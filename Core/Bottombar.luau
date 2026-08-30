@@ -17,7 +17,6 @@ function Bottombar.Create(Main)
     BottombarStroke.Parent = BottombarFrame
     
     local BottombarCorner = Instance.new("UICorner")
-    BottombarCorner.CornerRadius = UDim.new(0, 0)
     BottombarCorner.TopLeftRadius = UDim.new(0, 0)
     BottombarCorner.TopRightRadius = UDim.new(0, 0)
     BottombarCorner.Parent = BottombarFrame
