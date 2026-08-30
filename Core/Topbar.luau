@@ -57,7 +57,7 @@ function Topbar.Create(Main, Config)
     Actions.BorderColor3 = Color3.new(0, 0, 0)
     Actions.BorderSizePixel = 0
     Actions.Position = UDim2.new(1, 0, 0, 0)
-    Actions.Size = UDim2.new(0, 111, 0, 30)
+    Actions.Size = UDim2.new(0, 114, 0, 30)
     Actions.Parent = TopbarFrame
     
     local ActionsLayout = Instance.new("UIListLayout")
@@ -125,8 +125,13 @@ function Topbar.Create(Main, Config)
     Close.BorderSizePixel = 0
     Close.HoverImage = "rbxassetid://0"
     Close.LayoutOrder = 2
-    Close.Size = UDim2.new(0, 37, 0, 30)
+    Close.Size = UDim2.new(0, 40, 0, 30)
     Close.Parent = Actions
+    
+    local CloseCorner = Instance.new("UICorner")
+    CloseCorner.CornerRadius = UDim.new(0, 0)
+    CloseCorner.TopRightRadius = UDim.new(0, 8)
+    CloseCorner.Parent = Close
     
     local CloseIcon = Instance.new("ImageLabel")
     CloseIcon.BackgroundColor3 = Color3.new(1, 1, 1)
