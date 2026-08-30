@@ -13,11 +13,6 @@ function Topbar.Create(Main, Config)
     TopbarFrame.Size = UDim2.new(1, 0, 0, 30)
     TopbarFrame.Parent = Main
     
-    local TopbarCorner = Instance.new("UICorner")
-    TopbarCorner.BottomLeftRadius = UDim.new(0, 0)
-    TopbarCorner.BottomRightRadius = UDim.new(0, 0)
-    TopbarCorner.Parent = TopbarFrame
-    
     local TopbarStroke = Instance.new("UIStroke")
     TopbarStroke.Color = Color3.new(0.216, 0.216, 0.216)
     TopbarStroke.Parent = TopbarFrame
@@ -67,6 +62,7 @@ function Topbar.Create(Main, Config)
     
     local Minimize = Instance.new("ImageButton")
     Minimize.Name = "Minimize"
+    Minimize.AutoButtonColor = false
     Minimize.BackgroundColor3 = Color3.new(1, 1, 1)
     Minimize.BackgroundTransparency = 1
     Minimize.BorderColor3 = Color3.new(0, 0, 0)
@@ -93,6 +89,7 @@ function Topbar.Create(Main, Config)
     
     local Fullscreen = Instance.new("ImageButton")
     Fullscreen.Name = "Fullscreen"
+    Fullscreen.AutoButtonColor = false
     Fullscreen.BackgroundColor3 = Color3.new(1, 1, 1)
     Fullscreen.BackgroundTransparency = 1
     Fullscreen.BorderColor3 = Color3.new(0, 0, 0)
@@ -119,6 +116,7 @@ function Topbar.Create(Main, Config)
     
     local Close = Instance.new("ImageButton")
     Close.Name = "Close"
+    Close.AutoButtonColor = false
     Close.BackgroundColor3 = Color3.new(1, 1, 1)
     Close.BackgroundTransparency = 1
     Close.BorderColor3 = Color3.new(0, 0, 0)

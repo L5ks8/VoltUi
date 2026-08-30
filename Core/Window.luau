@@ -20,6 +20,7 @@ function Window:CreateWindow(Config)
     Main.BackgroundColor3 = Color3.new(0.075, 0.075, 0.075)
     Main.BorderColor3 = Color3.new(0, 0, 0)
     Main.BorderSizePixel = 0
+    Main.ClipsDescendants = true
     Main.Position = UDim2.new(0.5, 0, 0.5, 0)
     Main.Size = UDim2.new(0, 800, 0, 600)
     Main.Parent = VoltUi
@@ -77,14 +78,25 @@ function Window:CreateWindow(Config)
         -- Cancel logic is already handled inside CloseWarn (makes itself invisible)
     end)
     
-    local MinimizedBtn = Minimized.Create(VoltUi, function()
-        Main.Visible = true
-    end)
-    
     local isFullscreen = false
     local originalSize = Main.Size
     local originalPosition = Main.Position
     local FullscreenTweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+
+    local isMinimized = false
+    local preMinimizeSize = Main.Size
+    local preMinimizePos = Main.Position
+    local MinimizeTweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    
+    local MinimizedBtn
+    MinimizedBtn = Minimized.Create(VoltUi, function()
+        isMinimized = false
+        Main.Visible = true
+        TweenService:Create(Main, MinimizeTweenInfo, {
+            Size = isFullscreen and UDim2.new(1, 0, 1, 0) or preMinimizeSize,
+            Position = isFullscreen and UDim2.new(0.5, 0, 0.5, 0) or preMinimizePos
+        }):Play()
+    end)
     
     TopbarElements.FullscreenButton.MouseButton1Click:Connect(function()
         isFullscreen = not isFullscreen
@@ -104,8 +116,21 @@ function Window:CreateWindow(Config)
     end)
     
     TopbarElements.MinimizeButton.MouseButton1Click:Connect(function()
-        Main.Visible = false
+        isMinimized = true
+        preMinimizeSize = Main.Size
+        preMinimizePos = Main.Position
+        
         MinimizedBtn.Visible = true
+        local tw = TweenService:Create(Main, MinimizeTweenInfo, {
+            Size = UDim2.new(0, 0, 0, 0),
+            Position = MinimizedBtn.Position
+        })
+        tw.Completed:Connect(function()
+            if isMinimized then
+                Main.Visible = false
+            end
+        end)
+        tw:Play()
     end)
     
     TopbarElements.CloseButton.MouseButton1Click:Connect(function()

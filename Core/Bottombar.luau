@@ -7,19 +7,13 @@ function Bottombar.Create(Main)
     BottombarFrame.BorderColor3 = Color3.new(0, 0, 0)
     BottombarFrame.BorderSizePixel = 0
     BottombarFrame.LayoutOrder = 2
-    BottombarFrame.Position = UDim2.new(0, 0, 0.967, 0)
-    BottombarFrame.Rotation = -0.01
-    BottombarFrame.Size = UDim2.new(0, 800, 0, 20)
+    BottombarFrame.Position = UDim2.new(0, 0, 1, -20)
+    BottombarFrame.Size = UDim2.new(1, 0, 0, 20)
     BottombarFrame.Parent = Main
     
     local BottombarStroke = Instance.new("UIStroke")
     BottombarStroke.Color = Color3.new(0.216, 0.216, 0.216)
     BottombarStroke.Parent = BottombarFrame
-    
-    local BottombarCorner = Instance.new("UICorner")
-    BottombarCorner.TopLeftRadius = UDim.new(0, 0)
-    BottombarCorner.TopRightRadius = UDim.new(0, 0)
-    BottombarCorner.Parent = BottombarFrame
     
     local Tabdisplay = Instance.new("Frame")
     Tabdisplay.Name = "Tabdisplay"
