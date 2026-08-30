@@ -29,7 +29,7 @@ function Window:CreateWindow(Config)
     UICorner.Parent = Main
     
     local UIStroke = Instance.new("UIStroke")
-    UIStroke.Color = Color3.new(0.353, 0.353, 0.353)
+    UIStroke.Color = Color3.new(0.216, 0.216, 0.216)
     UIStroke.Parent = Main
     
     local TopbarElements = Topbar.Create(Main, Config)
