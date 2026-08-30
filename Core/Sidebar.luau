@@ -145,12 +145,22 @@ function Sidebar.Create(Content, maid)
     
     local function ApplyHover(button, text)
         button.AutoButtonColor = false
-        button.BackgroundColor3 = HoverColor
         button.BackgroundTransparency = 1
+        
+        local HoverBox = Instance.new("Frame")
+        HoverBox.Name = "HoverBox"
+        HoverBox.AnchorPoint = Vector2.new(0.5, 0.5)
+        HoverBox.Position = UDim2.new(0.5, 0, 0.5, 0)
+        HoverBox.Size = UDim2.new(0, 30, 0, 30)
+        HoverBox.BackgroundColor3 = HoverColor
+        HoverBox.BackgroundTransparency = 1
+        HoverBox.BorderSizePixel = 0
+        HoverBox.ZIndex = 0
+        HoverBox.Parent = button
         
         local Corner = Instance.new("UICorner")
         Corner.CornerRadius = UDim.new(0, 6)
-        Corner.Parent = button
+        Corner.Parent = HoverBox
         
         local Tooltip = Instance.new("TextLabel")
         Tooltip.Name = "Tooltip"
@@ -171,14 +181,14 @@ function Sidebar.Create(Content, maid)
         if icon then icon.Active = false end
         
         maid:GiveTask(button.MouseEnter:Connect(function()
-            Tween(button, TweenInfoObj, {BackgroundTransparency = 0})
+            Tween(HoverBox, TweenInfoObj, {BackgroundTransparency = 0})
             Tooltip.Visible = true
             Tween(Tooltip, TweenInfoObj, {TextTransparency = 0})
             if icon then Tween(icon, TweenInfoObj, {ImageTransparency = 0}) end
         end))
         
         maid:GiveTask(button.MouseLeave:Connect(function()
-            Tween(button, TweenInfoObj, {BackgroundTransparency = 1})
+            Tween(HoverBox, TweenInfoObj, {BackgroundTransparency = 1})
             local t1 = Tween(Tooltip, TweenInfoObj, {TextTransparency = 1})
             
             local defTrans = 0
