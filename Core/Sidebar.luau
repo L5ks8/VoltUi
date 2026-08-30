@@ -254,10 +254,12 @@ function Sidebar.Create(Content, maid)
     TabsContainer.Size = UDim2.new(0, 200, 1, -75)
     TabsContainer.Parent = SidebarFrame
     
-    local TabsStroke = Instance.new("UIStroke")
-    TabsStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
-    TabsStroke.Color = Color3.new(0.216, 0.216, 0.216)
-    TabsStroke.Parent = TabsContainer
+    local TabsTopBorder = Instance.new("Frame")
+    TabsTopBorder.Name = "TopBorder"
+    TabsTopBorder.BackgroundColor3 = Color3.new(0.216, 0.216, 0.216)
+    TabsTopBorder.BorderSizePixel = 0
+    TabsTopBorder.Size = UDim2.new(1, 0, 0, 1)
+    TabsTopBorder.Parent = TabsContainer
     
     local TabsScrolling = Instance.new("ScrollingFrame")
     TabsScrolling.Active = true

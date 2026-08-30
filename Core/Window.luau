@@ -89,7 +89,7 @@ function Window:CreateWindow(Config)
     local ClosePrompt = CloseWarn.Create(VoltUi, maid, function()
         maid:DoCleaning()
     end, function()
-        -- Cancel logic handled internally
+        
     end)
     
     local isFullscreen = false
