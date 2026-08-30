@@ -1,4 +1,5 @@
 local Topbar = {}
+local TweenService = game:GetService("TweenService")
 
 function Topbar.Create(Main, Config)
     local Title = Config.Title or "Volt - 1.0.0"
@@ -165,6 +166,16 @@ function Topbar.Create(Main, Config)
     VersionText.TextColor3 = Color3.new(0.537, 0.537, 0.537)
     VersionText.TextSize = 13
     VersionText.Parent = Version
+    
+    local HoverRed = Color3.fromRGB(235, 70, 70)
+    local TweenInfoObj = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    
+    Close.MouseEnter:Connect(function()
+        TweenService:Create(Close, TweenInfoObj, {BackgroundTransparency = 0, BackgroundColor3 = HoverRed}):Play()
+    end)
+    Close.MouseLeave:Connect(function()
+        TweenService:Create(Close, TweenInfoObj, {BackgroundTransparency = 1, BackgroundColor3 = Color3.new(1, 1, 1)}):Play()
+    end)
     
     return {
         Instance = TopbarFrame,

@@ -132,23 +132,22 @@ function CloseWarn.Create(ParentGui, ConfirmCallback, CancelCallback)
     MainStroke.Color = Color3.new(0.353, 0.353, 0.353)
     MainStroke.Parent = Main
     
-    local NormalColor = Color3.new(0.529, 0.529, 0.529)
     local HoverRed = Color3.fromRGB(235, 70, 70)
     local HoverGreen = Color3.fromRGB(70, 235, 70)
     local TweenInfoObj = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
     
     Confirm.MouseEnter:Connect(function()
-        TweenService:Create(ConfirmText, TweenInfoObj, {TextColor3 = HoverGreen}):Play()
+        TweenService:Create(Confirm, TweenInfoObj, {BackgroundTransparency = 0, BackgroundColor3 = HoverGreen}):Play()
     end)
     Confirm.MouseLeave:Connect(function()
-        TweenService:Create(ConfirmText, TweenInfoObj, {TextColor3 = NormalColor}):Play()
+        TweenService:Create(Confirm, TweenInfoObj, {BackgroundTransparency = 1, BackgroundColor3 = Color3.new(1, 1, 1)}):Play()
     end)
     
     Cancel.MouseEnter:Connect(function()
-        TweenService:Create(CancelText, TweenInfoObj, {TextColor3 = HoverRed}):Play()
+        TweenService:Create(Cancel, TweenInfoObj, {BackgroundTransparency = 0, BackgroundColor3 = HoverRed}):Play()
     end)
     Cancel.MouseLeave:Connect(function()
-        TweenService:Create(CancelText, TweenInfoObj, {TextColor3 = NormalColor}):Play()
+        TweenService:Create(Cancel, TweenInfoObj, {BackgroundTransparency = 1, BackgroundColor3 = Color3.new(1, 1, 1)}):Play()
     end)
     
     Confirm.MouseButton1Click:Connect(function()
