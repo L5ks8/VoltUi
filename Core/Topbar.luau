@@ -51,11 +51,12 @@ function Topbar.Create(Main, Config)
     
     local Actions = Instance.new("Frame")
     Actions.Name = "Actions"
+    Actions.AnchorPoint = Vector2.new(1, 0)
     Actions.BackgroundColor3 = Color3.new(1, 1, 1)
     Actions.BackgroundTransparency = 1
     Actions.BorderColor3 = Color3.new(0, 0, 0)
     Actions.BorderSizePixel = 0
-    Actions.Position = UDim2.new(0.861, 0, 0, 0)
+    Actions.Position = UDim2.new(1, 0, 0, 0)
     Actions.Size = UDim2.new(0, 111, 0, 30)
     Actions.Parent = TopbarFrame
     
@@ -124,7 +125,7 @@ function Topbar.Create(Main, Config)
     Close.BorderSizePixel = 0
     Close.HoverImage = "rbxassetid://0"
     Close.LayoutOrder = 2
-    Close.Size = UDim2.new(0.324, 0, 1, 0)
+    Close.Size = UDim2.new(0, 37, 0, 30)
     Close.Parent = Actions
     
     local CloseIcon = Instance.new("ImageLabel")
