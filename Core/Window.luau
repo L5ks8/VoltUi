@@ -2,6 +2,7 @@ local Window = {}
 local Topbar = require(script.Parent.Topbar)
 local Sidebar = require(script.Parent.Sidebar)
 local Bottombar = require(script.Parent.Bottombar)
+local CloseWarn = require(script.Parent.CloseWarn)
 
 function Window:CreateWindow(Config)
     local VoltUi = Instance.new("ScreenGui")
@@ -65,6 +66,37 @@ function Window:CreateWindow(Config)
     MainContentStroke.Parent = MainContent
     
     local BottombarElements = Bottombar.Create(Main)
+    
+    local ClosePrompt = CloseWarn.Create(VoltUi, function()
+        VoltUi:Destroy()
+    end, function()
+        -- Cancel logic is already handled inside CloseWarn (makes itself invisible)
+    end)
+    
+    local isFullscreen = false
+    local originalSize = Main.Size
+    local originalPosition = Main.Position
+    
+    TopbarElements.FullscreenButton.MouseButton1Click:Connect(function()
+        isFullscreen = not isFullscreen
+        if isFullscreen then
+            originalSize = Main.Size
+            originalPosition = Main.Position
+            Main.Size = UDim2.new(1, 0, 1, 0)
+            Main.Position = UDim2.new(0.5, 0, 0.5, 0)
+        else
+            Main.Size = originalSize
+            Main.Position = originalPosition
+        end
+    end)
+    
+    TopbarElements.MinimizeButton.MouseButton1Click:Connect(function()
+        Main.Visible = false
+    end)
+    
+    TopbarElements.CloseButton.MouseButton1Click:Connect(function()
+        ClosePrompt.Visible = true
+    end)
     
     local WindowObject = {
         Instance = VoltUi,
