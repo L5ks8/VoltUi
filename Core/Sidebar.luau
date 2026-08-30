@@ -40,6 +40,8 @@ function Sidebar.Create(Content, maid)
     Home.Parent = SidebarActions
     
     local HomeIcon = Instance.new("ImageLabel")
+    HomeIcon.AnchorPoint = Vector2.new(0.5, 0.5)
+    HomeIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
     HomeIcon.BackgroundColor3 = Color3.new(1, 1, 1)
     HomeIcon.BackgroundTransparency = 1
     HomeIcon.BorderColor3 = Color3.new(0, 0, 0)
@@ -48,13 +50,6 @@ function Sidebar.Create(Content, maid)
     HomeIcon.ImageTransparency = 0.2
     HomeIcon.Size = UDim2.new(0, 20, 0, 20)
     HomeIcon.Parent = Home
-    
-    local HomeLayout = Instance.new("UIListLayout")
-    HomeLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    HomeLayout.HorizontalFlex = Enum.UIFlexAlignment.SpaceAround
-    HomeLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    HomeLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    HomeLayout.Parent = Home
     
     local Account = Instance.new("ImageButton")
     Account.Name = "Account"
@@ -67,6 +62,8 @@ function Sidebar.Create(Content, maid)
     Account.Parent = SidebarActions
     
     local AccountIcon = Instance.new("ImageLabel")
+    AccountIcon.AnchorPoint = Vector2.new(0.5, 0.5)
+    AccountIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
     AccountIcon.BackgroundColor3 = Color3.new(1, 1, 1)
     AccountIcon.BackgroundTransparency = 1
     AccountIcon.BorderColor3 = Color3.new(0, 0, 0)
@@ -75,13 +72,6 @@ function Sidebar.Create(Content, maid)
     AccountIcon.ImageTransparency = 0.1
     AccountIcon.Size = UDim2.new(0, 15, 0, 15)
     AccountIcon.Parent = Account
-    
-    local AccountLayout = Instance.new("UIListLayout")
-    AccountLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    AccountLayout.HorizontalFlex = Enum.UIFlexAlignment.SpaceAround
-    AccountLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    AccountLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    AccountLayout.Parent = Account
     
     local Settings = Instance.new("ImageButton")
     Settings.Name = "Settings"
@@ -94,6 +84,8 @@ function Sidebar.Create(Content, maid)
     Settings.Parent = SidebarActions
     
     local SettingsIcon = Instance.new("ImageLabel")
+    SettingsIcon.AnchorPoint = Vector2.new(0.5, 0.5)
+    SettingsIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
     SettingsIcon.BackgroundColor3 = Color3.new(1, 1, 1)
     SettingsIcon.BackgroundTransparency = 1
     SettingsIcon.BorderColor3 = Color3.new(0, 0, 0)
@@ -101,13 +93,6 @@ function Sidebar.Create(Content, maid)
     SettingsIcon.Image = "rbxassetid://95898765113869"
     SettingsIcon.Size = UDim2.new(0, 15, 0, 15)
     SettingsIcon.Parent = Settings
-    
-    local SettingsLayout = Instance.new("UIListLayout")
-    SettingsLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    SettingsLayout.HorizontalFlex = Enum.UIFlexAlignment.SpaceAround
-    SettingsLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    SettingsLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    SettingsLayout.Parent = Settings
     
     local SidebarFiller = Instance.new("Frame")
     SidebarFiller.Name = "Filler"
@@ -132,6 +117,8 @@ function Sidebar.Create(Content, maid)
     Collapse.Parent = SidebarActions
     
     local CollapseIcon = Instance.new("ImageLabel")
+    CollapseIcon.AnchorPoint = Vector2.new(0.5, 0.5)
+    CollapseIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
     CollapseIcon.BackgroundColor3 = Color3.new(1, 1, 1)
     CollapseIcon.BackgroundTransparency = 1
     CollapseIcon.BorderColor3 = Color3.new(0, 0, 0)
@@ -142,12 +129,77 @@ function Sidebar.Create(Content, maid)
     CollapseIcon.Size = UDim2.new(0, 20, 0, 20)
     CollapseIcon.Parent = Collapse
     
-    local CollapseLayout = Instance.new("UIListLayout")
-    CollapseLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    CollapseLayout.HorizontalFlex = Enum.UIFlexAlignment.SpaceAround
-    CollapseLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    CollapseLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    CollapseLayout.Parent = Collapse
+    local SidebarFiller2 = Instance.new("Frame")
+    SidebarFiller2.Name = "Filler"
+    SidebarFiller2.BackgroundColor3 = Color3.new(1, 1, 1)
+    SidebarFiller2.BackgroundTransparency = 1
+    SidebarFiller2.BorderColor3 = Color3.new(0, 0, 0)
+    SidebarFiller2.BorderSizePixel = 0
+    SidebarFiller2.LayoutOrder = 2
+    SidebarFiller2.Position = UDim2.new(0, 0, 0.131, 0)
+    SidebarFiller2.Size = UDim2.new(0, 200, 0, 5)
+    SidebarFiller2.Parent = SidebarFrame
+    
+    local HoverColor = Color3.fromRGB(45, 45, 45)
+    local TweenInfoObj = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    
+    local function ApplyHover(button, text)
+        button.AutoButtonColor = false
+        button.BackgroundColor3 = HoverColor
+        button.BackgroundTransparency = 1
+        
+        local Corner = Instance.new("UICorner")
+        Corner.CornerRadius = UDim.new(0, 6)
+        Corner.Parent = button
+        
+        local Tooltip = Instance.new("TextLabel")
+        Tooltip.Name = "Tooltip"
+        Tooltip.BackgroundTransparency = 1
+        Tooltip.AnchorPoint = Vector2.new(0.5, 0)
+        Tooltip.Position = UDim2.new(0.5, 0, 1.1, 0)
+        Tooltip.Size = UDim2.new(0, 50, 0, 15)
+        Tooltip.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+        Tooltip.Text = text
+        Tooltip.TextColor3 = Color3.new(0.7, 0.7, 0.7)
+        Tooltip.TextSize = 12
+        Tooltip.TextTransparency = 1
+        Tooltip.ZIndex = 10
+        Tooltip.Visible = false
+        Tooltip.Parent = button
+        
+        local icon = button:FindFirstChildOfClass("ImageLabel")
+        if icon then icon.Active = false end
+        
+        maid:GiveTask(button.MouseEnter:Connect(function()
+            Tween(button, TweenInfoObj, {BackgroundTransparency = 0})
+            Tooltip.Visible = true
+            Tween(Tooltip, TweenInfoObj, {TextTransparency = 0})
+            if icon then Tween(icon, TweenInfoObj, {ImageTransparency = 0}) end
+        end))
+        
+        maid:GiveTask(button.MouseLeave:Connect(function()
+            Tween(button, TweenInfoObj, {BackgroundTransparency = 1})
+            local t1 = Tween(Tooltip, TweenInfoObj, {TextTransparency = 1})
+            
+            local defTrans = 0
+            if button.Name == "Home" then defTrans = 0.2
+            elseif button.Name == "Account" then defTrans = 0.1
+            elseif button.Name == "Collapse" then defTrans = 0.3
+            end
+            if icon then Tween(icon, TweenInfoObj, {ImageTransparency = defTrans}) end
+            
+            maid:GiveTask(t1.Completed:Connect(function()
+                if Tooltip.TextTransparency == 1 then
+                    Tooltip.Visible = false
+                end
+            end))
+        end))
+    end
+    
+    ApplyHover(Home, "Home")
+    ApplyHover(Account, "Account")
+    ApplyHover(Settings, "Settings")
+    ApplyHover(Collapse, "Collapse")
     
     local Searchbar = Instance.new("Frame")
     Searchbar.Name = "Searchbar"
@@ -234,79 +286,6 @@ function Sidebar.Create(Content, maid)
     SearchIconFrameLayout.SortOrder = Enum.SortOrder.LayoutOrder
     SearchIconFrameLayout.VerticalAlignment = Enum.VerticalAlignment.Center
     SearchIconFrameLayout.Parent = SearchIconFrame
-    
-    local SidebarFiller2 = Instance.new("Frame")
-    SidebarFiller2.Name = "Filler"
-    SidebarFiller2.BackgroundColor3 = Color3.new(1, 1, 1)
-    SidebarFiller2.BackgroundTransparency = 1
-    SidebarFiller2.BorderColor3 = Color3.new(0, 0, 0)
-    SidebarFiller2.BorderSizePixel = 0
-    SidebarFiller2.LayoutOrder = 2
-    SidebarFiller2.Position = UDim2.new(0, 0, 0.131, 0)
-    SidebarFiller2.Size = UDim2.new(0, 200, 0, 5)
-    SidebarFiller2.Parent = SidebarFrame
-    
-    local HoverColor = Color3.fromRGB(45, 45, 45)
-    local TweenInfoObj = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-    
-    local function ApplyHover(button, text)
-        button.AutoButtonColor = false
-        button.BackgroundColor3 = HoverColor
-        button.BackgroundTransparency = 1
-        
-        local Corner = Instance.new("UICorner")
-        Corner.CornerRadius = UDim.new(0, 6)
-        Corner.Parent = button
-        
-        local Tooltip = Instance.new("TextLabel")
-        Tooltip.Name = "Tooltip"
-        Tooltip.BackgroundTransparency = 1
-        Tooltip.AnchorPoint = Vector2.new(0.5, 0)
-        Tooltip.Position = UDim2.new(0.5, 0, 1, 2)
-        Tooltip.Size = UDim2.new(0, 50, 0, 15)
-        Tooltip.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-        Tooltip.Text = text
-        Tooltip.TextColor3 = Color3.new(0.7, 0.7, 0.7)
-        Tooltip.TextSize = 12
-        Tooltip.TextTransparency = 1
-        Tooltip.ZIndex = 10
-        Tooltip.Visible = false
-        Tooltip.Parent = button
-        
-        local icon = button:FindFirstChildOfClass("ImageLabel")
-        if icon then icon.Active = false end
-        
-        maid:GiveTask(button.MouseEnter:Connect(function()
-            Tween(button, TweenInfoObj, {BackgroundTransparency = 0})
-            Tooltip.Visible = true
-            Tween(Tooltip, TweenInfoObj, {TextTransparency = 0})
-            if icon then Tween(icon, TweenInfoObj, {ImageTransparency = 0}) end
-        end))
-        
-        maid:GiveTask(button.MouseLeave:Connect(function()
-            Tween(button, TweenInfoObj, {BackgroundTransparency = 1})
-            local t1 = Tween(Tooltip, TweenInfoObj, {TextTransparency = 1})
-            
-            local defTrans = 0
-            if button.Name == "Home" then defTrans = 0.2
-            elseif button.Name == "Account" then defTrans = 0.1
-            elseif button.Name == "Collapse" then defTrans = 0.3
-            end
-            if icon then Tween(icon, TweenInfoObj, {ImageTransparency = defTrans}) end
-            
-            maid:GiveTask(t1.Completed:Connect(function()
-                if Tooltip.TextTransparency == 1 then
-                    Tooltip.Visible = false
-                end
-            end))
-        end))
-    end
-    
-    ApplyHover(Home, "Home")
-    ApplyHover(Account, "Account")
-    ApplyHover(Settings, "Settings")
-    ApplyHover(Collapse, "Collapse")
-
     
     local TabsContainer = Instance.new("Frame")
     TabsContainer.Name = "Tabs"
