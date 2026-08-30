@@ -20,7 +20,7 @@ function Window:CreateWindow(Config)
     Main.BackgroundColor3 = Color3.new(0.075, 0.075, 0.075)
     Main.BorderColor3 = Color3.new(0, 0, 0)
     Main.BorderSizePixel = 0
-    Main.ClipsDescendants = true
+    Main.ClipsDescendants = false
     Main.Position = UDim2.new(0.5, 0, 0.5, 0)
     Main.Size = UDim2.new(0, 800, 0, 600)
     Main.Parent = VoltUi

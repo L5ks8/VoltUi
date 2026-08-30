@@ -11,6 +11,11 @@ function Bottombar.Create(Main)
     BottombarFrame.Size = UDim2.new(1, 0, 0, 20)
     BottombarFrame.Parent = Main
     
+    local BottombarCorner = Instance.new("UICorner")
+    BottombarCorner.TopLeftRadius = UDim.new(0, 0)
+    BottombarCorner.TopRightRadius = UDim.new(0, 0)
+    BottombarCorner.Parent = BottombarFrame
+    
     local BottombarBorder = Instance.new("Frame")
     BottombarBorder.Name = "Border"
     BottombarBorder.BackgroundColor3 = Color3.new(0.216, 0.216, 0.216)

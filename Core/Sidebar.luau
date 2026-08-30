@@ -9,13 +9,10 @@ function Sidebar.Create(Content)
     SidebarFrame.Size = UDim2.new(0, 200, 1, 0)
     SidebarFrame.Parent = Content
     
-    local SidebarBorder = Instance.new("Frame")
-    SidebarBorder.Name = "Border"
-    SidebarBorder.BackgroundColor3 = Color3.new(0.216, 0.216, 0.216)
-    SidebarBorder.BorderSizePixel = 0
-    SidebarBorder.Position = UDim2.new(1, -1, 0, 0)
-    SidebarBorder.Size = UDim2.new(0, 1, 1, 0)
-    SidebarBorder.Parent = SidebarFrame
+    local SidebarStroke = Instance.new("UIStroke")
+    SidebarStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
+    SidebarStroke.Color = Color3.new(0.216, 0.216, 0.216)
+    SidebarStroke.Parent = SidebarFrame
     
     local SidebarLayout = Instance.new("UIListLayout")
     SidebarLayout.SortOrder = Enum.SortOrder.LayoutOrder

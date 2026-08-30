@@ -13,6 +13,11 @@ function Topbar.Create(Main, Config)
     TopbarFrame.Size = UDim2.new(1, 0, 0, 30)
     TopbarFrame.Parent = Main
     
+    local TopbarCorner = Instance.new("UICorner")
+    TopbarCorner.BottomLeftRadius = UDim.new(0, 0)
+    TopbarCorner.BottomRightRadius = UDim.new(0, 0)
+    TopbarCorner.Parent = TopbarFrame
+    
     local TopbarBorder = Instance.new("Frame")
     TopbarBorder.Name = "Border"
     TopbarBorder.BackgroundColor3 = Color3.new(0.216, 0.216, 0.216)
@@ -76,6 +81,7 @@ function Topbar.Create(Main, Config)
     Minimize.Parent = Actions
     
     local MinimizeIcon = Instance.new("ImageLabel")
+    MinimizeIcon.Active = false
     MinimizeIcon.BackgroundColor3 = Color3.new(1, 1, 1)
     MinimizeIcon.BackgroundTransparency = 1
     MinimizeIcon.BorderColor3 = Color3.new(0, 0, 0)
@@ -105,6 +111,7 @@ function Topbar.Create(Main, Config)
     Fullscreen.Parent = Actions
     
     local FullscreenIcon = Instance.new("ImageLabel")
+    FullscreenIcon.Active = false
     FullscreenIcon.BackgroundColor3 = Color3.new(1, 1, 1)
     FullscreenIcon.BackgroundTransparency = 1
     FullscreenIcon.BorderColor3 = Color3.new(0, 0, 0)
@@ -138,6 +145,7 @@ function Topbar.Create(Main, Config)
     CloseCorner.Parent = Close
     
     local CloseIcon = Instance.new("ImageLabel")
+    CloseIcon.Active = false
     CloseIcon.BackgroundColor3 = Color3.new(1, 1, 1)
     CloseIcon.BackgroundTransparency = 1
     CloseIcon.BorderColor3 = Color3.new(0, 0, 0)
