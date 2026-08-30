@@ -171,7 +171,7 @@ function Sidebar.Create(Content, maid)
         Tooltip.Position = UDim2.new(0.5, 0, 1, 4)
         Tooltip.Size = UDim2.new(0, 0, 0, 18)
         Tooltip.AutomaticSize = Enum.AutomaticSize.X
-        Tooltip.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+        Tooltip.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
         Tooltip.Text = text
         Tooltip.TextColor3 = Color3.new(0.7, 0.7, 0.7)
         Tooltip.TextSize = 12
@@ -275,7 +275,7 @@ function Sidebar.Create(Content, maid)
     SearchInput.BackgroundTransparency = 1
     SearchInput.BorderColor3 = Color3.new(0, 0, 0)
     SearchInput.BorderSizePixel = 0
-    SearchInput.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    SearchInput.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     SearchInput.LayoutOrder = 1
     SearchInput.Position = UDim2.new(0.167, 0, 0, 0)
     SearchInput.Size = UDim2.new(0.833, 0, 1, 0)

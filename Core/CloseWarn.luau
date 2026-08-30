@@ -33,7 +33,7 @@ function CloseWarn.Create(ParentGui, maid, ConfirmCallback, CancelCallback)
     QuestionText.BackgroundTransparency = 1
     QuestionText.BorderColor3 = Color3.new(0, 0, 0)
     QuestionText.BorderSizePixel = 0
-    QuestionText.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    QuestionText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     QuestionText.LineHeight = 1.5
     QuestionText.Size = UDim2.new(1, 0, 1, 0)
     QuestionText.Text = "Are you Sure you want to close this Window ?"

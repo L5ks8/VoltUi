@@ -181,7 +181,7 @@ function Topbar.Create(Main, Config, maid)
     VersionText.BackgroundTransparency = 1
     VersionText.BorderColor3 = Color3.new(0, 0, 0)
     VersionText.BorderSizePixel = 0
-    VersionText.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    VersionText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     VersionText.Size = UDim2.new(1, 0, 1, 0)
     VersionText.Text = Title
     VersionText.TextColor3 = Color3.new(0.537, 0.537, 0.537)

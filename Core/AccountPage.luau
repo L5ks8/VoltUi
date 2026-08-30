@@ -46,7 +46,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     Title.Name = "Title"
     Title.BackgroundTransparency = 1
     Title.Size = UDim2.new(0, 100, 1, 0)
-    Title.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    Title.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     Title.Text = "Account"
     Title.TextColor3 = Color3.new(1, 1, 1)
     Title.TextSize = 14
@@ -133,7 +133,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     local AvatarText = Instance.new("TextLabel")
     AvatarText.BackgroundTransparency = 1
     AvatarText.Size = UDim2.new(1, 0, 1, 0)
-    AvatarText.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    AvatarText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     AvatarText.Text = "L"
     AvatarText.TextColor3 = Color3.new(1, 1, 1)
     AvatarText.TextSize = 18
@@ -168,7 +168,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     Username.BackgroundTransparency = 1
     Username.AutomaticSize = Enum.AutomaticSize.X
     Username.Size = UDim2.new(0, 0, 1, 0)
-    Username.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    Username.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     Username.Text = "L5ks8"
     Username.TextColor3 = Color3.new(1, 1, 1)
     Username.TextSize = 14
@@ -179,7 +179,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     UserIDBtn.BackgroundTransparency = 1
     UserIDBtn.AutomaticSize = Enum.AutomaticSize.X
     UserIDBtn.Size = UDim2.new(0, 0, 1, 0)
-    UserIDBtn.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+    UserIDBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
     UserIDBtn.Text = "•••••••••••"
     UserIDBtn.TextColor3 = Color3.new(0.4, 0.4, 0.4)
     UserIDBtn.TextSize = 12
@@ -230,7 +230,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     RoleText.BackgroundTransparency = 1
     RoleText.AutomaticSize = Enum.AutomaticSize.X
     RoleText.Size = UDim2.new(0, 0, 1, 0)
-    RoleText.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+    RoleText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     RoleText.Text = "User"
     RoleText.TextColor3 = Color3.new(0.9, 0.9, 0.9)
     RoleText.TextSize = 10
@@ -245,7 +245,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     JoinDate.BackgroundTransparency = 1
     JoinDate.AutomaticSize = Enum.AutomaticSize.X
     JoinDate.Size = UDim2.new(0, 0, 1, 0)
-    JoinDate.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+    JoinDate.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     JoinDate.Text = "Member since Jul 24, 2026"
     JoinDate.TextColor3 = Color3.new(0.5, 0.5, 0.5)
     JoinDate.TextSize = 11
@@ -270,7 +270,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     LicTitle.BackgroundTransparency = 1
     LicTitle.Size = UDim2.new(1, -25, 0, 16)
     LicTitle.Position = UDim2.new(0, 25, 0, 0)
-    LicTitle.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    LicTitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     LicTitle.Text = "Licenses"
     LicTitle.TextColor3 = Color3.new(1, 1, 1)
     LicTitle.TextSize = 12
@@ -281,7 +281,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     LicDesc.BackgroundTransparency = 1
     LicDesc.Size = UDim2.new(1, -25, 0, 14)
     LicDesc.Position = UDim2.new(0, 25, 0, 16)
-    LicDesc.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+    LicDesc.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     LicDesc.Text = "Subscription and claimed keys"
     LicDesc.TextColor3 = Color3.new(0.6, 0.6, 0.6)
     LicDesc.TextSize = 11
@@ -305,7 +305,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     LicTextBox.Name = "Input"
     LicTextBox.BackgroundColor3 = Color3.new(0.06, 0.06, 0.06)
     LicTextBox.Size = UDim2.new(1, -80, 1, 0)
-    LicTextBox.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+    LicTextBox.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     LicTextBox.Text = ""
     LicTextBox.PlaceholderText = "Enter license key"
     LicTextBox.TextColor3 = Color3.new(1, 1, 1)
@@ -329,7 +329,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     ClaimBtn.Name = "ClaimButton"
     ClaimBtn.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
     ClaimBtn.Size = UDim2.new(0, 70, 1, 0)
-    ClaimBtn.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+    ClaimBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     ClaimBtn.Text = "Claim"
     ClaimBtn.TextColor3 = Color3.new(0.8, 0.8, 0.8)
     ClaimBtn.TextSize = 12
@@ -383,7 +383,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     local VoltTitle = Instance.new("TextLabel")
     VoltTitle.BackgroundTransparency = 1
     VoltTitle.Size = UDim2.new(1, 0, 0, 16)
-    VoltTitle.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    VoltTitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     VoltTitle.Text = "Volt"
     VoltTitle.TextColor3 = Color3.new(1, 1, 1)
     VoltTitle.TextSize = 14
@@ -394,7 +394,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     VoltDesc.BackgroundTransparency = 1
     VoltDesc.Size = UDim2.new(1, 0, 0, 14)
     VoltDesc.Position = UDim2.new(0, 0, 0, 16)
-    VoltDesc.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+    VoltDesc.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     VoltDesc.Text = "Current subscription"
     VoltDesc.TextColor3 = Color3.new(0.6, 0.6, 0.6)
     VoltDesc.TextSize = 11
@@ -413,7 +413,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     local ActiveText = Instance.new("TextLabel")
     ActiveText.BackgroundTransparency = 1
     ActiveText.Size = UDim2.new(1, 0, 1, 0)
-    ActiveText.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    ActiveText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     ActiveText.Text = "Active"
     ActiveText.TextColor3 = Color3.new(1, 1, 1)
     ActiveText.TextSize = 10
@@ -439,7 +439,7 @@ function AccountPage.Create(Content, maid, BackCallback)
         local tLabel = Instance.new("TextLabel", box)
         tLabel.BackgroundTransparency = 1
         tLabel.Size = UDim2.new(1, 0, 0, 12)
-        tLabel.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+        tLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
         tLabel.Text = title
         tLabel.TextColor3 = Color3.new(0.5, 0.5, 0.5)
         tLabel.TextSize = 10
@@ -449,7 +449,7 @@ function AccountPage.Create(Content, maid, BackCallback)
         vLabel.BackgroundTransparency = 1
         vLabel.Size = UDim2.new(1, 0, 0, isLarge and 20 or 14)
         vLabel.Position = UDim2.new(0, 0, 0, isLarge and 16 or 14)
-        vLabel.FontFace = Font.new("rbxassetid://12187365364", isLarge and Enum.FontWeight.Bold or Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+        vLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", isLarge and Enum.FontWeight.Bold or Enum.FontWeight.Medium, Enum.FontStyle.Normal)
         vLabel.Text = val
         vLabel.TextColor3 = Color3.new(0.9, 0.9, 0.9)
         vLabel.TextSize = isLarge and 16 or 12
@@ -493,7 +493,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     KeysTitle.BackgroundTransparency = 1
     KeysTitle.Size = UDim2.new(1, -25, 1, 0)
     KeysTitle.Position = UDim2.new(0, 25, 0, 0)
-    KeysTitle.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    KeysTitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     KeysTitle.Text = "Claimed keys"
     KeysTitle.TextColor3 = Color3.new(1, 1, 1)
     KeysTitle.TextSize = 13
@@ -511,7 +511,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     local CountText = Instance.new("TextLabel")
     CountText.BackgroundTransparency = 1
     CountText.Size = UDim2.new(1, 0, 1, 0)
-    CountText.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    CountText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     CountText.Text = "1"
     CountText.TextColor3 = Color3.new(0.9, 0.9, 0.9)
     CountText.TextSize = 10
@@ -533,7 +533,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     local KeyCode = Instance.new("TextLabel")
     KeyCode.BackgroundTransparency = 1
     KeyCode.Size = UDim2.new(1, -60, 0, 16)
-    KeyCode.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+    KeyCode.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     KeyCode.Text = "ZH949GKE-NAP03W4X-YBVYRGPM-4WCCJDA"
     KeyCode.TextColor3 = Color3.new(0.9, 0.9, 0.9)
     KeyCode.TextSize = 11
@@ -544,7 +544,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     KeyDates.BackgroundTransparency = 1
     KeyDates.Size = UDim2.new(1, 0, 0, 14)
     KeyDates.Position = UDim2.new(0, 0, 0, 18)
-    KeyDates.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+    KeyDates.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     KeyDates.Text = "Claimed 30.8.2026  Expires 29.9.2026"
     KeyDates.TextColor3 = Color3.new(0.6, 0.6, 0.6)
     KeyDates.TextSize = 10
@@ -563,7 +563,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     local TypeText = Instance.new("TextLabel")
     TypeText.BackgroundTransparency = 1
     TypeText.Size = UDim2.new(1, 0, 1, 0)
-    TypeText.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+    TypeText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     TypeText.Text = "monthly"
     TypeText.TextColor3 = Color3.new(0.8, 0.8, 0.8)
     TypeText.TextSize = 10
@@ -587,7 +587,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     SecTitle.BackgroundTransparency = 1
     SecTitle.Size = UDim2.new(1, -25, 0, 16)
     SecTitle.Position = UDim2.new(0, 25, 0, 0)
-    SecTitle.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    SecTitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     SecTitle.Text = "Security"
     SecTitle.TextColor3 = Color3.new(1, 1, 1)
     SecTitle.TextSize = 12
@@ -598,7 +598,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     SecDesc.BackgroundTransparency = 1
     SecDesc.Size = UDim2.new(1, -25, 0, 14)
     SecDesc.Position = UDim2.new(0, 25, 0, 16)
-    SecDesc.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+    SecDesc.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     SecDesc.Text = "Session and account controls"
     SecDesc.TextColor3 = Color3.new(0.6, 0.6, 0.6)
     SecDesc.TextSize = 11
@@ -633,7 +633,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     local PassTitle = Instance.new("TextLabel")
     PassTitle.BackgroundTransparency = 1
     PassTitle.Size = UDim2.new(1, 0, 0, 16)
-    PassTitle.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    PassTitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     PassTitle.Text = "Change Password"
     PassTitle.TextColor3 = Color3.new(1, 1, 1)
     PassTitle.TextSize = 12
@@ -644,7 +644,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     PassDesc.BackgroundTransparency = 1
     PassDesc.Size = UDim2.new(1, 0, 0, 14)
     PassDesc.Position = UDim2.new(0, 0, 0, 16)
-    PassDesc.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+    PassDesc.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     PassDesc.Text = "Update your account password."
     PassDesc.TextColor3 = Color3.new(0.6, 0.6, 0.6)
     PassDesc.TextSize = 11
@@ -656,7 +656,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     PassBtn.Size = UDim2.new(0, 90, 0, 26)
     PassBtn.AnchorPoint = Vector2.new(1, 0.5)
     PassBtn.Position = UDim2.new(1, -15, 0.5, 0)
-    PassBtn.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+    PassBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     PassBtn.Text = "Change"
     PassBtn.TextColor3 = Color3.new(0.9, 0.9, 0.9)
     PassBtn.TextSize = 11
@@ -682,7 +682,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     local OutTitle = Instance.new("TextLabel")
     OutTitle.BackgroundTransparency = 1
     OutTitle.Size = UDim2.new(1, 0, 0, 16)
-    OutTitle.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    OutTitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     OutTitle.Text = "Sign out"
     OutTitle.TextColor3 = Color3.new(1, 1, 1)
     OutTitle.TextSize = 12
@@ -693,7 +693,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     OutDesc.BackgroundTransparency = 1
     OutDesc.Size = UDim2.new(1, 0, 0, 14)
     OutDesc.Position = UDim2.new(0, 0, 0, 16)
-    OutDesc.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+    OutDesc.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     OutDesc.Text = "End the session on this device."
     OutDesc.TextColor3 = Color3.new(0.6, 0.6, 0.6)
     OutDesc.TextSize = 11
@@ -705,7 +705,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     OutBtn.Size = UDim2.new(0, 80, 0, 26)
     OutBtn.AnchorPoint = Vector2.new(1, 0.5)
     OutBtn.Position = UDim2.new(1, -15, 0.5, 0)
-    OutBtn.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+    OutBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     OutBtn.Text = "Sign Out"
     OutBtn.TextColor3 = Color3.new(1, 0.3, 0.3)
     OutBtn.TextSize = 11
