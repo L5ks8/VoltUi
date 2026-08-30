@@ -1,18 +1,25 @@
-local Window = {}
+local Utils = script.Parent.Parent.Utils
+local Maid = require(Utils.Maid)
+local Signal = require(Utils.Signal)
+local Tween = require(Utils.Tween)
+local Utility = require(Utils.Utility)
+
 local Topbar = require(script.Parent.Topbar)
 local Sidebar = require(script.Parent.Sidebar)
 local Bottombar = require(script.Parent.Bottombar)
-local CloseWarn = require(script.Parent.CloseWarn)
 local Minimized = require(script.Parent.Minimized)
-local TweenService = game:GetService("TweenService")
-local Bottombar = require(script.Parent.Bottombar)
 local CloseWarn = require(script.Parent.CloseWarn)
 
+local Window = {}
+
 function Window:CreateWindow(Config)
+    local maid = Maid.new()
+    
     local VoltUi = Instance.new("ScreenGui")
     VoltUi.Name = "VoltUi"
     VoltUi.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     VoltUi.ResetOnSpawn = false
+    maid:GiveTask(VoltUi)
     
     local Main = Instance.new("Frame")
     Main.Name = "Main"
@@ -32,7 +39,10 @@ function Window:CreateWindow(Config)
     UIStroke.Color = Color3.new(0.216, 0.216, 0.216)
     UIStroke.Parent = Main
     
-    local TopbarElements = Topbar.Create(Main, Config)
+    local MainScale = Instance.new("UIScale")
+    MainScale.Parent = Main
+    
+    local TopbarElements = Topbar.Create(Main, Config, maid)
     
     local Content = Instance.new("Frame")
     Content.Name = "Content"
@@ -53,7 +63,7 @@ function Window:CreateWindow(Config)
     ContentLayout.VerticalAlignment = Enum.VerticalAlignment.Center
     ContentLayout.Parent = Content
     
-    local SidebarElements = Sidebar.Create(Content)
+    local SidebarElements = Sidebar.Create(Content, maid)
     
     local SidebarSeparator = Instance.new("Frame")
     SidebarSeparator.Name = "SidebarSeparator"
@@ -74,70 +84,73 @@ function Window:CreateWindow(Config)
     MainContent.LayoutOrder = 2
     MainContent.Parent = Content
     
-    local BottombarElements = Bottombar.Create(Main)
+    local BottombarElements = Bottombar.Create(Main, maid)
     
-    local ClosePrompt = CloseWarn.Create(VoltUi, function()
-        VoltUi:Destroy()
+    local ClosePrompt = CloseWarn.Create(VoltUi, maid, function()
+        maid:DoCleaning()
     end, function()
-        -- Cancel logic is already handled inside CloseWarn (makes itself invisible)
+        -- Cancel logic handled internally
     end)
     
     local isFullscreen = false
     local originalSize = Main.Size
     local originalPosition = Main.Position
-    local FullscreenTweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-
+    
     local isMinimized = false
     local preMinimizePos = Main.Position
     local MinimizeTweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
     
     local MinimizedBtn
-    MinimizedBtn = Minimized.Create(VoltUi, function()
+    MinimizedBtn = Minimized.Create(VoltUi, maid, function()
         isMinimized = false
         Main.Visible = true
-        TweenService:Create(MainScale, MinimizeTweenInfo, {Scale = 1}):Play()
-        TweenService:Create(Main, MinimizeTweenInfo, {
+        Tween(MainScale, MinimizeTweenInfo, {Scale = 1})
+        Tween(Main, MinimizeTweenInfo, {
             Position = isFullscreen and UDim2.new(0.5, 0, 0.5, 0) or preMinimizePos
-        }):Play()
+        })
     end)
     
-    TopbarElements.FullscreenButton.MouseButton1Click:Connect(function()
+    local FullscreenTweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    
+    maid:GiveTask(TopbarElements.FullscreenButton.MouseButton1Click:Connect(function()
         isFullscreen = not isFullscreen
         if isFullscreen then
             originalSize = Main.Size
             originalPosition = Main.Position
-            TweenService:Create(Main, FullscreenTweenInfo, {
+            Tween(Main, FullscreenTweenInfo, {
                 Size = UDim2.new(1, 0, 1, 0),
                 Position = UDim2.new(0.5, 0, 0.5, 0)
-            }):Play()
+            })
         else
-            TweenService:Create(Main, FullscreenTweenInfo, {
+            Tween(Main, FullscreenTweenInfo, {
                 Size = originalSize,
                 Position = originalPosition
-            }):Play()
+            })
         end
-    end)
+    end))
     
-    TopbarElements.MinimizeButton.MouseButton1Click:Connect(function()
+    maid:GiveTask(TopbarElements.MinimizeButton.MouseButton1Click:Connect(function()
         isMinimized = true
         preMinimizePos = Main.Position
         
         MinimizedBtn.Visible = true
-        TweenService:Create(MainScale, MinimizeTweenInfo, {Scale = 0}):Play()
-        local tw = TweenService:Create(Main, MinimizeTweenInfo, {
+        Tween(MainScale, MinimizeTweenInfo, {Scale = 0})
+        local tw = Tween(Main, MinimizeTweenInfo, {
             Position = MinimizedBtn.Position
         })
-        tw.Completed:Connect(function()
+        maid:GiveTask(tw.Completed:Connect(function()
             if isMinimized then
                 Main.Visible = false
             end
-        end)
-        tw:Play()
-    end)
+        end))
+    end))
     
-    TopbarElements.CloseButton.MouseButton1Click:Connect(function()
+    maid:GiveTask(TopbarElements.CloseButton.MouseButton1Click:Connect(function()
         ClosePrompt.Visible = true
-    end)
+    end))
+    
+    local OnClose = Signal.new()
+    maid:GiveTask(OnClose)
     
     local WindowObject = {
         Instance = VoltUi,
@@ -145,23 +158,12 @@ function Window:CreateWindow(Config)
         Topbar = TopbarElements,
         Sidebar = SidebarElements,
         Bottombar = BottombarElements,
-        ContentContainer = MainContent
+        ContentContainer = MainContent,
+        Maid = maid,
+        OnClose = OnClose
     }
     
-    if gethui then
-        VoltUi.Parent = gethui()
-    elseif syn and syn.protect_gui then
-        syn.protect_gui(VoltUi)
-        VoltUi.Parent = game:GetService("CoreGui")
-    else
-        local CoreGui = game:GetService("CoreGui")
-        local success = pcall(function()
-            VoltUi.Parent = CoreGui
-        end)
-        if not success then
-            VoltUi.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
-        end
-    end
+    Utility.ProtectGui(VoltUi)
     
     return WindowObject
 end

@@ -1,7 +1,9 @@
-local CloseWarn = {}
-local TweenService = game:GetService("TweenService")
+local Utils = script.Parent.Parent.Utils
+local Tween = require(Utils.Tween)
 
-function CloseWarn.Create(ParentGui, ConfirmCallback, CancelCallback)
+local CloseWarn = {}
+
+function CloseWarn.Create(ParentGui, maid, ConfirmCallback, CancelCallback)
     local Main = Instance.new("Frame")
     Main.Name = "CloseWarn"
     Main.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -143,29 +145,29 @@ function CloseWarn.Create(ParentGui, ConfirmCallback, CancelCallback)
     local HoverGreen = Color3.fromRGB(70, 235, 70)
     local TweenInfoObj = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
     
-    Confirm.MouseEnter:Connect(function()
-        TweenService:Create(Confirm, TweenInfoObj, {BackgroundTransparency = 0, BackgroundColor3 = HoverGreen}):Play()
-    end)
-    Confirm.MouseLeave:Connect(function()
-        TweenService:Create(Confirm, TweenInfoObj, {BackgroundTransparency = 1, BackgroundColor3 = Color3.new(1, 1, 1)}):Play()
-    end)
+    maid:GiveTask(Confirm.MouseEnter:Connect(function()
+        Tween(Confirm, TweenInfoObj, {BackgroundTransparency = 0, BackgroundColor3 = HoverGreen})
+    end))
+    maid:GiveTask(Confirm.MouseLeave:Connect(function()
+        Tween(Confirm, TweenInfoObj, {BackgroundTransparency = 1, BackgroundColor3 = Color3.new(1, 1, 1)})
+    end))
     
-    Cancel.MouseEnter:Connect(function()
-        TweenService:Create(Cancel, TweenInfoObj, {BackgroundTransparency = 0, BackgroundColor3 = HoverRed}):Play()
-    end)
-    Cancel.MouseLeave:Connect(function()
-        TweenService:Create(Cancel, TweenInfoObj, {BackgroundTransparency = 1, BackgroundColor3 = Color3.new(1, 1, 1)}):Play()
-    end)
+    maid:GiveTask(Cancel.MouseEnter:Connect(function()
+        Tween(Cancel, TweenInfoObj, {BackgroundTransparency = 0, BackgroundColor3 = HoverRed})
+    end))
+    maid:GiveTask(Cancel.MouseLeave:Connect(function()
+        Tween(Cancel, TweenInfoObj, {BackgroundTransparency = 1, BackgroundColor3 = Color3.new(1, 1, 1)})
+    end))
     
-    Confirm.MouseButton1Click:Connect(function()
+    maid:GiveTask(Confirm.MouseButton1Click:Connect(function()
         Main.Visible = false
         if ConfirmCallback then ConfirmCallback() end
-    end)
+    end))
     
-    Cancel.MouseButton1Click:Connect(function()
+    maid:GiveTask(Cancel.MouseButton1Click:Connect(function()
         Main.Visible = false
         if CancelCallback then CancelCallback() end
-    end)
+    end))
     
     return Main
 end

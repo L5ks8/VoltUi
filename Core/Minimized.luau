@@ -1,8 +1,9 @@
-local Minimized = {}
-local TweenService = game:GetService("TweenService")
-local UserInputService = game:GetService("UserInputService")
+local Utils = script.Parent.Parent.Utils
+local Utility = require(Utils.Utility)
 
-function Minimized.Create(ParentGui, RestoreCallback)
+local Minimized = {}
+
+function Minimized.Create(ParentGui, maid, RestoreCallback)
     local Frame = Instance.new("ImageButton")
     Frame.Name = "Minimized"
     Frame.Active = true
@@ -37,47 +38,12 @@ function Minimized.Create(ParentGui, RestoreCallback)
     ImageLabel.Size = UDim2.new(0, 45, 0, 45)
     ImageLabel.Parent = Frame
     
-    Frame.MouseButton1Click:Connect(function()
+    maid:GiveTask(Frame.MouseButton1Click:Connect(function()
         Frame.Visible = false
         if RestoreCallback then RestoreCallback() end
-    end)
+    end))
     
-    local dragging
-    local dragInput
-    local dragStart
-    local startPos
-
-    local function update(input)
-        local delta = input.Position - dragStart
-        local targetPos = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-        TweenService:Create(Frame, TweenInfo.new(0.08, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {Position = targetPos}):Play()
-    end
-
-    Frame.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            dragging = true
-            dragStart = input.Position
-            startPos = Frame.Position
-
-            input.Changed:Connect(function()
-                if input.UserInputState == Enum.UserInputState.End then
-                    dragging = false
-                end
-            end)
-        end
-    end)
-
-    Frame.InputChanged:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-            dragInput = input
-        end
-    end)
-
-    UserInputService.InputChanged:Connect(function(input)
-        if input == dragInput and dragging then
-            update(input)
-        end
-    end)
+    Utility.MakeDraggable(Frame, Frame, maid)
     
     return Frame
 end

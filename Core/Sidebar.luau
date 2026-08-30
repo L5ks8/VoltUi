@@ -1,6 +1,6 @@
 local Sidebar = {}
 
-function Sidebar.Create(Content)
+function Sidebar.Create(Content, maid)
     local SidebarFrame = Instance.new("Frame")
     SidebarFrame.Name = "Sidebar"
     SidebarFrame.BackgroundColor3 = Color3.new(0.11, 0.11, 0.11)

@@ -1,6 +1,6 @@
 local Bottombar = {}
 
-function Bottombar.Create(Main)
+function Bottombar.Create(Main, maid)
     local BottombarFrame = Instance.new("Frame")
     BottombarFrame.Name = "Bottombar"
     BottombarFrame.BackgroundColor3 = Color3.new(0.11, 0.11, 0.11)

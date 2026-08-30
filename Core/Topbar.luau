@@ -1,8 +1,10 @@
-local Topbar = {}
-local TweenService = game:GetService("TweenService")
-local UserInputService = game:GetService("UserInputService")
+local Utils = script.Parent.Parent.Utils
+local Tween = require(Utils.Tween)
+local Utility = require(Utils.Utility)
 
-function Topbar.Create(Main, Config)
+local Topbar = {}
+
+function Topbar.Create(Main, Config, maid)
     local Title = Config.Title or "Volt - 1.0.0"
     
     local TopbarFrame = Instance.new("Frame")
@@ -186,67 +188,30 @@ function Topbar.Create(Main, Config)
     VersionText.TextSize = 13
     VersionText.Parent = Version
     
-    local HoverRed = Color3.fromRGB(235, 70, 70)
-    local HoverGray = Color3.fromRGB(45, 45, 45)
     local TweenInfoObj = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
     
-    Minimize.MouseEnter:Connect(function()
-        TweenService:Create(Minimize, TweenInfoObj, {BackgroundTransparency = 0}):Play()
-    end)
-    Minimize.MouseLeave:Connect(function()
-        TweenService:Create(Minimize, TweenInfoObj, {BackgroundTransparency = 1}):Play()
-    end)
+    maid:GiveTask(Minimize.MouseEnter:Connect(function()
+        Tween(Minimize, TweenInfoObj, {BackgroundTransparency = 0})
+    end))
+    maid:GiveTask(Minimize.MouseLeave:Connect(function()
+        Tween(Minimize, TweenInfoObj, {BackgroundTransparency = 1})
+    end))
     
-    Fullscreen.MouseEnter:Connect(function()
-        TweenService:Create(Fullscreen, TweenInfoObj, {BackgroundTransparency = 0}):Play()
-    end)
-    Fullscreen.MouseLeave:Connect(function()
-        TweenService:Create(Fullscreen, TweenInfoObj, {BackgroundTransparency = 1}):Play()
-    end)
+    maid:GiveTask(Fullscreen.MouseEnter:Connect(function()
+        Tween(Fullscreen, TweenInfoObj, {BackgroundTransparency = 0})
+    end))
+    maid:GiveTask(Fullscreen.MouseLeave:Connect(function()
+        Tween(Fullscreen, TweenInfoObj, {BackgroundTransparency = 1})
+    end))
     
-    Close.MouseEnter:Connect(function()
-        TweenService:Create(Close, TweenInfoObj, {BackgroundTransparency = 0}):Play()
-    end)
-    Close.MouseLeave:Connect(function()
-        TweenService:Create(Close, TweenInfoObj, {BackgroundTransparency = 1}):Play()
-    end)
+    maid:GiveTask(Close.MouseEnter:Connect(function()
+        Tween(Close, TweenInfoObj, {BackgroundTransparency = 0})
+    end))
+    maid:GiveTask(Close.MouseLeave:Connect(function()
+        Tween(Close, TweenInfoObj, {BackgroundTransparency = 1})
+    end))
     
-    local dragging
-    local dragInput
-    local dragStart
-    local startPos
-
-    local function update(input)
-        local delta = input.Position - dragStart
-        local targetPos = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-        TweenService:Create(Main, TweenInfo.new(0.08, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {Position = targetPos}):Play()
-    end
-
-    TopbarFrame.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            dragging = true
-            dragStart = input.Position
-            startPos = Main.Position
-
-            input.Changed:Connect(function()
-                if input.UserInputState == Enum.UserInputState.End then
-                    dragging = false
-                end
-            end)
-        end
-    end)
-
-    TopbarFrame.InputChanged:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-            dragInput = input
-        end
-    end)
-
-    UserInputService.InputChanged:Connect(function(input)
-        if input == dragInput and dragging then
-            update(input)
-        end
-    end)
+    Utility.MakeDraggable(TopbarFrame, Main, maid)
     
     return {
         Instance = TopbarFrame,
