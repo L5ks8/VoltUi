@@ -251,7 +251,7 @@ function Sidebar.Create(Content)
     TabsContainer.BorderSizePixel = 0
     TabsContainer.LayoutOrder = 3
     TabsContainer.Position = UDim2.new(0, 0, 0.136, 0)
-    TabsContainer.Size = UDim2.new(0, 200, 0, 475)
+    TabsContainer.Size = UDim2.new(0, 200, 1, -75)
     TabsContainer.Parent = SidebarFrame
     
     local TabsStroke = Instance.new("UIStroke")
