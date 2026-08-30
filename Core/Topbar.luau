@@ -72,7 +72,7 @@ function Topbar.Create(Main, Config)
     local Minimize = Instance.new("TextButton")
     Minimize.Name = "Minimize"
     Minimize.AutoButtonColor = false
-    Minimize.BackgroundColor3 = Color3.new(1, 1, 1)
+    Minimize.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
     Minimize.BackgroundTransparency = 1
     Minimize.BorderColor3 = Color3.new(0, 0, 0)
     Minimize.BorderSizePixel = 0
@@ -101,7 +101,7 @@ function Topbar.Create(Main, Config)
     local Fullscreen = Instance.new("TextButton")
     Fullscreen.Name = "Fullscreen"
     Fullscreen.AutoButtonColor = false
-    Fullscreen.BackgroundColor3 = Color3.new(1, 1, 1)
+    Fullscreen.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
     Fullscreen.BackgroundTransparency = 1
     Fullscreen.BorderColor3 = Color3.new(0, 0, 0)
     Fullscreen.BorderSizePixel = 0
@@ -130,7 +130,7 @@ function Topbar.Create(Main, Config)
     local Close = Instance.new("TextButton")
     Close.Name = "Close"
     Close.AutoButtonColor = false
-    Close.BackgroundColor3 = Color3.new(1, 1, 1)
+    Close.BackgroundColor3 = Color3.fromRGB(235, 70, 70)
     Close.BackgroundTransparency = 1
     Close.BorderColor3 = Color3.new(0, 0, 0)
     Close.BorderSizePixel = 0
@@ -191,24 +191,24 @@ function Topbar.Create(Main, Config)
     local TweenInfoObj = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
     
     Minimize.MouseEnter:Connect(function()
-        TweenService:Create(Minimize, TweenInfoObj, {BackgroundTransparency = 0, BackgroundColor3 = HoverGray}):Play()
+        TweenService:Create(Minimize, TweenInfoObj, {BackgroundTransparency = 0}):Play()
     end)
     Minimize.MouseLeave:Connect(function()
-        TweenService:Create(Minimize, TweenInfoObj, {BackgroundTransparency = 1, BackgroundColor3 = Color3.new(1, 1, 1)}):Play()
+        TweenService:Create(Minimize, TweenInfoObj, {BackgroundTransparency = 1}):Play()
     end)
     
     Fullscreen.MouseEnter:Connect(function()
-        TweenService:Create(Fullscreen, TweenInfoObj, {BackgroundTransparency = 0, BackgroundColor3 = HoverGray}):Play()
+        TweenService:Create(Fullscreen, TweenInfoObj, {BackgroundTransparency = 0}):Play()
     end)
     Fullscreen.MouseLeave:Connect(function()
-        TweenService:Create(Fullscreen, TweenInfoObj, {BackgroundTransparency = 1, BackgroundColor3 = Color3.new(1, 1, 1)}):Play()
+        TweenService:Create(Fullscreen, TweenInfoObj, {BackgroundTransparency = 1}):Play()
     end)
     
     Close.MouseEnter:Connect(function()
-        TweenService:Create(Close, TweenInfoObj, {BackgroundTransparency = 0, BackgroundColor3 = HoverRed}):Play()
+        TweenService:Create(Close, TweenInfoObj, {BackgroundTransparency = 0}):Play()
     end)
     Close.MouseLeave:Connect(function()
-        TweenService:Create(Close, TweenInfoObj, {BackgroundTransparency = 1, BackgroundColor3 = Color3.new(1, 1, 1)}):Play()
+        TweenService:Create(Close, TweenInfoObj, {BackgroundTransparency = 1}):Play()
     end)
     
     local dragging

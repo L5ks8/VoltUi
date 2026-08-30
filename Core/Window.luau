@@ -55,20 +55,24 @@ function Window:CreateWindow(Config)
     
     local SidebarElements = Sidebar.Create(Content)
     
+    local SidebarSeparator = Instance.new("Frame")
+    SidebarSeparator.Name = "SidebarSeparator"
+    SidebarSeparator.BackgroundColor3 = Color3.new(0.216, 0.216, 0.216)
+    SidebarSeparator.BorderSizePixel = 0
+    SidebarSeparator.Size = UDim2.new(0, 1, 1, 0)
+    SidebarSeparator.LayoutOrder = 1
+    SidebarSeparator.Parent = Content
+    
     local MainContent = Instance.new("Frame")
     MainContent.Name = "MainContent"
     MainContent.BackgroundColor3 = Color3.new(1, 1, 1)
     MainContent.BackgroundTransparency = 1
     MainContent.BorderColor3 = Color3.new(0, 0, 0)
     MainContent.BorderSizePixel = 0
-    MainContent.Position = UDim2.new(0, 203, 0, 0)
-    MainContent.Size = UDim2.new(1, -203, 1, 0)
+    MainContent.Position = UDim2.new(0, 201, 0, 0)
+    MainContent.Size = UDim2.new(1, -201, 1, 0)
+    MainContent.LayoutOrder = 2
     MainContent.Parent = Content
-    
-    local MainContentStroke = Instance.new("UIStroke")
-    MainContentStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
-    MainContentStroke.Color = Color3.new(0.216, 0.216, 0.216)
-    MainContentStroke.Parent = MainContent
     
     local BottombarElements = Bottombar.Create(Main)
     
@@ -84,7 +88,6 @@ function Window:CreateWindow(Config)
     local FullscreenTweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 
     local isMinimized = false
-    local preMinimizeSize = Main.Size
     local preMinimizePos = Main.Position
     local MinimizeTweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
     
@@ -92,8 +95,8 @@ function Window:CreateWindow(Config)
     MinimizedBtn = Minimized.Create(VoltUi, function()
         isMinimized = false
         Main.Visible = true
+        TweenService:Create(MainScale, MinimizeTweenInfo, {Scale = 1}):Play()
         TweenService:Create(Main, MinimizeTweenInfo, {
-            Size = isFullscreen and UDim2.new(1, 0, 1, 0) or preMinimizeSize,
             Position = isFullscreen and UDim2.new(0.5, 0, 0.5, 0) or preMinimizePos
         }):Play()
     end)
@@ -117,12 +120,11 @@ function Window:CreateWindow(Config)
     
     TopbarElements.MinimizeButton.MouseButton1Click:Connect(function()
         isMinimized = true
-        preMinimizeSize = Main.Size
         preMinimizePos = Main.Position
         
         MinimizedBtn.Visible = true
+        TweenService:Create(MainScale, MinimizeTweenInfo, {Scale = 0}):Play()
         local tw = TweenService:Create(Main, MinimizeTweenInfo, {
-            Size = UDim2.new(0, 0, 0, 0),
             Position = MinimizedBtn.Position
         })
         tw.Completed:Connect(function()
