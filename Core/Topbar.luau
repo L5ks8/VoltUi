@@ -13,9 +13,13 @@ function Topbar.Create(Main, Config)
     TopbarFrame.Size = UDim2.new(1, 0, 0, 30)
     TopbarFrame.Parent = Main
     
-    local TopbarStroke = Instance.new("UIStroke")
-    TopbarStroke.Color = Color3.new(0.216, 0.216, 0.216)
-    TopbarStroke.Parent = TopbarFrame
+    local TopbarBorder = Instance.new("Frame")
+    TopbarBorder.Name = "Border"
+    TopbarBorder.BackgroundColor3 = Color3.new(0.216, 0.216, 0.216)
+    TopbarBorder.BorderSizePixel = 0
+    TopbarBorder.Position = UDim2.new(0, 0, 1, -1)
+    TopbarBorder.Size = UDim2.new(1, 0, 0, 1)
+    TopbarBorder.Parent = TopbarFrame
     
     local TopbarIcon = Instance.new("Frame")
     TopbarIcon.Name = "Icon"
@@ -60,7 +64,7 @@ function Topbar.Create(Main, Config)
     ActionsLayout.SortOrder = Enum.SortOrder.LayoutOrder
     ActionsLayout.Parent = Actions
     
-    local Minimize = Instance.new("ImageButton")
+    local Minimize = Instance.new("TextButton")
     Minimize.Name = "Minimize"
     Minimize.AutoButtonColor = false
     Minimize.BackgroundColor3 = Color3.new(1, 1, 1)
@@ -68,6 +72,7 @@ function Topbar.Create(Main, Config)
     Minimize.BorderColor3 = Color3.new(0, 0, 0)
     Minimize.BorderSizePixel = 0
     Minimize.Size = UDim2.new(0, 37, 0, 30)
+    Minimize.Text = ""
     Minimize.Parent = Actions
     
     local MinimizeIcon = Instance.new("ImageLabel")
@@ -87,7 +92,7 @@ function Topbar.Create(Main, Config)
     MinimizeLayout.VerticalAlignment = Enum.VerticalAlignment.Center
     MinimizeLayout.Parent = Minimize
     
-    local Fullscreen = Instance.new("ImageButton")
+    local Fullscreen = Instance.new("TextButton")
     Fullscreen.Name = "Fullscreen"
     Fullscreen.AutoButtonColor = false
     Fullscreen.BackgroundColor3 = Color3.new(1, 1, 1)
@@ -96,6 +101,7 @@ function Topbar.Create(Main, Config)
     Fullscreen.BorderSizePixel = 0
     Fullscreen.LayoutOrder = 1
     Fullscreen.Size = UDim2.new(0, 37, 0, 30)
+    Fullscreen.Text = ""
     Fullscreen.Parent = Actions
     
     local FullscreenIcon = Instance.new("ImageLabel")
@@ -114,16 +120,16 @@ function Topbar.Create(Main, Config)
     FullscreenLayout.VerticalAlignment = Enum.VerticalAlignment.Center
     FullscreenLayout.Parent = Fullscreen
     
-    local Close = Instance.new("ImageButton")
+    local Close = Instance.new("TextButton")
     Close.Name = "Close"
     Close.AutoButtonColor = false
     Close.BackgroundColor3 = Color3.new(1, 1, 1)
     Close.BackgroundTransparency = 1
     Close.BorderColor3 = Color3.new(0, 0, 0)
     Close.BorderSizePixel = 0
-    Close.HoverImage = "rbxassetid://0"
     Close.LayoutOrder = 2
     Close.Size = UDim2.new(0, 40, 0, 30)
+    Close.Text = ""
     Close.Parent = Actions
     
     local CloseCorner = Instance.new("UICorner")
