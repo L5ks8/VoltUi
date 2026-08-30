@@ -9,6 +9,7 @@ local Sidebar = require(script.Parent.Sidebar)
 local Bottombar = require(script.Parent.Bottombar)
 local Minimized = require(script.Parent.Minimized)
 local CloseWarn = require(script.Parent.CloseWarn)
+local AccountPage = require(script.Parent.AccountPage)
 
 local Window = {}
 
@@ -83,6 +84,19 @@ function Window:CreateWindow(Config)
     MainContent.Size = UDim2.new(1, -201, 1, 0)
     MainContent.LayoutOrder = 2
     MainContent.Parent = Content
+    
+    local AccountPageElements = AccountPage.Create(Content, maid, function()
+        SidebarElements.Instance.Visible = true
+        SidebarSeparator.Visible = true
+        MainContent.Visible = true
+    end)
+    
+    maid:GiveTask(SidebarElements.AccountBtn.MouseButton1Click:Connect(function()
+        SidebarElements.Instance.Visible = false
+        SidebarSeparator.Visible = false
+        MainContent.Visible = false
+        AccountPageElements.Visible = true
+    end))
     
     local BottombarElements = Bottombar.Create(Main, maid)
     

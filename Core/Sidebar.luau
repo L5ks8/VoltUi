@@ -356,7 +356,8 @@ function Sidebar.Create(Content, maid)
     return {
         Instance = SidebarFrame,
         TabsContainer = TabsScrolling,
-        SearchInput = SearchInput
+        SearchInput = SearchInput,
+        AccountBtn = Account
     }
 end
 
