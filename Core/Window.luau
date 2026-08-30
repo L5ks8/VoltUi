@@ -3,6 +3,10 @@ local Topbar = require(script.Parent.Topbar)
 local Sidebar = require(script.Parent.Sidebar)
 local Bottombar = require(script.Parent.Bottombar)
 local CloseWarn = require(script.Parent.CloseWarn)
+local Minimized = require(script.Parent.Minimized)
+local TweenService = game:GetService("TweenService")
+local Bottombar = require(script.Parent.Bottombar)
+local CloseWarn = require(script.Parent.CloseWarn)
 
 function Window:CreateWindow(Config)
     local VoltUi = Instance.new("ScreenGui")
@@ -31,14 +35,14 @@ function Window:CreateWindow(Config)
     
     local Content = Instance.new("Frame")
     Content.Name = "Content"
-    Content.AnchorPoint = Vector2.new(0.5, 0.5)
+    Content.AnchorPoint = Vector2.new(0, 0)
     Content.BackgroundColor3 = Color3.new(1, 1, 1)
     Content.BackgroundTransparency = 1
     Content.BorderColor3 = Color3.new(0, 0, 0)
     Content.BorderSizePixel = 0
     Content.LayoutOrder = 1
-    Content.Position = UDim2.new(0.5, 0, 0.508, 0)
-    Content.Size = UDim2.new(0, 800, 0, 550)
+    Content.Position = UDim2.new(0, 0, 0, 30)
+    Content.Size = UDim2.new(1, 0, 1, -50)
     Content.Parent = Main
     
     local ContentLayout = Instance.new("UIListLayout")
@@ -56,8 +60,8 @@ function Window:CreateWindow(Config)
     MainContent.BackgroundTransparency = 1
     MainContent.BorderColor3 = Color3.new(0, 0, 0)
     MainContent.BorderSizePixel = 0
-    MainContent.Position = UDim2.new(0.254, 0, 0.004, 0)
-    MainContent.Size = UDim2.new(0, 597, 0, 550)
+    MainContent.Position = UDim2.new(0, 203, 0, 0)
+    MainContent.Size = UDim2.new(1, -203, 1, 0)
     MainContent.Parent = Content
     
     local MainContentStroke = Instance.new("UIStroke")
@@ -73,25 +77,35 @@ function Window:CreateWindow(Config)
         -- Cancel logic is already handled inside CloseWarn (makes itself invisible)
     end)
     
+    local MinimizedBtn = Minimized.Create(VoltUi, function()
+        Main.Visible = true
+    end)
+    
     local isFullscreen = false
     local originalSize = Main.Size
     local originalPosition = Main.Position
+    local FullscreenTweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
     
     TopbarElements.FullscreenButton.MouseButton1Click:Connect(function()
         isFullscreen = not isFullscreen
         if isFullscreen then
             originalSize = Main.Size
             originalPosition = Main.Position
-            Main.Size = UDim2.new(1, 0, 1, 0)
-            Main.Position = UDim2.new(0.5, 0, 0.5, 0)
+            TweenService:Create(Main, FullscreenTweenInfo, {
+                Size = UDim2.new(1, 0, 1, 0),
+                Position = UDim2.new(0.5, 0, 0.5, 0)
+            }):Play()
         else
-            Main.Size = originalSize
-            Main.Position = originalPosition
+            TweenService:Create(Main, FullscreenTweenInfo, {
+                Size = originalSize,
+                Position = originalPosition
+            }):Play()
         end
     end)
     
     TopbarElements.MinimizeButton.MouseButton1Click:Connect(function()
         Main.Visible = false
+        MinimizedBtn.Visible = true
     end)
     
     TopbarElements.CloseButton.MouseButton1Click:Connect(function()

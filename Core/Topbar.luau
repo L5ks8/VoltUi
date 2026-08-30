@@ -10,7 +10,7 @@ function Topbar.Create(Main, Config)
     TopbarFrame.BackgroundColor3 = Color3.new(0.11, 0.11, 0.11)
     TopbarFrame.BorderColor3 = Color3.new(0, 0, 0)
     TopbarFrame.BorderSizePixel = 0
-    TopbarFrame.Size = UDim2.new(0, 800, 0, 30)
+    TopbarFrame.Size = UDim2.new(1, 0, 0, 30)
     TopbarFrame.Parent = Main
     
     local TopbarCorner = Instance.new("UICorner")
@@ -175,7 +175,22 @@ function Topbar.Create(Main, Config)
     VersionText.Parent = Version
     
     local HoverRed = Color3.fromRGB(235, 70, 70)
+    local HoverGray = Color3.fromRGB(45, 45, 45)
     local TweenInfoObj = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    
+    Minimize.MouseEnter:Connect(function()
+        TweenService:Create(Minimize, TweenInfoObj, {BackgroundTransparency = 0, BackgroundColor3 = HoverGray}):Play()
+    end)
+    Minimize.MouseLeave:Connect(function()
+        TweenService:Create(Minimize, TweenInfoObj, {BackgroundTransparency = 1, BackgroundColor3 = Color3.new(1, 1, 1)}):Play()
+    end)
+    
+    Fullscreen.MouseEnter:Connect(function()
+        TweenService:Create(Fullscreen, TweenInfoObj, {BackgroundTransparency = 0, BackgroundColor3 = HoverGray}):Play()
+    end)
+    Fullscreen.MouseLeave:Connect(function()
+        TweenService:Create(Fullscreen, TweenInfoObj, {BackgroundTransparency = 1, BackgroundColor3 = Color3.new(1, 1, 1)}):Play()
+    end)
     
     Close.MouseEnter:Connect(function()
         TweenService:Create(Close, TweenInfoObj, {BackgroundTransparency = 0, BackgroundColor3 = HoverRed}):Play()
