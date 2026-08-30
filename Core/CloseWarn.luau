@@ -65,6 +65,7 @@ function CloseWarn.Create(ParentGui, ConfirmCallback, CancelCallback)
     ButtonsLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
     ButtonsLayout.Padding = UDim.new(0, 9)
     ButtonsLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    ButtonsLayout.VerticalAlignment = Enum.VerticalAlignment.Center
     ButtonsLayout.Parent = Buttons
     
     local Confirm = Instance.new("TextButton")
@@ -73,9 +74,12 @@ function CloseWarn.Create(ParentGui, ConfirmCallback, CancelCallback)
     Confirm.BackgroundTransparency = 1
     Confirm.BorderColor3 = Color3.new(0, 0, 0)
     Confirm.BorderSizePixel = 0
-    Confirm.Size = UDim2.new(0, 80, 0, 49)
+    Confirm.Size = UDim2.new(0, 80, 0, 30)
     Confirm.Text = ""
     Confirm.Parent = Buttons
+    
+    local ConfirmCorner = Instance.new("UICorner")
+    ConfirmCorner.Parent = Confirm
     
     local ConfirmLayout = Instance.new("UIListLayout")
     ConfirmLayout.FillDirection = Enum.FillDirection.Horizontal
@@ -102,9 +106,12 @@ function CloseWarn.Create(ParentGui, ConfirmCallback, CancelCallback)
     Cancel.BorderColor3 = Color3.new(0, 0, 0)
     Cancel.BorderSizePixel = 0
     Cancel.LayoutOrder = 1
-    Cancel.Size = UDim2.new(0, 80, 0, 49)
+    Cancel.Size = UDim2.new(0, 80, 0, 30)
     Cancel.Text = ""
     Cancel.Parent = Buttons
+    
+    local CancelCorner = Instance.new("UICorner")
+    CancelCorner.Parent = Cancel
     
     local CancelLayout = Instance.new("UIListLayout")
     CancelLayout.FillDirection = Enum.FillDirection.Horizontal
