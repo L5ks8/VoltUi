@@ -165,10 +165,12 @@ function Sidebar.Create(Content, maid)
         
         local Tooltip = Instance.new("TextLabel")
         Tooltip.Name = "Tooltip"
+        Tooltip.BackgroundColor3 = Color3.new(0.075, 0.075, 0.075)
         Tooltip.BackgroundTransparency = 1
         Tooltip.AnchorPoint = Vector2.new(0.5, 0)
-        Tooltip.Position = UDim2.new(0.5, 0, 1.1, 0)
-        Tooltip.Size = UDim2.new(0, 50, 0, 15)
+        Tooltip.Position = UDim2.new(0.5, 0, 1, 4)
+        Tooltip.Size = UDim2.new(0, 0, 0, 18)
+        Tooltip.AutomaticSize = Enum.AutomaticSize.X
         Tooltip.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
         Tooltip.Text = text
         Tooltip.TextColor3 = Color3.new(0.7, 0.7, 0.7)
@@ -178,19 +180,35 @@ function Sidebar.Create(Content, maid)
         Tooltip.Visible = false
         Tooltip.Parent = button
         
+        local TooltipCorner = Instance.new("UICorner")
+        TooltipCorner.CornerRadius = UDim.new(0, 4)
+        TooltipCorner.Parent = Tooltip
+        
+        local TooltipPadding = Instance.new("UIPadding")
+        TooltipPadding.PaddingLeft = UDim.new(0, 6)
+        TooltipPadding.PaddingRight = UDim.new(0, 6)
+        TooltipPadding.Parent = Tooltip
+        
+        local TooltipStroke = Instance.new("UIStroke")
+        TooltipStroke.Color = Color3.new(0.216, 0.216, 0.216)
+        TooltipStroke.Transparency = 1
+        TooltipStroke.Parent = Tooltip
+        
         local icon = button:FindFirstChildOfClass("ImageLabel")
         if icon then icon.Active = false end
         
         maid:GiveTask(button.MouseEnter:Connect(function()
             Tween(HoverBox, TweenInfoObj, {BackgroundTransparency = 0})
             Tooltip.Visible = true
-            Tween(Tooltip, TweenInfoObj, {TextTransparency = 0})
+            Tween(Tooltip, TweenInfoObj, {TextTransparency = 0, BackgroundTransparency = 0})
+            Tween(TooltipStroke, TweenInfoObj, {Transparency = 0})
             if icon then Tween(icon, TweenInfoObj, {ImageTransparency = 0}) end
         end))
         
         maid:GiveTask(button.MouseLeave:Connect(function()
             Tween(HoverBox, TweenInfoObj, {BackgroundTransparency = 1})
-            local t1 = Tween(Tooltip, TweenInfoObj, {TextTransparency = 1})
+            local t1 = Tween(Tooltip, TweenInfoObj, {TextTransparency = 1, BackgroundTransparency = 1})
+            Tween(TooltipStroke, TweenInfoObj, {Transparency = 1})
             
             local defTrans = 0
             if button.Name == "Home" then defTrans = 0.2
