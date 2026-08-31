@@ -33,20 +33,20 @@ function AES.encrypt(data)
     end
 
     local success, result = pcall(function()
-        return encrypt("aes-cbc", data, Key, IV)
+        return encrypt(data, Key, IV, "CBC")
     end)
     local err1 = not success and result or nil
     
     if not success then
         success, result = pcall(function()
-            return encrypt("AES-CBC", data, Key, IV)
+            return encrypt("aes-cbc", data, Key, IV)
         end)
     end
     local err2 = not success and result or nil
 
     if not success then
         success, result = pcall(function()
-            return encrypt(data, Key, IV, "CBC")
+            return encrypt("AES-CBC", data, Key, IV)
         end)
     end
     local err3 = not success and result or nil
@@ -59,10 +59,13 @@ function AES.encrypt(data)
     end
     
     if success and result then
-        if b64encode then
-            local b64Success, b64Result = pcall(function() return b64encode(result) end)
-            if b64Success and b64Result then
-                return b64Result
+        if b64encode and b64decode then
+            local isBase64 = pcall(function() return b64decode(result) end)
+            if not isBase64 then
+                local b64Success, b64Result = pcall(function() return b64encode(result) end)
+                if b64Success and b64Result then
+                    return b64Result
+                end
             end
         end
         return result
@@ -86,38 +89,43 @@ function AES.decrypt(cipher_b64)
         return nil
     end
 
-    local cipher = cipher_b64
-    if b64decode then
-        local b64Success, b64Result = pcall(function() return b64decode(cipher_b64) end)
-        if b64Success and b64Result then
-            cipher = b64Result
-        end
-    end
-
     local success, result = pcall(function()
-        return decrypt("aes-cbc", cipher, Key, IV)
+        return decrypt(cipher_b64, Key, IV, "CBC")
     end)
     local err1 = not success and result or nil
     
     if not success then
         success, result = pcall(function()
-            return decrypt("AES-CBC", cipher, Key, IV)
+            return decrypt("aes-cbc", cipher_b64, Key, IV)
         end)
     end
     local err2 = not success and result or nil
-    
+
+    local cipher_raw = cipher_b64
+    if b64decode then
+        pcall(function() cipher_raw = b64decode(cipher_b64) end)
+    end
+
     if not success then
         success, result = pcall(function()
-            return decrypt(cipher, Key, IV, "CBC")
+            return decrypt(cipher_raw, Key, IV, "CBC")
         end)
     end
     local err3 = not success and result or nil
     
     if not success then
+        success, result = pcall(function()
+            return decrypt("aes-cbc", cipher_raw, Key, IV)
+        end)
+    end
+    local err4 = not success and result or nil
+
+    if not success then
         warn("AES Decryption failed. Errors:")
-        warn("1: " .. tostring(err1))
-        warn("2: " .. tostring(err2))
-        warn("3: " .. tostring(err3))
+        warn("1 (b64, CBC mode param): " .. tostring(err1))
+        warn("2 (b64, aes-cbc param): " .. tostring(err2))
+        warn("3 (raw, CBC mode param): " .. tostring(err3))
+        warn("4 (raw, aes-cbc param): " .. tostring(err4))
     end
     
     if success and result then
