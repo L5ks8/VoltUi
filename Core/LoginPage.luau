@@ -1,6 +1,7 @@
 local Utils = script.Parent.Parent.Utils
 local Tween = require(Utils.Tween)
 local Api = require(Utils.Api)
+local Notifications = require(script.Parent.Notifications)
 
 local LoginPage = {}
 
@@ -138,10 +139,8 @@ function LoginPage.Create(ParentGui, OnSuccess)
     SwitchBtn.TextSize = 11
     
     -- Register Specific Fields
-    local emailFrame, emailBox = CreateInput("Email Address", "Enter your email", false)
     local keyFrame, keyBox = CreateInput("License Key", "XXXX-XXXX-XXXX-XXXX", false)
     
-    emailFrame.Visible = false
     keyFrame.Visible = false
     
     local isLogin = true
@@ -156,7 +155,6 @@ function LoginPage.Create(ParentGui, OnSuccess)
             
             userFrame.Visible = true
             passFrame.Visible = true
-            emailFrame.Visible = false
             keyFrame.Visible = false
             Container.Size = UDim2.new(0, 400, 0, 500)
             ActionBtn.Position = UDim2.new(0, 30, 1, -120)
@@ -167,17 +165,15 @@ function LoginPage.Create(ParentGui, OnSuccess)
             SwitchBtn.Text = "Already have an account? Sign in here"
             
             userFrame.Visible = true
-            emailFrame.Visible = true
             keyFrame.Visible = true
             passFrame.Visible = true
             
             -- Adjust Layout Order
             userFrame.LayoutOrder = 1
-            emailFrame.LayoutOrder = 2
-            keyFrame.LayoutOrder = 3
-            passFrame.LayoutOrder = 4
+            keyFrame.LayoutOrder = 2
+            passFrame.LayoutOrder = 3
             
-            Container.Size = UDim2.new(0, 400, 0, 650)
+            Container.Size = UDim2.new(0, 400, 0, 580)
             ActionBtn.Position = UDim2.new(0, 30, 1, -120)
         end
         ErrorLabel.Text = ""
@@ -193,27 +189,29 @@ function LoginPage.Create(ParentGui, OnSuccess)
                 if success then
                     -- Load Data
                     Api.FetchMe()
+                    Notifications.Notify({ Title = "Login Successful", Content = "Welcome back!", Type = "Success" })
                     Page.Visible = false
                     if OnSuccess then OnSuccess() end
                 else
-                    ErrorLabel.Text = msg or "Login Failed"
+                    Notifications.Notify({ Title = "Login Failed", Content = msg or "Invalid credentials", Type = "Error" })
                     ActionBtn.Text = "Sign In"
                 end
             else
-                local success, msg = Api.Register(userBox.Text, emailBox.Text, passBox.Text, keyBox.Text)
+                local success, msg = Api.Register(userBox.Text, passBox.Text, keyBox.Text)
                 if success then
                     -- Registration success, now login
                     local succ2, msg2 = Api.Login(userBox.Text, passBox.Text)
                     if succ2 then
                         Api.FetchMe()
+                        Notifications.Notify({ Title = "Registration Successful", Content = "Welcome to Volt!", Type = "Success" })
                         Page.Visible = false
                         if OnSuccess then OnSuccess() end
                     else
-                        ErrorLabel.Text = "Registered, but login failed: " .. tostring(msg2)
+                        Notifications.Notify({ Title = "Auto-Login Failed", Content = msg2, Type = "Error" })
                         ActionBtn.Text = "Create Account"
                     end
                 else
-                    ErrorLabel.Text = msg or "Registration Failed"
+                    Notifications.Notify({ Title = "Registration Failed", Content = msg or "Check your inputs", Type = "Error" })
                     ActionBtn.Text = "Create Account"
                 end
             end

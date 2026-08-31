@@ -11,6 +11,7 @@ local Minimized = require(script.Parent.Minimized)
 local CloseWarn = require(script.Parent.CloseWarn)
 local AccountPage = require(script.Parent.AccountPage)
 local LoginPage = require(script.Parent.LoginPage)
+local Notifications = require(script.Parent.Notifications)
 
 local Window = {}
 
@@ -22,6 +23,8 @@ function Window:CreateWindow(Config)
     VoltUi.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     VoltUi.ResetOnSpawn = false
     maid:GiveTask(VoltUi)
+    
+    Notifications.Init(VoltUi)
     
     local Main = Instance.new("Frame")
     Main.Name = "Main"

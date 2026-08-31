@@ -7,16 +7,16 @@ const User = require('../models/User');
 // Register Route
 router.post('/register', async (req, res) => {
     try {
-        const { username, email, password, licenseKey, hwid } = req.body;
+        const { username, password, licenseKey, hwid } = req.body;
         
         if (licenseKey !== "Voltontop") {
             return res.status(400).json({ error: 'Invalid License Key.' });
         }
         
         // Check if user exists
-        let user = await User.findOne({ $or: [{ username }, { email }] });
+        let user = await User.findOne({ username });
         if (user) {
-            return res.status(400).json({ error: 'Username or Email already exists.' });
+            return res.status(400).json({ error: 'Username already exists.' });
         }
         
         // Hash password
@@ -25,7 +25,6 @@ router.post('/register', async (req, res) => {
         
         user = new User({
             username,
-            email,
             password: hashedPassword,
             hwid: hwid || null
         });

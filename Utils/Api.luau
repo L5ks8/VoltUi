@@ -84,11 +84,10 @@ function Api.Login(username, password)
     return false, "Connection Error"
 end
 
-function Api.Register(username, email, password, licenseKey)
+function Api.Register(username, password, licenseKey)
     local hwid = Api.GetHWID()
     local res = Api.Request("/auth/register", "POST", {
         username = username,
-        email = email,
         password = password,
         licenseKey = licenseKey,
         hwid = hwid
