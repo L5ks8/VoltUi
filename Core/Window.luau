@@ -104,9 +104,12 @@ function Window:CreateWindow(Config)
     -- Authenticate and fetch user data
     Main.Visible = false
     
+    local BottombarElements = Bottombar.Create(Main, maid)
+    
     local AccountPageElements
     AccountPageElements = AccountPage.Create(PagesContainer, maid, function()
         PageLayout:JumpTo(Content)
+        BottombarElements.Instance.Visible = true
     end, Api)
 
     local function OnLoginSuccess()
@@ -134,9 +137,8 @@ function Window:CreateWindow(Config)
     
     maid:GiveTask(SidebarElements.AccountBtn.MouseButton1Click:Connect(function()
         PageLayout:JumpTo(AccountPageElements.Instance)
+        BottombarElements.Instance.Visible = false
     end))
-    
-    local BottombarElements = Bottombar.Create(Main, maid)
     
     local ClosePrompt = CloseWarn.Create(VoltUi, maid, function()
         maid:DoCleaning()

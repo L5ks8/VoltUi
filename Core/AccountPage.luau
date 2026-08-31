@@ -66,6 +66,10 @@ function AccountPage.Create(Content, Maid, BackCallback)
     ReturnIcon.Size = UDim2.new(0, 25, 0, 25)
     ReturnIcon.Parent = ReturnButton
 
+    if BackCallback then
+        Maid:GiveTask(ReturnButton.MouseButton1Click:Connect(BackCallback))
+    end
+
     local AccountText = Instance.new("TextLabel")
     AccountText.BackgroundColor3 = Color3.new(1, 1, 1)
     AccountText.BackgroundTransparency = 1
@@ -1343,7 +1347,26 @@ function AccountPage.Create(Content, Maid, BackCallback)
     return {
         Instance = Page,
         UpdateData = function(data)
-            -- Functions to be added later
+            -- Username
+            if data and data.username then
+                Username.Text = data.username
+            else
+                local success, name = pcall(function() return game:GetService("Players").LocalPlayer.Name end)
+                Username.Text = success and name or "Username"
+            end
+            
+            -- Member since
+            if data and data.createdAt then
+                MemberSince.Text = "Member since " .. tostring(data.createdAt)
+            else
+                MemberSince.Text = "Member since Jul 24, 2026"
+            end
+            
+            -- Profile image
+            local success, userId = pcall(function() return game:GetService("Players").LocalPlayer.UserId end)
+            if success and userId then
+                ProfileImage.Image = "rbxthumb://type=AvatarHeadShot&id=" .. tostring(userId) .. "&w=150&h=150"
+            end
         end
     }
 end
