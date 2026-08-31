@@ -442,7 +442,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     TextBox.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     TextBox.Size = UDim2.new(1, 0, 1, 0)
     TextBox.Text = ""
-    TextBox.TextColor3 = Color3.new(0.259, 0.259, 0.259)
+    TextBox.TextColor3 = Color3.new(0.8, 0.8, 0.8)
     TextBox.TextSize = 17
     TextBox.TextXAlignment = Enum.TextXAlignment.Left
     TextBox.Parent = InputFrame
