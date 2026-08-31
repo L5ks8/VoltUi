@@ -32,7 +32,7 @@ app.use('/api/auth/reset-password', authLimiter);
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/user', require('./routes/user'));
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/voltui')
+mongoose.connect(process.env.MONGODB_URI || 'mongodb:
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error('MongoDB connection error:', err));
 
