@@ -42,9 +42,9 @@ const parseDuration = (str) => {
 
 const generateKey = () => {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let key = 'VOLT-';
-    for (let i = 0; i < 15; i++) {
-        if (i > 0 && i % 5 === 0) key += '-';
+    let key = '';
+    for (let i = 0; i < 32; i++) {
+        if (i > 0 && i % 8 === 0) key += '-';
         key += chars.charAt(Math.floor(Math.random() * chars.length));
     }
     return key;
