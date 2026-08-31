@@ -32,8 +32,15 @@ function Api.Request(endpoint, method, body)
         return requestFunc(options)
     end)
 
-    if success and res then
-        return HttpService:JSONDecode(res.Body)
+    if success and res and res.Body then
+        local decodeSuccess, decoded = pcall(function()
+            return HttpService:JSONDecode(res.Body)
+        end)
+        if decodeSuccess then 
+            return decoded 
+        else
+            return { error = "Server returned invalid JSON: " .. tostring(res.Body) }
+        end
     end
     return nil
 end

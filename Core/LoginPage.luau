@@ -10,9 +10,15 @@ function LoginPage.Create(ParentGui, OnSuccess)
     Page.Name = "LoginPage"
     Page.BackgroundColor3 = Color3.new(0.06, 0.06, 0.06) -- Dark background
     Page.BorderSizePixel = 0
-    Page.Size = UDim2.new(1, 0, 1, 0)
+    Page.AnchorPoint = Vector2.new(0.5, 0.5)
+    Page.Position = UDim2.new(0.5, 0, 0.5, 0)
+    Page.Size = UDim2.new(0, 800, 0, 600)
     Page.ZIndex = 50
     Page.Parent = ParentGui
+    
+    Instance.new("UICorner", Page)
+    local PageStroke = Instance.new("UIStroke", Page)
+    PageStroke.Color = Color3.new(0.216, 0.216, 0.216)
     
     local Container = Instance.new("Frame")
     Container.Name = "Container"
