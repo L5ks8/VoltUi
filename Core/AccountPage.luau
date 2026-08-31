@@ -9,6 +9,8 @@ function AccountPage.Create(Content, Maid, BackCallback)
     Page.BorderSizePixel = 0
     Page.Position = UDim2.new(0.5, 0, 0.518, 0)
     Page.Size = UDim2.new(0, 800, 0, 570)
+    Page.LayoutOrder = 2
+    Page.Visible = false
     Page.Parent = Content
 
     local PageCorner = Instance.new("UICorner")
@@ -1339,7 +1341,12 @@ function AccountPage.Create(Content, Maid, BackCallback)
     SecurityContentPadding.PaddingLeft = UDim.new(0, 9)
     SecurityContentPadding.Parent = SecurityContent
 
-    return Page
+    return {
+        Instance = Page,
+        UpdateData = function(data)
+            -- Functions to be added later
+        end
+    }
 end
 
 return AccountPage
