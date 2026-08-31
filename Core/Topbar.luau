@@ -13,6 +13,7 @@ function Topbar.Create(Main, Config, maid)
     TopbarFrame.BorderColor3 = Color3.new(0, 0, 0)
     TopbarFrame.BorderSizePixel = 0
     TopbarFrame.Size = UDim2.new(1, 0, 0, 30)
+    TopbarFrame.ZIndex = 50
     TopbarFrame.Parent = Main
     
     local TopbarCorner = Instance.new("UICorner")

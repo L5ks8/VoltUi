@@ -10,6 +10,7 @@ function Sidebar.Create(Content, maid)
     SidebarFrame.BorderColor3 = Color3.new(0, 0, 0)
     SidebarFrame.BorderSizePixel = 0
     SidebarFrame.Size = UDim2.new(0, 200, 1, 0)
+    SidebarFrame.ZIndex = 50
     SidebarFrame.Parent = Content
     
     local SidebarLayout = Instance.new("UIListLayout")
