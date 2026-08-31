@@ -942,6 +942,8 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     TextBox.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     TextBox.Size = UDim2.new(1, 0, 1, 0)
     TextBox.Text = ""
+    TextBox.PlaceholderText = "Enter license key"
+    TextBox.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
     TextBox.TextColor3 = Color3.new(0.8, 0.8, 0.8)
     TextBox.TextSize = 17
     TextBox.TextXAlignment = Enum.TextXAlignment.Left
@@ -989,6 +991,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     ClaimButton.BackgroundColor3 = Color3.new(0.149, 0.149, 0.149)
     ClaimButton.BorderColor3 = Color3.new(0.298, 0.298, 0.298)
     ClaimButton.BorderSizePixel = 0
+    ClaimButton.AutoButtonColor = false
     ClaimButton.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     ClaimButton.Size = UDim2.new(0, 70, 0, 35)
     ClaimButton.Text = "Claim"
