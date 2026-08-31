@@ -54,25 +54,36 @@ router.post('/redeem', authMiddleware, async (req, res) => {
         }
         
         if (user.keys.includes(actualKey)) {
-            return res.status(400).json({ error: 'Key already claimed.' });
+            return res.status(400).json({ error: 'Key already claimed by you.' });
         }
         
-        let daysToAdd = 0;
-        if (actualKey.includes("1D")) daysToAdd = 1;
-        else if (actualKey.includes("7D")) daysToAdd = 7;
-        else {
-            return res.status(400).json({ error: 'Invalid key.' });
+        const License = require('../models/License');
+        const license = await License.findOne({ key: actualKey });
+        
+        if (!license) {
+            return res.status(400).json({ error: 'Invalid License Key.' });
+        }
+        if (license.claimedBy) {
+            return res.status(400).json({ error: 'License Key already claimed.' });
         }
         
-        const now = new Date();
-        if (user.subscriptionEnd && user.subscriptionEnd > now) {
-            user.subscriptionEnd = new Date(user.subscriptionEnd.getTime() + daysToAdd * 24 * 60 * 60 * 1000);
+        if (license.durationMs === null) {
+            user.subscriptionEnd = null; // Upgraded to lifetime
         } else {
-            user.subscriptionEnd = new Date(now.getTime() + daysToAdd * 24 * 60 * 60 * 1000);
+            const now = new Date();
+            if (user.subscriptionEnd && user.subscriptionEnd > now) {
+                user.subscriptionEnd = new Date(user.subscriptionEnd.getTime() + license.durationMs);
+            } else {
+                user.subscriptionEnd = new Date(now.getTime() + license.durationMs);
+            }
         }
         
         user.keys.push(actualKey);
         await user.save();
+        
+        license.claimedBy = user._id;
+        license.claimedAt = new Date();
+        await license.save();
         
         res.json({ message: 'Key successfully redeemed!' });
     } catch (err) {

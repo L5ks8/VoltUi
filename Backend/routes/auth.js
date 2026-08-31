@@ -9,8 +9,14 @@ router.post('/register', async (req, res) => {
     try {
         const { username, password, licenseKey, hwid } = req.body;
         
-        if (licenseKey !== "Voltontop" && !licenseKey.includes("1D") && !licenseKey.includes("7D")) {
+        const License = require('../models/License');
+        const license = await License.findOne({ key: licenseKey });
+        
+        if (!license) {
             return res.status(400).json({ error: 'Invalid License Key.' });
+        }
+        if (license.claimedBy) {
+            return res.status(400).json({ error: 'License Key already claimed.' });
         }
         
         // Check if user exists
@@ -24,9 +30,8 @@ router.post('/register', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, salt);
         
         let subEnd = null;
-        if (licenseKey !== "Voltontop") {
-            let days = licenseKey.includes("7D") ? 7 : 1;
-            subEnd = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
+        if (license.durationMs !== null) {
+            subEnd = new Date(Date.now() + license.durationMs);
         }
 
         user = new User({
@@ -38,6 +43,10 @@ router.post('/register', async (req, res) => {
         });
         
         await user.save();
+        
+        license.claimedBy = user._id;
+        license.claimedAt = new Date();
+        await license.save();
         res.json({ message: 'Successfully registered!' });
     } catch (err) {
         console.error(err.message);

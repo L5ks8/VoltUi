@@ -25,3 +25,7 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
+
+// Start Discord Bot
+const bot = require('./bot');
+bot.start();
