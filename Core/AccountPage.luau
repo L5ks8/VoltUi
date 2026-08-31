@@ -525,15 +525,24 @@ function AccountPage.Create(Content, maid, BackCallback)
     KeysHeader.LayoutOrder = 0
     
     -- Single Key Row
-    local KeyItem = Instance.new("Frame")
+    local KeyItem = Instance.new("TextButton")
+    KeyItem.Text = ""
+    KeyItem.AutoButtonColor = false
     KeyItem.BackgroundTransparency = 1
-    KeyItem.Size = UDim2.new(1, 0, 0, 40)
+    KeyItem.BackgroundColor3 = Color3.new(0.12, 0.12, 0.12)
+    KeyItem.Size = UDim2.new(1, 10, 0, 40)
+    KeyItem.Position = UDim2.new(0, -5, 0, 0)
     KeyItem.LayoutOrder = 1
     KeyItem.Parent = KeysCard
+    Instance.new("UICorner", KeyItem).CornerRadius = UDim.new(0, 4)
+    
+    maid:GiveTask(KeyItem.MouseEnter:Connect(function() Tween(KeyItem, TweenInfo.new(0.2), {BackgroundTransparency = 0}) end))
+    maid:GiveTask(KeyItem.MouseLeave:Connect(function() Tween(KeyItem, TweenInfo.new(0.2), {BackgroundTransparency = 1}) end))
     
     local KeyCode = Instance.new("TextLabel")
     KeyCode.BackgroundTransparency = 1
     KeyCode.Size = UDim2.new(1, -60, 0, 16)
+    KeyCode.Position = UDim2.new(0, 5, 0, 0)
     KeyCode.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     KeyCode.Text = "Voltontop"
     KeyCode.TextColor3 = Color3.new(0.9, 0.9, 0.9)
@@ -544,7 +553,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     local KeyDates = Instance.new("TextLabel")
     KeyDates.BackgroundTransparency = 1
     KeyDates.Size = UDim2.new(1, 0, 0, 14)
-    KeyDates.Position = UDim2.new(0, 0, 0, 18)
+    KeyDates.Position = UDim2.new(0, 5, 0, 18)
     KeyDates.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     KeyDates.Text = "Lifetime Key"
     KeyDates.TextColor3 = Color3.new(0.6, 0.6, 0.6)
@@ -556,7 +565,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     TypeBadge.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
     TypeBadge.Size = UDim2.new(0, 50, 0, 18)
     TypeBadge.AnchorPoint = Vector2.new(1, 0)
-    TypeBadge.Position = UDim2.new(1, 0, 0, 0)
+    TypeBadge.Position = UDim2.new(1, -5, 0, 0)
     TypeBadge.Parent = KeyItem
     Instance.new("UICorner", TypeBadge).CornerRadius = UDim.new(0, 4)
     Instance.new("UIStroke", TypeBadge).Color = Color3.new(0.3, 0.3, 0.3)
@@ -565,7 +574,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     TypeText.BackgroundTransparency = 1
     TypeText.Size = UDim2.new(1, 0, 1, 0)
     TypeText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
-    TypeText.Text = "monthly"
+    TypeText.Text = "lifetime"
     TypeText.TextColor3 = Color3.new(0.8, 0.8, 0.8)
     TypeText.TextSize = 10
     TypeText.Parent = TypeBadge
