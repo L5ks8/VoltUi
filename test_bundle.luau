@@ -963,39 +963,6 @@ function AccountPage.Create(Content, maid, BackCallback)
     KeyIcon.ImageColor3 = Color3.new(0.8, 0.8, 0.8)
     KeyIcon.Parent = KeysHeader
     
-    local RedeemContainer = Instance.new("Frame")
-    RedeemContainer.BackgroundTransparency = 1
-    RedeemContainer.Size = UDim2.new(1, 0, 0, 36)
-    RedeemContainer.LayoutOrder = -1
-    RedeemContainer.Parent = KeysCard
-    
-    local RedeemInput = Instance.new("TextBox")
-    RedeemInput.BackgroundColor3 = Color3.new(0.12, 0.12, 0.12)
-    RedeemInput.Size = UDim2.new(1, -75, 1, 0)
-    RedeemInput.Position = UDim2.new(0, 0, 0, 0)
-    RedeemInput.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
-    RedeemInput.PlaceholderText = "Enter license key..."
-    RedeemInput.Text = ""
-    RedeemInput.TextColor3 = Color3.new(0.9, 0.9, 0.9)
-    RedeemInput.TextSize = 12
-    RedeemInput.Parent = RedeemContainer
-    Instance.new("UICorner", RedeemInput).CornerRadius = UDim.new(0, 6)
-    Instance.new("UIStroke", RedeemInput).Color = Color3.new(0.2, 0.2, 0.2)
-    local RedeemPad = Instance.new("UIPadding", RedeemInput)
-    RedeemPad.PaddingLeft = UDim.new(0, 10)
-    
-    local RedeemBtn = Instance.new("TextButton")
-    RedeemBtn.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
-    RedeemBtn.Size = UDim2.new(0, 70, 1, 0)
-    RedeemBtn.Position = UDim2.new(1, -70, 0, 0)
-    RedeemBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    RedeemBtn.Text = "Redeem"
-    RedeemBtn.TextColor3 = Color3.new(1, 1, 1)
-    RedeemBtn.TextSize = 12
-    RedeemBtn.Parent = RedeemContainer
-    Instance.new("UICorner", RedeemBtn).CornerRadius = UDim.new(0, 6)
-    Instance.new("UIStroke", RedeemBtn).Color = Color3.new(0.3, 0.3, 0.3)
-    
     local KeysTitle = Instance.new("TextLabel")
     KeysTitle.BackgroundTransparency = 1
     KeysTitle.Size = UDim2.new(1, -25, 1, 0)
@@ -1303,21 +1270,21 @@ function AccountPage.Create(Content, maid, BackCallback)
         ActiveText.Text = "Active"
         ActiveBadge.BackgroundColor3 = Color3.new(0.1, 0.3, 0.1)
         
-        maid:GiveTask(RedeemBtn.MouseButton1Click:Connect(function()
+        maid:GiveTask(ClaimBtn.MouseButton1Click:Connect(function()
             if isLifetime then
                 
-                Notifications.Notify({ Title = "Redeem Failed", Content = "You already have a Lifetime subscription!", Type = "Error" })
+                Notifications.Notify({ Title = "Claim Failed", Content = "You already have a Lifetime subscription!", Type = "Error" })
                 return
             end
             
-            local keyText = RedeemInput.Text
+            local keyText = LicTextBox.Text
             if keyText == "" then return end
             
-            RedeemInput.Text = ""
+            LicTextBox.Text = ""
             CreateKeyItem(keyText, "Premium")
             
             
-            Notifications.Notify({ Title = "Key Redeemed", Content = "Your subscription time has been extended.", Type = "Success" })
+            Notifications.Notify({ Title = "Key Claimed", Content = "Your subscription time has been extended.", Type = "Success" })
             
         end))
     end
