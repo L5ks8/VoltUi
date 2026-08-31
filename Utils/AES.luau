@@ -2,6 +2,8 @@ local AES = {}
 
 local Key = "VoltUiSuperSecretKey1234567890!!" -- 32 bytes
 local IV = "VoltUiSecretIV!!" -- 16 bytes
+local KeyB64 = "Vm9sdFVpU3VwZXJTZWNyZXRLZXkxMjM0NTY3ODkwISE="
+local IVB64 = "Vm9sdFVpU2VjcmV0SVYhIQ=="
 
 function AES.encrypt(data)
     local encrypt = (crypt and crypt.custom and crypt.custom.encrypt) 
@@ -18,14 +20,29 @@ function AES.encrypt(data)
         return nil
     end
 
-    -- Try signature: encrypt(data, key, iv, mode) [Macsploit/Delta/CodeX style]
+    -- Try signature with Base64 Key and IV [Delta/Macsploit expect Key/IV to be base64 strings]
     local success, result = pcall(function()
-        return encrypt(data, Key, IV, "CBC")
+        return encrypt(data, KeyB64, IVB64, "CBC")
     end)
+    local err0 = not success and result or nil
+
+    if not success then
+        success, result = pcall(function()
+            return encrypt("aes-cbc", data, KeyB64, IVB64)
+        end)
+    end
+    local err0b = not success and result or nil
+
+    if not success then
+        -- Try signature: encrypt(data, key, iv, mode) with raw strings
+        success, result = pcall(function()
+            return encrypt(data, Key, IV, "CBC")
+        end)
+    end
     local err1 = not success and result or nil
     
     if not success then
-        -- Try signature: encrypt(algorithm, data, key, iv) [Synapse style]
+        -- Try signature: encrypt(algorithm, data, key, iv) with raw strings
         success, result = pcall(function()
             return encrypt("aes-cbc", data, Key, IV)
         end)
@@ -41,9 +58,11 @@ function AES.encrypt(data)
     
     if not success then
         warn("AES Encryption failed. Errors:")
-        warn("1: " .. tostring(err1))
-        warn("2: " .. tostring(err2))
-        warn("3: " .. tostring(err3))
+        warn("0 (B64 Key/IV, CBC): " .. tostring(err0))
+        warn("0b (B64 Key/IV, aes-cbc): " .. tostring(err0b))
+        warn("1 (Raw Key/IV, CBC): " .. tostring(err1))
+        warn("2 (Raw Key/IV, aes-cbc): " .. tostring(err2))
+        warn("3 (Raw Key/IV, AES-CBC): " .. tostring(err3))
     end
     
     if success and result then
@@ -81,10 +100,24 @@ function AES.decrypt(cipher_b64)
     end
 
     -- We will try both the raw base64 string and the decoded raw bytes.
-    -- First, let's try with the base64 string directly (Macsploit/Delta expect this)
+    -- First, let's try with base64 Key and IV, since some executors expect base64 for these arguments
     local success, result = pcall(function()
-        return decrypt(cipher_b64, Key, IV, "CBC")
+        return decrypt(cipher_b64, KeyB64, IVB64, "CBC")
     end)
+    local err0 = not success and result or nil
+    
+    if not success then
+        success, result = pcall(function()
+            return decrypt("aes-cbc", cipher_b64, KeyB64, IVB64)
+        end)
+    end
+    local err0b = not success and result or nil
+
+    if not success then
+        success, result = pcall(function()
+            return decrypt(cipher_b64, Key, IV, "CBC")
+        end)
+    end
     local err1 = not success and result or nil
     
     if not success then
@@ -116,10 +149,12 @@ function AES.decrypt(cipher_b64)
 
     if not success then
         warn("AES Decryption failed. Errors:")
-        warn("1 (b64, CBC mode param): " .. tostring(err1))
-        warn("2 (b64, aes-cbc param): " .. tostring(err2))
-        warn("3 (raw, CBC mode param): " .. tostring(err3))
-        warn("4 (raw, aes-cbc param): " .. tostring(err4))
+        warn("0 (B64 Data/Key/IV, CBC): " .. tostring(err0))
+        warn("0b (B64 Data/Key/IV, aes-cbc): " .. tostring(err0b))
+        warn("1 (B64 Data, Raw Key/IV, CBC): " .. tostring(err1))
+        warn("2 (B64 Data, Raw Key/IV, aes-cbc): " .. tostring(err2))
+        warn("3 (Raw Data/Key/IV, CBC): " .. tostring(err3))
+        warn("4 (Raw Data/Key/IV, aes-cbc): " .. tostring(err4))
     end
     
     if success and result then
