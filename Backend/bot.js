@@ -172,6 +172,51 @@ client.on('interactionCreate', async interaction => {
             modal.addComponents(actionRow);
             
             await interaction.showModal(modal);
+        } else if (interaction.customId === 'panel_role') {
+            try {
+                const license = await License.findOne({ discordId: interaction.user.id });
+                if (!license) {
+                    return interaction.reply({ content: 'You have not linked a key yet. Please use the "Redeem Key" button first.', ephemeral: true });
+                }
+                
+                const roleId = '1544012798097367040';
+                const hasRole = interaction.member.roles.cache.has(roleId);
+                
+                if (!hasRole) {
+                    const role = interaction.guild.roles.cache.get(roleId);
+                    if (role) {
+                        await interaction.member.roles.add(role);
+                        return interaction.reply({ content: 'Role successfully given!', ephemeral: true });
+                    } else {
+                        return interaction.reply({ content: 'Role not found in the server.', ephemeral: true });
+                    }
+                } else {
+                    const user = await User.findOne({ discordId: interaction.user.id });
+                    
+                    const errorEmbed = new EmbedBuilder()
+                        .setTitle('Unable to give role')
+                        .setDescription(`You already have the <@&${roleId}> role!`)
+                        .setColor('#ff0000');
+                        
+                    const statsEmbed = new EmbedBuilder()
+                        .setTitle('Stats')
+                        .setColor('#1e1e1e')
+                        .setDescription(
+                            `**Total Executions:** ${user ? user.executions : 0} 🧠\n` +
+                            `**HWID Status:** ${user && user.hwid ? 'Assigned ✅' : 'Unassigned ❌'}\n` +
+                            `**Key:** (click to reveal) ||${license.key}|| 🔒\n` +
+                            `**Total HWID Resets:** ${user ? user.hwidResets : 0} ⚙️\n` +
+                            `**Last Reset:** ${user && user.lastReset ? `<t:${Math.floor(user.lastReset.getTime() / 1000)}:R>` : 'Never'} 📅\n` +
+                            `**Expires At:** ${license.durationMs === null ? 'Never 📅' : (user && user.subscriptionEnd ? `<t:${Math.floor(user.subscriptionEnd.getTime() / 1000)}:d> 📅` : 'Unknown 📅')}\n` +
+                            `**Banned:** ${user && user.banned ? 'Yes 🔴' : 'No ⛔'}`
+                        );
+                        
+                    await interaction.reply({ embeds: [errorEmbed, statsEmbed], ephemeral: true });
+                }
+            } catch (err) {
+                console.error(err);
+                await interaction.reply({ content: 'An error occurred.', ephemeral: true });
+            }
         } else if (interaction.customId.startsWith('panel_')) {
             await interaction.reply({ content: 'This feature is coming soon!', ephemeral: true });
         }
@@ -197,17 +242,7 @@ client.on('interactionCreate', async interaction => {
                 license.discordId = interaction.user.id;
                 await license.save();
                 
-                const roleId = '1544012798097367040';
-                if (interaction.guild) {
-                    const role = interaction.guild.roles.cache.get(roleId);
-                    if (role) {
-                        await interaction.member.roles.add(role).catch(console.error);
-                    } else {
-                        console.log(`Role ${roleId} not found in guild.`);
-                    }
-                }
-                
-                await interaction.reply({ content: 'Key successfully linked to your Discord account! You have received your role. You can now use the key in the script.', ephemeral: true });
+                await interaction.reply({ content: 'Key successfully linked to your Discord account! Please click the **Get Role** button to receive your role.', ephemeral: true });
             } catch (err) {
                 console.error(err);
                 await interaction.reply({ content: 'An error occurred while processing your key.', ephemeral: true });

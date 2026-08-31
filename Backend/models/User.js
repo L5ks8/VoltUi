@@ -31,6 +31,22 @@ const userSchema = new mongoose.Schema({
     subscriptionEnd: {
         type: Date,
         default: null
+    },
+    executions: {
+        type: Number,
+        default: 0
+    },
+    hwidResets: {
+        type: Number,
+        default: 0
+    },
+    lastReset: {
+        type: Date,
+        default: null
+    },
+    banned: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true });
 
