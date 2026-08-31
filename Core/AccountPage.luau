@@ -48,6 +48,10 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     ReturnButton.BorderSizePixel = 0
     ReturnButton.Size = UDim2.new(0, 35, 0, 35)
     ReturnButton.Parent = Actions
+    
+    local ReturnCorner = Instance.new("UICorner")
+    ReturnCorner.CornerRadius = UDim.new(0, 6)
+    ReturnCorner.Parent = ReturnButton
 
     local ReturnLayout = Instance.new("UIListLayout")
     ReturnLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
@@ -70,6 +74,14 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     if BackCallback then
         Maid:GiveTask(ReturnButton.MouseButton1Click:Connect(BackCallback))
     end
+    
+    local Tween = require(script.Parent.Parent.Utils.Tween)
+    Maid:GiveTask(ReturnButton.MouseEnter:Connect(function()
+        Tween(ReturnButton, TweenInfo.new(0.2), {BackgroundTransparency = 0.92})
+    end))
+    Maid:GiveTask(ReturnButton.MouseLeave:Connect(function()
+        Tween(ReturnButton, TweenInfo.new(0.2), {BackgroundTransparency = 1})
+    end))
 
     local AccountText = Instance.new("TextLabel")
     AccountText.BackgroundColor3 = Color3.new(1, 1, 1)
