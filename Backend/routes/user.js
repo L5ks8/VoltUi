@@ -28,6 +28,10 @@ router.get('/me', authMiddleware, async (req, res) => {
             return res.status(404).json({ msg: 'User not found' });
         }
         
+        if (user.banned) {
+            return res.status(403).json({ msg: 'You are banned from using VoltUi.' });
+        }
+        
         if (user.subscriptionEnd) {
             const ms = user.subscriptionEnd.getTime() - Date.now();
             if (ms > 0) {
