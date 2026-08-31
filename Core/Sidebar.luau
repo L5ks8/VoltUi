@@ -3,7 +3,7 @@ local Tween = require(Utils.Tween)
 
 local Sidebar = {}
 
-function Sidebar.Create(Content, maid)
+function Sidebar.Create(Content, maid, OnCollapse)
     local SidebarFrame = Instance.new("Frame")
     SidebarFrame.Name = "Sidebar"
     SidebarFrame.BackgroundColor3 = Color3.new(0.11, 0.11, 0.11)
@@ -23,7 +23,7 @@ function Sidebar.Create(Content, maid)
     SidebarActions.BackgroundTransparency = 1
     SidebarActions.BorderColor3 = Color3.new(0, 0, 0)
     SidebarActions.BorderSizePixel = 0
-    SidebarActions.Size = UDim2.new(0, 200, 0, 35)
+    SidebarActions.Size = UDim2.new(1, 0, 0, 35)
     SidebarActions.ZIndex = 10
     SidebarActions.Parent = SidebarFrame
     
@@ -239,7 +239,7 @@ function Sidebar.Create(Content, maid)
     Searchbar.BorderSizePixel = 0
     Searchbar.LayoutOrder = 1
     Searchbar.Position = UDim2.new(0, 0, 0.064, 0)
-    Searchbar.Size = UDim2.new(0, 200, 0, 35)
+    Searchbar.Size = UDim2.new(1, 0, 0, 35)
     Searchbar.Parent = SidebarFrame
     
     local SearchbarLayout = Instance.new("UIListLayout")
@@ -325,7 +325,7 @@ function Sidebar.Create(Content, maid)
     TabsContainer.BorderSizePixel = 0
     TabsContainer.LayoutOrder = 3
     TabsContainer.Position = UDim2.new(0, 0, 0.136, 0)
-    TabsContainer.Size = UDim2.new(0, 200, 1, -75)
+    TabsContainer.Size = UDim2.new(1, 0, 1, -75)
     TabsContainer.Parent = SidebarFrame
     
     local TabsTopBorder = Instance.new("Frame")
@@ -341,18 +341,54 @@ function Sidebar.Create(Content, maid)
     TabsScrolling.BackgroundTransparency = 1
     TabsScrolling.BorderColor3 = Color3.new(0, 0, 0)
     TabsScrolling.BorderSizePixel = 0
+    TabsScrolling.ScrollBarThickness = 0
     TabsScrolling.ScrollBarImageColor3 = Color3.new(0.137, 0.137, 0.137)
     TabsScrolling.ScrollBarImageTransparency = 1
     TabsScrolling.Size = UDim2.new(1, 0, 1, 0)
     TabsScrolling.Parent = TabsContainer
     
     local TabsScrollingLayout = Instance.new("UIListLayout")
+    TabsScrollingLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
     TabsScrollingLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    TabsScrollingLayout.Padding = UDim.new(0, 5)
     TabsScrollingLayout.Parent = TabsScrolling
     
     local TabsScrollingPadding = Instance.new("UIPadding")
     TabsScrollingPadding.PaddingTop = UDim.new(0, 9)
     TabsScrollingPadding.Parent = TabsScrolling
+    
+    local isCollapsed = false
+    local SidebarTweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    
+    maid:GiveTask(Collapse.MouseButton1Click:Connect(function()
+        isCollapsed = not isCollapsed
+        
+        if isCollapsed then
+            Searchbar.Visible = false
+            Home.Visible = false
+            Account.Visible = false
+            Settings.Visible = false
+            SidebarFiller.Visible = false
+            SidebarFiller2.Visible = false
+            SidebarActionsLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+            
+            Tween(SidebarFrame, SidebarTweenInfo, {Size = UDim2.new(0, 50, 1, 0)})
+            Tween(CollapseIcon, SidebarTweenInfo, {Rotation = 0})
+            if OnCollapse then OnCollapse:Fire(true) end
+        else
+            Searchbar.Visible = true
+            Home.Visible = true
+            Account.Visible = true
+            Settings.Visible = true
+            SidebarFiller.Visible = true
+            SidebarFiller2.Visible = true
+            SidebarActionsLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
+            
+            Tween(SidebarFrame, SidebarTweenInfo, {Size = UDim2.new(0, 200, 1, 0)})
+            Tween(CollapseIcon, SidebarTweenInfo, {Rotation = -180})
+            if OnCollapse then OnCollapse:Fire(false) end
+        end
+    end))
     
     return {
         Instance = SidebarFrame,

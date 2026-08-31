@@ -1,5 +1,8 @@
 local Utils = script.Parent.Parent.Utils
+local Topbar = require(script.Parent.Topbar)
 local Tween = require(Utils.Tween)
+local Utility = require(Utils.Utility)
+local Maid = require(Utils.Maid)
 local Api = require(Utils.Api)
 local Notifications = require(script.Parent.Notifications)
 
@@ -8,7 +11,7 @@ local LoginPage = {}
 function LoginPage.Create(ParentGui, OnSuccess)
     local Page = Instance.new("Frame")
     Page.Name = "LoginPage"
-    Page.BackgroundColor3 = Color3.new(0.06, 0.06, 0.06) -- Dark background
+    Page.BackgroundColor3 = Color3.new(0.06, 0.06, 0.06)
     Page.BorderSizePixel = 0
     Page.AnchorPoint = Vector2.new(0.5, 0.5)
     Page.Position = UDim2.new(0.5, 0, 0.5, 0)
@@ -16,27 +19,36 @@ function LoginPage.Create(ParentGui, OnSuccess)
     Page.ZIndex = 50
     Page.Parent = ParentGui
     
-    Instance.new("UICorner", Page)
+    Instance.new("UICorner", Page).CornerRadius = UDim.new(0, 8)
     local PageStroke = Instance.new("UIStroke", Page)
-    PageStroke.Color = Color3.new(0.216, 0.216, 0.216)
+    PageStroke.Color = Color3.new(0.15, 0.15, 0.15)
     
-    local Container = Instance.new("Frame")
-    Container.Name = "Container"
-    Container.AnchorPoint = Vector2.new(0.5, 0.5)
-    Container.BackgroundColor3 = Color3.new(0.09, 0.09, 0.09)
-    Container.Position = UDim2.new(0.5, 0, 0.5, 0)
-    Container.Size = UDim2.new(0, 400, 0, 500)
-    Container.Parent = Page
-    Instance.new("UICorner", Container).CornerRadius = UDim.new(0, 8)
-    local Stroke = Instance.new("UIStroke", Container)
-    Stroke.Color = Color3.new(0.15, 0.15, 0.15)
+    local maid = Maid.new()
     
-    -- Headers
-    local LogoContainer = Instance.new("Frame", Container)
+    local TopbarElements = Topbar.Create(Page, {Title = "Sign In"}, maid)
+    
+    maid:GiveTask(TopbarElements.CloseButton.MouseButton1Click:Connect(function()
+        Page:Destroy()
+        maid:Destroy()
+    end))
+    
+    local ContentFrame = Instance.new("Frame", Page)
+    ContentFrame.AnchorPoint = Vector2.new(0.5, 0)
+    ContentFrame.Position = UDim2.new(0.5, 0, 0, 30)
+    ContentFrame.Size = UDim2.new(0, 450, 1, -30) -- Leave room for Topbar
+    ContentFrame.BackgroundTransparency = 1
+    
+    local Layout = Instance.new("UIListLayout", ContentFrame)
+    Layout.SortOrder = Enum.SortOrder.LayoutOrder
+    Layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    Layout.VerticalAlignment = Enum.VerticalAlignment.Center
+    Layout.Padding = UDim.new(0, 10)
+    
+    local LogoContainer = Instance.new("Frame", ContentFrame)
     LogoContainer.BackgroundTransparency = 1
-    LogoContainer.Size = UDim2.new(1, 0, 0, 50)
-    LogoContainer.Position = UDim2.new(0, 0, 0, 30)
-
+    LogoContainer.Size = UDim2.new(0, 100, 0, 50)
+    LogoContainer.LayoutOrder = 1
+    
     local LogoLayout = Instance.new("UIListLayout", LogoContainer)
     LogoLayout.FillDirection = Enum.FillDirection.Horizontal
     LogoLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
@@ -46,7 +58,7 @@ function LoginPage.Create(ParentGui, OnSuccess)
 
     local LogoImg = Instance.new("ImageLabel", LogoContainer)
     LogoImg.BackgroundTransparency = 1
-    LogoImg.Size = UDim2.new(0, 24, 0, 24)
+    LogoImg.Size = UDim2.new(0, 32, 0, 32)
     LogoImg.Image = "rbxassetid://71942076965693"
     LogoImg.LayoutOrder = 1
 
@@ -56,163 +68,239 @@ function LoginPage.Create(ParentGui, OnSuccess)
     LogoText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     LogoText.Text = "Volt"
     LogoText.TextColor3 = Color3.new(1, 1, 1)
-    LogoText.TextSize = 24
+    LogoText.TextSize = 28
     LogoText.LayoutOrder = 2
     LogoText.TextXAlignment = Enum.TextXAlignment.Left
     
-    local Title = Instance.new("TextLabel", Container)
+    local Title = Instance.new("TextLabel", ContentFrame)
     Title.BackgroundTransparency = 1
-    Title.Size = UDim2.new(1, 0, 0, 30)
-    Title.Position = UDim2.new(0, 0, 0, 80)
+    Title.Size = UDim2.new(1, 0, 0, 35)
     Title.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     Title.Text = "Welcome to Volt"
     Title.TextColor3 = Color3.new(1, 1, 1)
-    Title.TextSize = 20
+    Title.TextSize = 24
+    Title.LayoutOrder = 2
     
-    local Subtitle = Instance.new("TextLabel", Container)
+    local Subtitle = Instance.new("TextLabel", ContentFrame)
     Subtitle.BackgroundTransparency = 1
     Subtitle.Size = UDim2.new(1, 0, 0, 20)
-    Subtitle.Position = UDim2.new(0, 0, 0, 110)
     Subtitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     Subtitle.Text = "Sign in to access your Lua development environment"
-    Subtitle.TextColor3 = Color3.new(0.6, 0.6, 0.6)
-    Subtitle.TextSize = 12
+    Subtitle.TextColor3 = Color3.new(0.7, 0.7, 0.7)
+    Subtitle.TextSize = 13
+    Subtitle.LayoutOrder = 3
     
-    -- Error Label
-    local ErrorLabel = Instance.new("TextLabel", Container)
-    ErrorLabel.BackgroundTransparency = 1
-    ErrorLabel.Size = UDim2.new(1, 0, 0, 20)
-    ErrorLabel.Position = UDim2.new(0, 0, 0, 140)
-    ErrorLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
-    ErrorLabel.Text = ""
-    ErrorLabel.TextColor3 = Color3.new(1, 0.3, 0.3)
-    ErrorLabel.TextSize = 12
+    local Spacer = Instance.new("Frame", ContentFrame)
+    Spacer.BackgroundTransparency = 1
+    Spacer.Size = UDim2.new(1, 0, 0, 10)
+    Spacer.LayoutOrder = 4
     
-    -- Inputs Container
-    local InputFrame = Instance.new("Frame", Container)
-    InputFrame.BackgroundTransparency = 1
-    InputFrame.Size = UDim2.new(1, -60, 0, 200)
-    InputFrame.Position = UDim2.new(0, 30, 0, 170)
+    local Box = Instance.new("Frame", ContentFrame)
+    Box.BackgroundColor3 = Color3.new(0.09, 0.09, 0.09)
+    Box.Size = UDim2.new(0, 400, 0, 0) -- Height is determined by AutomaticSize
+    Box.AutomaticSize = Enum.AutomaticSize.Y
+    Box.LayoutOrder = 5
+    Instance.new("UICorner", Box).CornerRadius = UDim.new(0, 8)
+    local BoxStroke = Instance.new("UIStroke", Box)
+    BoxStroke.Color = Color3.new(0.15, 0.15, 0.15)
     
-    local InputLayout = Instance.new("UIListLayout", InputFrame)
-    InputLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    InputLayout.Padding = UDim.new(0, 15)
+    local BoxLayout = Instance.new("UIListLayout", Box)
+    BoxLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    BoxLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    BoxLayout.Padding = UDim.new(0, 15)
     
-    local function CreateInput(name, placeholder, isPassword)
-        local frame = Instance.new("Frame", InputFrame)
+    local BoxPadding = Instance.new("UIPadding", Box)
+    BoxPadding.PaddingTop = UDim.new(0, 25)
+    BoxPadding.PaddingBottom = UDim.new(0, 25)
+    
+    local function CreateInput(name, placeholder, isPassword, iconId)
+        local frame = Instance.new("Frame")
         frame.BackgroundTransparency = 1
-        frame.Size = UDim2.new(1, 0, 0, 60)
+        frame.Size = UDim2.new(1, -50, 0, 65)
         
         local label = Instance.new("TextLabel", frame)
         label.BackgroundTransparency = 1
         label.Size = UDim2.new(1, 0, 0, 20)
         label.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
         label.Text = name
-        label.TextColor3 = Color3.new(0.8, 0.8, 0.8)
-        label.TextSize = 12
+        label.TextColor3 = Color3.new(0.9, 0.9, 0.9)
+        label.TextSize = 13
         label.TextXAlignment = Enum.TextXAlignment.Left
         
         local boxBg = Instance.new("Frame", frame)
-        boxBg.BackgroundColor3 = Color3.new(0.07, 0.07, 0.07)
-        boxBg.Size = UDim2.new(1, 0, 0, 35)
+        boxBg.BackgroundColor3 = Color3.new(0.06, 0.06, 0.06)
+        boxBg.Size = UDim2.new(1, 0, 0, 40)
         boxBg.Position = UDim2.new(0, 0, 0, 25)
-        Instance.new("UICorner", boxBg).CornerRadius = UDim.new(0, 4)
+        Instance.new("UICorner", boxBg).CornerRadius = UDim.new(0, 6)
         local boxStroke = Instance.new("UIStroke", boxBg)
-        boxStroke.Color = Color3.new(0.2, 0.2, 0.2)
+        boxStroke.Color = Color3.new(0.15, 0.15, 0.15)
+        
+        if iconId then
+            local icon = Instance.new("ImageLabel", boxBg)
+            icon.BackgroundTransparency = 1
+            icon.Size = UDim2.new(0, 16, 0, 16)
+            icon.Position = UDim2.new(0, 12, 0.5, -8)
+            icon.Image = iconId
+            icon.ImageColor3 = Color3.new(0.6, 0.6, 0.6)
+        end
         
         local box = Instance.new("TextBox", boxBg)
         box.BackgroundTransparency = 1
-        box.Size = UDim2.new(1, -20, 1, 0)
-        box.Position = UDim2.new(0, 10, 0, 0)
+        box.Size = UDim2.new(1, iconId and -45 or -25, 1, 0)
+        box.Position = UDim2.new(0, iconId and 35 or 12, 0, 0)
         box.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
         box.PlaceholderText = placeholder
+        box.PlaceholderColor3 = Color3.new(0.4, 0.4, 0.4)
         box.Text = ""
         box.TextColor3 = Color3.new(1, 1, 1)
-        box.TextSize = 12
+        box.TextSize = 13
         box.TextXAlignment = Enum.TextXAlignment.Left
         
         if isPassword then
-            -- Note: Native Roblox TextBox doesn't support password masking natively easily without Text property manipulation, 
-            -- but for this snippet we'll assume standard clear text or we could mask it manually.
-            -- To keep it simple we just hide it manually or don't mask it in this prototype.
-            -- In a real scenario we use Text property trick.
+            box.ClearTextOnFocus = false
         end
         
         return frame, box
     end
     
-    local userFrame, userBox = CreateInput("Username or Email", "Enter your username or email", false)
-    local passFrame, passBox = CreateInput("Password", "Enter your password", true)
+    local userFrame, userBox = CreateInput("Username", "Enter your username", false, "rbxassetid://134568818132029")
+    local passFrame, passBox = CreateInput("Password", "Enter your password", true, "rbxassetid://113646711739432")
+    local keyFrame, keyBox = CreateInput("License Key", "XXXX-XXXX-XXXX-XXXX", false, "rbxassetid://134568818132029")
+    local codeFrame, codeBox = CreateInput("Reset Code", "Enter 6-digit code", false, "rbxassetid://134568818132029")
+    local newPassFrame, newPassBox = CreateInput("New Password", "Enter new password", true, "rbxassetid://113646711739432")
     
-    local ActionBtn = Instance.new("TextButton", Container)
-    ActionBtn.BackgroundColor3 = Color3.new(0.15, 0.15, 0.15)
-    ActionBtn.Size = UDim2.new(1, -60, 0, 40)
-    ActionBtn.Position = UDim2.new(0, 30, 1, -120)
+    userFrame.Parent = Box
+    passFrame.Parent = Box
+    keyFrame.Parent = Box
+    codeFrame.Parent = Box
+    newPassFrame.Parent = Box
+    
+    userFrame.LayoutOrder = 1
+    keyFrame.LayoutOrder = 2
+    passFrame.LayoutOrder = 3
+    codeFrame.LayoutOrder = 4
+    newPassFrame.LayoutOrder = 5
+    
+    local ActionBtn = Instance.new("TextButton", Box)
+    ActionBtn.BackgroundColor3 = Color3.new(0.18, 0.18, 0.18)
+    ActionBtn.Size = UDim2.new(1, -50, 0, 42)
+    ActionBtn.LayoutOrder = 10
     ActionBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     ActionBtn.Text = "Sign In"
     ActionBtn.TextColor3 = Color3.new(0.8, 0.8, 0.8)
     ActionBtn.TextSize = 14
     Instance.new("UICorner", ActionBtn).CornerRadius = UDim.new(0, 6)
+    local ActionStroke = Instance.new("UIStroke", ActionBtn)
+    ActionStroke.Color = Color3.new(0.25, 0.25, 0.25)
     
-    local SwitchBtn = Instance.new("TextButton", Container)
+    local ForgotBtn = Instance.new("TextButton", Box)
+    ForgotBtn.BackgroundTransparency = 1
+    ForgotBtn.Size = UDim2.new(1, 0, 0, 20)
+    ForgotBtn.LayoutOrder = 11
+    ForgotBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+    ForgotBtn.Text = "Forgot your password?"
+    ForgotBtn.TextColor3 = Color3.new(0.6, 0.6, 0.6)
+    ForgotBtn.TextSize = 13
+    
+    local Divider = Instance.new("Frame", Box)
+    Divider.BackgroundColor3 = Color3.new(0.15, 0.15, 0.15)
+    Divider.Size = UDim2.new(1, -50, 0, 1)
+    Divider.LayoutOrder = 12
+    Divider.BorderSizePixel = 0
+    
+    local SwitchBtn = Instance.new("TextButton", Box)
     SwitchBtn.BackgroundTransparency = 1
     SwitchBtn.Size = UDim2.new(1, 0, 0, 20)
-    SwitchBtn.Position = UDim2.new(0, 0, 1, -50)
+    SwitchBtn.LayoutOrder = 13
+    SwitchBtn.RichText = true
     SwitchBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
-    SwitchBtn.Text = "Don't have an account? Create one here"
-    SwitchBtn.TextColor3 = Color3.new(0.6, 0.6, 0.6)
-    SwitchBtn.TextSize = 11
+    SwitchBtn.Text = "Don't have an account? <b>Create one here</b>"
+    SwitchBtn.TextColor3 = Color3.new(0.7, 0.7, 0.7)
+    SwitchBtn.TextSize = 13
     
-    -- Register Specific Fields
-    local keyFrame, keyBox = CreateInput("License Key", "XXXX-XXXX-XXXX-XXXX", false)
+    local UIState = "Login"
     
-    keyFrame.Visible = false
-    
-    local isLogin = true
-    
-    SwitchBtn.MouseButton1Click:Connect(function()
-        isLogin = not isLogin
-        if isLogin then
+    local function UpdateState(newState)
+        UIState = newState
+        userFrame.Visible = false
+        passFrame.Visible = false
+        keyFrame.Visible = false
+        codeFrame.Visible = false
+        newPassFrame.Visible = false
+        
+        ForgotBtn.Visible = false
+        Divider.Visible = false
+        SwitchBtn.Visible = false
+        
+        if UIState == "Login" then
             Title.Text = "Welcome to Volt"
             Subtitle.Text = "Sign in to access your Lua development environment"
             ActionBtn.Text = "Sign In"
-            SwitchBtn.Text = "Don't have an account? Create one here"
-            
             userFrame.Visible = true
             passFrame.Visible = true
-            keyFrame.Visible = false
-            Container.Size = UDim2.new(0, 400, 0, 500)
-            ActionBtn.Position = UDim2.new(0, 30, 1, -120)
-        else
+            ForgotBtn.Visible = true
+            Divider.Visible = true
+            SwitchBtn.Visible = true
+            SwitchBtn.Text = "Don't have an account? <b>Create one here</b>"
+            TopbarElements.Instance.Version.Text.Text = "Sign In"
+            
+        elseif UIState == "Register" then
             Title.Text = "Join Volt"
             Subtitle.Text = "Create your account to start Lua development"
             ActionBtn.Text = "Create Account"
-            SwitchBtn.Text = "Already have an account? Sign in here"
-            
             userFrame.Visible = true
             keyFrame.Visible = true
             passFrame.Visible = true
+            Divider.Visible = true
+            SwitchBtn.Visible = true
+            SwitchBtn.Text = "Already have an account? <b>Sign in here</b>"
+            TopbarElements.Instance.Version.Text.Text = "Register"
             
-            -- Adjust Layout Order
-            userFrame.LayoutOrder = 1
-            keyFrame.LayoutOrder = 2
-            passFrame.LayoutOrder = 3
+        elseif UIState == "Forgot" then
+            Title.Text = "Reset Password"
+            Subtitle.Text = "Enter your username and we'll send a code to your Discord"
+            ActionBtn.Text = "Send Reset Code"
+            userFrame.Visible = true
+            SwitchBtn.Visible = true
+            SwitchBtn.Text = "← <b>Back to Login</b>"
+            TopbarElements.Instance.Version.Text.Text = "Reset Password"
             
-            Container.Size = UDim2.new(0, 400, 0, 580)
-            ActionBtn.Position = UDim2.new(0, 30, 1, -120)
+        elseif UIState == "Reset" then
+            Title.Text = "Enter Code"
+            Subtitle.Text = "Enter the 6-digit code sent to your Discord DM"
+            ActionBtn.Text = "Reset Password"
+            codeFrame.Visible = true
+            newPassFrame.Visible = true
+            SwitchBtn.Visible = true
+            SwitchBtn.Text = "← <b>Back to Login</b>"
+            TopbarElements.Instance.Version.Text.Text = "Enter Code"
         end
-        ErrorLabel.Text = ""
+    end
+    
+    UpdateState("Login")
+    
+    ForgotBtn.MouseButton1Click:Connect(function()
+        UpdateState("Forgot")
+    end)
+    
+    SwitchBtn.MouseButton1Click:Connect(function()
+        if UIState == "Login" then
+            UpdateState("Register")
+        elseif UIState == "Register" then
+            UpdateState("Login")
+        elseif UIState == "Forgot" or UIState == "Reset" then
+            UpdateState("Login")
+        end
     end)
     
     ActionBtn.MouseButton1Click:Connect(function()
+        local prevText = ActionBtn.Text
         ActionBtn.Text = "Please wait..."
-        ErrorLabel.Text = ""
         
         task.spawn(function()
-            if isLogin then
+            if UIState == "Login" then
                 local success, msg = Api.Login(userBox.Text, passBox.Text)
                 if success then
-                    -- Load Data
                     Api.FetchMe()
                     Notifications.Notify({ Title = "Login Successful", Content = "Welcome back!", Type = "Success" })
                     Page.Visible = false
@@ -221,10 +309,10 @@ function LoginPage.Create(ParentGui, OnSuccess)
                     Notifications.Notify({ Title = "Login Failed", Content = msg or "Invalid credentials", Type = "Error" })
                     ActionBtn.Text = "Sign In"
                 end
-            else
+                
+            elseif UIState == "Register" then
                 local success, msg = Api.Register(userBox.Text, passBox.Text, keyBox.Text)
                 if success then
-                    -- Registration success, now login
                     local succ2, msg2 = Api.Login(userBox.Text, passBox.Text)
                     if succ2 then
                         Api.FetchMe()
@@ -238,6 +326,26 @@ function LoginPage.Create(ParentGui, OnSuccess)
                 else
                     Notifications.Notify({ Title = "Registration Failed", Content = msg or "Check your inputs", Type = "Error" })
                     ActionBtn.Text = "Create Account"
+                end
+                
+            elseif UIState == "Forgot" then
+                local success, msg = Api.ForgotPassword(userBox.Text)
+                if success then
+                    Notifications.Notify({ Title = "Code Sent", Content = msg, Type = "Success" })
+                    UpdateState("Reset")
+                else
+                    Notifications.Notify({ Title = "Failed", Content = msg, Type = "Error" })
+                    ActionBtn.Text = prevText
+                end
+                
+            elseif UIState == "Reset" then
+                local success, msg = Api.ResetPassword(userBox.Text, codeBox.Text, newPassBox.Text)
+                if success then
+                    Notifications.Notify({ Title = "Password Reset", Content = msg, Type = "Success" })
+                    UpdateState("Login")
+                else
+                    Notifications.Notify({ Title = "Reset Failed", Content = msg, Type = "Error" })
+                    ActionBtn.Text = prevText
                 end
             end
         end)

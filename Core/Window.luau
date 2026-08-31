@@ -13,6 +13,7 @@ local AccountPage = require(script.Parent.AccountPage)
 local LoginPage = require(script.Parent.LoginPage)
 local Notifications = require(script.Parent.Notifications)
 local Tabs = require(script.Parent.Tabs)
+local Loading = require(script.Parent.Loading)
 
 local Window = {}
 
@@ -22,8 +23,11 @@ function Window:CreateWindow(Config)
     local VoltUi = Instance.new("ScreenGui")
     VoltUi.Name = "VoltUi"
     VoltUi.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    VoltUi.IgnoreGuiInset = true
     VoltUi.ResetOnSpawn = false
     maid:GiveTask(VoltUi)
+    
+    Utility.ProtectGui(VoltUi)
     
     Notifications.Init(VoltUi)
     
@@ -83,8 +87,12 @@ function Window:CreateWindow(Config)
     ContentLayout.VerticalAlignment = Enum.VerticalAlignment.Center
     ContentLayout.Parent = Content
     
-    local SidebarElements = Sidebar.Create(Content, maid)
+    local OnCollapse = Signal.new()
+    maid:GiveTask(OnCollapse)
     
+    local SidebarElements = Sidebar.Create(Content, maid, OnCollapse)
+    
+
     local SidebarSeparator = Instance.new("Frame")
     SidebarSeparator.Name = "SidebarSeparator"
     SidebarSeparator.BackgroundColor3 = Color3.new(0.216, 0.216, 0.216)
@@ -103,6 +111,15 @@ function Window:CreateWindow(Config)
     MainContent.Size = UDim2.new(1, -201, 1, 0)
     MainContent.LayoutOrder = 2
     MainContent.Parent = Content
+    
+    maid:GiveTask(OnCollapse:Connect(function(isCollapsed)
+        local SidebarTweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+        if isCollapsed then
+            Tween(MainContent, SidebarTweenInfo, {Size = UDim2.new(1, -51, 1, 0)})
+        else
+            Tween(MainContent, SidebarTweenInfo, {Size = UDim2.new(1, -201, 1, 0)})
+        end
+    end))
     
     local ExpiredOverlay = Instance.new("TextButton")
     ExpiredOverlay.Name = "ExpiredOverlay"
@@ -139,10 +156,10 @@ function Window:CreateWindow(Config)
     
     local BottombarElements = Bottombar.Create(Main, maid)
     
-    local AccountPageElements
     AccountPageElements = AccountPage.Create(PagesContainer, maid, function()
         PageLayout:JumpTo(Content)
         BottombarElements.Instance.Visible = true
+        Tween(PagesContainer, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -50)})
         if Api.UserData and Api.UserData.remaining == "Expired" then
             ExpiredOverlay.Visible = true
         else
@@ -150,7 +167,10 @@ function Window:CreateWindow(Config)
         end
     end, Api)
 
+    local loadingScreen = Loading.Create(VoltUi)
+
     local function OnLoginSuccess()
+        loadingScreen:WaitForReady()
         Main.Visible = true
         if AccountPageElements and Api.UserData then
             AccountPageElements.UpdateData(Api.UserData)
@@ -160,6 +180,7 @@ function Window:CreateWindow(Config)
                 ExpiredOverlay.Visible = false
             end
         end
+        loadingScreen:FadeOut()
     end
 
     local token = Api.GetToken()
@@ -171,16 +192,21 @@ function Window:CreateWindow(Config)
                 OnLoginSuccess()
             else
                 -- Token invalid, show login
+                loadingScreen:WaitForReady()
                 LoginPage.Create(VoltUi, OnLoginSuccess)
+                loadingScreen:FadeOut()
             end
         end)
     else
+        loadingScreen:WaitForReady()
         LoginPage.Create(VoltUi, OnLoginSuccess)
+        loadingScreen:FadeOut()
     end
     
     maid:GiveTask(SidebarElements.AccountBtn.MouseButton1Click:Connect(function()
         PageLayout:JumpTo(AccountPageElements.Instance)
         BottombarElements.Instance.Visible = false
+        Tween(PagesContainer, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -30)})
     end))
     
     local ClosePrompt = CloseWarn.Create(VoltUi, maid, function()
@@ -257,14 +283,13 @@ function Window:CreateWindow(Config)
         Bottombar = BottombarElements,
         ContentContainer = MainContent,
         Maid = maid,
-        OnClose = OnClose
+        OnClose = OnClose,
+        OnCollapse = OnCollapse
     }
     
     function WindowObject:CreateTab(Name, IconAsset)
         return Tabs.CreateTab(WindowObject, Name, IconAsset)
     end
-    
-    Utility.ProtectGui(VoltUi)
     
     return WindowObject
 end

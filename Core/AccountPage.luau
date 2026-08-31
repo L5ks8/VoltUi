@@ -9,12 +9,14 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     Page.BorderColor3 = Color3.new(0, 0, 0)
     Page.BorderSizePixel = 0
     Page.Position = UDim2.new(0.5, 0, 0.518, 0)
-    Page.Size = UDim2.new(0, 800, 0, 570)
+    Page.Size = UDim2.new(1, 0, 1, 0)
     Page.LayoutOrder = 2
     Page.Parent = Content
 
     local PageCorner = Instance.new("UICorner")
-    PageCorner.CornerRadius = UDim.new(0, 0)
+    PageCorner.CornerRadius = UDim.new(0, 8)
+    PageCorner.TopLeftRadius = UDim.new(0, 0)
+    PageCorner.TopRightRadius = UDim.new(0, 0)
     PageCorner.Parent = Page
 
     local PageStroke = Instance.new("UIStroke")
@@ -27,7 +29,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     Actions.BackgroundTransparency = 1
     Actions.BorderColor3 = Color3.new(0, 0, 0)
     Actions.BorderSizePixel = 0
-    Actions.Size = UDim2.new(0, 800, 0, 35)
+    Actions.Size = UDim2.new(1, 0, 0, 35)
     Actions.Parent = Page
 
     local ActionsLayout = Instance.new("UIListLayout")
@@ -109,8 +111,8 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     ContentFrame.BorderColor3 = Color3.new(0, 0, 0)
     ContentFrame.BorderSizePixel = 0
     ContentFrame.LayoutOrder = 1
-    ContentFrame.Position = UDim2.new(0, 0, 0.061, 0)
-    ContentFrame.Size = UDim2.new(0, 800, 0, 535)
+    ContentFrame.Position = UDim2.new(0, 0, 0, 35)
+    ContentFrame.Size = UDim2.new(1, 0, 1, -35)
     ContentFrame.Parent = Page
 
     local ContentLayout = Instance.new("UIListLayout")
@@ -125,7 +127,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     AccountPageFrame.BorderColor3 = Color3.new(0, 0, 0)
     AccountPageFrame.BorderSizePixel = 0
     AccountPageFrame.Position = UDim2.new(0.038, 0, 0.03, 0)
-    AccountPageFrame.Size = UDim2.new(0, 770, 0, 505)
+    AccountPageFrame.Size = UDim2.new(1, -30, 1, -30)
     AccountPageFrame.Parent = ContentFrame
 
     local AccountPageCorner = Instance.new("UICorner")
@@ -145,7 +147,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     Userinfo.BackgroundTransparency = 1
     Userinfo.BorderColor3 = Color3.new(0, 0, 0)
     Userinfo.BorderSizePixel = 0
-    Userinfo.Size = UDim2.new(0, 770, 0, 80)
+    Userinfo.Size = UDim2.new(1, 0, 0, 80)
     Userinfo.Parent = AccountPageFrame
 
     local UserinfoCorner = Instance.new("UICorner")
@@ -180,13 +182,25 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
 
     local ProfileImage = Instance.new("ImageButton")
     ProfileImage.Name = "Frame"
-    ProfileImage.Active = false
+    ProfileImage.AutoButtonColor = false
     ProfileImage.BackgroundColor3 = Color3.new(0.188, 0.188, 0.188)
     ProfileImage.BorderColor3 = Color3.new(0, 0, 0)
     ProfileImage.BorderSizePixel = 0
     ProfileImage.Selectable = false
     ProfileImage.Size = UDim2.new(0, 50, 0, 50)
     ProfileImage.Parent = Profile
+    
+    ProfileImage.MouseButton1Click:Connect(function()
+        local success, userId = pcall(function() return game:GetService("Players").LocalPlayer.UserId end)
+        if success and userId and setclipboard then
+            setclipboard(tostring(userId))
+            Notifications.Notify({
+                Title = "Success",
+                Content = "Copied UserId to clipboard!",
+                Duration = 3
+            })
+        end
+    end)
 
     local ProfileImageCorner = Instance.new("UICorner")
     ProfileImageCorner.Parent = ProfileImage
@@ -202,7 +216,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     Info.BorderColor3 = Color3.new(0, 0, 0)
     Info.BorderSizePixel = 0
     Info.Position = UDim2.new(0.104, 0, 0, 0)
-    Info.Size = UDim2.new(0, 500, 0, 80)
+    Info.Size = UDim2.new(1, -80, 1, 0)
     Info.Parent = Userinfo
 
     local InfoLayoutInner = Instance.new("UIListLayout")
@@ -217,7 +231,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     InfoContainer.BackgroundTransparency = 1
     InfoContainer.BorderColor3 = Color3.new(0, 0, 0)
     InfoContainer.BorderSizePixel = 0
-    InfoContainer.Size = UDim2.new(0, 500, 0, 50)
+    InfoContainer.Size = UDim2.new(1, 0, 0, 50)
     InfoContainer.Parent = Info
 
     local InfoContainerLayout = Instance.new("UIListLayout")
@@ -230,7 +244,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     TextContainer.BackgroundTransparency = 1
     TextContainer.BorderColor3 = Color3.new(0, 0, 0)
     TextContainer.BorderSizePixel = 0
-    TextContainer.Size = UDim2.new(0, 150, 0, 50)
+    TextContainer.Size = UDim2.new(1, 0, 1, 0)
     TextContainer.Parent = InfoContainer
 
     local TextContainerLayout = Instance.new("UIListLayout")
@@ -309,7 +323,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     License.BorderSizePixel = 0
     License.LayoutOrder = 1
     License.Position = UDim2.new(0, 0, 0.158, 0)
-    License.Size = UDim2.new(0, 770, 0, 280)
+    License.Size = UDim2.new(1, 0, 0, 280)
     License.Parent = AccountPageFrame
 
     local LicenseStroke = Instance.new("UIStroke")
@@ -326,7 +340,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     LicenseHeader.BackgroundTransparency = 1
     LicenseHeader.BorderColor3 = Color3.new(0, 0, 0)
     LicenseHeader.BorderSizePixel = 0
-    LicenseHeader.Size = UDim2.new(0, 770, 0, 50)
+    LicenseHeader.Size = UDim2.new(1, 0, 0, 50)
     LicenseHeader.Parent = License
 
     local LicenseHeaderStroke = Instance.new("UIStroke")
@@ -422,7 +436,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     Redeem.BorderColor3 = Color3.new(0, 0, 0)
     Redeem.BorderSizePixel = 0
     Redeem.Position = UDim2.new(0.286, 0, 0, 0)
-    Redeem.Size = UDim2.new(0, 550, 0, 50)
+    Redeem.Size = UDim2.new(1, -220, 1, 0)
     Redeem.Parent = LicenseHeader
 
     local RedeemLayout = Instance.new("UIListLayout")
@@ -438,7 +452,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     InputFrame.BorderColor3 = Color3.new(0, 0, 0)
     InputFrame.BorderSizePixel = 0
     InputFrame.Position = UDim2.new(0.236, 0, 0, 0)
-    InputFrame.Size = UDim2.new(0, 320, 0, 35)
+    InputFrame.Size = UDim2.new(1, -110, 0, 35)
     InputFrame.Parent = Redeem
 
     local InputCorner = Instance.new("UICorner")
@@ -523,7 +537,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     DetailsFrame.BorderColor3 = Color3.new(0, 0, 0)
     DetailsFrame.BorderSizePixel = 0
     DetailsFrame.Position = UDim2.new(0, 0, 0.179, 0)
-    DetailsFrame.Size = UDim2.new(0, 770, 0, 230)
+    DetailsFrame.Size = UDim2.new(1, 0, 1, -50)
     DetailsFrame.Parent = License
 
     local DetailsFrameLayout = Instance.new("UIListLayout")
@@ -537,7 +551,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     StatusFrame.BackgroundTransparency = 1
     StatusFrame.BorderColor3 = Color3.new(0, 0, 0)
     StatusFrame.BorderSizePixel = 0
-    StatusFrame.Size = UDim2.new(0, 200, 0, 230)
+    StatusFrame.Size = UDim2.new(0, 220, 1, 0)
     StatusFrame.Parent = DetailsFrame
 
     local StatusFrameLayout = Instance.new("UIListLayout")
@@ -944,8 +958,8 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     ClaimedKeysFrame.BackgroundTransparency = 1
     ClaimedKeysFrame.BorderColor3 = Color3.new(0, 0, 0)
     ClaimedKeysFrame.BorderSizePixel = 0
-    ClaimedKeysFrame.Position = UDim2.new(0.26, 0, 0, 0)
-    ClaimedKeysFrame.Size = UDim2.new(0.74, 0, 1, 0)
+    ClaimedKeysFrame.Position = UDim2.new(0, 0, 0, 0)
+    ClaimedKeysFrame.Size = UDim2.new(1, -230, 1, 0)
     ClaimedKeysFrame.Parent = DetailsFrame
 
     local ClaimedKeysLayout = Instance.new("UIListLayout")
@@ -961,7 +975,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     KeysFrame.BorderColor3 = Color3.new(0, 0, 0)
     KeysFrame.BorderSizePixel = 0
     KeysFrame.Position = UDim2.new(0, 0, 0.043, 0)
-    KeysFrame.Size = UDim2.new(0, 555, 0, 210)
+    KeysFrame.Size = UDim2.new(1, -15, 1, -20)
     KeysFrame.Parent = ClaimedKeysFrame
 
     local KeysStroke = Instance.new("UIStroke")
@@ -982,7 +996,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     KeysTextFrame.BackgroundTransparency = 1
     KeysTextFrame.BorderColor3 = Color3.new(0, 0, 0)
     KeysTextFrame.BorderSizePixel = 0
-    KeysTextFrame.Size = UDim2.new(0, 555, 0, 30)
+    KeysTextFrame.Size = UDim2.new(1, 0, 0, 30)
     KeysTextFrame.Parent = KeysFrame
 
     local KeysTextLayout = Instance.new("UIListLayout")
@@ -1043,9 +1057,8 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     local CountFrame = Instance.new("Frame")
     CountFrame.Name = "Count"
     CountFrame.BackgroundColor3 = Color3.new(0.173, 0.173, 0.173)
-    CountFrame.BorderColor3 = Color3.new(0, 0, 0)
     CountFrame.BorderSizePixel = 0
-    CountFrame.LayoutOrder = 3
+    CountFrame.LayoutOrder = 2
     CountFrame.Size = UDim2.new(0, 20, 0, 20)
     CountFrame.Parent = KeysTextFrame
 
@@ -1080,8 +1093,8 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     Filler.BackgroundTransparency = 1
     Filler.BorderColor3 = Color3.new(0, 0, 0)
     Filler.BorderSizePixel = 0
-    Filler.LayoutOrder = 2
-    Filler.Size = UDim2.new(0, 395, 0, 30)
+    Filler.LayoutOrder = 3
+    Filler.Size = UDim2.new(1, -150, 0, 30)
     Filler.Parent = KeysTextFrame
 
     local Claimed = Instance.new("Frame")
@@ -1091,7 +1104,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     Claimed.BorderColor3 = Color3.new(0, 0, 0)
     Claimed.BorderSizePixel = 0
     Claimed.Position = UDim2.new(0, 0, 0.143, 0)
-    Claimed.Size = UDim2.new(0, 555, 0, 180)
+    Claimed.Size = UDim2.new(1, 0, 1, -30)
     Claimed.Parent = KeysFrame
 
     local ClaimedLayout = Instance.new("UIListLayout")
@@ -1104,7 +1117,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     ExampleKey.BackgroundTransparency = 1
     ExampleKey.BorderColor3 = Color3.new(0, 0, 0)
     ExampleKey.BorderSizePixel = 0
-    ExampleKey.Size = UDim2.new(0, 555, 0, 50)
+    ExampleKey.Size = UDim2.new(1, -10, 0, 50)
     ExampleKey.Parent = Claimed
 
     local Security = Instance.new("Frame")
@@ -1115,7 +1128,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     Security.BorderSizePixel = 0
     Security.LayoutOrder = 2
     Security.Position = UDim2.new(0, 0, 0.713, 0)
-    Security.Size = UDim2.new(0, 770, 0, 145)
+    Security.Size = UDim2.new(1, 0, 0, 145)
     Security.Parent = AccountPageFrame
 
     local SecurityLayout = Instance.new("UIListLayout")
@@ -1129,7 +1142,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     SecurityText.BackgroundTransparency = 1
     SecurityText.BorderColor3 = Color3.new(0, 0, 0)
     SecurityText.BorderSizePixel = 0
-    SecurityText.Size = UDim2.new(0, 770, 0, 40)
+    SecurityText.Size = UDim2.new(1, 0, 0, 40)
     SecurityText.Parent = Security
 
     local SecurityIconFrame = Instance.new("Frame")
@@ -1213,7 +1226,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     SecurityContent.BorderColor3 = Color3.new(0, 0, 0)
     SecurityContent.BorderSizePixel = 0
     SecurityContent.Position = UDim2.new(0, 0, 0.345, 0)
-    SecurityContent.Size = UDim2.new(0, 770, 0, 95)
+    SecurityContent.Size = UDim2.new(1, 0, 0, 95)
     SecurityContent.Parent = Security
 
     local LogoutFrame = Instance.new("Frame")
@@ -1556,7 +1569,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
                 KeyItem.BackgroundColor3 = Color3.new(0.16, 0.16, 0.16)
                 KeyItem.BackgroundTransparency = 1
                 KeyItem.BorderSizePixel = 0
-                KeyItem.Size = UDim2.new(0, 555, 0, 50)
+                KeyItem.Size = UDim2.new(1, 0, 0, 50)
                 KeyItem.Parent = Claimed
                 
                 local KeyCorner = Instance.new("UICorner")

@@ -39,7 +39,16 @@ function Api.Request(endpoint, method, body)
         Headers = headers
     }
     if body then
-        options.Body = HttpService:JSONEncode(body)
+        
+        local jsonStr = HttpService:JSONEncode(body)
+        local encryptedBody = AES.encrypt(jsonStr)
+        
+        if encryptedBody then
+            options.Body = HttpService:JSONEncode({ encrypted = encryptedBody })
+        else
+            warn("Failed to encrypt payload, sending unencrypted (this will likely be rejected by the server).")
+            options.Body = jsonStr
+        end
     end
 
     local success, res = pcall(function()
@@ -50,7 +59,20 @@ function Api.Request(endpoint, method, body)
         local decodeSuccess, decoded = pcall(function()
             return HttpService:JSONDecode(res.Body)
         end)
-        if decodeSuccess then 
+        
+        if decodeSuccess then
+            if decoded.encrypted then
+                
+                local decryptedStr = AES.decrypt(decoded.encrypted)
+                if decryptedStr then
+                    local finalSuccess, finalDecoded = pcall(function() return HttpService:JSONDecode(decryptedStr) end)
+                    if finalSuccess then
+                        return finalDecoded
+                    end
+                end
+                return { error = "Failed to decrypt server response" }
+            end
+            
             return decoded 
         else
             return { error = "Server returned invalid JSON: " .. tostring(res.Body) }
@@ -113,6 +135,34 @@ function Api.Register(username, password, licenseKey)
         hwid = hwid
     })
 
+    if res and res.message then
+        return true, res.message
+    elseif res and res.error then
+        return false, res.error
+    end
+    return false, "Connection Error"
+end
+
+function Api.ForgotPassword(username)
+    local res = Api.Request("/auth/forgot-password", "POST", {
+        username = username
+    })
+    
+    if res and res.message then
+        return true, res.message
+    elseif res and res.error then
+        return false, res.error
+    end
+    return false, "Connection Error"
+end
+
+function Api.ResetPassword(username, code, newPassword)
+    local res = Api.Request("/auth/reset-password", "POST", {
+        username = username,
+        code = code,
+        newPassword = newPassword
+    })
+    
     if res and res.message then
         return true, res.message
     elseif res and res.error then
@@ -310,6 +360,143 @@ local DarkTheme = {
 
 
 -- [[ Components/Button.luau ]] --
+local ButtonComponent = {}
+
+
+
+function ButtonComponent.Create(TabContent, Maid, Config)
+    local btnConfig = type(Config) == "string" and {Header = Config} or Config
+    local headerText = btnConfig.Header or btnConfig.Name or "Button"
+    local descText = btnConfig.Description or ""
+    local buttonText = btnConfig.ButtonText or "Click"
+    local cb = btnConfig.Callback or function() end
+    
+    local BtnFrame = Instance.new("Frame")
+    BtnFrame.Name = headerText
+    BtnFrame.BackgroundColor3 = Color3.new(0.11, 0.11, 0.11)
+    BtnFrame.BorderColor3 = Color3.new(0, 0, 0)
+    BtnFrame.BorderSizePixel = 0
+    BtnFrame.Size = UDim2.new(1, 0, 0, 40)
+    BtnFrame.Parent = TabContent
+    
+    local BtnCorner = Instance.new("UICorner")
+    BtnCorner.CornerRadius = UDim.new(0, 5)
+    BtnCorner.Parent = BtnFrame
+    
+    local BtnStroke = Instance.new("UIStroke")
+    BtnStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
+    BtnStroke.Color = Color3.new(0.216, 0.216, 0.216)
+    BtnStroke.Parent = BtnFrame
+    
+    local BtnLayout = Instance.new("UIListLayout")
+    BtnLayout.FillDirection = Enum.FillDirection.Horizontal
+    BtnLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    BtnLayout.Parent = BtnFrame
+    
+    local TextContainer = Instance.new("Frame")
+    TextContainer.Name = "Text"
+    TextContainer.BackgroundTransparency = 1
+    TextContainer.Size = UDim2.new(1, -120, 1, 0)
+    TextContainer.Parent = BtnFrame
+    
+    local TextLayout = Instance.new("UIListLayout")
+    TextLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    TextLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    TextLayout.Parent = TextContainer
+    
+    local TextPadding = Instance.new("UIPadding")
+    TextPadding.PaddingLeft = UDim.new(0, 9)
+    TextPadding.Parent = TextContainer
+    
+    local Header = Instance.new("TextLabel")
+    Header.Name = "Header"
+    Header.BackgroundTransparency = 1
+    Header.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    Header.Size = UDim2.new(1, 0, 0, descText == "" and 40 or 20)
+    Header.Text = headerText
+    Header.TextColor3 = Color3.new(0.8, 0.8, 0.8)
+    Header.TextSize = 15
+    Header.TextXAlignment = Enum.TextXAlignment.Left
+    Header.TextYAlignment = descText == "" and Enum.TextYAlignment.Center or Enum.TextYAlignment.Bottom
+    Header.Parent = TextContainer
+    
+    if descText ~= "" then
+        local Description = Instance.new("TextLabel")
+        Description.Name = "Description"
+        Description.BackgroundTransparency = 1
+        Description.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+        Description.Size = UDim2.new(1, 0, 0, 20)
+        Description.Text = descText
+        Description.TextColor3 = Color3.new(0.6, 0.6, 0.6)
+        Description.TextSize = 14
+        Description.TextXAlignment = Enum.TextXAlignment.Left
+        Description.TextYAlignment = Enum.TextYAlignment.Top
+        Description.Parent = TextContainer
+    end
+    
+    local ButtonContainer = Instance.new("Frame")
+    ButtonContainer.Name = "ButtonContainer"
+    ButtonContainer.BackgroundTransparency = 1
+    ButtonContainer.LayoutOrder = 1
+    ButtonContainer.Size = UDim2.new(0, 120, 1, 0)
+    ButtonContainer.Parent = BtnFrame
+    
+    local ButtonLayout = Instance.new("UIListLayout")
+    ButtonLayout.FillDirection = Enum.FillDirection.Horizontal
+    ButtonLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
+    ButtonLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    ButtonLayout.Parent = ButtonContainer
+    
+    local ButtonPadding = Instance.new("UIPadding")
+    ButtonPadding.PaddingRight = UDim.new(0, 9)
+    ButtonPadding.Parent = ButtonContainer
+    
+    local ClickBtn = Instance.new("TextButton")
+    ClickBtn.Name = "Button"
+    ClickBtn.AutoButtonColor = false
+    ClickBtn.BackgroundColor3 = Color3.new(0.141, 0.141, 0.141)
+    ClickBtn.BorderSizePixel = 0
+    ClickBtn.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+    ClickBtn.Size = UDim2.new(0, 100, 0, 25)
+    ClickBtn.Text = buttonText
+    ClickBtn.TextColor3 = Color3.new(0.8, 0.8, 0.8)
+    ClickBtn.TextSize = 14
+    ClickBtn.Parent = ButtonContainer
+    
+    local ClickBtnCorner = Instance.new("UICorner")
+    ClickBtnCorner.CornerRadius = UDim.new(0, 5)
+    ClickBtnCorner.Parent = ClickBtn
+    
+    local ClickBtnStroke = Instance.new("UIStroke")
+    ClickBtnStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    ClickBtnStroke.Color = Color3.new(0.275, 0.275, 0.275)
+    ClickBtnStroke.Parent = ClickBtn
+    
+    Maid:GiveTask(ClickBtn.MouseButton1Click:Connect(function()
+        cb()
+    end))
+    
+    Maid:GiveTask(ClickBtn.MouseEnter:Connect(function()
+        Tween(ClickBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.new(0.18, 0.18, 0.18)})
+        Tween(ClickBtnStroke, TweenInfo.new(0.2), {Color = Color3.new(0.35, 0.35, 0.35)})
+    end))
+    
+    Maid:GiveTask(ClickBtn.MouseLeave:Connect(function()
+        Tween(ClickBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.new(0.141, 0.141, 0.141)})
+        Tween(ClickBtnStroke, TweenInfo.new(0.2), {Color = Color3.new(0.275, 0.275, 0.275)})
+    end))
+    
+    Maid:GiveTask(ClickBtn.MouseButton1Down:Connect(function()
+        Tween(ClickBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.new(0.22, 0.22, 0.22)})
+    end))
+    
+    Maid:GiveTask(ClickBtn.MouseButton1Up:Connect(function()
+        Tween(ClickBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.new(0.18, 0.18, 0.18)})
+    end))
+    
+    return BtnFrame
+end
+
 
 
 -- [[ Components/Toggle.luau ]] --
@@ -383,7 +570,7 @@ function Notifications.Notify(options)
 
     local isError = (string.lower(type) == "error")
     local mainColor = isError and Config.ErrorColor or Config.SuccessColor
-    local iconAsset = isError and "rbxassetid://85824584748112" or "rbxassetid://10651060934"
+    local iconAsset = isError and "rbxassetid://85824584748112" or "rbxassetid://118922551501473"
     
     local Wrapper = Instance.new("Frame")
     Wrapper.Name = "NotificationWrapper"
@@ -494,12 +681,14 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     Page.BorderColor3 = Color3.new(0, 0, 0)
     Page.BorderSizePixel = 0
     Page.Position = UDim2.new(0.5, 0, 0.518, 0)
-    Page.Size = UDim2.new(0, 800, 0, 570)
+    Page.Size = UDim2.new(1, 0, 1, 0)
     Page.LayoutOrder = 2
     Page.Parent = Content
 
     local PageCorner = Instance.new("UICorner")
-    PageCorner.CornerRadius = UDim.new(0, 0)
+    PageCorner.CornerRadius = UDim.new(0, 8)
+    PageCorner.TopLeftRadius = UDim.new(0, 0)
+    PageCorner.TopRightRadius = UDim.new(0, 0)
     PageCorner.Parent = Page
 
     local PageStroke = Instance.new("UIStroke")
@@ -512,7 +701,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     Actions.BackgroundTransparency = 1
     Actions.BorderColor3 = Color3.new(0, 0, 0)
     Actions.BorderSizePixel = 0
-    Actions.Size = UDim2.new(0, 800, 0, 35)
+    Actions.Size = UDim2.new(1, 0, 0, 35)
     Actions.Parent = Page
 
     local ActionsLayout = Instance.new("UIListLayout")
@@ -594,8 +783,8 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     ContentFrame.BorderColor3 = Color3.new(0, 0, 0)
     ContentFrame.BorderSizePixel = 0
     ContentFrame.LayoutOrder = 1
-    ContentFrame.Position = UDim2.new(0, 0, 0.061, 0)
-    ContentFrame.Size = UDim2.new(0, 800, 0, 535)
+    ContentFrame.Position = UDim2.new(0, 0, 0, 35)
+    ContentFrame.Size = UDim2.new(1, 0, 1, -35)
     ContentFrame.Parent = Page
 
     local ContentLayout = Instance.new("UIListLayout")
@@ -610,7 +799,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     AccountPageFrame.BorderColor3 = Color3.new(0, 0, 0)
     AccountPageFrame.BorderSizePixel = 0
     AccountPageFrame.Position = UDim2.new(0.038, 0, 0.03, 0)
-    AccountPageFrame.Size = UDim2.new(0, 770, 0, 505)
+    AccountPageFrame.Size = UDim2.new(1, -30, 1, -30)
     AccountPageFrame.Parent = ContentFrame
 
     local AccountPageCorner = Instance.new("UICorner")
@@ -630,7 +819,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     Userinfo.BackgroundTransparency = 1
     Userinfo.BorderColor3 = Color3.new(0, 0, 0)
     Userinfo.BorderSizePixel = 0
-    Userinfo.Size = UDim2.new(0, 770, 0, 80)
+    Userinfo.Size = UDim2.new(1, 0, 0, 80)
     Userinfo.Parent = AccountPageFrame
 
     local UserinfoCorner = Instance.new("UICorner")
@@ -665,13 +854,25 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
 
     local ProfileImage = Instance.new("ImageButton")
     ProfileImage.Name = "Frame"
-    ProfileImage.Active = false
+    ProfileImage.AutoButtonColor = false
     ProfileImage.BackgroundColor3 = Color3.new(0.188, 0.188, 0.188)
     ProfileImage.BorderColor3 = Color3.new(0, 0, 0)
     ProfileImage.BorderSizePixel = 0
     ProfileImage.Selectable = false
     ProfileImage.Size = UDim2.new(0, 50, 0, 50)
     ProfileImage.Parent = Profile
+    
+    ProfileImage.MouseButton1Click:Connect(function()
+        local success, userId = pcall(function() return game:GetService("Players").LocalPlayer.UserId end)
+        if success and userId and setclipboard then
+            setclipboard(tostring(userId))
+            Notifications.Notify({
+                Title = "Success",
+                Content = "Copied UserId to clipboard!",
+                Duration = 3
+            })
+        end
+    end)
 
     local ProfileImageCorner = Instance.new("UICorner")
     ProfileImageCorner.Parent = ProfileImage
@@ -687,7 +888,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     Info.BorderColor3 = Color3.new(0, 0, 0)
     Info.BorderSizePixel = 0
     Info.Position = UDim2.new(0.104, 0, 0, 0)
-    Info.Size = UDim2.new(0, 500, 0, 80)
+    Info.Size = UDim2.new(1, -80, 1, 0)
     Info.Parent = Userinfo
 
     local InfoLayoutInner = Instance.new("UIListLayout")
@@ -702,7 +903,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     InfoContainer.BackgroundTransparency = 1
     InfoContainer.BorderColor3 = Color3.new(0, 0, 0)
     InfoContainer.BorderSizePixel = 0
-    InfoContainer.Size = UDim2.new(0, 500, 0, 50)
+    InfoContainer.Size = UDim2.new(1, 0, 0, 50)
     InfoContainer.Parent = Info
 
     local InfoContainerLayout = Instance.new("UIListLayout")
@@ -715,7 +916,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     TextContainer.BackgroundTransparency = 1
     TextContainer.BorderColor3 = Color3.new(0, 0, 0)
     TextContainer.BorderSizePixel = 0
-    TextContainer.Size = UDim2.new(0, 150, 0, 50)
+    TextContainer.Size = UDim2.new(1, 0, 1, 0)
     TextContainer.Parent = InfoContainer
 
     local TextContainerLayout = Instance.new("UIListLayout")
@@ -794,7 +995,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     License.BorderSizePixel = 0
     License.LayoutOrder = 1
     License.Position = UDim2.new(0, 0, 0.158, 0)
-    License.Size = UDim2.new(0, 770, 0, 280)
+    License.Size = UDim2.new(1, 0, 0, 280)
     License.Parent = AccountPageFrame
 
     local LicenseStroke = Instance.new("UIStroke")
@@ -811,7 +1012,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     LicenseHeader.BackgroundTransparency = 1
     LicenseHeader.BorderColor3 = Color3.new(0, 0, 0)
     LicenseHeader.BorderSizePixel = 0
-    LicenseHeader.Size = UDim2.new(0, 770, 0, 50)
+    LicenseHeader.Size = UDim2.new(1, 0, 0, 50)
     LicenseHeader.Parent = License
 
     local LicenseHeaderStroke = Instance.new("UIStroke")
@@ -907,7 +1108,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     Redeem.BorderColor3 = Color3.new(0, 0, 0)
     Redeem.BorderSizePixel = 0
     Redeem.Position = UDim2.new(0.286, 0, 0, 0)
-    Redeem.Size = UDim2.new(0, 550, 0, 50)
+    Redeem.Size = UDim2.new(1, -220, 1, 0)
     Redeem.Parent = LicenseHeader
 
     local RedeemLayout = Instance.new("UIListLayout")
@@ -923,7 +1124,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     InputFrame.BorderColor3 = Color3.new(0, 0, 0)
     InputFrame.BorderSizePixel = 0
     InputFrame.Position = UDim2.new(0.236, 0, 0, 0)
-    InputFrame.Size = UDim2.new(0, 320, 0, 35)
+    InputFrame.Size = UDim2.new(1, -110, 0, 35)
     InputFrame.Parent = Redeem
 
     local InputCorner = Instance.new("UICorner")
@@ -1008,7 +1209,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     DetailsFrame.BorderColor3 = Color3.new(0, 0, 0)
     DetailsFrame.BorderSizePixel = 0
     DetailsFrame.Position = UDim2.new(0, 0, 0.179, 0)
-    DetailsFrame.Size = UDim2.new(0, 770, 0, 230)
+    DetailsFrame.Size = UDim2.new(1, 0, 1, -50)
     DetailsFrame.Parent = License
 
     local DetailsFrameLayout = Instance.new("UIListLayout")
@@ -1022,7 +1223,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     StatusFrame.BackgroundTransparency = 1
     StatusFrame.BorderColor3 = Color3.new(0, 0, 0)
     StatusFrame.BorderSizePixel = 0
-    StatusFrame.Size = UDim2.new(0, 200, 0, 230)
+    StatusFrame.Size = UDim2.new(0, 220, 1, 0)
     StatusFrame.Parent = DetailsFrame
 
     local StatusFrameLayout = Instance.new("UIListLayout")
@@ -1429,8 +1630,8 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     ClaimedKeysFrame.BackgroundTransparency = 1
     ClaimedKeysFrame.BorderColor3 = Color3.new(0, 0, 0)
     ClaimedKeysFrame.BorderSizePixel = 0
-    ClaimedKeysFrame.Position = UDim2.new(0.26, 0, 0, 0)
-    ClaimedKeysFrame.Size = UDim2.new(0.74, 0, 1, 0)
+    ClaimedKeysFrame.Position = UDim2.new(0, 0, 0, 0)
+    ClaimedKeysFrame.Size = UDim2.new(1, -230, 1, 0)
     ClaimedKeysFrame.Parent = DetailsFrame
 
     local ClaimedKeysLayout = Instance.new("UIListLayout")
@@ -1446,7 +1647,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     KeysFrame.BorderColor3 = Color3.new(0, 0, 0)
     KeysFrame.BorderSizePixel = 0
     KeysFrame.Position = UDim2.new(0, 0, 0.043, 0)
-    KeysFrame.Size = UDim2.new(0, 555, 0, 210)
+    KeysFrame.Size = UDim2.new(1, -15, 1, -20)
     KeysFrame.Parent = ClaimedKeysFrame
 
     local KeysStroke = Instance.new("UIStroke")
@@ -1467,7 +1668,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     KeysTextFrame.BackgroundTransparency = 1
     KeysTextFrame.BorderColor3 = Color3.new(0, 0, 0)
     KeysTextFrame.BorderSizePixel = 0
-    KeysTextFrame.Size = UDim2.new(0, 555, 0, 30)
+    KeysTextFrame.Size = UDim2.new(1, 0, 0, 30)
     KeysTextFrame.Parent = KeysFrame
 
     local KeysTextLayout = Instance.new("UIListLayout")
@@ -1528,9 +1729,8 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     local CountFrame = Instance.new("Frame")
     CountFrame.Name = "Count"
     CountFrame.BackgroundColor3 = Color3.new(0.173, 0.173, 0.173)
-    CountFrame.BorderColor3 = Color3.new(0, 0, 0)
     CountFrame.BorderSizePixel = 0
-    CountFrame.LayoutOrder = 3
+    CountFrame.LayoutOrder = 2
     CountFrame.Size = UDim2.new(0, 20, 0, 20)
     CountFrame.Parent = KeysTextFrame
 
@@ -1565,8 +1765,8 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     Filler.BackgroundTransparency = 1
     Filler.BorderColor3 = Color3.new(0, 0, 0)
     Filler.BorderSizePixel = 0
-    Filler.LayoutOrder = 2
-    Filler.Size = UDim2.new(0, 395, 0, 30)
+    Filler.LayoutOrder = 3
+    Filler.Size = UDim2.new(1, -150, 0, 30)
     Filler.Parent = KeysTextFrame
 
     local Claimed = Instance.new("Frame")
@@ -1576,7 +1776,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     Claimed.BorderColor3 = Color3.new(0, 0, 0)
     Claimed.BorderSizePixel = 0
     Claimed.Position = UDim2.new(0, 0, 0.143, 0)
-    Claimed.Size = UDim2.new(0, 555, 0, 180)
+    Claimed.Size = UDim2.new(1, 0, 1, -30)
     Claimed.Parent = KeysFrame
 
     local ClaimedLayout = Instance.new("UIListLayout")
@@ -1589,7 +1789,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     ExampleKey.BackgroundTransparency = 1
     ExampleKey.BorderColor3 = Color3.new(0, 0, 0)
     ExampleKey.BorderSizePixel = 0
-    ExampleKey.Size = UDim2.new(0, 555, 0, 50)
+    ExampleKey.Size = UDim2.new(1, -10, 0, 50)
     ExampleKey.Parent = Claimed
 
     local Security = Instance.new("Frame")
@@ -1600,7 +1800,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     Security.BorderSizePixel = 0
     Security.LayoutOrder = 2
     Security.Position = UDim2.new(0, 0, 0.713, 0)
-    Security.Size = UDim2.new(0, 770, 0, 145)
+    Security.Size = UDim2.new(1, 0, 0, 145)
     Security.Parent = AccountPageFrame
 
     local SecurityLayout = Instance.new("UIListLayout")
@@ -1614,7 +1814,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     SecurityText.BackgroundTransparency = 1
     SecurityText.BorderColor3 = Color3.new(0, 0, 0)
     SecurityText.BorderSizePixel = 0
-    SecurityText.Size = UDim2.new(0, 770, 0, 40)
+    SecurityText.Size = UDim2.new(1, 0, 0, 40)
     SecurityText.Parent = Security
 
     local SecurityIconFrame = Instance.new("Frame")
@@ -1698,7 +1898,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     SecurityContent.BorderColor3 = Color3.new(0, 0, 0)
     SecurityContent.BorderSizePixel = 0
     SecurityContent.Position = UDim2.new(0, 0, 0.345, 0)
-    SecurityContent.Size = UDim2.new(0, 770, 0, 95)
+    SecurityContent.Size = UDim2.new(1, 0, 0, 95)
     SecurityContent.Parent = Security
 
     local LogoutFrame = Instance.new("Frame")
@@ -1974,6 +2174,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
             end
             
             if subEnd or isLifetime then isActive = true end
+            if remainingStr == "Expired" then isActive = false end
             PageData.IsLifetime = isLifetime
             
             if isActive then
@@ -2035,7 +2236,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
                 KeyItem.BackgroundColor3 = Color3.new(0.16, 0.16, 0.16)
                 KeyItem.BackgroundTransparency = 1
                 KeyItem.BorderSizePixel = 0
-                KeyItem.Size = UDim2.new(0, 555, 0, 50)
+                KeyItem.Size = UDim2.new(1, 0, 0, 50)
                 KeyItem.Parent = Claimed
                 
                 local KeyCorner = Instance.new("UICorner")
@@ -2122,1012 +2323,6 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
             end
         end
     return PageData
-end
-
-
-
--- [[ Core/LoginPage.luau ]] --
-
-
-
-
-
-local LoginPage = {}
-
-function LoginPage.Create(ParentGui, OnSuccess)
-    local Page = Instance.new("Frame")
-    Page.Name = "LoginPage"
-    Page.BackgroundColor3 = Color3.new(0.06, 0.06, 0.06)
-    Page.BorderSizePixel = 0
-    Page.AnchorPoint = Vector2.new(0.5, 0.5)
-    Page.Position = UDim2.new(0.5, 0, 0.5, 0)
-    Page.Size = UDim2.new(0, 800, 0, 600)
-    Page.ZIndex = 50
-    Page.Parent = ParentGui
-    
-    Instance.new("UICorner", Page)
-    local PageStroke = Instance.new("UIStroke", Page)
-    PageStroke.Color = Color3.new(0.216, 0.216, 0.216)
-    
-    local Container = Instance.new("Frame")
-    Container.Name = "Container"
-    Container.AnchorPoint = Vector2.new(0.5, 0.5)
-    Container.BackgroundColor3 = Color3.new(0.09, 0.09, 0.09)
-    Container.Position = UDim2.new(0.5, 0, 0.5, 0)
-    Container.Size = UDim2.new(0, 400, 0, 500)
-    Container.Parent = Page
-    Instance.new("UICorner", Container).CornerRadius = UDim.new(0, 8)
-    local Stroke = Instance.new("UIStroke", Container)
-    Stroke.Color = Color3.new(0.15, 0.15, 0.15)
-    
-    local LogoContainer = Instance.new("Frame", Container)
-    LogoContainer.BackgroundTransparency = 1
-    LogoContainer.Size = UDim2.new(1, 0, 0, 50)
-    LogoContainer.Position = UDim2.new(0, 0, 0, 30)
-
-    local LogoLayout = Instance.new("UIListLayout", LogoContainer)
-    LogoLayout.FillDirection = Enum.FillDirection.Horizontal
-    LogoLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    LogoLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    LogoLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    LogoLayout.Padding = UDim.new(0, 8)
-
-    local LogoImg = Instance.new("ImageLabel", LogoContainer)
-    LogoImg.BackgroundTransparency = 1
-    LogoImg.Size = UDim2.new(0, 24, 0, 24)
-    LogoImg.Image = "rbxassetid://71942076965693"
-    LogoImg.LayoutOrder = 1
-
-    local LogoText = Instance.new("TextLabel", LogoContainer)
-    LogoText.BackgroundTransparency = 1
-    LogoText.Size = UDim2.new(0, 50, 0, 50)
-    LogoText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    LogoText.Text = "Volt"
-    LogoText.TextColor3 = Color3.new(1, 1, 1)
-    LogoText.TextSize = 24
-    LogoText.LayoutOrder = 2
-    LogoText.TextXAlignment = Enum.TextXAlignment.Left
-    
-    local Title = Instance.new("TextLabel", Container)
-    Title.BackgroundTransparency = 1
-    Title.Size = UDim2.new(1, 0, 0, 30)
-    Title.Position = UDim2.new(0, 0, 0, 80)
-    Title.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    Title.Text = "Welcome to Volt"
-    Title.TextColor3 = Color3.new(1, 1, 1)
-    Title.TextSize = 20
-    
-    local Subtitle = Instance.new("TextLabel", Container)
-    Subtitle.BackgroundTransparency = 1
-    Subtitle.Size = UDim2.new(1, 0, 0, 20)
-    Subtitle.Position = UDim2.new(0, 0, 0, 110)
-    Subtitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
-    Subtitle.Text = "Sign in to access your Lua development environment"
-    Subtitle.TextColor3 = Color3.new(0.6, 0.6, 0.6)
-    Subtitle.TextSize = 12
-    
-    local ErrorLabel = Instance.new("TextLabel", Container)
-    ErrorLabel.BackgroundTransparency = 1
-    ErrorLabel.Size = UDim2.new(1, 0, 0, 20)
-    ErrorLabel.Position = UDim2.new(0, 0, 0, 140)
-    ErrorLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
-    ErrorLabel.Text = ""
-    ErrorLabel.TextColor3 = Color3.new(1, 0.3, 0.3)
-    ErrorLabel.TextSize = 12
-    
-    local InputFrame = Instance.new("Frame", Container)
-    InputFrame.BackgroundTransparency = 1
-    InputFrame.Size = UDim2.new(1, -60, 0, 200)
-    InputFrame.Position = UDim2.new(0, 30, 0, 170)
-    
-    local InputLayout = Instance.new("UIListLayout", InputFrame)
-    InputLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    InputLayout.Padding = UDim.new(0, 15)
-    
-    local function CreateInput(name, placeholder, isPassword)
-        local frame = Instance.new("Frame", InputFrame)
-        frame.BackgroundTransparency = 1
-        frame.Size = UDim2.new(1, 0, 0, 60)
-        
-        local label = Instance.new("TextLabel", frame)
-        label.BackgroundTransparency = 1
-        label.Size = UDim2.new(1, 0, 0, 20)
-        label.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-        label.Text = name
-        label.TextColor3 = Color3.new(0.8, 0.8, 0.8)
-        label.TextSize = 12
-        label.TextXAlignment = Enum.TextXAlignment.Left
-        
-        local boxBg = Instance.new("Frame", frame)
-        boxBg.BackgroundColor3 = Color3.new(0.07, 0.07, 0.07)
-        boxBg.Size = UDim2.new(1, 0, 0, 35)
-        boxBg.Position = UDim2.new(0, 0, 0, 25)
-        Instance.new("UICorner", boxBg).CornerRadius = UDim.new(0, 4)
-        local boxStroke = Instance.new("UIStroke", boxBg)
-        boxStroke.Color = Color3.new(0.2, 0.2, 0.2)
-        
-        local box = Instance.new("TextBox", boxBg)
-        box.BackgroundTransparency = 1
-        box.Size = UDim2.new(1, -20, 1, 0)
-        box.Position = UDim2.new(0, 10, 0, 0)
-        box.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
-        box.PlaceholderText = placeholder
-        box.Text = ""
-        box.TextColor3 = Color3.new(1, 1, 1)
-        box.TextSize = 12
-        box.TextXAlignment = Enum.TextXAlignment.Left
-        
-        if isPassword then
-        end
-        
-        return frame, box
-    end
-    
-    local userFrame, userBox = CreateInput("Username or Email", "Enter your username or email", false)
-    local passFrame, passBox = CreateInput("Password", "Enter your password", true)
-    
-    local ActionBtn = Instance.new("TextButton", Container)
-    ActionBtn.BackgroundColor3 = Color3.new(0.15, 0.15, 0.15)
-    ActionBtn.Size = UDim2.new(1, -60, 0, 40)
-    ActionBtn.Position = UDim2.new(0, 30, 1, -120)
-    ActionBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    ActionBtn.Text = "Sign In"
-    ActionBtn.TextColor3 = Color3.new(0.8, 0.8, 0.8)
-    ActionBtn.TextSize = 14
-    Instance.new("UICorner", ActionBtn).CornerRadius = UDim.new(0, 6)
-    
-    local SwitchBtn = Instance.new("TextButton", Container)
-    SwitchBtn.BackgroundTransparency = 1
-    SwitchBtn.Size = UDim2.new(1, 0, 0, 20)
-    SwitchBtn.Position = UDim2.new(0, 0, 1, -50)
-    SwitchBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
-    SwitchBtn.Text = "Don't have an account? Create one here"
-    SwitchBtn.TextColor3 = Color3.new(0.6, 0.6, 0.6)
-    SwitchBtn.TextSize = 11
-    
-    local keyFrame, keyBox = CreateInput("License Key", "XXXX-XXXX-XXXX-XXXX", false)
-    
-    keyFrame.Visible = false
-    
-    local isLogin = true
-    
-    SwitchBtn.MouseButton1Click:Connect(function()
-        isLogin = not isLogin
-        if isLogin then
-            Title.Text = "Welcome to Volt"
-            Subtitle.Text = "Sign in to access your Lua development environment"
-            ActionBtn.Text = "Sign In"
-            SwitchBtn.Text = "Don't have an account? Create one here"
-            
-            userFrame.Visible = true
-            passFrame.Visible = true
-            keyFrame.Visible = false
-            Container.Size = UDim2.new(0, 400, 0, 500)
-            ActionBtn.Position = UDim2.new(0, 30, 1, -120)
-        else
-            Title.Text = "Join Volt"
-            Subtitle.Text = "Create your account to start Lua development"
-            ActionBtn.Text = "Create Account"
-            SwitchBtn.Text = "Already have an account? Sign in here"
-            
-            userFrame.Visible = true
-            keyFrame.Visible = true
-            passFrame.Visible = true
-            
-            userFrame.LayoutOrder = 1
-            keyFrame.LayoutOrder = 2
-            passFrame.LayoutOrder = 3
-            
-            Container.Size = UDim2.new(0, 400, 0, 580)
-            ActionBtn.Position = UDim2.new(0, 30, 1, -120)
-        end
-        ErrorLabel.Text = ""
-    end)
-    
-    ActionBtn.MouseButton1Click:Connect(function()
-        ActionBtn.Text = "Please wait..."
-        ErrorLabel.Text = ""
-        
-        task.spawn(function()
-            if isLogin then
-                local success, msg = Api.Login(userBox.Text, passBox.Text)
-                if success then
-                    Api.FetchMe()
-                    Notifications.Notify({ Title = "Login Successful", Content = "Welcome back!", Type = "Success" })
-                    Page.Visible = false
-                    if OnSuccess then OnSuccess() end
-                else
-                    Notifications.Notify({ Title = "Login Failed", Content = msg or "Invalid credentials", Type = "Error" })
-                    ActionBtn.Text = "Sign In"
-                end
-            else
-                local success, msg = Api.Register(userBox.Text, passBox.Text, keyBox.Text)
-                if success then
-                    local succ2, msg2 = Api.Login(userBox.Text, passBox.Text)
-                    if succ2 then
-                        Api.FetchMe()
-                        Notifications.Notify({ Title = "Registration Successful", Content = "Welcome to Volt!", Type = "Success" })
-                        Page.Visible = false
-                        if OnSuccess then OnSuccess() end
-                    else
-                        Notifications.Notify({ Title = "Auto-Login Failed", Content = msg2, Type = "Error" })
-                        ActionBtn.Text = "Create Account"
-                    end
-                else
-                    Notifications.Notify({ Title = "Registration Failed", Content = msg or "Check your inputs", Type = "Error" })
-                    ActionBtn.Text = "Create Account"
-                end
-            end
-        end)
-    end)
-    
-    return Page
-end
-
-
-
--- [[ Core/CloseWarn.luau ]] --
-
-
-
-local CloseWarn = {}
-
-function CloseWarn.Create(ParentGui, maid, ConfirmCallback, CancelCallback)
-    local Main = Instance.new("Frame")
-    Main.Name = "CloseWarn"
-    Main.AnchorPoint = Vector2.new(0.5, 0.5)
-    Main.BackgroundColor3 = Color3.new(0.11, 0.11, 0.11)
-    Main.BorderColor3 = Color3.new(0, 0, 0)
-    Main.BorderSizePixel = 0
-    Main.Position = UDim2.new(0.5, 0, 0.475, 0)
-    Main.Size = UDim2.new(0, 200, 0, 108)
-    Main.ZIndex = 100
-    Main.Visible = false
-    Main.Parent = ParentGui
-    
-    local UICorner = Instance.new("UICorner")
-    UICorner.Parent = Main
-    
-    local Question = Instance.new("Frame")
-    Question.Name = "Question"
-    Question.BackgroundColor3 = Color3.new(1, 1, 1)
-    Question.BackgroundTransparency = 1
-    Question.BorderColor3 = Color3.new(0, 0, 0)
-    Question.BorderSizePixel = 0
-    Question.Size = UDim2.new(0, 200, 0, 59)
-    Question.Parent = Main
-    
-    local QuestionText = Instance.new("TextLabel")
-    QuestionText.BackgroundColor3 = Color3.new(1, 1, 1)
-    QuestionText.BackgroundTransparency = 1
-    QuestionText.BorderColor3 = Color3.new(0, 0, 0)
-    QuestionText.BorderSizePixel = 0
-    QuestionText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    QuestionText.LineHeight = 1.5
-    QuestionText.Size = UDim2.new(1, 0, 1, 0)
-    QuestionText.Text = "Are you Sure you want to close this Window ?"
-    QuestionText.TextColor3 = Color3.new(0.529, 0.529, 0.529)
-    QuestionText.TextSize = 14
-    QuestionText.TextWrapped = true
-    QuestionText.Parent = Question
-    
-    local QuestionStroke = Instance.new("UIStroke")
-    QuestionStroke.Color = Color3.new(0.353, 0.353, 0.353)
-    QuestionStroke.Parent = Question
-    
-    local QuestionCorner = Instance.new("UICorner")
-    QuestionCorner.BottomLeftRadius = UDim.new(0, 0)
-    QuestionCorner.BottomRightRadius = UDim.new(0, 0)
-    QuestionCorner.Parent = Question
-    
-    local Buttons = Instance.new("Frame")
-    Buttons.Name = "Buttons"
-    Buttons.BackgroundColor3 = Color3.new(1, 1, 1)
-    Buttons.BackgroundTransparency = 1
-    Buttons.BorderColor3 = Color3.new(0, 0, 0)
-    Buttons.BorderSizePixel = 0
-    Buttons.LayoutOrder = 1
-    Buttons.Position = UDim2.new(0, 0, 0.546, 0)
-    Buttons.Size = UDim2.new(0, 200, 0, 49)
-    Buttons.Parent = Main
-    
-    local ButtonsLayout = Instance.new("UIListLayout")
-    ButtonsLayout.FillDirection = Enum.FillDirection.Horizontal
-    ButtonsLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    ButtonsLayout.Padding = UDim.new(0, 9)
-    ButtonsLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    ButtonsLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    ButtonsLayout.Parent = Buttons
-    
-    local Confirm = Instance.new("TextButton")
-    Confirm.Name = "Confirm"
-    Confirm.BackgroundColor3 = Color3.new(1, 1, 1)
-    Confirm.BackgroundTransparency = 1
-    Confirm.BorderColor3 = Color3.new(0, 0, 0)
-    Confirm.BorderSizePixel = 0
-    Confirm.Size = UDim2.new(0, 80, 0, 30)
-    Confirm.Text = ""
-    Confirm.Parent = Buttons
-    
-    local ConfirmCorner = Instance.new("UICorner")
-    ConfirmCorner.Parent = Confirm
-    
-    local ConfirmLayout = Instance.new("UIListLayout")
-    ConfirmLayout.FillDirection = Enum.FillDirection.Horizontal
-    ConfirmLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    ConfirmLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    ConfirmLayout.Parent = Confirm
-    
-    local ConfirmText = Instance.new("TextLabel")
-    ConfirmText.BackgroundColor3 = Color3.new(1, 1, 1)
-    ConfirmText.BackgroundTransparency = 1
-    ConfirmText.BorderColor3 = Color3.new(0, 0, 0)
-    ConfirmText.BorderSizePixel = 0
-    ConfirmText.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    ConfirmText.Size = UDim2.new(1, 0, 1, 0)
-    ConfirmText.Text = "Confirm"
-    ConfirmText.TextColor3 = Color3.new(0.529, 0.529, 0.529)
-    ConfirmText.TextSize = 14
-    ConfirmText.Parent = Confirm
-    
-    local Cancel = Instance.new("TextButton")
-    Cancel.Name = "Cancel"
-    Cancel.BackgroundColor3 = Color3.new(1, 1, 1)
-    Cancel.BackgroundTransparency = 1
-    Cancel.BorderColor3 = Color3.new(0, 0, 0)
-    Cancel.BorderSizePixel = 0
-    Cancel.LayoutOrder = 1
-    Cancel.Size = UDim2.new(0, 80, 0, 30)
-    Cancel.Text = ""
-    Cancel.Parent = Buttons
-    
-    local CancelCorner = Instance.new("UICorner")
-    CancelCorner.Parent = Cancel
-    
-    local CancelLayout = Instance.new("UIListLayout")
-    CancelLayout.FillDirection = Enum.FillDirection.Horizontal
-    CancelLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    CancelLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    CancelLayout.Parent = Cancel
-    
-    local CancelText = Instance.new("TextLabel")
-    CancelText.BackgroundColor3 = Color3.new(1, 1, 1)
-    CancelText.BackgroundTransparency = 1
-    CancelText.BorderColor3 = Color3.new(0, 0, 0)
-    CancelText.BorderSizePixel = 0
-    CancelText.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    CancelText.Size = UDim2.new(1, 0, 1, 0)
-    CancelText.Text = "Cancel"
-    CancelText.TextColor3 = Color3.new(0.529, 0.529, 0.529)
-    CancelText.TextSize = 14
-    CancelText.Parent = Cancel
-    
-    local MainLayout = Instance.new("UIListLayout")
-    MainLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    MainLayout.Parent = Main
-    
-    local MainStroke = Instance.new("UIStroke")
-    MainStroke.Color = Color3.new(0.353, 0.353, 0.353)
-    MainStroke.Parent = Main
-    
-    local HoverRed = Color3.fromRGB(235, 70, 70)
-    local HoverGreen = Color3.fromRGB(70, 235, 70)
-    local TweenInfoObj = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-    
-    maid:GiveTask(Confirm.MouseEnter:Connect(function()
-        Tween(Confirm, TweenInfoObj, {BackgroundTransparency = 0, BackgroundColor3 = HoverGreen})
-    end))
-    maid:GiveTask(Confirm.MouseLeave:Connect(function()
-        Tween(Confirm, TweenInfoObj, {BackgroundTransparency = 1, BackgroundColor3 = Color3.new(1, 1, 1)})
-    end))
-    
-    maid:GiveTask(Cancel.MouseEnter:Connect(function()
-        Tween(Cancel, TweenInfoObj, {BackgroundTransparency = 0, BackgroundColor3 = HoverRed})
-    end))
-    maid:GiveTask(Cancel.MouseLeave:Connect(function()
-        Tween(Cancel, TweenInfoObj, {BackgroundTransparency = 1, BackgroundColor3 = Color3.new(1, 1, 1)})
-    end))
-    
-    maid:GiveTask(Confirm.MouseButton1Click:Connect(function()
-        Main.Visible = false
-        if ConfirmCallback then ConfirmCallback() end
-    end))
-    
-    maid:GiveTask(Cancel.MouseButton1Click:Connect(function()
-        Main.Visible = false
-        if CancelCallback then CancelCallback() end
-    end))
-    
-    return Main
-end
-
-
-
--- [[ Core/Minimized.luau ]] --
-
-
-
-local Minimized = {}
-
-function Minimized.Create(ParentGui, maid, RestoreCallback)
-    local Frame = Instance.new("ImageButton")
-    Frame.Name = "Minimized"
-    Frame.Active = true
-    Frame.AnchorPoint = Vector2.new(0.1, 0.3)
-    Frame.BackgroundColor3 = Color3.new(0.11, 0.11, 0.11)
-    Frame.BorderColor3 = Color3.new(0, 0, 0)
-    Frame.BorderSizePixel = 0
-    Frame.Position = UDim2.new(0.064, 0, 0.083, 0)
-    Frame.Selectable = false
-    Frame.Size = UDim2.new(0, 70, 0, 70)
-    Frame.Visible = false
-    Frame.AutoButtonColor = false
-    Frame.Parent = ParentGui
-    
-    local UICorner = Instance.new("UICorner")
-    UICorner.Parent = Frame
-    
-    local UIListLayout = Instance.new("UIListLayout")
-    UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    UIListLayout.HorizontalFlex = Enum.UIFlexAlignment.SpaceAround
-    UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    UIListLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    UIListLayout.Parent = Frame
-    
-    local ImageLabel = Instance.new("ImageLabel")
-    ImageLabel.BackgroundColor3 = Color3.new(1, 1, 1)
-    ImageLabel.BackgroundTransparency = 1
-    ImageLabel.BorderColor3 = Color3.new(0, 0, 0)
-    ImageLabel.BorderSizePixel = 0
-    ImageLabel.Image = "rbxassetid://71942076965693"
-    ImageLabel.Position = UDim2.new(-0.3, 0, 0.143, 0)
-    ImageLabel.Size = UDim2.new(0, 45, 0, 45)
-    ImageLabel.Parent = Frame
-    
-    maid:GiveTask(Frame.MouseButton1Click:Connect(function()
-        Frame.Visible = false
-        if RestoreCallback then RestoreCallback() end
-    end))
-    
-    Utility.MakeDraggable(Frame, Frame, maid)
-    
-    return Frame
-end
-
-
-
--- [[ Core/Bottombar.luau ]] --
-local Bottombar = {}
-
-function Bottombar.Create(Main, maid)
-    local BottombarFrame = Instance.new("Frame")
-    BottombarFrame.Name = "Bottombar"
-    BottombarFrame.BackgroundColor3 = Color3.new(0.11, 0.11, 0.11)
-    BottombarFrame.BorderColor3 = Color3.new(0, 0, 0)
-    BottombarFrame.BorderSizePixel = 0
-    BottombarFrame.LayoutOrder = 2
-    BottombarFrame.Position = UDim2.new(0, 0, 1, -20)
-    BottombarFrame.Size = UDim2.new(1, 0, 0, 20)
-    BottombarFrame.Parent = Main
-    
-    local BottombarCorner = Instance.new("UICorner")
-    BottombarCorner.TopLeftRadius = UDim.new(0, 0)
-    BottombarCorner.TopRightRadius = UDim.new(0, 0)
-    BottombarCorner.Parent = BottombarFrame
-    
-    local BottombarBorder = Instance.new("Frame")
-    BottombarBorder.Name = "Border"
-    BottombarBorder.BackgroundColor3 = Color3.new(0.216, 0.216, 0.216)
-    BottombarBorder.BorderSizePixel = 0
-    BottombarBorder.Position = UDim2.new(0, 0, 0, 0)
-    BottombarBorder.Size = UDim2.new(1, 0, 0, 1)
-    BottombarBorder.Parent = BottombarFrame
-    
-    local Tabdisplay = Instance.new("Frame")
-    Tabdisplay.Name = "Tabdisplay"
-    Tabdisplay.BackgroundColor3 = Color3.new(1, 1, 1)
-    Tabdisplay.BackgroundTransparency = 1
-    Tabdisplay.BorderColor3 = Color3.new(0, 0, 0)
-    Tabdisplay.BorderSizePixel = 0
-    Tabdisplay.Size = UDim2.new(0, 100, 0, 20)
-    Tabdisplay.Parent = BottombarFrame
-    
-    local TabdisplayIcon = Instance.new("TextLabel")
-    TabdisplayIcon.Name = "Icon"
-    TabdisplayIcon.BackgroundColor3 = Color3.new(1, 1, 1)
-    TabdisplayIcon.BackgroundTransparency = 1
-    TabdisplayIcon.BorderColor3 = Color3.new(0, 0, 0)
-    TabdisplayIcon.BorderSizePixel = 0
-    TabdisplayIcon.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    TabdisplayIcon.Size = UDim2.new(0.2, 0, 1, 0)
-    TabdisplayIcon.Text = "< ⁄ >"
-    TabdisplayIcon.TextColor3 = Color3.new(0.51, 0.51, 0.51)
-    TabdisplayIcon.TextDirection = Enum.TextDirection.RightToLeft
-    TabdisplayIcon.TextSize = 13
-    TabdisplayIcon.TextXAlignment = Enum.TextXAlignment.Right
-    TabdisplayIcon.Parent = Tabdisplay
-    
-    local TabdisplayName = Instance.new("TextLabel")
-    TabdisplayName.Name = "TabName"
-    TabdisplayName.BackgroundColor3 = Color3.new(1, 1, 1)
-    TabdisplayName.BackgroundTransparency = 1
-    TabdisplayName.BorderColor3 = Color3.new(0.353, 0.353, 0.353)
-    TabdisplayName.BorderSizePixel = 0
-    TabdisplayName.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    TabdisplayName.LayoutOrder = 1
-    TabdisplayName.Size = UDim2.new(1, 0, 1, 0)
-    TabdisplayName.Text = "No Tab Selected"
-    TabdisplayName.TextColor3 = Color3.new(0.529, 0.529, 0.529)
-    TabdisplayName.TextSize = 14
-    TabdisplayName.TextXAlignment = Enum.TextXAlignment.Left
-    TabdisplayName.Parent = Tabdisplay
-    
-    local TabdisplayNamePadding = Instance.new("UIPadding")
-    TabdisplayNamePadding.PaddingLeft = UDim.new(0, 3)
-    TabdisplayNamePadding.Parent = TabdisplayName
-    
-    local TabdisplayLayout = Instance.new("UIListLayout")
-    TabdisplayLayout.FillDirection = Enum.FillDirection.Horizontal
-    TabdisplayLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    TabdisplayLayout.Parent = Tabdisplay
-    
-    local Info = Instance.new("Frame")
-    Info.Name = "Info"
-    Info.BackgroundColor3 = Color3.new(1, 1, 1)
-    Info.BackgroundTransparency = 1
-    Info.BorderColor3 = Color3.new(0, 0, 0)
-    Info.BorderSizePixel = 0
-    Info.Position = UDim2.new(0.775, 0, 0, 0)
-    Info.Size = UDim2.new(0, 180, 0, 20)
-    Info.Parent = BottombarFrame
-    
-    local InfoLayout = Instance.new("UIListLayout")
-    InfoLayout.FillDirection = Enum.FillDirection.Horizontal
-    InfoLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    InfoLayout.Parent = Info
-    
-    local Status = Instance.new("Frame")
-    Status.Name = "Status"
-    Status.AnchorPoint = Vector2.new(1, 0.5)
-    Status.BackgroundColor3 = Color3.new(1, 1, 1)
-    Status.BackgroundTransparency = 1
-    Status.BorderColor3 = Color3.new(0, 0, 0)
-    Status.BorderSizePixel = 0
-    Status.LayoutOrder = 1
-    Status.Position = UDim2.new(1, 0, 0.5, 0)
-    Status.Size = UDim2.new(0, 85, 0, 20)
-    Status.Parent = Info
-    
-    local StatusIcon = Instance.new("ImageLabel")
-    StatusIcon.BackgroundColor3 = Color3.new(1, 1, 1)
-    StatusIcon.BackgroundTransparency = 1
-    StatusIcon.BorderColor3 = Color3.new(0, 0, 0)
-    StatusIcon.BorderSizePixel = 0
-    StatusIcon.Image = "rbxassetid://102114288213902"
-    StatusIcon.Size = UDim2.new(0, 20, 0, 20)
-    StatusIcon.Parent = Status
-    
-    local StatusText = Instance.new("TextLabel")
-    StatusText.BackgroundColor3 = Color3.new(1, 1, 1)
-    StatusText.BackgroundTransparency = 1
-    StatusText.BorderColor3 = Color3.new(0, 0, 0)
-    StatusText.BorderSizePixel = 0
-    StatusText.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    StatusText.LayoutOrder = 1
-    StatusText.Position = UDim2.new(0.2, 0, 0, 0)
-    StatusText.Size = UDim2.new(0.8, 0, 1, 0)
-    StatusText.Text = "Connected"
-    StatusText.TextColor3 = Color3.new(0.482, 0.482, 0.482)
-    StatusText.TextSize = 14
-    StatusText.TextXAlignment = Enum.TextXAlignment.Left
-    StatusText.Parent = Status
-    
-    local StatusTextPadding = Instance.new("UIPadding")
-    StatusTextPadding.PaddingLeft = UDim.new(0, 5)
-    StatusTextPadding.Parent = StatusText
-    
-    local StatusLayout = Instance.new("UIListLayout")
-    StatusLayout.FillDirection = Enum.FillDirection.Horizontal
-    StatusLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    StatusLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    StatusLayout.Parent = Status
-    
-    local Gamename = Instance.new("Frame")
-    Gamename.Name = "Gamename"
-    Gamename.BackgroundColor3 = Color3.new(1, 1, 1)
-    Gamename.BackgroundTransparency = 1
-    Gamename.BorderColor3 = Color3.new(0, 0, 0)
-    Gamename.BorderSizePixel = 0
-    Gamename.Size = UDim2.new(0, 95, 0, 20)
-    Gamename.Parent = Info
-    
-    local GamenameText = Instance.new("TextLabel")
-    GamenameText.Name = "Name"
-    GamenameText.AnchorPoint = Vector2.new(0.5, 0.5)
-    GamenameText.BackgroundColor3 = Color3.new(1, 1, 1)
-    GamenameText.BackgroundTransparency = 1
-    GamenameText.BorderColor3 = Color3.new(0, 0, 0)
-    GamenameText.BorderSizePixel = 0
-    GamenameText.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    GamenameText.Position = UDim2.new(0.5, 0, 0.5, 0)
-    GamenameText.Size = UDim2.new(1, 0, 1, 0)
-    local Success, GameNameResult = pcall(function() return game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name end)
-    GamenameText.Text = Success and GameNameResult or "Unknown Game"
-    GamenameText.TextColor3 = Color3.new(0.529, 0.529, 0.529)
-    GamenameText.TextSize = 14
-    GamenameText.Parent = Gamename
-    
-    return {
-        Instance = BottombarFrame,
-        TabdisplayName = TabdisplayName
-    }
-end
-
-
-
--- [[ Core/Sidebar.luau ]] --
-
-
-
-local Sidebar = {}
-
-function Sidebar.Create(Content, maid)
-    local SidebarFrame = Instance.new("Frame")
-    SidebarFrame.Name = "Sidebar"
-    SidebarFrame.BackgroundColor3 = Color3.new(0.11, 0.11, 0.11)
-    SidebarFrame.BorderColor3 = Color3.new(0, 0, 0)
-    SidebarFrame.BorderSizePixel = 0
-    SidebarFrame.Size = UDim2.new(0, 200, 1, 0)
-    SidebarFrame.ZIndex = 50
-    SidebarFrame.Parent = Content
-    
-    local SidebarLayout = Instance.new("UIListLayout")
-    SidebarLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    SidebarLayout.Parent = SidebarFrame
-    
-    local SidebarActions = Instance.new("Frame")
-    SidebarActions.Name = "Actions"
-    SidebarActions.BackgroundColor3 = Color3.new(1, 1, 1)
-    SidebarActions.BackgroundTransparency = 1
-    SidebarActions.BorderColor3 = Color3.new(0, 0, 0)
-    SidebarActions.BorderSizePixel = 0
-    SidebarActions.Size = UDim2.new(0, 200, 0, 35)
-    SidebarActions.ZIndex = 10
-    SidebarActions.Parent = SidebarFrame
-    
-    local SidebarActionsLayout = Instance.new("UIListLayout")
-    SidebarActionsLayout.FillDirection = Enum.FillDirection.Horizontal
-    SidebarActionsLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    SidebarActionsLayout.Parent = SidebarActions
-    
-    local Home = Instance.new("ImageButton")
-    Home.Name = "Home"
-    Home.BackgroundColor3 = Color3.new(1, 1, 1)
-    Home.BackgroundTransparency = 1
-    Home.BorderColor3 = Color3.new(0, 0, 0)
-    Home.BorderSizePixel = 0
-    Home.Size = UDim2.new(0, 35, 0, 35)
-    Home.Parent = SidebarActions
-    
-    local HomeIcon = Instance.new("ImageLabel")
-    HomeIcon.AnchorPoint = Vector2.new(0.5, 0.5)
-    HomeIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
-    HomeIcon.BackgroundColor3 = Color3.new(1, 1, 1)
-    HomeIcon.BackgroundTransparency = 1
-    HomeIcon.BorderColor3 = Color3.new(0, 0, 0)
-    HomeIcon.BorderSizePixel = 0
-    HomeIcon.Image = "rbxassetid://94685968948870"
-    HomeIcon.ImageTransparency = 0.2
-    HomeIcon.Size = UDim2.new(0, 20, 0, 20)
-    HomeIcon.Parent = Home
-    
-    local Account = Instance.new("ImageButton")
-    Account.Name = "Account"
-    Account.BackgroundColor3 = Color3.new(1, 1, 1)
-    Account.BackgroundTransparency = 1
-    Account.BorderColor3 = Color3.new(0, 0, 0)
-    Account.BorderSizePixel = 0
-    Account.LayoutOrder = 1
-    Account.Size = UDim2.new(0, 35, 0, 35)
-    Account.Parent = SidebarActions
-    
-    local AccountIcon = Instance.new("ImageLabel")
-    AccountIcon.AnchorPoint = Vector2.new(0.5, 0.5)
-    AccountIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
-    AccountIcon.BackgroundColor3 = Color3.new(1, 1, 1)
-    AccountIcon.BackgroundTransparency = 1
-    AccountIcon.BorderColor3 = Color3.new(0, 0, 0)
-    AccountIcon.BorderSizePixel = 0
-    AccountIcon.Image = "rbxassetid://134568818132029"
-    AccountIcon.ImageTransparency = 0.1
-    AccountIcon.Size = UDim2.new(0, 15, 0, 15)
-    AccountIcon.Parent = Account
-    
-    local Settings = Instance.new("ImageButton")
-    Settings.Name = "Settings"
-    Settings.BackgroundColor3 = Color3.new(1, 1, 1)
-    Settings.BackgroundTransparency = 1
-    Settings.BorderColor3 = Color3.new(0, 0, 0)
-    Settings.BorderSizePixel = 0
-    Settings.LayoutOrder = 2
-    Settings.Size = UDim2.new(0, 35, 0, 35)
-    Settings.Parent = SidebarActions
-    
-    local SettingsIcon = Instance.new("ImageLabel")
-    SettingsIcon.AnchorPoint = Vector2.new(0.5, 0.5)
-    SettingsIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
-    SettingsIcon.BackgroundColor3 = Color3.new(1, 1, 1)
-    SettingsIcon.BackgroundTransparency = 1
-    SettingsIcon.BorderColor3 = Color3.new(0, 0, 0)
-    SettingsIcon.BorderSizePixel = 0
-    SettingsIcon.Image = "rbxassetid://95898765113869"
-    SettingsIcon.Size = UDim2.new(0, 15, 0, 15)
-    SettingsIcon.Parent = Settings
-    
-    local SidebarFiller = Instance.new("Frame")
-    SidebarFiller.Name = "Filler"
-    SidebarFiller.BackgroundColor3 = Color3.new(1, 1, 1)
-    SidebarFiller.BackgroundTransparency = 1
-    SidebarFiller.BorderColor3 = Color3.new(0, 0, 0)
-    SidebarFiller.BorderSizePixel = 0
-    SidebarFiller.LayoutOrder = 3
-    SidebarFiller.Position = UDim2.new(0.525, 0, 0, 0)
-    SidebarFiller.Size = UDim2.new(0, 60, 0, 35)
-    SidebarFiller.Parent = SidebarActions
-    
-    local Collapse = Instance.new("ImageButton")
-    Collapse.Name = "Collapse"
-    Collapse.BackgroundColor3 = Color3.new(1, 1, 1)
-    Collapse.BackgroundTransparency = 1
-    Collapse.BorderColor3 = Color3.new(0, 0, 0)
-    Collapse.BorderSizePixel = 0
-    Collapse.LayoutOrder = 4
-    Collapse.Position = UDim2.new(0.525, 0, 0, 0)
-    Collapse.Size = UDim2.new(0, 35, 0, 35)
-    Collapse.Parent = SidebarActions
-    
-    local CollapseIcon = Instance.new("ImageLabel")
-    CollapseIcon.AnchorPoint = Vector2.new(0.5, 0.5)
-    CollapseIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
-    CollapseIcon.BackgroundColor3 = Color3.new(1, 1, 1)
-    CollapseIcon.BackgroundTransparency = 1
-    CollapseIcon.BorderColor3 = Color3.new(0, 0, 0)
-    CollapseIcon.BorderSizePixel = 0
-    CollapseIcon.Image = "rbxassetid://93526157530558"
-    CollapseIcon.ImageTransparency = 0.3
-    CollapseIcon.Rotation = -180
-    CollapseIcon.Size = UDim2.new(0, 20, 0, 20)
-    CollapseIcon.Parent = Collapse
-    
-    local SidebarFiller2 = Instance.new("Frame")
-    SidebarFiller2.Name = "Filler"
-    SidebarFiller2.BackgroundColor3 = Color3.new(1, 1, 1)
-    SidebarFiller2.BackgroundTransparency = 1
-    SidebarFiller2.BorderColor3 = Color3.new(0, 0, 0)
-    SidebarFiller2.BorderSizePixel = 0
-    SidebarFiller2.LayoutOrder = 2
-    SidebarFiller2.Position = UDim2.new(0, 0, 0.131, 0)
-    SidebarFiller2.Size = UDim2.new(0, 200, 0, 5)
-    SidebarFiller2.Parent = SidebarFrame
-    
-    local HoverColor = Color3.fromRGB(45, 45, 45)
-    local TweenInfoObj = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-    
-    local function ApplyHover(button, text)
-        button.AutoButtonColor = false
-        button.BackgroundTransparency = 1
-        
-        local HoverBox = Instance.new("Frame")
-        HoverBox.Name = "HoverBox"
-        HoverBox.AnchorPoint = Vector2.new(0.5, 0.5)
-        HoverBox.Position = UDim2.new(0.5, 0, 0.5, 0)
-        HoverBox.Size = UDim2.new(0, 30, 0, 30)
-        HoverBox.BackgroundColor3 = HoverColor
-        HoverBox.BackgroundTransparency = 1
-        HoverBox.BorderSizePixel = 0
-        HoverBox.ZIndex = 0
-        HoverBox.Parent = button
-        
-        local Corner = Instance.new("UICorner")
-        Corner.CornerRadius = UDim.new(0, 6)
-        Corner.Parent = HoverBox
-        
-        local Tooltip = Instance.new("TextLabel")
-        Tooltip.Name = "Tooltip"
-        Tooltip.BackgroundColor3 = Color3.new(0.075, 0.075, 0.075)
-        Tooltip.BackgroundTransparency = 1
-        Tooltip.AnchorPoint = Vector2.new(0.5, 0)
-        Tooltip.Position = UDim2.new(0.5, 0, 1, 4)
-        Tooltip.Size = UDim2.new(0, 0, 0, 18)
-        Tooltip.AutomaticSize = Enum.AutomaticSize.X
-        Tooltip.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-        Tooltip.Text = text
-        Tooltip.TextColor3 = Color3.new(0.7, 0.7, 0.7)
-        Tooltip.TextSize = 12
-        Tooltip.TextTransparency = 1
-        Tooltip.ZIndex = 10
-        Tooltip.Visible = false
-        Tooltip.Parent = button
-        
-        local TooltipCorner = Instance.new("UICorner")
-        TooltipCorner.CornerRadius = UDim.new(0, 4)
-        TooltipCorner.Parent = Tooltip
-        
-        local TooltipPadding = Instance.new("UIPadding")
-        TooltipPadding.PaddingLeft = UDim.new(0, 6)
-        TooltipPadding.PaddingRight = UDim.new(0, 6)
-        TooltipPadding.Parent = Tooltip
-        
-        local TooltipStroke = Instance.new("UIStroke")
-        TooltipStroke.Color = Color3.new(0.216, 0.216, 0.216)
-        TooltipStroke.Transparency = 1
-        TooltipStroke.Parent = Tooltip
-        
-        local icon = button:FindFirstChildOfClass("ImageLabel")
-        if icon then icon.Active = false end
-        
-        maid:GiveTask(button.MouseEnter:Connect(function()
-            Tween(HoverBox, TweenInfoObj, {BackgroundTransparency = 0})
-            Tooltip.Visible = true
-            Tween(Tooltip, TweenInfoObj, {TextTransparency = 0, BackgroundTransparency = 0})
-            Tween(TooltipStroke, TweenInfoObj, {Transparency = 0})
-            if icon then Tween(icon, TweenInfoObj, {ImageTransparency = 0}) end
-        end))
-        
-        maid:GiveTask(button.MouseLeave:Connect(function()
-            Tween(HoverBox, TweenInfoObj, {BackgroundTransparency = 1})
-            local t1 = Tween(Tooltip, TweenInfoObj, {TextTransparency = 1, BackgroundTransparency = 1})
-            Tween(TooltipStroke, TweenInfoObj, {Transparency = 1})
-            
-            local defTrans = 0
-            if button.Name == "Home" then defTrans = 0.2
-            elseif button.Name == "Account" then defTrans = 0.1
-            elseif button.Name == "Collapse" then defTrans = 0.3
-            end
-            if icon then Tween(icon, TweenInfoObj, {ImageTransparency = defTrans}) end
-            
-            maid:GiveTask(t1.Completed:Connect(function()
-                if Tooltip.TextTransparency == 1 then
-                    Tooltip.Visible = false
-                end
-            end))
-        end))
-    end
-    
-    ApplyHover(Home, "Home")
-    ApplyHover(Account, "Account")
-    ApplyHover(Settings, "Settings")
-    ApplyHover(Collapse, "Collapse")
-    
-    local Searchbar = Instance.new("Frame")
-    Searchbar.Name = "Searchbar"
-    Searchbar.BackgroundColor3 = Color3.new(1, 1, 1)
-    Searchbar.BackgroundTransparency = 1
-    Searchbar.BorderColor3 = Color3.new(0, 0, 0)
-    Searchbar.BorderSizePixel = 0
-    Searchbar.LayoutOrder = 1
-    Searchbar.Position = UDim2.new(0, 0, 0.064, 0)
-    Searchbar.Size = UDim2.new(0, 200, 0, 35)
-    Searchbar.Parent = SidebarFrame
-    
-    local SearchbarLayout = Instance.new("UIListLayout")
-    SearchbarLayout.FillDirection = Enum.FillDirection.Horizontal
-    SearchbarLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    SearchbarLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    SearchbarLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    SearchbarLayout.Parent = Searchbar
-    
-    local Search = Instance.new("Frame")
-    Search.Name = "Search"
-    Search.BackgroundColor3 = Color3.new(0.094, 0.094, 0.094)
-    Search.BorderColor3 = Color3.new(0, 0, 0)
-    Search.BorderSizePixel = 0
-    Search.Size = UDim2.new(0, 180, 0, 30)
-    Search.Parent = Searchbar
-    
-    local SearchStroke = Instance.new("UIStroke")
-    SearchStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
-    SearchStroke.Color = Color3.new(0.216, 0.216, 0.216)
-    SearchStroke.Parent = Search
-    
-    local SearchCorner = Instance.new("UICorner")
-    SearchCorner.CornerRadius = UDim.new(0, 5)
-    SearchCorner.Parent = Search
-    
-    local SearchInnerLayout = Instance.new("UIListLayout")
-    SearchInnerLayout.FillDirection = Enum.FillDirection.Horizontal
-    SearchInnerLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    SearchInnerLayout.Parent = Search
-    
-    local SearchInput = Instance.new("TextBox")
-    SearchInput.BackgroundColor3 = Color3.new(1, 1, 1)
-    SearchInput.BackgroundTransparency = 1
-    SearchInput.BorderColor3 = Color3.new(0, 0, 0)
-    SearchInput.BorderSizePixel = 0
-    SearchInput.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    SearchInput.LayoutOrder = 1
-    SearchInput.Position = UDim2.new(0.167, 0, 0, 0)
-    SearchInput.Size = UDim2.new(0.833, 0, 1, 0)
-    SearchInput.Text = "Search..."
-    SearchInput.TextColor3 = Color3.new(0.478, 0.478, 0.478)
-    SearchInput.TextSize = 12
-    SearchInput.TextXAlignment = Enum.TextXAlignment.Left
-    SearchInput.Parent = Search
-    
-    local SearchInputPadding = Instance.new("UIPadding")
-    SearchInputPadding.PaddingLeft = UDim.new(0, 4)
-    SearchInputPadding.Parent = SearchInput
-    
-    local SearchIconFrame = Instance.new("Frame")
-    SearchIconFrame.Name = "Icon"
-    SearchIconFrame.BackgroundColor3 = Color3.new(1, 1, 1)
-    SearchIconFrame.BackgroundTransparency = 1
-    SearchIconFrame.BorderColor3 = Color3.new(0, 0, 0)
-    SearchIconFrame.BorderSizePixel = 0
-    SearchIconFrame.Size = UDim2.new(0, 30, 0, 30)
-    SearchIconFrame.Parent = Search
-    
-    local SearchIconLabel = Instance.new("ImageLabel")
-    SearchIconLabel.BackgroundColor3 = Color3.new(1, 1, 1)
-    SearchIconLabel.BackgroundTransparency = 1
-    SearchIconLabel.BorderColor3 = Color3.new(0, 0, 0)
-    SearchIconLabel.BorderSizePixel = 0
-    SearchIconLabel.Image = "rbxassetid://88107177696245"
-    SearchIconLabel.ImageTransparency = 0.3
-    SearchIconLabel.Size = UDim2.new(0, 16, 0, 16)
-    SearchIconLabel.Parent = SearchIconFrame
-    
-    local SearchIconFrameLayout = Instance.new("UIListLayout")
-    SearchIconFrameLayout.FillDirection = Enum.FillDirection.Horizontal
-    SearchIconFrameLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    SearchIconFrameLayout.HorizontalFlex = Enum.UIFlexAlignment.SpaceAround
-    SearchIconFrameLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    SearchIconFrameLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    SearchIconFrameLayout.Parent = SearchIconFrame
-    
-    local TabsContainer = Instance.new("Frame")
-    TabsContainer.Name = "Tabs"
-    TabsContainer.BackgroundColor3 = Color3.new(1, 1, 1)
-    TabsContainer.BackgroundTransparency = 1
-    TabsContainer.BorderColor3 = Color3.new(0, 0, 0)
-    TabsContainer.BorderSizePixel = 0
-    TabsContainer.LayoutOrder = 3
-    TabsContainer.Position = UDim2.new(0, 0, 0.136, 0)
-    TabsContainer.Size = UDim2.new(0, 200, 1, -75)
-    TabsContainer.Parent = SidebarFrame
-    
-    local TabsTopBorder = Instance.new("Frame")
-    TabsTopBorder.Name = "TopBorder"
-    TabsTopBorder.BackgroundColor3 = Color3.new(0.216, 0.216, 0.216)
-    TabsTopBorder.BorderSizePixel = 0
-    TabsTopBorder.Size = UDim2.new(1, 0, 0, 1)
-    TabsTopBorder.Parent = TabsContainer
-    
-    local TabsScrolling = Instance.new("ScrollingFrame")
-    TabsScrolling.Active = true
-    TabsScrolling.BackgroundColor3 = Color3.new(1, 1, 1)
-    TabsScrolling.BackgroundTransparency = 1
-    TabsScrolling.BorderColor3 = Color3.new(0, 0, 0)
-    TabsScrolling.BorderSizePixel = 0
-    TabsScrolling.ScrollBarImageColor3 = Color3.new(0.137, 0.137, 0.137)
-    TabsScrolling.ScrollBarImageTransparency = 1
-    TabsScrolling.Size = UDim2.new(1, 0, 1, 0)
-    TabsScrolling.Parent = TabsContainer
-    
-    local TabsScrollingLayout = Instance.new("UIListLayout")
-    TabsScrollingLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    TabsScrollingLayout.Parent = TabsScrolling
-    
-    local TabsScrollingPadding = Instance.new("UIPadding")
-    TabsScrollingPadding.PaddingTop = UDim.new(0, 9)
-    TabsScrollingPadding.Parent = TabsScrolling
-    
-    return {
-        Instance = SidebarFrame,
-        TabsContainer = TabsScrolling,
-        SearchInput = SearchInput,
-        AccountBtn = Account
-    }
 end
 
 
@@ -3409,10 +2604,1287 @@ end
 
 
 
+-- [[ Core/Loading.luau ]] --
+
+
+
+local Loading = {}
+
+function Loading.Create(ParentGui)
+    local Main = Instance.new("Frame")
+    Main.Name = "Loading"
+    Main.AnchorPoint = Vector2.new(0.5, 0.5)
+    Main.BackgroundColor3 = Color3.new(0.09, 0.09, 0.09)
+    Main.BorderColor3 = Color3.new(0, 0, 0)
+    Main.BorderSizePixel = 0
+    Main.Position = UDim2.new(0.5, 0, 0.5, 0)
+    Main.Size = UDim2.new(0, 800, 0, 600)
+    Main.ZIndex = 99999
+    Main.Parent = ParentGui
+    
+    local UICorner = Instance.new("UICorner")
+    UICorner.Parent = Main
+    
+    local UIListLayout = Instance.new("UIListLayout")
+    UIListLayout.FillDirection = Enum.FillDirection.Horizontal
+    UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    UIListLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    UIListLayout.Parent = Main
+    
+    local UICorner = Instance.new("UICorner")
+    UICorner.Parent = Main
+    
+    local Icon = Instance.new("ImageLabel")
+    Icon.Name = "Icon"
+    Icon.BackgroundColor3 = Color3.new(1, 1, 1)
+    Icon.BackgroundTransparency = 1
+    Icon.BorderColor3 = Color3.new(0, 0, 0)
+    Icon.BorderSizePixel = 0
+    Icon.Image = "rbxassetid://71942076965693"
+    Icon.Size = UDim2.new(0, 100, 0, 100)
+    Icon.ImageTransparency = 1
+    Icon.ZIndex = 100000
+    Icon.Parent = Main
+    
+    local Text = Instance.new("TextLabel")
+    Text.Name = "Text"
+    Text.BackgroundColor3 = Color3.new(1, 1, 1)
+    Text.BackgroundTransparency = 1
+    Text.BorderColor3 = Color3.new(0, 0, 0)
+    Text.BorderSizePixel = 0
+    Text.FontFace = Font.new("rbxasset://fonts/families/LegacyArial.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    Text.Size = UDim2.new(0, 0, 0, 100)
+    Text.Text = "olt"
+    Text.TextColor3 = Color3.new(0.984, 0.984, 0.984)
+    Text.TextSize = 76
+    Text.TextXAlignment = Enum.TextXAlignment.Left
+    Text.ClipsDescendants = true
+    Text.MaxVisibleGraphemes = 0
+    Text.ZIndex = 100000
+    Text.Parent = Main
+
+    local ReadyEvent = Instance.new("BindableEvent")
+    local obj = {IsReady = false, Faded = false, ReadyEvent = ReadyEvent}
+    
+    task.spawn(function()
+        -- Preload the icon image so the animation doesn't play while the image is still downloading!
+        local ContentProvider = game:GetService("ContentProvider")
+        pcall(function()
+            ContentProvider:PreloadAsync({Icon})
+        end)
+        
+        -- Initial buffer for executor lag to settle
+        task.wait(0.2)
+        
+        Tween(Icon, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0})
+        task.wait(1)
+        
+        task.wait(0.2)
+        
+        Tween(Text, TweenInfo.new(0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {Size = UDim2.new(0, 150, 0, 100)})
+        task.wait(0.8)
+        
+        for i = 1, 3 do
+            Text.MaxVisibleGraphemes = i
+            task.wait(0.15)
+        end
+        
+        task.wait(0.8)
+        obj.IsReady = true
+        ReadyEvent:Fire()
+    end)
+    
+    function obj:WaitForReady()
+        if not self.IsReady then
+            self.ReadyEvent.Event:Wait()
+        end
+    end
+    
+    function obj:FadeOut()
+        if self.Faded then return end
+        self.Faded = true
+        
+        task.spawn(function()
+            Tween(Icon, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 1})
+            Tween(Text, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 1})
+            
+            task.wait(0.3)
+            
+            -- Then fade out the solid background to smoothly reveal the UI behind it
+            Tween(Main, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1})
+            task.wait(0.4)
+            
+            Main:Destroy()
+        end)
+    end
+    
+    return obj
+end
+
+
+
+-- [[ Core/LoginPage.luau ]] --
+
+
+
+
+
+
+
+
+local LoginPage = {}
+
+function LoginPage.Create(ParentGui, OnSuccess)
+    local Page = Instance.new("Frame")
+    Page.Name = "LoginPage"
+    Page.BackgroundColor3 = Color3.new(0.06, 0.06, 0.06)
+    Page.BorderSizePixel = 0
+    Page.AnchorPoint = Vector2.new(0.5, 0.5)
+    Page.Position = UDim2.new(0.5, 0, 0.5, 0)
+    Page.Size = UDim2.new(0, 800, 0, 600)
+    Page.ZIndex = 50
+    Page.Parent = ParentGui
+    
+    Instance.new("UICorner", Page).CornerRadius = UDim.new(0, 8)
+    local PageStroke = Instance.new("UIStroke", Page)
+    PageStroke.Color = Color3.new(0.15, 0.15, 0.15)
+    
+    local maid = Maid.new()
+    
+    local TopbarElements = Topbar.Create(Page, {Title = "Sign In"}, maid)
+    
+    maid:GiveTask(TopbarElements.CloseButton.MouseButton1Click:Connect(function()
+        Page:Destroy()
+        maid:Destroy()
+    end))
+    
+    local ContentFrame = Instance.new("Frame", Page)
+    ContentFrame.AnchorPoint = Vector2.new(0.5, 0)
+    ContentFrame.Position = UDim2.new(0.5, 0, 0, 30)
+    ContentFrame.Size = UDim2.new(0, 450, 1, -30)
+    ContentFrame.BackgroundTransparency = 1
+    
+    local Layout = Instance.new("UIListLayout", ContentFrame)
+    Layout.SortOrder = Enum.SortOrder.LayoutOrder
+    Layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    Layout.VerticalAlignment = Enum.VerticalAlignment.Center
+    Layout.Padding = UDim.new(0, 10)
+    
+    local LogoContainer = Instance.new("Frame", ContentFrame)
+    LogoContainer.BackgroundTransparency = 1
+    LogoContainer.Size = UDim2.new(0, 100, 0, 50)
+    LogoContainer.LayoutOrder = 1
+    
+    local LogoLayout = Instance.new("UIListLayout", LogoContainer)
+    LogoLayout.FillDirection = Enum.FillDirection.Horizontal
+    LogoLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    LogoLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    LogoLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    LogoLayout.Padding = UDim.new(0, 8)
+
+    local LogoImg = Instance.new("ImageLabel", LogoContainer)
+    LogoImg.BackgroundTransparency = 1
+    LogoImg.Size = UDim2.new(0, 32, 0, 32)
+    LogoImg.Image = "rbxassetid://71942076965693"
+    LogoImg.LayoutOrder = 1
+
+    local LogoText = Instance.new("TextLabel", LogoContainer)
+    LogoText.BackgroundTransparency = 1
+    LogoText.Size = UDim2.new(0, 50, 0, 50)
+    LogoText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    LogoText.Text = "Volt"
+    LogoText.TextColor3 = Color3.new(1, 1, 1)
+    LogoText.TextSize = 28
+    LogoText.LayoutOrder = 2
+    LogoText.TextXAlignment = Enum.TextXAlignment.Left
+    
+    local Title = Instance.new("TextLabel", ContentFrame)
+    Title.BackgroundTransparency = 1
+    Title.Size = UDim2.new(1, 0, 0, 35)
+    Title.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    Title.Text = "Welcome to Volt"
+    Title.TextColor3 = Color3.new(1, 1, 1)
+    Title.TextSize = 24
+    Title.LayoutOrder = 2
+    
+    local Subtitle = Instance.new("TextLabel", ContentFrame)
+    Subtitle.BackgroundTransparency = 1
+    Subtitle.Size = UDim2.new(1, 0, 0, 20)
+    Subtitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+    Subtitle.Text = "Sign in to access your Lua development environment"
+    Subtitle.TextColor3 = Color3.new(0.7, 0.7, 0.7)
+    Subtitle.TextSize = 13
+    Subtitle.LayoutOrder = 3
+    
+    local Spacer = Instance.new("Frame", ContentFrame)
+    Spacer.BackgroundTransparency = 1
+    Spacer.Size = UDim2.new(1, 0, 0, 10)
+    Spacer.LayoutOrder = 4
+    
+    local Box = Instance.new("Frame", ContentFrame)
+    Box.BackgroundColor3 = Color3.new(0.09, 0.09, 0.09)
+    Box.Size = UDim2.new(0, 400, 0, 0)
+    Box.AutomaticSize = Enum.AutomaticSize.Y
+    Box.LayoutOrder = 5
+    Instance.new("UICorner", Box).CornerRadius = UDim.new(0, 8)
+    local BoxStroke = Instance.new("UIStroke", Box)
+    BoxStroke.Color = Color3.new(0.15, 0.15, 0.15)
+    
+    local BoxLayout = Instance.new("UIListLayout", Box)
+    BoxLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    BoxLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    BoxLayout.Padding = UDim.new(0, 15)
+    
+    local BoxPadding = Instance.new("UIPadding", Box)
+    BoxPadding.PaddingTop = UDim.new(0, 25)
+    BoxPadding.PaddingBottom = UDim.new(0, 25)
+    
+    local function CreateInput(name, placeholder, isPassword, iconId)
+        local frame = Instance.new("Frame")
+        frame.BackgroundTransparency = 1
+        frame.Size = UDim2.new(1, -50, 0, 65)
+        
+        local label = Instance.new("TextLabel", frame)
+        label.BackgroundTransparency = 1
+        label.Size = UDim2.new(1, 0, 0, 20)
+        label.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+        label.Text = name
+        label.TextColor3 = Color3.new(0.9, 0.9, 0.9)
+        label.TextSize = 13
+        label.TextXAlignment = Enum.TextXAlignment.Left
+        
+        local boxBg = Instance.new("Frame", frame)
+        boxBg.BackgroundColor3 = Color3.new(0.06, 0.06, 0.06)
+        boxBg.Size = UDim2.new(1, 0, 0, 40)
+        boxBg.Position = UDim2.new(0, 0, 0, 25)
+        Instance.new("UICorner", boxBg).CornerRadius = UDim.new(0, 6)
+        local boxStroke = Instance.new("UIStroke", boxBg)
+        boxStroke.Color = Color3.new(0.15, 0.15, 0.15)
+        
+        if iconId then
+            local icon = Instance.new("ImageLabel", boxBg)
+            icon.BackgroundTransparency = 1
+            icon.Size = UDim2.new(0, 16, 0, 16)
+            icon.Position = UDim2.new(0, 12, 0.5, -8)
+            icon.Image = iconId
+            icon.ImageColor3 = Color3.new(0.6, 0.6, 0.6)
+        end
+        
+        local box = Instance.new("TextBox", boxBg)
+        box.BackgroundTransparency = 1
+        box.Size = UDim2.new(1, iconId and -45 or -25, 1, 0)
+        box.Position = UDim2.new(0, iconId and 35 or 12, 0, 0)
+        box.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+        box.PlaceholderText = placeholder
+        box.PlaceholderColor3 = Color3.new(0.4, 0.4, 0.4)
+        box.Text = ""
+        box.TextColor3 = Color3.new(1, 1, 1)
+        box.TextSize = 13
+        box.TextXAlignment = Enum.TextXAlignment.Left
+        
+        if isPassword then
+            box.ClearTextOnFocus = false
+        end
+        
+        return frame, box
+    end
+    
+    local userFrame, userBox = CreateInput("Username", "Enter your username", false, "rbxassetid://134568818132029")
+    local passFrame, passBox = CreateInput("Password", "Enter your password", true, "rbxassetid://113646711739432")
+    local keyFrame, keyBox = CreateInput("License Key", "XXXX-XXXX-XXXX-XXXX", false, "rbxassetid://134568818132029")
+    local codeFrame, codeBox = CreateInput("Reset Code", "Enter 6-digit code", false, "rbxassetid://134568818132029")
+    local newPassFrame, newPassBox = CreateInput("New Password", "Enter new password", true, "rbxassetid://113646711739432")
+    
+    userFrame.Parent = Box
+    passFrame.Parent = Box
+    keyFrame.Parent = Box
+    codeFrame.Parent = Box
+    newPassFrame.Parent = Box
+    
+    userFrame.LayoutOrder = 1
+    keyFrame.LayoutOrder = 2
+    passFrame.LayoutOrder = 3
+    codeFrame.LayoutOrder = 4
+    newPassFrame.LayoutOrder = 5
+    
+    local ActionBtn = Instance.new("TextButton", Box)
+    ActionBtn.BackgroundColor3 = Color3.new(0.18, 0.18, 0.18)
+    ActionBtn.Size = UDim2.new(1, -50, 0, 42)
+    ActionBtn.LayoutOrder = 10
+    ActionBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    ActionBtn.Text = "Sign In"
+    ActionBtn.TextColor3 = Color3.new(0.8, 0.8, 0.8)
+    ActionBtn.TextSize = 14
+    Instance.new("UICorner", ActionBtn).CornerRadius = UDim.new(0, 6)
+    local ActionStroke = Instance.new("UIStroke", ActionBtn)
+    ActionStroke.Color = Color3.new(0.25, 0.25, 0.25)
+    
+    local ForgotBtn = Instance.new("TextButton", Box)
+    ForgotBtn.BackgroundTransparency = 1
+    ForgotBtn.Size = UDim2.new(1, 0, 0, 20)
+    ForgotBtn.LayoutOrder = 11
+    ForgotBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+    ForgotBtn.Text = "Forgot your password?"
+    ForgotBtn.TextColor3 = Color3.new(0.6, 0.6, 0.6)
+    ForgotBtn.TextSize = 13
+    
+    local Divider = Instance.new("Frame", Box)
+    Divider.BackgroundColor3 = Color3.new(0.15, 0.15, 0.15)
+    Divider.Size = UDim2.new(1, -50, 0, 1)
+    Divider.LayoutOrder = 12
+    Divider.BorderSizePixel = 0
+    
+    local SwitchBtn = Instance.new("TextButton", Box)
+    SwitchBtn.BackgroundTransparency = 1
+    SwitchBtn.Size = UDim2.new(1, 0, 0, 20)
+    SwitchBtn.LayoutOrder = 13
+    SwitchBtn.RichText = true
+    SwitchBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+    SwitchBtn.Text = "Don't have an account? <b>Create one here</b>"
+    SwitchBtn.TextColor3 = Color3.new(0.7, 0.7, 0.7)
+    SwitchBtn.TextSize = 13
+    
+    local UIState = "Login"
+    
+    local function UpdateState(newState)
+        UIState = newState
+        userFrame.Visible = false
+        passFrame.Visible = false
+        keyFrame.Visible = false
+        codeFrame.Visible = false
+        newPassFrame.Visible = false
+        
+        ForgotBtn.Visible = false
+        Divider.Visible = false
+        SwitchBtn.Visible = false
+        
+        if UIState == "Login" then
+            Title.Text = "Welcome to Volt"
+            Subtitle.Text = "Sign in to access your Lua development environment"
+            ActionBtn.Text = "Sign In"
+            userFrame.Visible = true
+            passFrame.Visible = true
+            ForgotBtn.Visible = true
+            Divider.Visible = true
+            SwitchBtn.Visible = true
+            SwitchBtn.Text = "Don't have an account? <b>Create one here</b>"
+            TopbarElements.Instance.Version.Text.Text = "Sign In"
+            
+        elseif UIState == "Register" then
+            Title.Text = "Join Volt"
+            Subtitle.Text = "Create your account to start Lua development"
+            ActionBtn.Text = "Create Account"
+            userFrame.Visible = true
+            keyFrame.Visible = true
+            passFrame.Visible = true
+            Divider.Visible = true
+            SwitchBtn.Visible = true
+            SwitchBtn.Text = "Already have an account? <b>Sign in here</b>"
+            TopbarElements.Instance.Version.Text.Text = "Register"
+            
+        elseif UIState == "Forgot" then
+            Title.Text = "Reset Password"
+            Subtitle.Text = "Enter your username and we'll send a code to your Discord"
+            ActionBtn.Text = "Send Reset Code"
+            userFrame.Visible = true
+            SwitchBtn.Visible = true
+            SwitchBtn.Text = "← <b>Back to Login</b>"
+            TopbarElements.Instance.Version.Text.Text = "Reset Password"
+            
+        elseif UIState == "Reset" then
+            Title.Text = "Enter Code"
+            Subtitle.Text = "Enter the 6-digit code sent to your Discord DM"
+            ActionBtn.Text = "Reset Password"
+            codeFrame.Visible = true
+            newPassFrame.Visible = true
+            SwitchBtn.Visible = true
+            SwitchBtn.Text = "← <b>Back to Login</b>"
+            TopbarElements.Instance.Version.Text.Text = "Enter Code"
+        end
+    end
+    
+    UpdateState("Login")
+    
+    ForgotBtn.MouseButton1Click:Connect(function()
+        UpdateState("Forgot")
+    end)
+    
+    SwitchBtn.MouseButton1Click:Connect(function()
+        if UIState == "Login" then
+            UpdateState("Register")
+        elseif UIState == "Register" then
+            UpdateState("Login")
+        elseif UIState == "Forgot" or UIState == "Reset" then
+            UpdateState("Login")
+        end
+    end)
+    
+    ActionBtn.MouseButton1Click:Connect(function()
+        local prevText = ActionBtn.Text
+        ActionBtn.Text = "Please wait..."
+        
+        task.spawn(function()
+            if UIState == "Login" then
+                local success, msg = Api.Login(userBox.Text, passBox.Text)
+                if success then
+                    Api.FetchMe()
+                    Notifications.Notify({ Title = "Login Successful", Content = "Welcome back!", Type = "Success" })
+                    Page.Visible = false
+                    if OnSuccess then OnSuccess() end
+                else
+                    Notifications.Notify({ Title = "Login Failed", Content = msg or "Invalid credentials", Type = "Error" })
+                    ActionBtn.Text = "Sign In"
+                end
+                
+            elseif UIState == "Register" then
+                local success, msg = Api.Register(userBox.Text, passBox.Text, keyBox.Text)
+                if success then
+                    local succ2, msg2 = Api.Login(userBox.Text, passBox.Text)
+                    if succ2 then
+                        Api.FetchMe()
+                        Notifications.Notify({ Title = "Registration Successful", Content = "Welcome to Volt!", Type = "Success" })
+                        Page.Visible = false
+                        if OnSuccess then OnSuccess() end
+                    else
+                        Notifications.Notify({ Title = "Auto-Login Failed", Content = msg2, Type = "Error" })
+                        ActionBtn.Text = "Create Account"
+                    end
+                else
+                    Notifications.Notify({ Title = "Registration Failed", Content = msg or "Check your inputs", Type = "Error" })
+                    ActionBtn.Text = "Create Account"
+                end
+                
+            elseif UIState == "Forgot" then
+                local success, msg = Api.ForgotPassword(userBox.Text)
+                if success then
+                    Notifications.Notify({ Title = "Code Sent", Content = msg, Type = "Success" })
+                    UpdateState("Reset")
+                else
+                    Notifications.Notify({ Title = "Failed", Content = msg, Type = "Error" })
+                    ActionBtn.Text = prevText
+                end
+                
+            elseif UIState == "Reset" then
+                local success, msg = Api.ResetPassword(userBox.Text, codeBox.Text, newPassBox.Text)
+                if success then
+                    Notifications.Notify({ Title = "Password Reset", Content = msg, Type = "Success" })
+                    UpdateState("Login")
+                else
+                    Notifications.Notify({ Title = "Reset Failed", Content = msg, Type = "Error" })
+                    ActionBtn.Text = prevText
+                end
+            end
+        end)
+    end)
+    
+    return Page
+end
+
+
+
+-- [[ Core/CloseWarn.luau ]] --
+
+
+
+local CloseWarn = {}
+
+function CloseWarn.Create(ParentGui, maid, ConfirmCallback, CancelCallback)
+    local Overlay = Instance.new("Frame")
+    Overlay.Name = "CloseWarnOverlay"
+    Overlay.BackgroundColor3 = Color3.new(0, 0, 0)
+    Overlay.BackgroundTransparency = 1
+    Overlay.BorderSizePixel = 0
+    Overlay.Size = UDim2.new(1, 0, 1, 0)
+    Overlay.ZIndex = 9999
+    Overlay.Visible = false
+    Overlay.Parent = ParentGui
+    
+    local Main = Instance.new("Frame")
+    Main.Name = "CloseWarnModal"
+    Main.AnchorPoint = Vector2.new(0.5, 0.5)
+    Main.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    Main.BorderColor3 = Color3.new(0, 0, 0)
+    Main.BorderSizePixel = 0
+    Main.Position = UDim2.new(0.5, 0, 0.5, 0)
+    Main.Size = UDim2.new(0, 320, 0, 160)
+    Main.ZIndex = 10000
+    Main.Parent = Overlay
+    
+    local UICorner = Instance.new("UICorner")
+    UICorner.CornerRadius = UDim.new(0, 8)
+    UICorner.Parent = Main
+    
+    local UIStroke = Instance.new("UIStroke")
+    UIStroke.Color = Color3.fromRGB(40, 40, 40)
+    UIStroke.Parent = Main
+
+    local UIScale = Instance.new("UIScale")
+    UIScale.Scale = 0
+    UIScale.Parent = Main
+    
+    local Title = Instance.new("TextLabel")
+    Title.Name = "Title"
+    Title.BackgroundTransparency = 1
+    Title.Position = UDim2.new(0, 20, 0, 20)
+    Title.Size = UDim2.new(1, -40, 0, 24)
+    Title.Font = Enum.Font.GothamBold
+    Title.Text = "Close VoltUi?"
+    Title.TextColor3 = Color3.new(1, 1, 1)
+    Title.TextSize = 20
+    Title.TextXAlignment = Enum.TextXAlignment.Left
+    Title.Parent = Main
+    
+    local Subtext = Instance.new("TextLabel")
+    Subtext.Name = "Subtext"
+    Subtext.BackgroundTransparency = 1
+    Subtext.Position = UDim2.new(0, 20, 0, 50)
+    Subtext.Size = UDim2.new(1, -40, 0, 40)
+    Subtext.Font = Enum.Font.Gotham
+    Subtext.Text = "Are you sure you want to close this window? You will need to re-inject to open it again."
+    Subtext.TextColor3 = Color3.fromRGB(150, 150, 150)
+    Subtext.TextSize = 14
+    Subtext.TextWrapped = true
+    Subtext.TextXAlignment = Enum.TextXAlignment.Left
+    Subtext.TextYAlignment = Enum.TextYAlignment.Top
+    Subtext.Parent = Main
+    
+    local ButtonContainer = Instance.new("Frame")
+    ButtonContainer.Name = "ButtonContainer"
+    ButtonContainer.BackgroundTransparency = 1
+    ButtonContainer.Position = UDim2.new(0, 20, 1, -50)
+    ButtonContainer.Size = UDim2.new(1, -40, 0, 32)
+    ButtonContainer.Parent = Main
+    
+    local UIListLayout = Instance.new("UIListLayout")
+    UIListLayout.FillDirection = Enum.FillDirection.Horizontal
+    UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
+    UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    UIListLayout.Padding = UDim.new(0, 10)
+    UIListLayout.Parent = ButtonContainer
+    
+    local CancelBtn = Instance.new("TextButton")
+    CancelBtn.Name = "Cancel"
+    CancelBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    CancelBtn.BorderSizePixel = 0
+    CancelBtn.Size = UDim2.new(0, 80, 1, 0)
+    CancelBtn.Font = Enum.Font.GothamSemibold
+    CancelBtn.Text = "Cancel"
+    CancelBtn.TextColor3 = Color3.new(1, 1, 1)
+    CancelBtn.TextSize = 14
+    CancelBtn.AutoButtonColor = false
+    CancelBtn.LayoutOrder = 1
+    CancelBtn.Parent = ButtonContainer
+    
+    local CancelCorner = Instance.new("UICorner")
+    CancelCorner.CornerRadius = UDim.new(0, 6)
+    CancelCorner.Parent = CancelBtn
+    
+    local CancelStroke = Instance.new("UIStroke")
+    CancelStroke.Color = Color3.fromRGB(60, 60, 60)
+    CancelStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    CancelStroke.Parent = CancelBtn
+    
+    local CloseBtn = Instance.new("TextButton")
+    CloseBtn.Name = "Close"
+    CloseBtn.BackgroundColor3 = Color3.fromRGB(220, 60, 60)
+    CloseBtn.BorderSizePixel = 0
+    CloseBtn.Size = UDim2.new(0, 80, 1, 0)
+    CloseBtn.Font = Enum.Font.GothamSemibold
+    CloseBtn.Text = "Close"
+    CloseBtn.TextColor3 = Color3.new(1, 1, 1)
+    CloseBtn.TextSize = 14
+    CloseBtn.AutoButtonColor = false
+    CloseBtn.LayoutOrder = 2
+    CloseBtn.Parent = ButtonContainer
+    
+    local CloseCorner = Instance.new("UICorner")
+    CloseCorner.CornerRadius = UDim.new(0, 6)
+    CloseCorner.Parent = CloseBtn
+    
+    local TweenInfoObj = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    
+    maid:GiveTask(CancelBtn.MouseEnter:Connect(function()
+        Tween(CancelBtn, TweenInfoObj, {BackgroundColor3 = Color3.fromRGB(50, 50, 50)})
+    end))
+    maid:GiveTask(CancelBtn.MouseLeave:Connect(function()
+        Tween(CancelBtn, TweenInfoObj, {BackgroundColor3 = Color3.fromRGB(35, 35, 35)})
+    end))
+    
+    maid:GiveTask(CloseBtn.MouseEnter:Connect(function()
+        Tween(CloseBtn, TweenInfoObj, {BackgroundColor3 = Color3.fromRGB(255, 80, 80)})
+    end))
+    maid:GiveTask(CloseBtn.MouseLeave:Connect(function()
+        Tween(CloseBtn, TweenInfoObj, {BackgroundColor3 = Color3.fromRGB(220, 60, 60)})
+    end))
+    
+    local function Hide()
+        Tween(Overlay, TweenInfoObj, {BackgroundTransparency = 1})
+        local hideTween = Tween(UIScale, TweenInfo.new(0.2, Enum.EasingStyle.Back, Enum.EasingDirection.In), {Scale = 0})
+        task.spawn(function()
+            hideTween.Completed:Wait()
+            Overlay.Visible = false
+        end)
+    end
+    
+    maid:GiveTask(CancelBtn.MouseButton1Click:Connect(function()
+        Hide()
+        if CancelCallback then CancelCallback() end
+    end))
+    
+    maid:GiveTask(CloseBtn.MouseButton1Click:Connect(function()
+        Hide()
+        if ConfirmCallback then ConfirmCallback() end
+    end))
+    
+    -- Intercept the Visible property change to trigger a nice animation
+    maid:GiveTask(Overlay:GetPropertyChangedSignal("Visible"):Connect(function()
+        if Overlay.Visible and Overlay.BackgroundTransparency == 1 then
+            UIScale.Scale = 0.8
+            Tween(Overlay, TweenInfoObj, {BackgroundTransparency = 0.5})
+            Tween(UIScale, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Scale = 1})
+        end
+    end))
+    
+    return Overlay
+end
+
+
+
+-- [[ Core/Minimized.luau ]] --
+
+
+
+local Minimized = {}
+
+function Minimized.Create(ParentGui, maid, RestoreCallback)
+    local Frame = Instance.new("ImageButton")
+    Frame.Name = "Minimized"
+    Frame.Active = true
+    Frame.AnchorPoint = Vector2.new(0.1, 0.3)
+    Frame.BackgroundColor3 = Color3.new(0.11, 0.11, 0.11)
+    Frame.BorderColor3 = Color3.new(0, 0, 0)
+    Frame.BorderSizePixel = 0
+    Frame.Position = UDim2.new(0.064, 0, 0.083, 0)
+    Frame.Selectable = false
+    Frame.Size = UDim2.new(0, 70, 0, 70)
+    Frame.Visible = false
+    Frame.AutoButtonColor = false
+    Frame.Parent = ParentGui
+    
+    local UICorner = Instance.new("UICorner")
+    UICorner.Parent = Frame
+    
+    local UIListLayout = Instance.new("UIListLayout")
+    UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    UIListLayout.HorizontalFlex = Enum.UIFlexAlignment.SpaceAround
+    UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    UIListLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    UIListLayout.Parent = Frame
+    
+    local ImageLabel = Instance.new("ImageLabel")
+    ImageLabel.BackgroundColor3 = Color3.new(1, 1, 1)
+    ImageLabel.BackgroundTransparency = 1
+    ImageLabel.BorderColor3 = Color3.new(0, 0, 0)
+    ImageLabel.BorderSizePixel = 0
+    ImageLabel.Image = "rbxassetid://71942076965693"
+    ImageLabel.Position = UDim2.new(-0.3, 0, 0.143, 0)
+    ImageLabel.Size = UDim2.new(0, 45, 0, 45)
+    ImageLabel.Parent = Frame
+    
+    maid:GiveTask(Frame.MouseButton1Click:Connect(function()
+        Frame.Visible = false
+        if RestoreCallback then RestoreCallback() end
+    end))
+    
+    Utility.MakeDraggable(Frame, Frame, maid)
+    
+    return Frame
+end
+
+
+
+-- [[ Core/Bottombar.luau ]] --
+local Bottombar = {}
+
+function Bottombar.Create(Main, maid)
+    local BottombarFrame = Instance.new("Frame")
+    BottombarFrame.Name = "Bottombar"
+    BottombarFrame.BackgroundColor3 = Color3.new(0.11, 0.11, 0.11)
+    BottombarFrame.BorderColor3 = Color3.new(0, 0, 0)
+    BottombarFrame.BorderSizePixel = 0
+    BottombarFrame.LayoutOrder = 2
+    BottombarFrame.Position = UDim2.new(0, 0, 1, -20)
+    BottombarFrame.Size = UDim2.new(1, 0, 0, 20)
+    BottombarFrame.Parent = Main
+    
+    local BottombarCorner = Instance.new("UICorner")
+    BottombarCorner.TopLeftRadius = UDim.new(0, 0)
+    BottombarCorner.TopRightRadius = UDim.new(0, 0)
+    BottombarCorner.Parent = BottombarFrame
+    
+    local BottombarBorder = Instance.new("Frame")
+    BottombarBorder.Name = "Border"
+    BottombarBorder.BackgroundColor3 = Color3.new(0.216, 0.216, 0.216)
+    BottombarBorder.BorderSizePixel = 0
+    BottombarBorder.Position = UDim2.new(0, 0, 0, 0)
+    BottombarBorder.Size = UDim2.new(1, 0, 0, 1)
+    BottombarBorder.Parent = BottombarFrame
+    
+    local Tabdisplay = Instance.new("Frame")
+    Tabdisplay.Name = "Tabdisplay"
+    Tabdisplay.BackgroundColor3 = Color3.new(1, 1, 1)
+    Tabdisplay.BackgroundTransparency = 1
+    Tabdisplay.BorderColor3 = Color3.new(0, 0, 0)
+    Tabdisplay.BorderSizePixel = 0
+    Tabdisplay.Size = UDim2.new(0, 100, 0, 20)
+    Tabdisplay.Parent = BottombarFrame
+    
+    local TabdisplayIcon = Instance.new("TextLabel")
+    TabdisplayIcon.Name = "Icon"
+    TabdisplayIcon.BackgroundColor3 = Color3.new(1, 1, 1)
+    TabdisplayIcon.BackgroundTransparency = 1
+    TabdisplayIcon.BorderColor3 = Color3.new(0, 0, 0)
+    TabdisplayIcon.BorderSizePixel = 0
+    TabdisplayIcon.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    TabdisplayIcon.Size = UDim2.new(0.2, 0, 1, 0)
+    TabdisplayIcon.Text = "< ⁄ >"
+    TabdisplayIcon.TextColor3 = Color3.new(0.51, 0.51, 0.51)
+    TabdisplayIcon.TextDirection = Enum.TextDirection.RightToLeft
+    TabdisplayIcon.TextSize = 13
+    TabdisplayIcon.TextXAlignment = Enum.TextXAlignment.Right
+    TabdisplayIcon.Parent = Tabdisplay
+    
+    local TabdisplayName = Instance.new("TextLabel")
+    TabdisplayName.Name = "TabName"
+    TabdisplayName.BackgroundColor3 = Color3.new(1, 1, 1)
+    TabdisplayName.BackgroundTransparency = 1
+    TabdisplayName.BorderColor3 = Color3.new(0.353, 0.353, 0.353)
+    TabdisplayName.BorderSizePixel = 0
+    TabdisplayName.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    TabdisplayName.LayoutOrder = 1
+    TabdisplayName.Size = UDim2.new(1, 0, 1, 0)
+    TabdisplayName.Text = "No Tab Selected"
+    TabdisplayName.TextColor3 = Color3.new(0.529, 0.529, 0.529)
+    TabdisplayName.TextSize = 14
+    TabdisplayName.TextXAlignment = Enum.TextXAlignment.Left
+    TabdisplayName.Parent = Tabdisplay
+    
+    local TabdisplayNamePadding = Instance.new("UIPadding")
+    TabdisplayNamePadding.PaddingLeft = UDim.new(0, 3)
+    TabdisplayNamePadding.Parent = TabdisplayName
+    
+    local TabdisplayLayout = Instance.new("UIListLayout")
+    TabdisplayLayout.FillDirection = Enum.FillDirection.Horizontal
+    TabdisplayLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    TabdisplayLayout.Parent = Tabdisplay
+    
+    local Info = Instance.new("Frame")
+    Info.Name = "Info"
+    Info.BackgroundColor3 = Color3.new(1, 1, 1)
+    Info.BackgroundTransparency = 1
+    Info.BorderColor3 = Color3.new(0, 0, 0)
+    Info.BorderSizePixel = 0
+    Info.AnchorPoint = Vector2.new(1, 0.5)
+    Info.Position = UDim2.new(1, -15, 0.5, 0)
+    Info.Size = UDim2.new(0, 0, 0, 20)
+    Info.AutomaticSize = Enum.AutomaticSize.X
+    Info.Parent = BottombarFrame
+    
+    local InfoLayout = Instance.new("UIListLayout")
+    InfoLayout.FillDirection = Enum.FillDirection.Horizontal
+    InfoLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    InfoLayout.Padding = UDim.new(0, 15)
+    InfoLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    InfoLayout.Parent = Info
+    
+    local Status = Instance.new("Frame")
+    Status.Name = "Status"
+    Status.BackgroundColor3 = Color3.new(1, 1, 1)
+    Status.BackgroundTransparency = 1
+    Status.BorderColor3 = Color3.new(0, 0, 0)
+    Status.BorderSizePixel = 0
+    Status.LayoutOrder = 1
+    Status.Size = UDim2.new(0, 0, 0, 20)
+    Status.AutomaticSize = Enum.AutomaticSize.X
+    Status.Parent = Info
+    
+    local StatusIcon = Instance.new("ImageLabel")
+    StatusIcon.BackgroundColor3 = Color3.new(1, 1, 1)
+    StatusIcon.BackgroundTransparency = 1
+    StatusIcon.BorderColor3 = Color3.new(0, 0, 0)
+    StatusIcon.BorderSizePixel = 0
+    StatusIcon.Image = "rbxassetid://102114288213902"
+    StatusIcon.Size = UDim2.new(0, 20, 0, 20)
+    StatusIcon.Parent = Status
+    
+    local StatusText = Instance.new("TextLabel")
+    StatusText.BackgroundColor3 = Color3.new(1, 1, 1)
+    StatusText.BackgroundTransparency = 1
+    StatusText.BorderColor3 = Color3.new(0, 0, 0)
+    StatusText.BorderSizePixel = 0
+    StatusText.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    StatusText.LayoutOrder = 1
+    StatusText.Size = UDim2.new(0, 0, 1, 0)
+    StatusText.AutomaticSize = Enum.AutomaticSize.X
+    StatusText.Text = "Connected"
+    StatusText.TextColor3 = Color3.new(0.482, 0.482, 0.482)
+    StatusText.TextSize = 14
+    StatusText.TextXAlignment = Enum.TextXAlignment.Left
+    StatusText.Parent = Status
+    
+    local StatusTextPadding = Instance.new("UIPadding")
+    StatusTextPadding.PaddingLeft = UDim.new(0, 5)
+    StatusTextPadding.Parent = StatusText
+    
+    local StatusLayout = Instance.new("UIListLayout")
+    StatusLayout.FillDirection = Enum.FillDirection.Horizontal
+    StatusLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    StatusLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    StatusLayout.Parent = Status
+    
+    local Gamename = Instance.new("Frame")
+    Gamename.Name = "Gamename"
+    Gamename.BackgroundColor3 = Color3.new(1, 1, 1)
+    Gamename.BackgroundTransparency = 1
+    Gamename.BorderColor3 = Color3.new(0, 0, 0)
+    Gamename.BorderSizePixel = 0
+    Gamename.Size = UDim2.new(0, 0, 0, 20)
+    Gamename.AutomaticSize = Enum.AutomaticSize.X
+    Gamename.Parent = Info
+    
+    local GamenameText = Instance.new("TextLabel")
+    GamenameText.Name = "Name"
+    GamenameText.BackgroundColor3 = Color3.new(1, 1, 1)
+    GamenameText.BackgroundTransparency = 1
+    GamenameText.BorderColor3 = Color3.new(0, 0, 0)
+    GamenameText.BorderSizePixel = 0
+    GamenameText.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    GamenameText.Size = UDim2.new(0, 0, 1, 0)
+    GamenameText.AutomaticSize = Enum.AutomaticSize.X
+    local Success, GameNameResult = pcall(function() return game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name end)
+    GamenameText.Text = Success and GameNameResult or "Unknown Game"
+    GamenameText.TextColor3 = Color3.new(0.529, 0.529, 0.529)
+    GamenameText.TextSize = 14
+    GamenameText.Parent = Gamename
+    
+    return {
+        Instance = BottombarFrame,
+        TabdisplayName = TabdisplayName
+    }
+end
+
+
+
+-- [[ Core/Sidebar.luau ]] --
+
+
+
+local Sidebar = {}
+
+function Sidebar.Create(Content, maid, OnCollapse)
+    local SidebarFrame = Instance.new("Frame")
+    SidebarFrame.Name = "Sidebar"
+    SidebarFrame.BackgroundColor3 = Color3.new(0.11, 0.11, 0.11)
+    SidebarFrame.BorderColor3 = Color3.new(0, 0, 0)
+    SidebarFrame.BorderSizePixel = 0
+    SidebarFrame.Size = UDim2.new(0, 200, 1, 0)
+    SidebarFrame.ZIndex = 50
+    SidebarFrame.Parent = Content
+    
+    local SidebarLayout = Instance.new("UIListLayout")
+    SidebarLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    SidebarLayout.Parent = SidebarFrame
+    
+    local SidebarActions = Instance.new("Frame")
+    SidebarActions.Name = "Actions"
+    SidebarActions.BackgroundColor3 = Color3.new(1, 1, 1)
+    SidebarActions.BackgroundTransparency = 1
+    SidebarActions.BorderColor3 = Color3.new(0, 0, 0)
+    SidebarActions.BorderSizePixel = 0
+    SidebarActions.Size = UDim2.new(1, 0, 0, 35)
+    SidebarActions.ZIndex = 10
+    SidebarActions.Parent = SidebarFrame
+    
+    local SidebarActionsLayout = Instance.new("UIListLayout")
+    SidebarActionsLayout.FillDirection = Enum.FillDirection.Horizontal
+    SidebarActionsLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    SidebarActionsLayout.Parent = SidebarActions
+    
+    local Home = Instance.new("ImageButton")
+    Home.Name = "Home"
+    Home.BackgroundColor3 = Color3.new(1, 1, 1)
+    Home.BackgroundTransparency = 1
+    Home.BorderColor3 = Color3.new(0, 0, 0)
+    Home.BorderSizePixel = 0
+    Home.Size = UDim2.new(0, 35, 0, 35)
+    Home.Parent = SidebarActions
+    
+    local HomeIcon = Instance.new("ImageLabel")
+    HomeIcon.AnchorPoint = Vector2.new(0.5, 0.5)
+    HomeIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
+    HomeIcon.BackgroundColor3 = Color3.new(1, 1, 1)
+    HomeIcon.BackgroundTransparency = 1
+    HomeIcon.BorderColor3 = Color3.new(0, 0, 0)
+    HomeIcon.BorderSizePixel = 0
+    HomeIcon.Image = "rbxassetid://94685968948870"
+    HomeIcon.ImageTransparency = 0.2
+    HomeIcon.Size = UDim2.new(0, 20, 0, 20)
+    HomeIcon.Parent = Home
+    
+    local Account = Instance.new("ImageButton")
+    Account.Name = "Account"
+    Account.BackgroundColor3 = Color3.new(1, 1, 1)
+    Account.BackgroundTransparency = 1
+    Account.BorderColor3 = Color3.new(0, 0, 0)
+    Account.BorderSizePixel = 0
+    Account.LayoutOrder = 1
+    Account.Size = UDim2.new(0, 35, 0, 35)
+    Account.Parent = SidebarActions
+    
+    local AccountIcon = Instance.new("ImageLabel")
+    AccountIcon.AnchorPoint = Vector2.new(0.5, 0.5)
+    AccountIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
+    AccountIcon.BackgroundColor3 = Color3.new(1, 1, 1)
+    AccountIcon.BackgroundTransparency = 1
+    AccountIcon.BorderColor3 = Color3.new(0, 0, 0)
+    AccountIcon.BorderSizePixel = 0
+    AccountIcon.Image = "rbxassetid://134568818132029"
+    AccountIcon.ImageTransparency = 0.1
+    AccountIcon.Size = UDim2.new(0, 15, 0, 15)
+    AccountIcon.Parent = Account
+    
+    local Settings = Instance.new("ImageButton")
+    Settings.Name = "Settings"
+    Settings.BackgroundColor3 = Color3.new(1, 1, 1)
+    Settings.BackgroundTransparency = 1
+    Settings.BorderColor3 = Color3.new(0, 0, 0)
+    Settings.BorderSizePixel = 0
+    Settings.LayoutOrder = 2
+    Settings.Size = UDim2.new(0, 35, 0, 35)
+    Settings.Parent = SidebarActions
+    
+    local SettingsIcon = Instance.new("ImageLabel")
+    SettingsIcon.AnchorPoint = Vector2.new(0.5, 0.5)
+    SettingsIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
+    SettingsIcon.BackgroundColor3 = Color3.new(1, 1, 1)
+    SettingsIcon.BackgroundTransparency = 1
+    SettingsIcon.BorderColor3 = Color3.new(0, 0, 0)
+    SettingsIcon.BorderSizePixel = 0
+    SettingsIcon.Image = "rbxassetid://95898765113869"
+    SettingsIcon.Size = UDim2.new(0, 15, 0, 15)
+    SettingsIcon.Parent = Settings
+    
+    local SidebarFiller = Instance.new("Frame")
+    SidebarFiller.Name = "Filler"
+    SidebarFiller.BackgroundColor3 = Color3.new(1, 1, 1)
+    SidebarFiller.BackgroundTransparency = 1
+    SidebarFiller.BorderColor3 = Color3.new(0, 0, 0)
+    SidebarFiller.BorderSizePixel = 0
+    SidebarFiller.LayoutOrder = 3
+    SidebarFiller.Position = UDim2.new(0.525, 0, 0, 0)
+    SidebarFiller.Size = UDim2.new(0, 60, 0, 35)
+    SidebarFiller.Parent = SidebarActions
+    
+    local Collapse = Instance.new("ImageButton")
+    Collapse.Name = "Collapse"
+    Collapse.BackgroundColor3 = Color3.new(1, 1, 1)
+    Collapse.BackgroundTransparency = 1
+    Collapse.BorderColor3 = Color3.new(0, 0, 0)
+    Collapse.BorderSizePixel = 0
+    Collapse.LayoutOrder = 4
+    Collapse.Position = UDim2.new(0.525, 0, 0, 0)
+    Collapse.Size = UDim2.new(0, 35, 0, 35)
+    Collapse.Parent = SidebarActions
+    
+    local CollapseIcon = Instance.new("ImageLabel")
+    CollapseIcon.AnchorPoint = Vector2.new(0.5, 0.5)
+    CollapseIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
+    CollapseIcon.BackgroundColor3 = Color3.new(1, 1, 1)
+    CollapseIcon.BackgroundTransparency = 1
+    CollapseIcon.BorderColor3 = Color3.new(0, 0, 0)
+    CollapseIcon.BorderSizePixel = 0
+    CollapseIcon.Image = "rbxassetid://93526157530558"
+    CollapseIcon.ImageTransparency = 0.3
+    CollapseIcon.Rotation = -180
+    CollapseIcon.Size = UDim2.new(0, 20, 0, 20)
+    CollapseIcon.Parent = Collapse
+    
+    local SidebarFiller2 = Instance.new("Frame")
+    SidebarFiller2.Name = "Filler"
+    SidebarFiller2.BackgroundColor3 = Color3.new(1, 1, 1)
+    SidebarFiller2.BackgroundTransparency = 1
+    SidebarFiller2.BorderColor3 = Color3.new(0, 0, 0)
+    SidebarFiller2.BorderSizePixel = 0
+    SidebarFiller2.LayoutOrder = 2
+    SidebarFiller2.Position = UDim2.new(0, 0, 0.131, 0)
+    SidebarFiller2.Size = UDim2.new(0, 200, 0, 5)
+    SidebarFiller2.Parent = SidebarFrame
+    
+    local HoverColor = Color3.fromRGB(45, 45, 45)
+    local TweenInfoObj = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    
+    local function ApplyHover(button, text)
+        button.AutoButtonColor = false
+        button.BackgroundTransparency = 1
+        
+        local HoverBox = Instance.new("Frame")
+        HoverBox.Name = "HoverBox"
+        HoverBox.AnchorPoint = Vector2.new(0.5, 0.5)
+        HoverBox.Position = UDim2.new(0.5, 0, 0.5, 0)
+        HoverBox.Size = UDim2.new(0, 30, 0, 30)
+        HoverBox.BackgroundColor3 = HoverColor
+        HoverBox.BackgroundTransparency = 1
+        HoverBox.BorderSizePixel = 0
+        HoverBox.ZIndex = 0
+        HoverBox.Parent = button
+        
+        local Corner = Instance.new("UICorner")
+        Corner.CornerRadius = UDim.new(0, 6)
+        Corner.Parent = HoverBox
+        
+        local Tooltip = Instance.new("TextLabel")
+        Tooltip.Name = "Tooltip"
+        Tooltip.BackgroundColor3 = Color3.new(0.075, 0.075, 0.075)
+        Tooltip.BackgroundTransparency = 1
+        Tooltip.AnchorPoint = Vector2.new(0.5, 0)
+        Tooltip.Position = UDim2.new(0.5, 0, 1, 4)
+        Tooltip.Size = UDim2.new(0, 0, 0, 18)
+        Tooltip.AutomaticSize = Enum.AutomaticSize.X
+        Tooltip.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+        Tooltip.Text = text
+        Tooltip.TextColor3 = Color3.new(0.7, 0.7, 0.7)
+        Tooltip.TextSize = 12
+        Tooltip.TextTransparency = 1
+        Tooltip.ZIndex = 10
+        Tooltip.Visible = false
+        Tooltip.Parent = button
+        
+        local TooltipCorner = Instance.new("UICorner")
+        TooltipCorner.CornerRadius = UDim.new(0, 4)
+        TooltipCorner.Parent = Tooltip
+        
+        local TooltipPadding = Instance.new("UIPadding")
+        TooltipPadding.PaddingLeft = UDim.new(0, 6)
+        TooltipPadding.PaddingRight = UDim.new(0, 6)
+        TooltipPadding.Parent = Tooltip
+        
+        local TooltipStroke = Instance.new("UIStroke")
+        TooltipStroke.Color = Color3.new(0.216, 0.216, 0.216)
+        TooltipStroke.Transparency = 1
+        TooltipStroke.Parent = Tooltip
+        
+        local icon = button:FindFirstChildOfClass("ImageLabel")
+        if icon then icon.Active = false end
+        
+        maid:GiveTask(button.MouseEnter:Connect(function()
+            Tween(HoverBox, TweenInfoObj, {BackgroundTransparency = 0})
+            Tooltip.Visible = true
+            Tween(Tooltip, TweenInfoObj, {TextTransparency = 0, BackgroundTransparency = 0})
+            Tween(TooltipStroke, TweenInfoObj, {Transparency = 0})
+            if icon then Tween(icon, TweenInfoObj, {ImageTransparency = 0}) end
+        end))
+        
+        maid:GiveTask(button.MouseLeave:Connect(function()
+            Tween(HoverBox, TweenInfoObj, {BackgroundTransparency = 1})
+            local t1 = Tween(Tooltip, TweenInfoObj, {TextTransparency = 1, BackgroundTransparency = 1})
+            Tween(TooltipStroke, TweenInfoObj, {Transparency = 1})
+            
+            local defTrans = 0
+            if button.Name == "Home" then defTrans = 0.2
+            elseif button.Name == "Account" then defTrans = 0.1
+            elseif button.Name == "Collapse" then defTrans = 0.3
+            end
+            if icon then Tween(icon, TweenInfoObj, {ImageTransparency = defTrans}) end
+            
+            maid:GiveTask(t1.Completed:Connect(function()
+                if Tooltip.TextTransparency == 1 then
+                    Tooltip.Visible = false
+                end
+            end))
+        end))
+    end
+    
+    ApplyHover(Home, "Home")
+    ApplyHover(Account, "Account")
+    ApplyHover(Settings, "Settings")
+    ApplyHover(Collapse, "Collapse")
+    
+    local Searchbar = Instance.new("Frame")
+    Searchbar.Name = "Searchbar"
+    Searchbar.BackgroundColor3 = Color3.new(1, 1, 1)
+    Searchbar.BackgroundTransparency = 1
+    Searchbar.BorderColor3 = Color3.new(0, 0, 0)
+    Searchbar.BorderSizePixel = 0
+    Searchbar.LayoutOrder = 1
+    Searchbar.Position = UDim2.new(0, 0, 0.064, 0)
+    Searchbar.Size = UDim2.new(1, 0, 0, 35)
+    Searchbar.Parent = SidebarFrame
+    
+    local SearchbarLayout = Instance.new("UIListLayout")
+    SearchbarLayout.FillDirection = Enum.FillDirection.Horizontal
+    SearchbarLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    SearchbarLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    SearchbarLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    SearchbarLayout.Parent = Searchbar
+    
+    local Search = Instance.new("Frame")
+    Search.Name = "Search"
+    Search.BackgroundColor3 = Color3.new(0.094, 0.094, 0.094)
+    Search.BorderColor3 = Color3.new(0, 0, 0)
+    Search.BorderSizePixel = 0
+    Search.Size = UDim2.new(0, 180, 0, 30)
+    Search.Parent = Searchbar
+    
+    local SearchStroke = Instance.new("UIStroke")
+    SearchStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
+    SearchStroke.Color = Color3.new(0.216, 0.216, 0.216)
+    SearchStroke.Parent = Search
+    
+    local SearchCorner = Instance.new("UICorner")
+    SearchCorner.CornerRadius = UDim.new(0, 5)
+    SearchCorner.Parent = Search
+    
+    local SearchInnerLayout = Instance.new("UIListLayout")
+    SearchInnerLayout.FillDirection = Enum.FillDirection.Horizontal
+    SearchInnerLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    SearchInnerLayout.Parent = Search
+    
+    local SearchInput = Instance.new("TextBox")
+    SearchInput.BackgroundColor3 = Color3.new(1, 1, 1)
+    SearchInput.BackgroundTransparency = 1
+    SearchInput.BorderColor3 = Color3.new(0, 0, 0)
+    SearchInput.BorderSizePixel = 0
+    SearchInput.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    SearchInput.LayoutOrder = 1
+    SearchInput.Position = UDim2.new(0.167, 0, 0, 0)
+    SearchInput.Size = UDim2.new(0.833, 0, 1, 0)
+    SearchInput.Text = "Search..."
+    SearchInput.TextColor3 = Color3.new(0.478, 0.478, 0.478)
+    SearchInput.TextSize = 12
+    SearchInput.TextXAlignment = Enum.TextXAlignment.Left
+    SearchInput.Parent = Search
+    
+    local SearchInputPadding = Instance.new("UIPadding")
+    SearchInputPadding.PaddingLeft = UDim.new(0, 4)
+    SearchInputPadding.Parent = SearchInput
+    
+    local SearchIconFrame = Instance.new("Frame")
+    SearchIconFrame.Name = "Icon"
+    SearchIconFrame.BackgroundColor3 = Color3.new(1, 1, 1)
+    SearchIconFrame.BackgroundTransparency = 1
+    SearchIconFrame.BorderColor3 = Color3.new(0, 0, 0)
+    SearchIconFrame.BorderSizePixel = 0
+    SearchIconFrame.Size = UDim2.new(0, 30, 0, 30)
+    SearchIconFrame.Parent = Search
+    
+    local SearchIconLabel = Instance.new("ImageLabel")
+    SearchIconLabel.BackgroundColor3 = Color3.new(1, 1, 1)
+    SearchIconLabel.BackgroundTransparency = 1
+    SearchIconLabel.BorderColor3 = Color3.new(0, 0, 0)
+    SearchIconLabel.BorderSizePixel = 0
+    SearchIconLabel.Image = "rbxassetid://88107177696245"
+    SearchIconLabel.ImageTransparency = 0.3
+    SearchIconLabel.Size = UDim2.new(0, 16, 0, 16)
+    SearchIconLabel.Parent = SearchIconFrame
+    
+    local SearchIconFrameLayout = Instance.new("UIListLayout")
+    SearchIconFrameLayout.FillDirection = Enum.FillDirection.Horizontal
+    SearchIconFrameLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    SearchIconFrameLayout.HorizontalFlex = Enum.UIFlexAlignment.SpaceAround
+    SearchIconFrameLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    SearchIconFrameLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    SearchIconFrameLayout.Parent = SearchIconFrame
+    
+    local TabsContainer = Instance.new("Frame")
+    TabsContainer.Name = "Tabs"
+    TabsContainer.BackgroundColor3 = Color3.new(1, 1, 1)
+    TabsContainer.BackgroundTransparency = 1
+    TabsContainer.BorderColor3 = Color3.new(0, 0, 0)
+    TabsContainer.BorderSizePixel = 0
+    TabsContainer.LayoutOrder = 3
+    TabsContainer.Position = UDim2.new(0, 0, 0.136, 0)
+    TabsContainer.Size = UDim2.new(1, 0, 1, -75)
+    TabsContainer.Parent = SidebarFrame
+    
+    local TabsTopBorder = Instance.new("Frame")
+    TabsTopBorder.Name = "TopBorder"
+    TabsTopBorder.BackgroundColor3 = Color3.new(0.216, 0.216, 0.216)
+    TabsTopBorder.BorderSizePixel = 0
+    TabsTopBorder.Size = UDim2.new(1, 0, 0, 1)
+    TabsTopBorder.Parent = TabsContainer
+    
+    local TabsScrolling = Instance.new("ScrollingFrame")
+    TabsScrolling.Active = true
+    TabsScrolling.BackgroundColor3 = Color3.new(1, 1, 1)
+    TabsScrolling.BackgroundTransparency = 1
+    TabsScrolling.BorderColor3 = Color3.new(0, 0, 0)
+    TabsScrolling.BorderSizePixel = 0
+    TabsScrolling.ScrollBarThickness = 0
+    TabsScrolling.ScrollBarImageColor3 = Color3.new(0.137, 0.137, 0.137)
+    TabsScrolling.ScrollBarImageTransparency = 1
+    TabsScrolling.Size = UDim2.new(1, 0, 1, 0)
+    TabsScrolling.Parent = TabsContainer
+    
+    local TabsScrollingLayout = Instance.new("UIListLayout")
+    TabsScrollingLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    TabsScrollingLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    TabsScrollingLayout.Padding = UDim.new(0, 5)
+    TabsScrollingLayout.Parent = TabsScrolling
+    
+    local TabsScrollingPadding = Instance.new("UIPadding")
+    TabsScrollingPadding.PaddingTop = UDim.new(0, 9)
+    TabsScrollingPadding.Parent = TabsScrolling
+    
+    local isCollapsed = false
+    local SidebarTweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    
+    maid:GiveTask(Collapse.MouseButton1Click:Connect(function()
+        isCollapsed = not isCollapsed
+        
+        if isCollapsed then
+            Searchbar.Visible = false
+            Home.Visible = false
+            Account.Visible = false
+            Settings.Visible = false
+            SidebarFiller.Visible = false
+            SidebarFiller2.Visible = false
+            SidebarActionsLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+            
+            Tween(SidebarFrame, SidebarTweenInfo, {Size = UDim2.new(0, 50, 1, 0)})
+            Tween(CollapseIcon, SidebarTweenInfo, {Rotation = 0})
+            if OnCollapse then OnCollapse:Fire(true) end
+        else
+            Searchbar.Visible = true
+            Home.Visible = true
+            Account.Visible = true
+            Settings.Visible = true
+            SidebarFiller.Visible = true
+            SidebarFiller2.Visible = true
+            SidebarActionsLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
+            
+            Tween(SidebarFrame, SidebarTweenInfo, {Size = UDim2.new(0, 200, 1, 0)})
+            Tween(CollapseIcon, SidebarTweenInfo, {Rotation = -180})
+            if OnCollapse then OnCollapse:Fire(false) end
+        end
+    end))
+    
+    return {
+        Instance = SidebarFrame,
+        TabsContainer = TabsScrolling,
+        SearchInput = SearchInput,
+        AccountBtn = Account
+    }
+end
+
+
+
 -- [[ Core/Theme.luau ]] --
 
 
 -- [[ Core/Tabs.luau ]] --
+
+
 
 
 
@@ -3427,14 +3899,14 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
     
     local isFirstTab = (#Tabs.Instances == 0)
     
-    -- 1. Create the Tab Button in Sidebar
     local TabBtn = Instance.new("TextButton")
     TabBtn.Name = Name
     TabBtn.BackgroundColor3 = Color3.new(1, 1, 1)
     TabBtn.BackgroundTransparency = 1
-    TabBtn.Size = UDim2.new(1, -20, 0, 32)
+    TabBtn.Size = UDim2.new(1, -20, 0, 40)
     TabBtn.Position = UDim2.new(0, 10, 0, 0)
     TabBtn.Text = ""
+    TabBtn.ClipsDescendants = true
     TabBtn.Parent = SidebarContainer
     
     local TabCorner = Instance.new("UICorner")
@@ -3444,8 +3916,8 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
     local TabIcon = Instance.new("ImageLabel")
     TabIcon.BackgroundTransparency = 1
     TabIcon.Size = UDim2.new(0, 16, 0, 16)
-    TabIcon.AnchorPoint = Vector2.new(0, 0.5)
-    TabIcon.Position = UDim2.new(0, 12, 0.5, 0)
+    TabIcon.AnchorPoint = Vector2.new(0.5, 0.5)
+    TabIcon.Position = UDim2.new(0, 20, 0.5, 0)
     TabIcon.Image = IconAsset or ""
     TabIcon.ImageColor3 = Color3.new(0.6, 0.6, 0.6)
     TabIcon.Parent = TabBtn
@@ -3505,6 +3977,10 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
         Tween(TabBtn, TweenInfo.new(0.2), {BackgroundTransparency = 0.95})
         Tween(TabTitle, TweenInfo.new(0.2), {TextColor3 = Color3.new(1, 1, 1)})
         Tween(TabIcon, TweenInfo.new(0.2), {ImageColor3 = Color3.new(1, 1, 1)})
+        
+        if WindowObject.Bottombar and WindowObject.Bottombar.TabdisplayName then
+            WindowObject.Bottombar.TabdisplayName.Text = Name
+        end
     end
     
     Maid:GiveTask(TabBtn.MouseButton1Click:Connect(ActivateTab))
@@ -3522,6 +3998,21 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
         end
     end))
     
+    if WindowObject.OnCollapse then
+        Maid:GiveTask(WindowObject.OnCollapse:Connect(function(isCollapsed)
+            local SidebarTweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+            if isCollapsed then
+                Tween(TabBtn, SidebarTweenInfo, {Size = UDim2.new(0, 40, 0, 40)})
+                Tween(TabIcon, SidebarTweenInfo, {Position = UDim2.new(0.5, 0, 0.5, 0)})
+                TabTitle.Visible = false
+            else
+                Tween(TabBtn, SidebarTweenInfo, {Size = UDim2.new(1, -20, 0, 40)})
+                Tween(TabIcon, SidebarTweenInfo, {Position = UDim2.new(0, 20, 0.5, 0)})
+                TabTitle.Visible = true
+            end
+        end))
+    end
+    
     if isFirstTab then
         ActivateTab()
     end
@@ -3529,57 +4020,7 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
     local TabMethods = {}
     
     function TabMethods:CreateButton(Config)
-        local btnConfig = type(Config) == "string" and {Name = Config} or Config
-        local btnName = btnConfig.Name or "Button"
-        local cb = btnConfig.Callback or function() end
-        
-        local BtnFrame = Instance.new("Frame")
-        BtnFrame.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
-        BtnFrame.Size = UDim2.new(1, 0, 0, 42)
-        BtnFrame.Parent = TabContent
-        Instance.new("UICorner", BtnFrame).CornerRadius = UDim.new(0, 6)
-        Instance.new("UIStroke", BtnFrame).Color = Color3.new(0.15, 0.15, 0.15)
-        
-        local Title = Instance.new("TextLabel")
-        Title.BackgroundTransparency = 1
-        Title.Size = UDim2.new(1, -20, 1, 0)
-        Title.Position = UDim2.new(0, 15, 0, 0)
-        Title.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
-        Title.Text = btnName
-        Title.TextColor3 = Color3.new(0.9, 0.9, 0.9)
-        Title.TextSize = 13
-        Title.TextXAlignment = Enum.TextXAlignment.Left
-        Title.Parent = BtnFrame
-        
-        local ClickBtn = Instance.new("TextButton")
-        ClickBtn.BackgroundTransparency = 1
-        ClickBtn.Size = UDim2.new(1, 0, 1, 0)
-        ClickBtn.Text = ""
-        ClickBtn.Parent = BtnFrame
-        
-        Maid:GiveTask(ClickBtn.MouseButton1Click:Connect(function()
-            cb()
-        end))
-        
-        Maid:GiveTask(ClickBtn.MouseEnter:Connect(function()
-            Tween(BtnFrame, TweenInfo.new(0.2), {BackgroundColor3 = Color3.new(0.12, 0.12, 0.12)})
-            Tween(BtnFrame:FindFirstChildOfClass("UIStroke"), TweenInfo.new(0.2), {Color = Color3.new(0.2, 0.2, 0.2)})
-        end))
-        
-        Maid:GiveTask(ClickBtn.MouseLeave:Connect(function()
-            Tween(BtnFrame, TweenInfo.new(0.2), {BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)})
-            Tween(BtnFrame:FindFirstChildOfClass("UIStroke"), TweenInfo.new(0.2), {Color = Color3.new(0.15, 0.15, 0.15)})
-        end))
-        
-        Maid:GiveTask(ClickBtn.MouseButton1Down:Connect(function()
-            Tween(BtnFrame, TweenInfo.new(0.1), {BackgroundColor3 = Color3.new(0.15, 0.15, 0.15)})
-        end))
-        
-        Maid:GiveTask(ClickBtn.MouseButton1Up:Connect(function()
-            Tween(BtnFrame, TweenInfo.new(0.1), {BackgroundColor3 = Color3.new(0.12, 0.12, 0.12)})
-        end))
-        
-        return BtnFrame
+        return ButtonComponent.Create(TabContent, Maid, Config)
     end
     
     return TabMethods
@@ -3604,6 +4045,7 @@ end
 
 
 
+
 local Window = {}
 
 function Window:CreateWindow(Config)
@@ -3612,8 +4054,11 @@ function Window:CreateWindow(Config)
     local VoltUi = Instance.new("ScreenGui")
     VoltUi.Name = "VoltUi"
     VoltUi.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    VoltUi.IgnoreGuiInset = true
     VoltUi.ResetOnSpawn = false
     maid:GiveTask(VoltUi)
+    
+    Utility.ProtectGui(VoltUi)
     
     Notifications.Init(VoltUi)
     
@@ -3673,8 +4118,12 @@ function Window:CreateWindow(Config)
     ContentLayout.VerticalAlignment = Enum.VerticalAlignment.Center
     ContentLayout.Parent = Content
     
-    local SidebarElements = Sidebar.Create(Content, maid)
+    local OnCollapse = Signal.new()
+    maid:GiveTask(OnCollapse)
     
+    local SidebarElements = Sidebar.Create(Content, maid, OnCollapse)
+    
+
     local SidebarSeparator = Instance.new("Frame")
     SidebarSeparator.Name = "SidebarSeparator"
     SidebarSeparator.BackgroundColor3 = Color3.new(0.216, 0.216, 0.216)
@@ -3694,12 +4143,22 @@ function Window:CreateWindow(Config)
     MainContent.LayoutOrder = 2
     MainContent.Parent = Content
     
+    maid:GiveTask(OnCollapse:Connect(function(isCollapsed)
+        local SidebarTweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+        if isCollapsed then
+            Tween(MainContent, SidebarTweenInfo, {Size = UDim2.new(1, -51, 1, 0)})
+        else
+            Tween(MainContent, SidebarTweenInfo, {Size = UDim2.new(1, -201, 1, 0)})
+        end
+    end))
+    
     local ExpiredOverlay = Instance.new("TextButton")
     ExpiredOverlay.Name = "ExpiredOverlay"
     ExpiredOverlay.Size = UDim2.new(1, 0, 1, 0)
     ExpiredOverlay.BackgroundColor3 = Color3.new(0, 0, 0)
     ExpiredOverlay.BackgroundTransparency = 0.5
     ExpiredOverlay.Text = ""
+    ExpiredOverlay.AutoButtonColor = false
     ExpiredOverlay.ZIndex = 9999
     ExpiredOverlay.Visible = false
     ExpiredOverlay.Parent = MainContent
@@ -3727,10 +4186,10 @@ function Window:CreateWindow(Config)
     
     local BottombarElements = Bottombar.Create(Main, maid)
     
-    local AccountPageElements
     AccountPageElements = AccountPage.Create(PagesContainer, maid, function()
         PageLayout:JumpTo(Content)
         BottombarElements.Instance.Visible = true
+        Tween(PagesContainer, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -50)})
         if Api.UserData and Api.UserData.remaining == "Expired" then
             ExpiredOverlay.Visible = true
         else
@@ -3738,7 +4197,10 @@ function Window:CreateWindow(Config)
         end
     end, Api)
 
+    local loadingScreen = Loading.Create(VoltUi)
+
     local function OnLoginSuccess()
+        loadingScreen:WaitForReady()
         Main.Visible = true
         if AccountPageElements and Api.UserData then
             AccountPageElements.UpdateData(Api.UserData)
@@ -3748,6 +4210,7 @@ function Window:CreateWindow(Config)
                 ExpiredOverlay.Visible = false
             end
         end
+        loadingScreen:FadeOut()
     end
 
     local token = Api.GetToken()
@@ -3757,16 +4220,21 @@ function Window:CreateWindow(Config)
             if data then
                 OnLoginSuccess()
             else
+                loadingScreen:WaitForReady()
                 LoginPage.Create(VoltUi, OnLoginSuccess)
+                loadingScreen:FadeOut()
             end
         end)
     else
+        loadingScreen:WaitForReady()
         LoginPage.Create(VoltUi, OnLoginSuccess)
+        loadingScreen:FadeOut()
     end
     
     maid:GiveTask(SidebarElements.AccountBtn.MouseButton1Click:Connect(function()
         PageLayout:JumpTo(AccountPageElements.Instance)
         BottombarElements.Instance.Visible = false
+        Tween(PagesContainer, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -30)})
     end))
     
     local ClosePrompt = CloseWarn.Create(VoltUi, maid, function()
@@ -3843,14 +4311,13 @@ function Window:CreateWindow(Config)
         Bottombar = BottombarElements,
         ContentContainer = MainContent,
         Maid = maid,
-        OnClose = OnClose
+        OnClose = OnClose,
+        OnCollapse = OnCollapse
     }
     
     function WindowObject:CreateTab(Name, IconAsset)
         return Tabs.CreateTab(WindowObject, Name, IconAsset)
     end
-    
-    Utility.ProtectGui(VoltUi)
     
     return WindowObject
 end

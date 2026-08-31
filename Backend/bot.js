@@ -85,7 +85,7 @@ client.on('ready', async () => {
 client.on('interactionCreate', async interaction => {
     if (interaction.isChatInputCommand()) {
         if (interaction.user.id !== process.env.OWNER && !['panel', 'key'].includes(interaction.commandName)) {
-            return interaction.reply({ content: 'You do not have permission to use this command.', ephemeral: true });
+            return interaction.reply({ embeds: [new EmbedBuilder().setDescription('You do not have permission to use this command.').setColor('#e74c3c')], ephemeral: true });
         }
 
         if (interaction.commandName === 'createkey') {
@@ -93,7 +93,7 @@ client.on('interactionCreate', async interaction => {
             const durationMs = parseDuration(durationStr);
 
             if (durationMs === undefined) {
-                return interaction.reply({ content: 'Invalid duration. Use 1h, 1d, 2d, 7d, 1w, 1m, 1y, or l (lifetime).', ephemeral: true });
+                return interaction.reply({ embeds: [new EmbedBuilder().setDescription('Invalid duration. Use 1h, 1d, 2d, 7d, 1w, 1m, 1y, or l (lifetime).').setColor('#e74c3c')], ephemeral: true });
             }
 
             const key = generateKey();
@@ -117,7 +117,7 @@ client.on('interactionCreate', async interaction => {
                 await interaction.reply({ embeds: [embed], ephemeral: true });
             } catch (err) {
                 console.error(err);
-                await interaction.reply({ content: 'Error generating key.', ephemeral: true });
+                await interaction.reply({ embeds: [new EmbedBuilder().setDescription('Error generating key.').setColor('#e74c3c')], ephemeral: true });
             }
         } else if (interaction.commandName === 'key') {
             try {
@@ -126,7 +126,7 @@ client.on('interactionCreate', async interaction => {
 
                 if (lastFreeKey && (Date.now() - lastFreeKey.createdAt.getTime()) < cooldownMs) {
                     const availableAt = Math.floor((lastFreeKey.createdAt.getTime() + cooldownMs) / 1000);
-                    return interaction.reply({ content: `You can generate another free key <t:${availableAt}:R>.`, ephemeral: true });
+                    return interaction.reply({ embeds: [new EmbedBuilder().setDescription(`You can generate another free key <t:${availableAt}:R>.`).setColor('#e74c3c')], ephemeral: true });
                 }
 
                 const newKey = generateKey();
@@ -151,7 +151,7 @@ client.on('interactionCreate', async interaction => {
                 await interaction.reply({ embeds: [embed], ephemeral: true });
             } catch (err) {
                 console.error(err);
-                await interaction.reply({ content: 'Error generating free key.', ephemeral: true });
+                await interaction.reply({ embeds: [new EmbedBuilder().setDescription('Error generating free key.').setColor('#e74c3c')], ephemeral: true });
             }
         } else if (interaction.commandName === 'keyinfo') {
             const keyString = interaction.options.getString('key');
@@ -160,7 +160,7 @@ client.on('interactionCreate', async interaction => {
                 const license = await License.findOne({ key: keyString }).populate('claimedBy', 'username');
 
                 if (!license) {
-                    return interaction.reply({ content: 'Key not found.', ephemeral: true });
+                    return interaction.reply({ embeds: [new EmbedBuilder().setDescription('Key not found.').setColor('#e74c3c')], ephemeral: true });
                 }
 
                 let status = license.claimedBy ? 'Claimed' : 'Unclaimed';
@@ -187,45 +187,45 @@ client.on('interactionCreate', async interaction => {
                 await interaction.reply({ embeds: [embed], ephemeral: true });
             } catch (err) {
                 console.error(err);
-                await interaction.reply({ content: 'Error fetching key info.', ephemeral: true });
+                await interaction.reply({ embeds: [new EmbedBuilder().setDescription('Error fetching key info.').setColor('#e74c3c')], ephemeral: true });
             }
         } else if (interaction.commandName === 'blacklist') {
             const targetUser = interaction.options.getUser('user');
             try {
                 const user = await User.findOne({ discordId: targetUser.id });
-                if (!user) return interaction.reply({ content: 'That Discord user has not registered an account yet.', ephemeral: true });
+                if (!user) return interaction.reply({ embeds: [new EmbedBuilder().setDescription('That Discord user has not registered an account yet.').setColor('#e74c3c')], ephemeral: true });
                 user.banned = true;
                 await user.save();
-                await interaction.reply({ content: `User **${user.username}** (<@${targetUser.id}>) has been blacklisted.`, ephemeral: true });
+                await interaction.reply({ embeds: [new EmbedBuilder().setDescription(`User **${user.username}** (<@${targetUser.id}>) has been blacklisted.`).setColor('#2ecc71')], ephemeral: true });
             } catch (err) {
                 console.error(err);
-                await interaction.reply({ content: 'Error blacklisting user.', ephemeral: true });
+                await interaction.reply({ embeds: [new EmbedBuilder().setDescription('Error blacklisting user.').setColor('#e74c3c')], ephemeral: true });
             }
         } else if (interaction.commandName === 'unblacklist') {
             const targetUser = interaction.options.getUser('user');
             try {
                 const user = await User.findOne({ discordId: targetUser.id });
-                if (!user) return interaction.reply({ content: 'That Discord user has not registered an account yet.', ephemeral: true });
+                if (!user) return interaction.reply({ embeds: [new EmbedBuilder().setDescription('That Discord user has not registered an account yet.').setColor('#e74c3c')], ephemeral: true });
                 user.banned = false;
                 await user.save();
-                await interaction.reply({ content: `User **${user.username}** (<@${targetUser.id}>) has been unblacklisted.`, ephemeral: true });
+                await interaction.reply({ embeds: [new EmbedBuilder().setDescription(`User **${user.username}** (<@${targetUser.id}>) has been unblacklisted.`).setColor('#2ecc71')], ephemeral: true });
             } catch (err) {
                 console.error(err);
-                await interaction.reply({ content: 'Error unblacklisting user.', ephemeral: true });
+                await interaction.reply({ embeds: [new EmbedBuilder().setDescription('Error unblacklisting user.').setColor('#e74c3c')], ephemeral: true });
             }
         } else if (interaction.commandName === 'reset_hwid') {
             const targetUser = interaction.options.getUser('user');
             try {
                 const user = await User.findOne({ discordId: targetUser.id });
-                if (!user) return interaction.reply({ content: 'That Discord user has not registered an account yet.', ephemeral: true });
+                if (!user) return interaction.reply({ embeds: [new EmbedBuilder().setDescription('That Discord user has not registered an account yet.').setColor('#e74c3c')], ephemeral: true });
                 user.hwid = null;
                 user.hwidResets = (user.hwidResets || 0) + 1;
                 user.lastReset = new Date();
                 await user.save();
-                await interaction.reply({ content: `HWID for **${user.username}** (<@${targetUser.id}>) has been reset.`, ephemeral: true });
+                await interaction.reply({ embeds: [new EmbedBuilder().setDescription(`HWID for **${user.username}** (<@${targetUser.id}>) has been reset.`).setColor('#2ecc71')], ephemeral: true });
             } catch (err) {
                 console.error(err);
-                await interaction.reply({ content: 'Error resetting HWID.', ephemeral: true });
+                await interaction.reply({ embeds: [new EmbedBuilder().setDescription('Error resetting HWID.').setColor('#2ecc71')], ephemeral: true });
             }
         } else if (interaction.commandName === 'panel') {
             const embed = new EmbedBuilder()
@@ -263,7 +263,7 @@ client.on('interactionCreate', async interaction => {
             try {
                 const license = await License.findOne({ discordId: interaction.user.id });
                 if (!license) {
-                    return interaction.reply({ content: 'You have not linked a key yet. Please use the "Redeem Key" button first.', ephemeral: true });
+                    return interaction.reply({ embeds: [new EmbedBuilder().setDescription('You have not linked a key yet. Please use the "Redeem Key" button first.').setColor('#2ecc71')], ephemeral: true });
                 }
 
                 const roleId = '1544012798097367040';
@@ -273,42 +273,28 @@ client.on('interactionCreate', async interaction => {
                     const role = interaction.guild.roles.cache.get(roleId);
                     if (role) {
                         await interaction.member.roles.add(role);
-                        return interaction.reply({ content: 'Role successfully given!', ephemeral: true });
+                        const successEmbed = new EmbedBuilder().setDescription('Role successfully given!').setColor('#2ecc71');
+                        return interaction.reply({ embeds: [successEmbed], ephemeral: true });
                     } else {
-                        return interaction.reply({ content: 'Role not found in the server.', ephemeral: true });
+                        return interaction.reply({ embeds: [new EmbedBuilder().setDescription('Role not found in the server.').setColor('#e74c3c')], ephemeral: true });
                     }
                 } else {
-                    const user = await User.findOne({ discordId: interaction.user.id });
-
                     const errorEmbed = new EmbedBuilder()
                         .setTitle('Unable to give role')
                         .setDescription(`You already have the <@&${roleId}> role!`)
                         .setColor('#ff0000');
 
-                    const statsEmbed = new EmbedBuilder()
-                        .setTitle('Stats')
-                        .setColor('#1e1e1e')
-                        .setDescription(
-                            `**Total Executions:** ${user ? user.executions : 0} 🧠\n` +
-                            `**HWID Status:** ${user && user.hwid ? 'Assigned ✅' : 'Unassigned ❌'}\n` +
-                            `**Key:** (click to reveal) ||${license.key}|| 🔒\n` +
-                            `**Total HWID Resets:** ${user ? user.hwidResets : 0} ⚙️\n` +
-                            `**Last Reset:** ${user && user.lastReset ? `<t:${Math.floor(user.lastReset.getTime() / 1000)}:R>` : 'Never'} 📅\n` +
-                            `**Expires At:** ${license.durationMs === null ? 'Never 📅' : (user && user.subscriptionEnd ? `<t:${Math.floor(user.subscriptionEnd.getTime() / 1000)}:d> 📅` : 'Unknown 📅')}\n` +
-                            `**Banned:** ${user && user.banned ? 'Yes 🔴' : 'No ⛔'}`
-                        );
-
-                    await interaction.reply({ embeds: [errorEmbed, statsEmbed], ephemeral: true });
+                    await interaction.reply({ embeds: [errorEmbed], ephemeral: true });
                 }
             } catch (err) {
                 console.error(err);
-                await interaction.reply({ content: 'An error occurred.', ephemeral: true });
+                await interaction.reply({ embeds: [new EmbedBuilder().setDescription('An error occurred.').setColor('#e74c3c')], ephemeral: true });
             }
         } else if (interaction.customId === 'panel_stats') {
             try {
                 const license = await License.findOne({ discordId: interaction.user.id });
                 if (!license) {
-                    return interaction.reply({ content: 'You have not linked a key yet.', ephemeral: true });
+                    return interaction.reply({ embeds: [new EmbedBuilder().setDescription('You have not linked a key yet.').setColor('#2ecc71')], ephemeral: true });
                 }
                 
                 const user = await User.findOne({ discordId: interaction.user.id });
@@ -329,10 +315,10 @@ client.on('interactionCreate', async interaction => {
                 await interaction.reply({ embeds: [statsEmbed], ephemeral: true });
             } catch (err) {
                 console.error(err);
-                await interaction.reply({ content: 'An error occurred.', ephemeral: true });
+                await interaction.reply({ embeds: [new EmbedBuilder().setDescription('An error occurred.').setColor('#e74c3c')], ephemeral: true });
             }
         } else if (interaction.customId.startsWith('panel_')) {
-            await interaction.reply({ content: 'This feature is coming soon!', ephemeral: true });
+            await interaction.reply({ embeds: [new EmbedBuilder().setDescription('This feature is coming soon!').setColor('#e74c3c')], ephemeral: true });
         }
     } else if (interaction.isModalSubmit()) {
         if (interaction.customId === 'redeem_modal') {
@@ -342,24 +328,24 @@ client.on('interactionCreate', async interaction => {
                 const license = await License.findOne({ key: keyInput });
 
                 if (!license) {
-                    return interaction.reply({ content: 'Invalid license key.', ephemeral: true });
+                    return interaction.reply({ embeds: [new EmbedBuilder().setDescription('Invalid license key.').setColor('#e74c3c')], ephemeral: true });
                 }
 
                 if (license.claimedBy) {
-                    return interaction.reply({ content: 'This key has already been fully claimed and used.', ephemeral: true });
+                    return interaction.reply({ embeds: [new EmbedBuilder().setDescription('This key has already been fully claimed and used.').setColor('#e74c3c')], ephemeral: true });
                 }
 
                 if (license.discordId && license.discordId !== interaction.user.id) {
-                    return interaction.reply({ content: 'This key is already linked to another Discord account.', ephemeral: true });
+                    return interaction.reply({ embeds: [new EmbedBuilder().setDescription('This key is already linked to another Discord account.').setColor('#2ecc71')], ephemeral: true });
                 }
 
                 license.discordId = interaction.user.id;
                 await license.save();
 
-                await interaction.reply({ content: 'Key successfully linked to your Discord account! Please click the **Get Role** button to receive your role.', ephemeral: true });
+                await interaction.reply({ embeds: [new EmbedBuilder().setDescription('Key successfully linked to your Discord account! Please click the **Get Role** button to receive your role.').setColor('#2ecc71')], ephemeral: true });
             } catch (err) {
                 console.error(err);
-                await interaction.reply({ content: 'An error occurred while processing your key.', ephemeral: true });
+                await interaction.reply({ embeds: [new EmbedBuilder().setDescription('An error occurred while processing your key.').setColor('#e74c3c')], ephemeral: true });
             }
         }
     }

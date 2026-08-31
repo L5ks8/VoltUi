@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const bot = require('../bot');
+const { EmbedBuilder } = require('discord.js');
 
 // Register Route
 router.post('/register', async (req, res) => {
@@ -84,10 +85,12 @@ router.post('/login', async (req, res) => {
         // HWID Locking
         if (!user.hwid) {
             user.hwid = hwid;
-            await user.save();
         } else if (user.hwid !== hwid) {
             return res.status(403).json({ error: 'Invalid HWID. Please reset your HWID.' });
         }
+        
+        user.executions = (user.executions || 0) + 1;
+        await user.save();
         
         // Generate Token
         const payload = {
@@ -125,7 +128,12 @@ router.post('/forgot-password', async (req, res) => {
         user.resetCodeExpires = new Date(Date.now() + 15 * 60 * 1000); // 15 mins
         await user.save();
 
-        const success = await bot.sendDM(user.discordId, `Your Volt password reset code is: **${code}**\nThis code will expire in 15 minutes.`);
+        const embed = new EmbedBuilder()
+            .setTitle('Password Reset')
+            .setDescription(`Your Volt password reset code is: **${code}**\nThis code will expire in 15 minutes.`)
+            .setColor('#f39c12');
+        
+        const success = await bot.sendDM(user.discordId, null, embed);
         if (success) {
             res.json({ message: 'Verification code sent to your Discord DM.' });
         } else {

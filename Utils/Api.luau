@@ -25,7 +25,16 @@ function Api.Request(endpoint, method, body)
         Headers = headers
     }
     if body then
-        options.Body = HttpService:JSONEncode(body)
+        local AES = require(script.Parent.AES)
+        local jsonStr = HttpService:JSONEncode(body)
+        local encryptedBody = AES.encrypt(jsonStr)
+        
+        if encryptedBody then
+            options.Body = HttpService:JSONEncode({ encrypted = encryptedBody })
+        else
+            warn("Failed to encrypt payload, sending unencrypted (this will likely be rejected by the server).")
+            options.Body = jsonStr
+        end
     end
 
     local success, res = pcall(function()
@@ -36,7 +45,21 @@ function Api.Request(endpoint, method, body)
         local decodeSuccess, decoded = pcall(function()
             return HttpService:JSONDecode(res.Body)
         end)
-        if decodeSuccess then 
+        
+        if decodeSuccess then
+            -- Server response is also AES encrypted in { encrypted: "..." }
+            if decoded.encrypted then
+                local AES = require(script.Parent.AES)
+                local decryptedStr = AES.decrypt(decoded.encrypted)
+                if decryptedStr then
+                    local finalSuccess, finalDecoded = pcall(function() return HttpService:JSONDecode(decryptedStr) end)
+                    if finalSuccess then
+                        return finalDecoded
+                    end
+                end
+                return { error = "Failed to decrypt server response" }
+            end
+            
             return decoded 
         else
             return { error = "Server returned invalid JSON: " .. tostring(res.Body) }
@@ -100,6 +123,34 @@ function Api.Register(username, password, licenseKey)
         hwid = hwid
     })
 
+    if res and res.message then
+        return true, res.message
+    elseif res and res.error then
+        return false, res.error
+    end
+    return false, "Connection Error"
+end
+
+function Api.ForgotPassword(username)
+    local res = Api.Request("/auth/forgot-password", "POST", {
+        username = username
+    })
+    
+    if res and res.message then
+        return true, res.message
+    elseif res and res.error then
+        return false, res.error
+    end
+    return false, "Connection Error"
+end
+
+function Api.ResetPassword(username, code, newPassword)
+    local res = Api.Request("/auth/reset-password", "POST", {
+        username = username,
+        code = code,
+        newPassword = newPassword
+    })
+    
     if res and res.message then
         return true, res.message
     elseif res and res.error then

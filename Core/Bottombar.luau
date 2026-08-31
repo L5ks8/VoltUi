@@ -78,25 +78,28 @@ function Bottombar.Create(Main, maid)
     Info.BackgroundTransparency = 1
     Info.BorderColor3 = Color3.new(0, 0, 0)
     Info.BorderSizePixel = 0
-    Info.Position = UDim2.new(0.775, 0, 0, 0)
-    Info.Size = UDim2.new(0, 180, 0, 20)
+    Info.AnchorPoint = Vector2.new(1, 0.5)
+    Info.Position = UDim2.new(1, -15, 0.5, 0)
+    Info.Size = UDim2.new(0, 0, 0, 20)
+    Info.AutomaticSize = Enum.AutomaticSize.X
     Info.Parent = BottombarFrame
     
     local InfoLayout = Instance.new("UIListLayout")
     InfoLayout.FillDirection = Enum.FillDirection.Horizontal
     InfoLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    InfoLayout.Padding = UDim.new(0, 15)
+    InfoLayout.VerticalAlignment = Enum.VerticalAlignment.Center
     InfoLayout.Parent = Info
     
     local Status = Instance.new("Frame")
     Status.Name = "Status"
-    Status.AnchorPoint = Vector2.new(1, 0.5)
     Status.BackgroundColor3 = Color3.new(1, 1, 1)
     Status.BackgroundTransparency = 1
     Status.BorderColor3 = Color3.new(0, 0, 0)
     Status.BorderSizePixel = 0
     Status.LayoutOrder = 1
-    Status.Position = UDim2.new(1, 0, 0.5, 0)
-    Status.Size = UDim2.new(0, 85, 0, 20)
+    Status.Size = UDim2.new(0, 0, 0, 20)
+    Status.AutomaticSize = Enum.AutomaticSize.X
     Status.Parent = Info
     
     local StatusIcon = Instance.new("ImageLabel")
@@ -115,8 +118,8 @@ function Bottombar.Create(Main, maid)
     StatusText.BorderSizePixel = 0
     StatusText.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     StatusText.LayoutOrder = 1
-    StatusText.Position = UDim2.new(0.2, 0, 0, 0)
-    StatusText.Size = UDim2.new(0.8, 0, 1, 0)
+    StatusText.Size = UDim2.new(0, 0, 1, 0)
+    StatusText.AutomaticSize = Enum.AutomaticSize.X
     StatusText.Text = "Connected"
     StatusText.TextColor3 = Color3.new(0.482, 0.482, 0.482)
     StatusText.TextSize = 14
@@ -139,19 +142,19 @@ function Bottombar.Create(Main, maid)
     Gamename.BackgroundTransparency = 1
     Gamename.BorderColor3 = Color3.new(0, 0, 0)
     Gamename.BorderSizePixel = 0
-    Gamename.Size = UDim2.new(0, 95, 0, 20)
+    Gamename.Size = UDim2.new(0, 0, 0, 20)
+    Gamename.AutomaticSize = Enum.AutomaticSize.X
     Gamename.Parent = Info
     
     local GamenameText = Instance.new("TextLabel")
     GamenameText.Name = "Name"
-    GamenameText.AnchorPoint = Vector2.new(0.5, 0.5)
     GamenameText.BackgroundColor3 = Color3.new(1, 1, 1)
     GamenameText.BackgroundTransparency = 1
     GamenameText.BorderColor3 = Color3.new(0, 0, 0)
     GamenameText.BorderSizePixel = 0
     GamenameText.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    GamenameText.Position = UDim2.new(0.5, 0, 0.5, 0)
-    GamenameText.Size = UDim2.new(1, 0, 1, 0)
+    GamenameText.Size = UDim2.new(0, 0, 1, 0)
+    GamenameText.AutomaticSize = Enum.AutomaticSize.X
     local Success, GameNameResult = pcall(function() return game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name end)
     GamenameText.Text = Success and GameNameResult or "Unknown Game"
     GamenameText.TextColor3 = Color3.new(0.529, 0.529, 0.529)

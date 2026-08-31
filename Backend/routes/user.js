@@ -27,11 +27,11 @@ router.get('/me', authMiddleware, async (req, res) => {
         if (!user) {
             return res.status(404).json({ msg: 'User not found' });
         }
-        
+
         if (user.banned) {
-            return res.status(403).json({ msg: 'You are banned from using VoltUi.' });
+            return res.status(403).json({ msg: 'You are banned from using Volt.' });
         }
-        
+
         if (user.subscriptionEnd) {
             const ms = user.subscriptionEnd.getTime() - Date.now();
             if (ms > 0) {
@@ -42,10 +42,10 @@ router.get('/me', authMiddleware, async (req, res) => {
                 user.remaining = 'Expired';
             }
         }
-        
+
         const License = require('../models/License');
         const licenses = await License.find({ claimedBy: user._id }).lean();
-        
+
         const validLicenses = [];
         for (const lic of licenses) {
             let isExpired = false;
@@ -55,7 +55,7 @@ router.get('/me', authMiddleware, async (req, res) => {
                     isExpired = true;
                 }
             }
-            
+
             if (isExpired) {
                 await License.deleteOne({ _id: lic._id });
                 await User.updateOne({ _id: user._id }, { $pull: { keys: lic.key } });
@@ -63,18 +63,18 @@ router.get('/me', authMiddleware, async (req, res) => {
                 validLicenses.push(lic);
             }
         }
-        
+
         const formattedLicenses = validLicenses.map(lic => {
             let claimedStr = 'N/A';
             let expiresStr = 'N/A';
             if (lic.claimedAt) {
                 const d = new Date(lic.claimedAt);
-                claimedStr = `${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()}`;
+                claimedStr = `${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()}`;
                 if (lic.durationMs === null) {
                     expiresStr = 'Lifetime';
                 } else if (lic.durationMs) {
                     const e = new Date(d.getTime() + lic.durationMs);
-                    expiresStr = `${e.getDate()}.${e.getMonth()+1}.${e.getFullYear()}`;
+                    expiresStr = `${e.getDate()}.${e.getMonth() + 1}.${e.getFullYear()}`;
                 }
             }
             return {
@@ -83,9 +83,9 @@ router.get('/me', authMiddleware, async (req, res) => {
                 expiresStr
             };
         });
-        
+
         user.licenseObjects = formattedLicenses;
-        
+
         res.json({ user });
     } catch (err) {
         console.error(err.message);
@@ -100,32 +100,32 @@ router.post('/redeem', authMiddleware, async (req, res) => {
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
-        
+
         if (user.subscriptionEnd === null) {
             return res.status(400).json({ error: 'Lifetime accounts cannot claim new keys.' });
         }
-        
+
         const { licenseKey, key } = req.body;
         const actualKey = licenseKey || key;
-        
+
         if (!actualKey) {
             return res.status(400).json({ error: 'No key provided' });
         }
-        
+
         if (user.keys.includes(actualKey)) {
             return res.status(400).json({ error: 'Key already claimed by you.' });
         }
-        
+
         const License = require('../models/License');
         const license = await License.findOne({ key: actualKey });
-        
+
         if (!license) {
             return res.status(400).json({ error: 'Invalid License Key.' });
         }
         if (license.claimedBy) {
             return res.status(400).json({ error: 'License Key already claimed.' });
         }
-        
+
         if (license.discordId) {
             if (user.discordId && user.discordId !== license.discordId) {
                 return res.status(400).json({ error: 'This key is linked to a different Discord account.' });
@@ -134,7 +134,7 @@ router.post('/redeem', authMiddleware, async (req, res) => {
                 user.discordId = license.discordId;
             }
         }
-        
+
         if (license.durationMs === null) {
             user.subscriptionEnd = null; // Upgraded to lifetime
         } else {
@@ -145,14 +145,14 @@ router.post('/redeem', authMiddleware, async (req, res) => {
                 user.subscriptionEnd = new Date(now.getTime() + license.durationMs);
             }
         }
-        
+
         user.keys.push(actualKey);
         await user.save();
-        
+
         license.claimedBy = user._id;
         license.claimedAt = new Date();
         await license.save();
-        
+
         res.json({ message: 'Key successfully redeemed!' });
     } catch (err) {
         console.error(err.message);
