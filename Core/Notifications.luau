@@ -69,11 +69,10 @@ function Notifications.Notify(options)
 
     -- Icon Background
     local IconBg = Instance.new("Frame")
-    IconBg.BackgroundColor3 = iconBgColor
+    IconBg.BackgroundTransparency = 1
     IconBg.Size = UDim2.new(0, 30, 0, 30)
     IconBg.Position = UDim2.new(0, Config.Padding, 0.5, -15)
     IconBg.Parent = Notif
-    Instance.new("UICorner", IconBg).CornerRadius = UDim.new(0, 6)
 
     -- Icon
     local Icon = Instance.new("ImageLabel")
@@ -82,7 +81,7 @@ function Notifications.Notify(options)
     Icon.AnchorPoint = Vector2.new(0.5, 0.5)
     Icon.Position = UDim2.new(0.5, 0, 0.5, 0)
     Icon.Image = iconAsset
-    Icon.ImageColor3 = mainColor
+    Icon.ImageColor3 = Color3.new(1, 1, 1) -- White icons
     Icon.Parent = IconBg
 
     -- Title
@@ -134,7 +133,7 @@ function Notifications.Notify(options)
     CloseBtn.MouseButton1Click:Connect(CloseNotif)
 
     -- Animate In
-    Tween(Notif, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Position = UDim2.new(0, 0, 0, 0)})
+    Tween(Notif, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2.new(0, 0, 0, 0)})
 
     -- Auto Close
     task.delay(duration, CloseNotif)

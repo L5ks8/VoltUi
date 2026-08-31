@@ -753,7 +753,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     OutBtnIcon.BackgroundTransparency = 1
     OutBtnIcon.Size = UDim2.new(0, 14, 0, 14)
     OutBtnIcon.Position = UDim2.new(0, 8, 0.5, -7)
-    OutBtnIcon.Image = "rbxassetid://86733305583331"
+    OutBtnIcon.Image = "rbxassetid://83408923775191"
     OutBtnIcon.ImageColor3 = Color3.new(1, 0.3, 0.3)
     OutBtnIcon.Parent = OutBtn
     

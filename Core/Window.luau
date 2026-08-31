@@ -12,6 +12,7 @@ local CloseWarn = require(script.Parent.CloseWarn)
 local AccountPage = require(script.Parent.AccountPage)
 local LoginPage = require(script.Parent.LoginPage)
 local Notifications = require(script.Parent.Notifications)
+local Tabs = require(script.Parent.Tabs)
 
 local Window = {}
 
@@ -206,6 +207,10 @@ function Window:CreateWindow(Config)
         Maid = maid,
         OnClose = OnClose
     }
+    
+    function WindowObject:CreateTab(Name, IconAsset)
+        return Tabs.CreateTab(WindowObject, Name, IconAsset)
+    end
     
     Utility.ProtectGui(VoltUi)
     
