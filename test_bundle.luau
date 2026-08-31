@@ -517,7 +517,9 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
 
     local ActionsLayout = Instance.new("UIListLayout")
     ActionsLayout.FillDirection = Enum.FillDirection.Horizontal
+    ActionsLayout.VerticalAlignment = Enum.VerticalAlignment.Center
     ActionsLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    ActionsLayout.Padding = UDim.new(0, 5)
     ActionsLayout.Parent = Actions
 
     local ActionsStroke = Instance.new("UIStroke")
@@ -531,7 +533,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     ReturnButton.BackgroundTransparency = 1
     ReturnButton.BorderColor3 = Color3.new(0, 0, 0)
     ReturnButton.BorderSizePixel = 0
-    ReturnButton.Size = UDim2.new(0, 35, 0, 35)
+    ReturnButton.Size = UDim2.new(0, 28, 0, 28)
     ReturnButton.Parent = Actions
     
     local ReturnCorner = Instance.new("UICorner")
@@ -562,7 +564,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     
     
     Maid:GiveTask(ReturnButton.MouseEnter:Connect(function()
-        Tween(ReturnButton, TweenInfo.new(0.2), {BackgroundTransparency = 0.92})
+        Tween(ReturnButton, TweenInfo.new(0.2), {BackgroundTransparency = 0.9})
     end))
     Maid:GiveTask(ReturnButton.MouseLeave:Connect(function()
         Tween(ReturnButton, TweenInfo.new(0.2), {BackgroundTransparency = 1})
