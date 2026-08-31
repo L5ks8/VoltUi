@@ -44,6 +44,14 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: null
     },
+    resetCode: {
+        type: String,
+        default: null
+    },
+    resetCodeExpires: {
+        type: Date,
+        default: null
+    },
     banned: {
         type: Boolean,
         default: false

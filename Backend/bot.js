@@ -322,5 +322,20 @@ module.exports = {
         } else {
             console.log('Missing TOKEN or OWNER in .env, Discord Bot not started.');
         }
+    },
+    sendDM: async (discordId, content, embed = null) => {
+        try {
+            const user = await client.users.fetch(discordId);
+            if (user) {
+                const options = { content };
+                if (embed) options.embeds = [embed];
+                await user.send(options);
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.error('Error sending DM:', error);
+            return false;
+        }
     }
 };
