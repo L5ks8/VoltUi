@@ -520,7 +520,6 @@ function AccountPage.Create(Content, maid, BackCallback)
         Tween(BackBtn, TweenInfo.new(0.2), {ImageTransparency = 0.4})
     end))
     maid:GiveTask(BackBtn.MouseButton1Click:Connect(function()
-        Page.Visible = false
         if BackCallback then BackCallback() end
     end))
     
@@ -2764,9 +2763,15 @@ function Window:CreateWindow(Config)
     Main.Visible = false
     
     local AccountPageElements = AccountPage.Create(Content, maid, function()
+        Tween(AccountPageElements.Instance, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2.new(1, 0, 0, 0)})
+        
         SidebarElements.Instance.Visible = true
         SidebarSeparator.Visible = true
         MainContent.Visible = true
+        
+        task.delay(0.4, function()
+            AccountPageElements.Instance.Visible = false
+        end)
     end, Api)
 
     local function OnLoginSuccess()
@@ -2791,10 +2796,16 @@ function Window:CreateWindow(Config)
     end
     
     maid:GiveTask(SidebarElements.AccountBtn.MouseButton1Click:Connect(function()
-        SidebarElements.Instance.Visible = false
-        SidebarSeparator.Visible = false
-        MainContent.Visible = false
+        AccountPageElements.Instance.Position = UDim2.new(1, 0, 0, 0)
         AccountPageElements.Instance.Visible = true
+        
+        Tween(AccountPageElements.Instance, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2.new(0, 0, 0, 0)})
+        
+        task.delay(0.2, function()
+            SidebarElements.Instance.Visible = false
+            SidebarSeparator.Visible = false
+            MainContent.Visible = false
+        end)
     end))
     
     local BottombarElements = Bottombar.Create(Main, maid)

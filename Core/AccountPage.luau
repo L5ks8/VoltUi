@@ -60,7 +60,6 @@ function AccountPage.Create(Content, maid, BackCallback)
         Tween(BackBtn, TweenInfo.new(0.2), {ImageTransparency = 0.4})
     end))
     maid:GiveTask(BackBtn.MouseButton1Click:Connect(function()
-        Page.Visible = false
         if BackCallback then BackCallback() end
     end))
     
