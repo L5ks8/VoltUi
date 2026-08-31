@@ -42,7 +42,14 @@ router.get('/me', authMiddleware, async (req, res) => {
         const License = require('../models/License');
         const licenses = await License.find({ claimedBy: user._id }).lean();
         
-        const formattedLicenses = licenses.map(lic => {
+        const formattedLicenses = licenses.filter(lic => {
+            if (lic.durationMs === null) return true;
+            if (lic.claimedAt) {
+                const expiresAt = new Date(lic.claimedAt).getTime() + lic.durationMs;
+                if (expiresAt < Date.now()) return false;
+            }
+            return true;
+        }).map(lic => {
             let claimedStr = 'N/A';
             let expiresStr = 'N/A';
             if (lic.claimedAt) {

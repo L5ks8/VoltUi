@@ -1493,6 +1493,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
             end
             
             if subEnd or isLifetime then isActive = true end
+            if remainingStr == "Expired" then isActive = false end
             PageData.IsLifetime = isLifetime
             
             if isActive then

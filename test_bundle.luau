@@ -3694,6 +3694,35 @@ function Window:CreateWindow(Config)
     MainContent.LayoutOrder = 2
     MainContent.Parent = Content
     
+    local ExpiredOverlay = Instance.new("TextButton")
+    ExpiredOverlay.Name = "ExpiredOverlay"
+    ExpiredOverlay.Size = UDim2.new(1, 0, 1, 0)
+    ExpiredOverlay.BackgroundColor3 = Color3.new(0, 0, 0)
+    ExpiredOverlay.BackgroundTransparency = 0.5
+    ExpiredOverlay.Text = ""
+    ExpiredOverlay.ZIndex = 9999
+    ExpiredOverlay.Visible = false
+    ExpiredOverlay.Parent = MainContent
+    
+    local ExpiredText = Instance.new("TextLabel")
+    ExpiredText.Size = UDim2.new(1, 0, 1, 0)
+    ExpiredText.BackgroundTransparency = 1
+    ExpiredText.Text = "Subscription Expired"
+    ExpiredText.TextColor3 = Color3.new(1, 0.3, 0.3)
+    ExpiredText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    ExpiredText.TextSize = 24
+    ExpiredText.ZIndex = 10000
+    ExpiredText.Parent = ExpiredOverlay
+
+    maid:GiveTask(ExpiredOverlay.MouseButton1Click:Connect(function()
+        Notifications.Notify({
+            Title = "Expired",
+            Content = "Your subscription has expired. Please redeem a new key in the Account page.",
+            Type = "Error",
+            Duration = 3
+        })
+    end))
+
     Main.Visible = false
     
     local BottombarElements = Bottombar.Create(Main, maid)
@@ -3702,12 +3731,22 @@ function Window:CreateWindow(Config)
     AccountPageElements = AccountPage.Create(PagesContainer, maid, function()
         PageLayout:JumpTo(Content)
         BottombarElements.Instance.Visible = true
+        if Api.UserData and Api.UserData.remaining == "Expired" then
+            ExpiredOverlay.Visible = true
+        else
+            ExpiredOverlay.Visible = false
+        end
     end, Api)
 
     local function OnLoginSuccess()
         Main.Visible = true
         if AccountPageElements and Api.UserData then
             AccountPageElements.UpdateData(Api.UserData)
+            if Api.UserData.remaining == "Expired" then
+                ExpiredOverlay.Visible = true
+            else
+                ExpiredOverlay.Visible = false
+            end
         end
     end
 
