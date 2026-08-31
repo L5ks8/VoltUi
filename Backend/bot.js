@@ -97,7 +97,7 @@ client.on('interactionCreate', async interaction => {
                 .setColor('#2ecc71')
                 .setTimestamp();
 
-            await interaction.reply({ embeds: [embed], ephemeral: false });
+            await interaction.reply({ embeds: [embed], ephemeral: true });
         } catch (err) {
             console.error(err);
             await interaction.reply({ content: 'Error generating key.', ephemeral: true });
@@ -133,7 +133,7 @@ client.on('interactionCreate', async interaction => {
                 .setColor(license.claimedBy ? '#e74c3c' : '#2ecc71')
                 .setTimestamp();
 
-            await interaction.reply({ embeds: [embed], ephemeral: false });
+            await interaction.reply({ embeds: [embed], ephemeral: true });
         } catch (err) {
             console.error(err);
             await interaction.reply({ content: 'Error fetching key info.', ephemeral: true });
