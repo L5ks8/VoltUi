@@ -2478,6 +2478,8 @@ function Topbar.Create(Main, Config, maid)
     VersionText.TextSize = 13
     VersionText.Parent = Version
     
+    local TweenInfoObj = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+
     local function ApplyHover(button, text, hoverColor)
         button.AutoButtonColor = false
         button.BackgroundTransparency = 1
