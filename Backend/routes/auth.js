@@ -73,11 +73,17 @@ router.post('/login', async (req, res) => {
             return res.status(400).json({ error: 'Invalid credentials.' });
         }
         
-        // HWID Locking / Updating
-        if (!user.hwid || user.hwid !== hwid) {
-            // Update HWID on successful login from a new device
+        // Check if banned
+        if (user.banned) {
+            return res.status(403).json({ error: 'You are banned from using VoltUi.' });
+        }
+        
+        // HWID Locking
+        if (!user.hwid) {
             user.hwid = hwid;
             await user.save();
+        } else if (user.hwid !== hwid) {
+            return res.status(403).json({ error: 'Invalid HWID. Please reset your HWID.' });
         }
         
         // Generate Token

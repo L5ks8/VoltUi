@@ -27,7 +27,19 @@ const commands = [
         ),
     new SlashCommandBuilder()
         .setName('panel')
-        .setDescription('Generate the interactive control panel')
+        .setDescription('Generate the interactive control panel'),
+    new SlashCommandBuilder()
+        .setName('blacklist')
+        .setDescription('Blacklist a user')
+        .addStringOption(option => option.setName('username').setDescription('Username to blacklist').setRequired(true)),
+    new SlashCommandBuilder()
+        .setName('unblacklist')
+        .setDescription('Unblacklist a user')
+        .addStringOption(option => option.setName('username').setDescription('Username to unblacklist').setRequired(true)),
+    new SlashCommandBuilder()
+        .setName('reset_hwid')
+        .setDescription('Reset HWID for a user')
+        .addStringOption(option => option.setName('username').setDescription('Username to reset HWID').setRequired(true))
 ].map(command => command.toJSON());
 
 const parseDuration = (str) => {
@@ -176,6 +188,44 @@ client.on('interactionCreate', async interaction => {
             } catch (err) {
                 console.error(err);
                 await interaction.reply({ content: 'Error fetching key info.', ephemeral: true });
+            }
+        } else if (interaction.commandName === 'blacklist') {
+            const username = interaction.options.getString('username');
+            try {
+                const user = await User.findOne({ username });
+                if (!user) return interaction.reply({ content: 'User not found.', ephemeral: true });
+                user.banned = true;
+                await user.save();
+                await interaction.reply({ content: `User **${username}** has been blacklisted.`, ephemeral: true });
+            } catch (err) {
+                console.error(err);
+                await interaction.reply({ content: 'Error blacklisting user.', ephemeral: true });
+            }
+        } else if (interaction.commandName === 'unblacklist') {
+            const username = interaction.options.getString('username');
+            try {
+                const user = await User.findOne({ username });
+                if (!user) return interaction.reply({ content: 'User not found.', ephemeral: true });
+                user.banned = false;
+                await user.save();
+                await interaction.reply({ content: `User **${username}** has been unblacklisted.`, ephemeral: true });
+            } catch (err) {
+                console.error(err);
+                await interaction.reply({ content: 'Error unblacklisting user.', ephemeral: true });
+            }
+        } else if (interaction.commandName === 'reset_hwid') {
+            const username = interaction.options.getString('username');
+            try {
+                const user = await User.findOne({ username });
+                if (!user) return interaction.reply({ content: 'User not found.', ephemeral: true });
+                user.hwid = null;
+                user.hwidResets = (user.hwidResets || 0) + 1;
+                user.lastReset = new Date();
+                await user.save();
+                await interaction.reply({ content: `HWID for **${username}** has been reset.`, ephemeral: true });
+            } catch (err) {
+                console.error(err);
+                await interaction.reply({ content: 'Error resetting HWID.', ephemeral: true });
             }
         } else if (interaction.commandName === 'panel') {
             const embed = new EmbedBuilder()
