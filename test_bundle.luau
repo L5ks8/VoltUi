@@ -35,11 +35,27 @@ function AES.encrypt(data)
     local success, result = pcall(function()
         return encrypt("aes-cbc", data, Key, IV)
     end)
+    local err1 = not success and result or nil
     
+    if not success then
+        success, result = pcall(function()
+            return encrypt("AES-CBC", data, Key, IV)
+        end)
+    end
+    local err2 = not success and result or nil
+
     if not success then
         success, result = pcall(function()
             return encrypt(data, Key, IV, "CBC")
         end)
+    end
+    local err3 = not success and result or nil
+    
+    if not success then
+        warn("AES Encryption failed. Errors:")
+        warn("1: " .. tostring(err1))
+        warn("2: " .. tostring(err2))
+        warn("3: " .. tostring(err3))
     end
     
     if success and result then
@@ -81,11 +97,27 @@ function AES.decrypt(cipher_b64)
     local success, result = pcall(function()
         return decrypt("aes-cbc", cipher, Key, IV)
     end)
+    local err1 = not success and result or nil
+    
+    if not success then
+        success, result = pcall(function()
+            return decrypt("AES-CBC", cipher, Key, IV)
+        end)
+    end
+    local err2 = not success and result or nil
     
     if not success then
         success, result = pcall(function()
             return decrypt(cipher, Key, IV, "CBC")
         end)
+    end
+    local err3 = not success and result or nil
+    
+    if not success then
+        warn("AES Decryption failed. Errors:")
+        warn("1: " .. tostring(err1))
+        warn("2: " .. tostring(err2))
+        warn("3: " .. tostring(err3))
     end
     
     if success and result then
