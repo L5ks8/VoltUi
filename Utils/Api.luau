@@ -1,4 +1,5 @@
 local HttpService = game:GetService("HttpService")
+local AES = require(script.Parent.AES)
 
 local Api = {}
 Api.BaseUrl = "https://voltui.onrender.com/api"
@@ -25,7 +26,6 @@ function Api.Request(endpoint, method, body)
         Headers = headers
     }
     if body then
-        local AES = require(script.Parent.AES)
         local jsonStr = HttpService:JSONEncode(body)
         local encryptedBody = AES.encrypt(jsonStr)
         
@@ -49,7 +49,6 @@ function Api.Request(endpoint, method, body)
         if decodeSuccess then
             -- Server response is also AES encrypted in { encrypted: "..." }
             if decoded.encrypted then
-                local AES = require(script.Parent.AES)
                 local decryptedStr = AES.decrypt(decoded.encrypted)
                 if decryptedStr then
                     local finalSuccess, finalDecoded = pcall(function() return HttpService:JSONDecode(decryptedStr) end)

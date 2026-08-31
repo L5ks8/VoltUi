@@ -14,6 +14,7 @@ end
 -- [[ Utils/Api.luau ]] --
 local HttpService = game:GetService("HttpService")
 
+
 local Api = {}
 Api.BaseUrl = "https://voltui.onrender.com/api"
 Api.Token = nil
@@ -39,7 +40,6 @@ function Api.Request(endpoint, method, body)
         Headers = headers
     }
     if body then
-        
         local jsonStr = HttpService:JSONEncode(body)
         local encryptedBody = AES.encrypt(jsonStr)
         
@@ -62,7 +62,6 @@ function Api.Request(endpoint, method, body)
         
         if decodeSuccess then
             if decoded.encrypted then
-                
                 local decryptedStr = AES.decrypt(decoded.encrypted)
                 if decryptedStr then
                     local finalSuccess, finalDecoded = pcall(function() return HttpService:JSONDecode(decryptedStr) end)
