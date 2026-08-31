@@ -1899,6 +1899,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
             local subStart = data.subscriptionStart or data.startedAt or data.createdAt
             local remainingStr = data.remaining
             local isActive = false
+            local isLifetime = (subEnd == nil)
             
             if data.subscription and type(data.subscription) == "table" then
                 local sub = data.subscription
@@ -1906,19 +1907,22 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
                 subStart = subStart or sub.startedAt or sub.createdAt
                 remainingStr = remainingStr or sub.remaining
                 if sub.active ~= nil then isActive = sub.active end
+                if subEnd then isLifetime = false end
             end
             
-            if subEnd then isActive = true end
+            if subEnd or isLifetime then isActive = true end
             
             if isActive then
                 StatusBadgeText.Text = "Active"
                 StatusBadgeText.TextColor3 = Color3.new(0.4, 0.8, 0.4)
                 
-                if subEnd then
+                if isLifetime then
+                    EndsValue.Text = "Lifetime"
+                    RemainingValue.Text = "Lifetime"
+                else
                     local endStr = string.match(tostring(subEnd), "^(%d+%-%d+%-%d+)") or tostring(subEnd)
                     EndsValue.Text = endStr
-                else
-                    EndsValue.Text = "N/A"
+                    RemainingValue.Text = remainingStr and tostring(remainingStr) or "Active"
                 end
                 
                 if subStart then
@@ -1927,8 +1931,6 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
                 else
                     StartedValue.Text = "N/A"
                 end
-                
-                RemainingValue.Text = remainingStr and tostring(remainingStr) or "Active"
             else
                 StatusBadgeText.Text = "Inactive"
                 StatusBadgeText.TextColor3 = Color3.new(0.6, 0.6, 0.6)
@@ -1937,19 +1939,46 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
                 EndsValue.Text = "N/A"
             end
             
-            local keysData = data.keys or data.claimedKeys or data.licenses or data.licenseKeys
+            for _, child in ipairs(Claimed:GetChildren()) do
+                if child:IsA("Frame") then child:Destroy() end
+            end
+            
+            local keysData = data.keys or data.claimedKeys or data.licenses or data.licenseKeys or data.usedKey or data.license
             if data.subscription and type(data.subscription) == "table" then
                 keysData = keysData or data.subscription.keys or data.subscription.claimedKeys
             end
             
-            if keysData then
-                if type(keysData) == "table" then
-                    CountLabel.Text = tostring(#keysData)
-                else
-                    CountLabel.Text = tostring(keysData)
-                end
-            else
-                CountLabel.Text = "0"
+            local keyList = {}
+            if type(keysData) == "table" then
+                keyList = keysData
+            elseif type(keysData) == "string" then
+                keyList = {keysData}
+            end
+            
+            CountLabel.Text = tostring(#keyList)
+            
+            for _, keyStr in ipairs(keyList) do
+                local KeyItem = Instance.new("Frame")
+                KeyItem.Name = "KeyItem"
+                KeyItem.BackgroundColor3 = Color3.new(0.12, 0.12, 0.12)
+                KeyItem.BorderSizePixel = 0
+                KeyItem.Size = UDim2.new(0, 555, 0, 40)
+                KeyItem.Parent = Claimed
+                
+                local KeyCorner = Instance.new("UICorner")
+                KeyCorner.CornerRadius = UDim.new(0, 6)
+                KeyCorner.Parent = KeyItem
+                
+                local KeyLabel = Instance.new("TextLabel")
+                KeyLabel.BackgroundTransparency = 1
+                KeyLabel.Size = UDim2.new(1, -20, 1, 0)
+                KeyLabel.Position = UDim2.new(0, 10, 0, 0)
+                KeyLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+                KeyLabel.TextSize = 16
+                KeyLabel.TextColor3 = Color3.new(0.8, 0.8, 0.8)
+                KeyLabel.TextXAlignment = Enum.TextXAlignment.Left
+                KeyLabel.Text = tostring(keyStr)
+                KeyLabel.Parent = KeyItem
             end
             
             local success, userId = pcall(function() return game:GetService("Players").LocalPlayer.UserId end)
