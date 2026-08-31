@@ -483,6 +483,7 @@ end
 
 
 -- [[ Core/AccountPage.luau ]] --
+
 local AccountPage = {}
 
 function AccountPage.Create(Content, Maid, BackCallback, Api)
@@ -1878,6 +1879,15 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     local PageData = {}
     
     Maid:GiveTask(ClaimButton.MouseButton1Click:Connect(function()
+        if PageData.IsLifetime then
+            Notifications.Notify({
+                Title = "Error",
+                Content = "You cannot claim keys while having a Lifetime subscription.",
+                Type = "Error",
+                Duration = 4
+            })
+            return
+        end
         local key = TextBox.Text
         if key and key ~= "" then
             ClaimButton.Text = "..."
@@ -1947,6 +1957,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
             end
             
             if subEnd or isLifetime then isActive = true end
+            PageData.IsLifetime = isLifetime
             
             if isActive then
                 StatusBadgeText.Text = "Active"
