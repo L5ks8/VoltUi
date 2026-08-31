@@ -535,7 +535,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     KeyCode.BackgroundTransparency = 1
     KeyCode.Size = UDim2.new(1, -60, 0, 16)
     KeyCode.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
-    KeyCode.Text = "ZH949GKE-NAP03W4X-YBVYRGPM-4WCCJDA"
+    KeyCode.Text = "Voltontop"
     KeyCode.TextColor3 = Color3.new(0.9, 0.9, 0.9)
     KeyCode.TextSize = 11
     KeyCode.TextXAlignment = Enum.TextXAlignment.Left
@@ -546,7 +546,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     KeyDates.Size = UDim2.new(1, 0, 0, 14)
     KeyDates.Position = UDim2.new(0, 0, 0, 18)
     KeyDates.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
-    KeyDates.Text = "Claimed 30.8.2026  Expires 29.9.2026"
+    KeyDates.Text = "Lifetime Key"
     KeyDates.TextColor3 = Color3.new(0.6, 0.6, 0.6)
     KeyDates.TextSize = 10
     KeyDates.TextXAlignment = Enum.TextXAlignment.Left
@@ -737,21 +737,13 @@ function AccountPage.Create(Content, maid, BackCallback)
             JoinDate.Text = "Member since " .. string.sub(data.createdAt, 1, 10)
         end
         
-        -- Update Subscription
-        if data.subscriptionEnd then
-            local endTimestamp = 0 -- We can parse this later, for now just strings
-            EndVal.Text = string.sub(data.subscriptionEnd, 1, 10)
-            OrigVal.Text = string.sub(data.subscriptionEnd, 1, 10)
-            ActiveText.Text = "Active"
-            ActiveBadge.BackgroundColor3 = Color3.new(0.1, 0.3, 0.1)
-        else
-            RemVal.Text = "Inactive"
-            StartVal.Text = "-"
-            EndVal.Text = "-"
-            OrigVal.Text = "-"
-            ActiveText.Text = "Inactive"
-            ActiveBadge.BackgroundColor3 = Color3.new(0.3, 0.1, 0.1)
-        end
+        -- Update Subscription (Hardcoded to Lifetime since everyone has Voltontop for now)
+        RemVal.Text = "Lifetime"
+        StartVal.Text = data.createdAt and string.sub(data.createdAt, 1, 10) or "N/A"
+        EndVal.Text = "Never"
+        OrigVal.Text = "Never"
+        ActiveText.Text = "Active"
+        ActiveBadge.BackgroundColor3 = Color3.new(0.1, 0.3, 0.1)
     end
 
     return {
