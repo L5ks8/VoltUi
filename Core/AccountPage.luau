@@ -670,19 +670,40 @@ function AccountPage.Create(Content, maid, BackCallback)
     
     local PassBtn = Instance.new("TextButton")
     PassBtn.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
-    PassBtn.Size = UDim2.new(0, 90, 0, 26)
+    PassBtn.Size = UDim2.new(0, 130, 0, 26)
     PassBtn.AnchorPoint = Vector2.new(1, 0.5)
     PassBtn.Position = UDim2.new(1, -15, 0.5, 0)
-    PassBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
-    PassBtn.Text = "Change"
-    PassBtn.TextColor3 = Color3.new(0.9, 0.9, 0.9)
-    PassBtn.TextSize = 11
+    PassBtn.Text = ""
     PassBtn.Parent = PassCard
     Instance.new("UICorner", PassBtn).CornerRadius = UDim.new(0, 4)
     Instance.new("UIStroke", PassBtn).Color = Color3.new(0.3, 0.3, 0.3)
     
+    local PassBtnIcon = Instance.new("ImageLabel")
+    PassBtnIcon.BackgroundTransparency = 1
+    PassBtnIcon.Size = UDim2.new(0, 14, 0, 14)
+    PassBtnIcon.Position = UDim2.new(0, 8, 0.5, -7)
+    PassBtnIcon.Image = "rbxassetid://10709769508" -- generic key/shield icon
+    PassBtnIcon.ImageColor3 = Color3.new(0.8, 0.8, 0.8)
+    PassBtnIcon.Parent = PassBtn
+    
+    local PassBtnText = Instance.new("TextLabel")
+    PassBtnText.BackgroundTransparency = 1
+    PassBtnText.Size = UDim2.new(1, -30, 1, 0)
+    PassBtnText.Position = UDim2.new(0, 26, 0, 0)
+    PassBtnText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+    PassBtnText.Text = "Change Password"
+    PassBtnText.TextColor3 = Color3.new(0.9, 0.9, 0.9)
+    PassBtnText.TextSize = 11
+    PassBtnText.TextXAlignment = Enum.TextXAlignment.Left
+    PassBtnText.Parent = PassBtn
+    
     maid:GiveTask(PassBtn.MouseEnter:Connect(function() Tween(PassBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.new(0.15, 0.15, 0.15)}) end))
     maid:GiveTask(PassBtn.MouseLeave:Connect(function() Tween(PassBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)}) end))
+    
+    maid:GiveTask(PassBtn.MouseButton1Click:Connect(function()
+        print("Change Password clicked!")
+        -- API implementation missing for changing password
+    end))
     
     -- Sign Out Card
     local OutCard = Instance.new("Frame")
@@ -719,20 +740,44 @@ function AccountPage.Create(Content, maid, BackCallback)
     
     local OutBtn = Instance.new("TextButton")
     OutBtn.BackgroundColor3 = Color3.new(0.15, 0.05, 0.05)
-    OutBtn.Size = UDim2.new(0, 80, 0, 26)
+    OutBtn.Size = UDim2.new(0, 90, 0, 26)
     OutBtn.AnchorPoint = Vector2.new(1, 0.5)
     OutBtn.Position = UDim2.new(1, -15, 0.5, 0)
-    OutBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
-    OutBtn.Text = "Sign Out"
-    OutBtn.TextColor3 = Color3.new(1, 0.3, 0.3)
-    OutBtn.TextSize = 11
+    OutBtn.Text = ""
     OutBtn.Parent = OutCard
     Instance.new("UICorner", OutBtn).CornerRadius = UDim.new(0, 4)
     local OutStroke = Instance.new("UIStroke", OutBtn)
     OutStroke.Color = Color3.new(0.5, 0.1, 0.1)
     
+    local OutBtnIcon = Instance.new("ImageLabel")
+    OutBtnIcon.BackgroundTransparency = 1
+    OutBtnIcon.Size = UDim2.new(0, 14, 0, 14)
+    OutBtnIcon.Position = UDim2.new(0, 8, 0.5, -7)
+    OutBtnIcon.Image = "rbxassetid://86733305583331"
+    OutBtnIcon.ImageColor3 = Color3.new(1, 0.3, 0.3)
+    OutBtnIcon.Parent = OutBtn
+    
+    local OutBtnText = Instance.new("TextLabel")
+    OutBtnText.BackgroundTransparency = 1
+    OutBtnText.Size = UDim2.new(1, -30, 1, 0)
+    OutBtnText.Position = UDim2.new(0, 26, 0, 0)
+    OutBtnText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+    OutBtnText.Text = "Sign Out"
+    OutBtnText.TextColor3 = Color3.new(1, 0.3, 0.3)
+    OutBtnText.TextSize = 11
+    OutBtnText.TextXAlignment = Enum.TextXAlignment.Left
+    OutBtnText.Parent = OutBtn
+    
     maid:GiveTask(OutBtn.MouseEnter:Connect(function() Tween(OutBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.new(0.2, 0.1, 0.1)}) end))
     maid:GiveTask(OutBtn.MouseLeave:Connect(function() Tween(OutBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.new(0.15, 0.05, 0.05)}) end))
+
+    maid:GiveTask(OutBtn.MouseButton1Click:Connect(function()
+        if Api and Api.SaveToken then
+            Api.SaveToken("")
+            Api.Token = nil
+        end
+        game.Players.LocalPlayer:Kick("You have successfully signed out.")
+    end))
     
     local function UpdateData(data)
         if not data then return end
