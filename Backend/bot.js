@@ -31,15 +31,15 @@ const commands = [
     new SlashCommandBuilder()
         .setName('blacklist')
         .setDescription('Blacklist a user')
-        .addStringOption(option => option.setName('username').setDescription('Username to blacklist').setRequired(true)),
+        .addUserOption(option => option.setName('user').setDescription('The Discord user to blacklist').setRequired(true)),
     new SlashCommandBuilder()
         .setName('unblacklist')
         .setDescription('Unblacklist a user')
-        .addStringOption(option => option.setName('username').setDescription('Username to unblacklist').setRequired(true)),
+        .addUserOption(option => option.setName('user').setDescription('The Discord user to unblacklist').setRequired(true)),
     new SlashCommandBuilder()
         .setName('reset_hwid')
         .setDescription('Reset HWID for a user')
-        .addStringOption(option => option.setName('username').setDescription('Username to reset HWID').setRequired(true))
+        .addUserOption(option => option.setName('user').setDescription('The Discord user to reset HWID').setRequired(true))
 ].map(command => command.toJSON());
 
 const parseDuration = (str) => {
@@ -190,39 +190,39 @@ client.on('interactionCreate', async interaction => {
                 await interaction.reply({ content: 'Error fetching key info.', ephemeral: true });
             }
         } else if (interaction.commandName === 'blacklist') {
-            const username = interaction.options.getString('username');
+            const targetUser = interaction.options.getUser('user');
             try {
-                const user = await User.findOne({ username });
-                if (!user) return interaction.reply({ content: 'User not found.', ephemeral: true });
+                const user = await User.findOne({ discordId: targetUser.id });
+                if (!user) return interaction.reply({ content: 'That Discord user has not registered an account yet.', ephemeral: true });
                 user.banned = true;
                 await user.save();
-                await interaction.reply({ content: `User **${username}** has been blacklisted.`, ephemeral: true });
+                await interaction.reply({ content: `User **${user.username}** (<@${targetUser.id}>) has been blacklisted.`, ephemeral: true });
             } catch (err) {
                 console.error(err);
                 await interaction.reply({ content: 'Error blacklisting user.', ephemeral: true });
             }
         } else if (interaction.commandName === 'unblacklist') {
-            const username = interaction.options.getString('username');
+            const targetUser = interaction.options.getUser('user');
             try {
-                const user = await User.findOne({ username });
-                if (!user) return interaction.reply({ content: 'User not found.', ephemeral: true });
+                const user = await User.findOne({ discordId: targetUser.id });
+                if (!user) return interaction.reply({ content: 'That Discord user has not registered an account yet.', ephemeral: true });
                 user.banned = false;
                 await user.save();
-                await interaction.reply({ content: `User **${username}** has been unblacklisted.`, ephemeral: true });
+                await interaction.reply({ content: `User **${user.username}** (<@${targetUser.id}>) has been unblacklisted.`, ephemeral: true });
             } catch (err) {
                 console.error(err);
                 await interaction.reply({ content: 'Error unblacklisting user.', ephemeral: true });
             }
         } else if (interaction.commandName === 'reset_hwid') {
-            const username = interaction.options.getString('username');
+            const targetUser = interaction.options.getUser('user');
             try {
-                const user = await User.findOne({ username });
-                if (!user) return interaction.reply({ content: 'User not found.', ephemeral: true });
+                const user = await User.findOne({ discordId: targetUser.id });
+                if (!user) return interaction.reply({ content: 'That Discord user has not registered an account yet.', ephemeral: true });
                 user.hwid = null;
                 user.hwidResets = (user.hwidResets || 0) + 1;
                 user.lastReset = new Date();
                 await user.save();
-                await interaction.reply({ content: `HWID for **${username}** has been reset.`, ephemeral: true });
+                await interaction.reply({ content: `HWID for **${user.username}** (<@${targetUser.id}>) has been reset.`, ephemeral: true });
             } catch (err) {
                 console.error(err);
                 await interaction.reply({ content: 'Error resetting HWID.', ephemeral: true });

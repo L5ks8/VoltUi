@@ -19,6 +19,9 @@ router.post('/register', async (req, res) => {
         if (license.claimedBy) {
             return res.status(400).json({ error: 'License Key already claimed.' });
         }
+        if (!license.discordId) {
+            return res.status(400).json({ error: 'You must redeem this key in the Discord server first!' });
+        }
         
         // Check if user exists
         let user = await User.findOne({ username });
