@@ -2389,21 +2389,16 @@ function Topbar.Create(Main, Config, maid)
     
     local MinimizeIcon = Instance.new("ImageLabel")
     MinimizeIcon.Active = false
+    MinimizeIcon.AnchorPoint = Vector2.new(0.5, 0.5)
     MinimizeIcon.BackgroundColor3 = Color3.new(1, 1, 1)
     MinimizeIcon.BackgroundTransparency = 1
     MinimizeIcon.BorderColor3 = Color3.new(0, 0, 0)
     MinimizeIcon.BorderSizePixel = 0
     MinimizeIcon.Image = "rbxassetid://109304937949559"
     MinimizeIcon.ImageTransparency = 0.3
+    MinimizeIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
     MinimizeIcon.Size = UDim2.new(0, 30, 0, 30)
     MinimizeIcon.Parent = Minimize
-    
-    local MinimizeLayout = Instance.new("UIListLayout")
-    MinimizeLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    MinimizeLayout.HorizontalFlex = Enum.UIFlexAlignment.SpaceAround
-    MinimizeLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    MinimizeLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    MinimizeLayout.Parent = Minimize
     
     local Fullscreen = Instance.new("TextButton")
     Fullscreen.Name = "Fullscreen"
@@ -2419,20 +2414,15 @@ function Topbar.Create(Main, Config, maid)
     
     local FullscreenIcon = Instance.new("ImageLabel")
     FullscreenIcon.Active = false
+    FullscreenIcon.AnchorPoint = Vector2.new(0.5, 0.5)
     FullscreenIcon.BackgroundColor3 = Color3.new(1, 1, 1)
     FullscreenIcon.BackgroundTransparency = 1
     FullscreenIcon.BorderColor3 = Color3.new(0, 0, 0)
     FullscreenIcon.BorderSizePixel = 0
     FullscreenIcon.Image = "rbxassetid://89144063792928"
+    FullscreenIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
     FullscreenIcon.Size = UDim2.new(0, 23, 0, 23)
     FullscreenIcon.Parent = Fullscreen
-    
-    local FullscreenLayout = Instance.new("UIListLayout")
-    FullscreenLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    FullscreenLayout.HorizontalFlex = Enum.UIFlexAlignment.SpaceAround
-    FullscreenLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    FullscreenLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    FullscreenLayout.Parent = Fullscreen
     
     local Close = Instance.new("TextButton")
     Close.Name = "Close"
@@ -2453,21 +2443,16 @@ function Topbar.Create(Main, Config, maid)
     
     local CloseIcon = Instance.new("ImageLabel")
     CloseIcon.Active = false
+    CloseIcon.AnchorPoint = Vector2.new(0.5, 0.5)
     CloseIcon.BackgroundColor3 = Color3.new(1, 1, 1)
     CloseIcon.BackgroundTransparency = 1
     CloseIcon.BorderColor3 = Color3.new(0, 0, 0)
     CloseIcon.BorderSizePixel = 0
     CloseIcon.Image = "rbxassetid://121170570745612"
     CloseIcon.ImageTransparency = 0.3
+    CloseIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
     CloseIcon.Size = UDim2.new(0, 30, 0, 30)
     CloseIcon.Parent = Close
-    
-    local CloseLayout = Instance.new("UIListLayout")
-    CloseLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    CloseLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    CloseLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    CloseLayout.VerticalFlex = Enum.UIFlexAlignment.SpaceAround
-    CloseLayout.Parent = Close
     
     local Version = Instance.new("Frame")
     Version.Name = "Version"
