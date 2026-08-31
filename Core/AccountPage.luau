@@ -10,7 +10,6 @@ function AccountPage.Create(Content, Maid, BackCallback)
     Page.Position = UDim2.new(0.5, 0, 0.518, 0)
     Page.Size = UDim2.new(0, 800, 0, 570)
     Page.LayoutOrder = 2
-    Page.Visible = false
     Page.Parent = Content
 
     local PageCorner = Instance.new("UICorner")
