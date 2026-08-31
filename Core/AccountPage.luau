@@ -37,7 +37,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     BackBtn.Name = "BackButton"
     BackBtn.BackgroundTransparency = 1
     BackBtn.Size = UDim2.new(0, 20, 0, 20)
-    BackBtn.Image = "rbxassetid://10137902340" -- Left Arrow Icon
+    BackBtn.Image = "rbxassetid://91727336448940" -- Left Arrow Icon
     BackBtn.ImageColor3 = Color3.new(1, 1, 1)
     BackBtn.ImageTransparency = 0.4
     BackBtn.Parent = Header
