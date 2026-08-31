@@ -1516,36 +1516,106 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
             end
             
             local keyList = {}
-            if type(keysData) == "table" then
-                keyList = keysData
-            elseif type(keysData) == "string" then
-                keyList = {keysData}
+            if data.licenseObjects and type(data.licenseObjects) == "table" then
+                keyList = data.licenseObjects
+            else
+                if type(keysData) == "table" then
+                    for _, k in ipairs(keysData) do table.insert(keyList, { key = k }) end
+                elseif type(keysData) == "string" then
+                    keyList = {{ key = keysData }}
+                end
             end
             
             CountLabel.Text = tostring(#keyList)
             
-            for _, keyStr in ipairs(keyList) do
+            local Tween = require(script.Parent.Parent.Utils.Tween)
+            
+            for _, licenseObj in ipairs(keyList) do
+                local keyStr = type(licenseObj) == "string" and licenseObj or licenseObj.key
+                
                 local KeyItem = Instance.new("Frame")
                 KeyItem.Name = "KeyItem"
                 KeyItem.BackgroundColor3 = Color3.new(0.12, 0.12, 0.12)
                 KeyItem.BorderSizePixel = 0
-                KeyItem.Size = UDim2.new(0, 555, 0, 40)
+                KeyItem.Size = UDim2.new(0, 555, 0, 50)
                 KeyItem.Parent = Claimed
                 
                 local KeyCorner = Instance.new("UICorner")
                 KeyCorner.CornerRadius = UDim.new(0, 6)
                 KeyCorner.Parent = KeyItem
                 
+                local HoverButton = Instance.new("TextButton")
+                HoverButton.BackgroundTransparency = 1
+                HoverButton.Text = ""
+                HoverButton.Size = UDim2.new(1, 0, 1, 0)
+                HoverButton.ZIndex = 5
+                HoverButton.Parent = KeyItem
+                
+                Maid:GiveTask(HoverButton.MouseEnter:Connect(function()
+                    Tween(KeyItem, 0.2, {BackgroundColor3 = Color3.new(0.16, 0.16, 0.16)})
+                end))
+                Maid:GiveTask(HoverButton.MouseLeave:Connect(function()
+                    Tween(KeyItem, 0.2, {BackgroundColor3 = Color3.new(0.12, 0.12, 0.12)})
+                end))
+                
                 local KeyLabel = Instance.new("TextLabel")
                 KeyLabel.BackgroundTransparency = 1
-                KeyLabel.Size = UDim2.new(1, -20, 1, 0)
-                KeyLabel.Position = UDim2.new(0, 10, 0, 0)
-                KeyLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-                KeyLabel.TextSize = 16
-                KeyLabel.TextColor3 = Color3.new(0.8, 0.8, 0.8)
+                KeyLabel.Size = UDim2.new(1, -100, 0, 25)
+                KeyLabel.Position = UDim2.new(0, 10, 0, 5)
+                KeyLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+                KeyLabel.TextSize = 15
+                KeyLabel.TextColor3 = Color3.fromRGB(130, 190, 255)
                 KeyLabel.TextXAlignment = Enum.TextXAlignment.Left
                 KeyLabel.Text = tostring(keyStr)
                 KeyLabel.Parent = KeyItem
+                
+                local DetailsLabel = Instance.new("TextLabel")
+                DetailsLabel.BackgroundTransparency = 1
+                DetailsLabel.Size = UDim2.new(1, -100, 0, 15)
+                DetailsLabel.Position = UDim2.new(0, 10, 0, 30)
+                DetailsLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+                DetailsLabel.TextSize = 13
+                DetailsLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+                DetailsLabel.TextXAlignment = Enum.TextXAlignment.Left
+                
+                local claimedStr = type(licenseObj) == "table" and licenseObj.claimedStr or "N/A"
+                local expiresStr = type(licenseObj) == "table" and licenseObj.expiresStr or "N/A"
+                DetailsLabel.Text = "Claimed " .. claimedStr .. "   Expires " .. expiresStr
+                DetailsLabel.Parent = KeyItem
+                
+                local BadgeFrame = Instance.new("Frame")
+                BadgeFrame.AnchorPoint = Vector2.new(1, 0.5)
+                BadgeFrame.Position = UDim2.new(1, -10, 0.5, 0)
+                BadgeFrame.Size = UDim2.new(0, 70, 0, 22)
+                BadgeFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+                BadgeFrame.Parent = KeyItem
+                Instance.new("UICorner", BadgeFrame).CornerRadius = UDim.new(0, 4)
+                
+                local BadgeStroke = Instance.new("UIStroke")
+                BadgeStroke.Color = Color3.fromRGB(80, 80, 80)
+                BadgeStroke.Parent = BadgeFrame
+                
+                local BadgeText = Instance.new("TextLabel")
+                BadgeText.BackgroundTransparency = 1
+                BadgeText.Size = UDim2.new(1, 0, 1, 0)
+                BadgeText.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+                BadgeText.TextSize = 13
+                BadgeText.TextColor3 = Color3.fromRGB(255, 170, 0)
+                
+                local badgeName = "unknown"
+                if type(licenseObj) == "table" then
+                    if licenseObj.durationMs == nil then badgeName = "lifetime"
+                    elseif licenseObj.durationMs then
+                        local days = math.floor(licenseObj.durationMs / (1000 * 60 * 60 * 24))
+                        if days == 30 or days == 31 then badgeName = "monthly"
+                        elseif days == 7 then badgeName = "weekly"
+                        elseif days == 1 then badgeName = "daily"
+                        elseif days < 1 then badgeName = "hourly"
+                        else badgeName = tostring(days).." days" end
+                    end
+                end
+                BadgeText.Text = badgeName
+                BadgeText.Parent = BadgeFrame
             end
             
             -- Profile image

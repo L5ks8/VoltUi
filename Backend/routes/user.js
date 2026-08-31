@@ -23,10 +23,47 @@ const authMiddleware = (req, res, next) => {
 // GET /api/user/me
 router.get('/me', authMiddleware, async (req, res) => {
     try {
-        const user = await User.findById(req.user.id).select('-password');
+        const user = await User.findById(req.user.id).select('-password').lean();
         if (!user) {
             return res.status(404).json({ msg: 'User not found' });
         }
+        
+        if (user.subscriptionEnd) {
+            const ms = user.subscriptionEnd.getTime() - Date.now();
+            if (ms > 0) {
+                const days = Math.floor(ms / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                user.remaining = days > 0 ? `${days}d ${hours}h` : `${hours}h`;
+            } else {
+                user.remaining = 'Expired';
+            }
+        }
+        
+        const License = require('../models/License');
+        const licenses = await License.find({ claimedBy: user._id }).lean();
+        
+        const formattedLicenses = licenses.map(lic => {
+            let claimedStr = 'N/A';
+            let expiresStr = 'N/A';
+            if (lic.claimedAt) {
+                const d = new Date(lic.claimedAt);
+                claimedStr = `${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()}`;
+                if (lic.durationMs === null) {
+                    expiresStr = 'Lifetime';
+                } else if (lic.durationMs) {
+                    const e = new Date(d.getTime() + lic.durationMs);
+                    expiresStr = `${e.getDate()}.${e.getMonth()+1}.${e.getFullYear()}`;
+                }
+            }
+            return {
+                ...lic,
+                claimedStr,
+                expiresStr
+            };
+        });
+        
+        user.licenseObjects = formattedLicenses;
+        
         res.json({ user });
     } catch (err) {
         console.error(err.message);
