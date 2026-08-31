@@ -121,6 +121,17 @@ function Api.Register(username, password, licenseKey)
     return false, "Connection Error"
 end
 
+function Api.RedeemKey(key)
+    if not Api.GetToken() then return false, "Not authenticated" end
+    local res = Api.Request("/user/redeem", "POST", { licenseKey = key, key = key })
+    if res and res.message then
+        return true, res.message
+    elseif res and res.error then
+        return false, res.error
+    end
+    return false, "Connection Error"
+end
+
 function Api.FetchMe()
     if not Api.GetToken() then return nil end
     local meRes = Api.Request("/user/me", "GET")
@@ -1864,9 +1875,34 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
         end
     end))
 
-    return {
-        Instance = Page,
-        UpdateData = function(data)
+    local PageData = {}
+    
+    Maid:GiveTask(ClaimButton.MouseButton1Click:Connect(function()
+        local key = TextBox.Text
+        if key and key ~= "" then
+            ClaimButton.Text = "..."
+            task.spawn(function()
+                if Api and Api.RedeemKey then
+                    local success, msg = Api.RedeemKey(key)
+                    if success then
+                        TextBox.Text = ""
+                        local newData = Api.FetchMe()
+                        if newData and PageData.UpdateData then
+                            PageData.UpdateData(newData)
+                        end
+                    else
+                        TextBox.Text = tostring(msg) or "Failed"
+                        task.wait(2)
+                        TextBox.Text = ""
+                    end
+                end
+                ClaimButton.Text = "Claim"
+            end)
+        end
+    end))
+
+    PageData.Instance = Page
+    PageData.UpdateData = function(data)
             if data and data.username then
                 Username.Text = data.username
             else
@@ -1986,7 +2022,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
                 ProfileImage.Image = "rbxthumb://type=AvatarHeadShot&id=" .. tostring(userId) .. "&w=150&h=150"
             end
         end
-    }
+    return PageData
 end
 
 

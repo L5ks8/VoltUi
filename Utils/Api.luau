@@ -108,6 +108,17 @@ function Api.Register(username, password, licenseKey)
     return false, "Connection Error"
 end
 
+function Api.RedeemKey(key)
+    if not Api.GetToken() then return false, "Not authenticated" end
+    local res = Api.Request("/user/redeem", "POST", { licenseKey = key, key = key })
+    if res and res.message then
+        return true, res.message
+    elseif res and res.error then
+        return false, res.error
+    end
+    return false, "Connection Error"
+end
+
 function Api.FetchMe()
     if not Api.GetToken() then return nil end
     local meRes = Api.Request("/user/me", "GET")

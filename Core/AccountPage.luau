@@ -1390,9 +1390,34 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
         end
     end))
 
-    return {
-        Instance = Page,
-        UpdateData = function(data)
+    local PageData = {}
+    
+    Maid:GiveTask(ClaimButton.MouseButton1Click:Connect(function()
+        local key = TextBox.Text
+        if key and key ~= "" then
+            ClaimButton.Text = "..."
+            task.spawn(function()
+                if Api and Api.RedeemKey then
+                    local success, msg = Api.RedeemKey(key)
+                    if success then
+                        TextBox.Text = ""
+                        local newData = Api.FetchMe()
+                        if newData and PageData.UpdateData then
+                            PageData.UpdateData(newData)
+                        end
+                    else
+                        TextBox.Text = tostring(msg) or "Failed"
+                        task.wait(2)
+                        TextBox.Text = ""
+                    end
+                end
+                ClaimButton.Text = "Claim"
+            end)
+        end
+    end))
+
+    PageData.Instance = Page
+    PageData.UpdateData = function(data)
             -- Username
             if data and data.username then
                 Username.Text = data.username
@@ -1518,7 +1543,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
                 ProfileImage.Image = "rbxthumb://type=AvatarHeadShot&id=" .. tostring(userId) .. "&w=150&h=150"
             end
         end
-    }
+    return PageData
 end
 
 return AccountPage
