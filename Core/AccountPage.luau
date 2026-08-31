@@ -486,7 +486,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     local KeyIcon = Instance.new("ImageLabel")
     KeyIcon.BackgroundTransparency = 1
     KeyIcon.Size = UDim2.new(0, 16, 0, 16)
-    KeyIcon.Image = "rbxassetid://10651062060"
+    KeyIcon.Image = "rbxassetid://73004699045411"
     KeyIcon.ImageColor3 = Color3.new(0.8, 0.8, 0.8)
     KeyIcon.Parent = KeysHeader
     
@@ -564,8 +564,8 @@ function AccountPage.Create(Content, maid, BackCallback)
     local TypeBadge = Instance.new("Frame")
     TypeBadge.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
     TypeBadge.Size = UDim2.new(0, 50, 0, 18)
-    TypeBadge.AnchorPoint = Vector2.new(1, 0)
-    TypeBadge.Position = UDim2.new(1, -5, 0, 0)
+    TypeBadge.AnchorPoint = Vector2.new(1, 0.5)
+    TypeBadge.Position = UDim2.new(1, -5, 0.5, 0)
     TypeBadge.Parent = KeyItem
     Instance.new("UICorner", TypeBadge).CornerRadius = UDim.new(0, 4)
     Instance.new("UIStroke", TypeBadge).Color = Color3.new(0.3, 0.3, 0.3)
