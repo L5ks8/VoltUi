@@ -10,13 +10,13 @@ router.post('/register', async (req, res) => {
         const { username, email, password, licenseKey, hwid } = req.body;
         
         if (licenseKey !== "Voltontop") {
-            return res.status(400).json({ error: 'Ungültiger License Key.' });
+            return res.status(400).json({ error: 'Invalid License Key.' });
         }
         
         // Check if user exists
         let user = await User.findOne({ $or: [{ username }, { email }] });
         if (user) {
-            return res.status(400).json({ error: 'Benutzername oder Email existiert bereits.' });
+            return res.status(400).json({ error: 'Username or Email already exists.' });
         }
         
         // Hash password
@@ -31,7 +31,7 @@ router.post('/register', async (req, res) => {
         });
         
         await user.save();
-        res.json({ message: 'Erfolgreich registriert!' });
+        res.json({ message: 'Successfully registered!' });
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server error');
@@ -46,13 +46,13 @@ router.post('/login', async (req, res) => {
         // Find user
         let user = await User.findOne({ username });
         if (!user) {
-            return res.status(400).json({ error: 'Falsche Zugangsdaten.' });
+            return res.status(400).json({ error: 'Invalid credentials.' });
         }
         
         // Check password
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({ error: 'Falsche Zugangsdaten.' });
+            return res.status(400).json({ error: 'Invalid credentials.' });
         }
         
         // HWID Locking / Updating

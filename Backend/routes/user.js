@@ -7,7 +7,7 @@ const User = require('../models/User');
 const authMiddleware = (req, res, next) => {
     const authHeader = req.header('Authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(401).json({ msg: 'Kein Token, Autorisierung verweigert' });
+        return res.status(401).json({ msg: 'No token, authorization denied' });
     }
     const token = authHeader.split(' ')[1];
 
@@ -16,7 +16,7 @@ const authMiddleware = (req, res, next) => {
         req.user = decoded.user;
         next();
     } catch (err) {
-        res.status(401).json({ msg: 'Token ist ungültig' });
+        res.status(401).json({ msg: 'Token is not valid' });
     }
 };
 
@@ -25,7 +25,7 @@ router.get('/me', authMiddleware, async (req, res) => {
     try {
         const user = await User.findById(req.user.id).select('-password');
         if (!user) {
-            return res.status(404).json({ msg: 'Benutzer nicht gefunden' });
+            return res.status(404).json({ msg: 'User not found' });
         }
         res.json({ user });
     } catch (err) {
