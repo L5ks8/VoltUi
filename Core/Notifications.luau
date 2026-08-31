@@ -48,7 +48,7 @@ function Notifications.Notify(options)
 
     local isError = (string.lower(type) == "error")
     local mainColor = isError and Config.ErrorColor or Config.SuccessColor
-    local iconAsset = isError and "rbxassetid://97388232453690" or "rbxassetid://10651060934" -- X or Check
+    local iconAsset = isError and "rbxassetid://85824584748112" or "rbxassetid://10651060934" -- X or Check
     
     local Wrapper = Instance.new("Frame")
     Wrapper.Name = "NotificationWrapper"
