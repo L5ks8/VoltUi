@@ -7,12 +7,16 @@ const User = require('../models/User');
 // Register Route
 router.post('/register', async (req, res) => {
     try {
-        const { username, password } = req.body;
+        const { username, email, password, licenseKey, hwid } = req.body;
+        
+        if (licenseKey !== "Voltontop") {
+            return res.status(400).json({ error: 'Ungültiger License Key.' });
+        }
         
         // Check if user exists
-        let user = await User.findOne({ username });
+        let user = await User.findOne({ $or: [{ username }, { email }] });
         if (user) {
-            return res.status(400).json({ error: 'Benutzer existiert bereits.' });
+            return res.status(400).json({ error: 'Benutzername oder Email existiert bereits.' });
         }
         
         // Hash password
@@ -21,7 +25,9 @@ router.post('/register', async (req, res) => {
         
         user = new User({
             username,
-            password: hashedPassword
+            email,
+            password: hashedPassword,
+            hwid: hwid || null
         });
         
         await user.save();
@@ -49,13 +55,11 @@ router.post('/login', async (req, res) => {
             return res.status(400).json({ error: 'Falsche Zugangsdaten.' });
         }
         
-        // HWID Locking
-        if (!user.hwid) {
-            // First time login, lock HWID
+        // HWID Locking / Updating
+        if (!user.hwid || user.hwid !== hwid) {
+            // Update HWID on successful login from a new device
             user.hwid = hwid;
             await user.save();
-        } else if (user.hwid !== hwid) {
-            return res.status(403).json({ error: 'Ungültige Hardware ID (HWID Mismatch).' });
         }
         
         // Generate Token

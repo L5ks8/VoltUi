@@ -186,7 +186,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     UserIDBtn.Parent = NameRow
     
     local isRevealed = false
-    local actualID = "948592301" -- Example ID
+    local actualID = "No ID Available" -- Default
     maid:GiveTask(UserIDBtn.MouseButton1Click:Connect(function()
         isRevealed = not isRevealed
         if isRevealed then
@@ -350,7 +350,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     local SubsRow = Instance.new("Frame")
     SubsRow.Name = "SubscriptionsRow"
     SubsRow.BackgroundTransparency = 1
-    SubsRow.Size = UDim2.new(1, 0, 0, 250)
+    SubsRow.Size = UDim2.new(1, 0, 0, 280)
     SubsRow.Parent = Scroll
     
     local SubsLayout = Instance.new("UIListLayout")
@@ -454,12 +454,13 @@ function AccountPage.Create(Content, maid, BackCallback)
         vLabel.TextColor3 = Color3.new(0.9, 0.9, 0.9)
         vLabel.TextSize = isLarge and 16 or 12
         vLabel.TextXAlignment = Enum.TextXAlignment.Left
+        return vLabel
     end
     
-    CreateInfoBox(VoltCard, "Remaining", "1 month", true)
-    CreateInfoBox(VoltCard, "Started", "30.8.2026", false)
-    CreateInfoBox(VoltCard, "Ends", "29.9.2026", false)
-    CreateInfoBox(VoltCard, "Original end", "29.9.2026", false)
+    local RemVal = CreateInfoBox(VoltCard, "Remaining", "Loading...", true)
+    local StartVal = CreateInfoBox(VoltCard, "Started", "Loading...", false)
+    local EndVal = CreateInfoBox(VoltCard, "Ends", "Loading...", false)
+    local OrigVal = CreateInfoBox(VoltCard, "Original end", "Loading...", false)
     
     -- Right Card: Claimed Keys
     local KeysCard = Instance.new("Frame")
@@ -717,7 +718,46 @@ function AccountPage.Create(Content, maid, BackCallback)
     maid:GiveTask(OutBtn.MouseEnter:Connect(function() Tween(OutBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.new(0.2, 0.1, 0.1)}) end))
     maid:GiveTask(OutBtn.MouseLeave:Connect(function() Tween(OutBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.new(0.15, 0.05, 0.05)}) end))
     
-    return Page
+    local function UpdateData(data)
+        if not data then return end
+        
+        -- Update Profile
+        if data.username then
+            Username.Text = data.username
+            AvatarText.Text = string.sub(data.username, 1, 1):upper()
+        end
+        if data._id then
+            actualID = tostring(data._id)
+            if isRevealed then UserIDBtn.Text = actualID end
+        end
+        if data.role then
+            RoleText.Text = data.role:sub(1,1):upper() .. data.role:sub(2)
+        end
+        if data.createdAt then
+            JoinDate.Text = "Member since " .. string.sub(data.createdAt, 1, 10)
+        end
+        
+        -- Update Subscription
+        if data.subscriptionEnd then
+            local endTimestamp = 0 -- We can parse this later, for now just strings
+            EndVal.Text = string.sub(data.subscriptionEnd, 1, 10)
+            OrigVal.Text = string.sub(data.subscriptionEnd, 1, 10)
+            ActiveText.Text = "Active"
+            ActiveBadge.BackgroundColor3 = Color3.new(0.1, 0.3, 0.1)
+        else
+            RemVal.Text = "Inactive"
+            StartVal.Text = "-"
+            EndVal.Text = "-"
+            OrigVal.Text = "-"
+            ActiveText.Text = "Inactive"
+            ActiveBadge.BackgroundColor3 = Color3.new(0.3, 0.1, 0.1)
+        end
+    end
+
+    return {
+        Instance = Page,
+        UpdateData = UpdateData
+    }
 end
 
 return AccountPage

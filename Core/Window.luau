@@ -10,6 +10,7 @@ local Bottombar = require(script.Parent.Bottombar)
 local Minimized = require(script.Parent.Minimized)
 local CloseWarn = require(script.Parent.CloseWarn)
 local AccountPage = require(script.Parent.AccountPage)
+local LoginPage = require(script.Parent.LoginPage)
 
 local Window = {}
 
@@ -85,17 +86,43 @@ function Window:CreateWindow(Config)
     MainContent.LayoutOrder = 2
     MainContent.Parent = Content
     
+    -- Authenticate and fetch user data
+    Main.Visible = false
+    
     local AccountPageElements = AccountPage.Create(Content, maid, function()
         SidebarElements.Instance.Visible = true
         SidebarSeparator.Visible = true
         MainContent.Visible = true
-    end)
+    end, Api)
+
+    local function OnLoginSuccess()
+        Main.Visible = true
+        if AccountPageElements and Api.UserData then
+            AccountPageElements.UpdateData(Api.UserData)
+        end
+    end
+
+    local token = Api.GetToken()
+    if token then
+        -- Auto login with saved token
+        task.spawn(function()
+            local data = Api.FetchMe()
+            if data then
+                OnLoginSuccess()
+            else
+                -- Token invalid, show login
+                LoginPage.Create(VoltUi, OnLoginSuccess)
+            end
+        end)
+    else
+        LoginPage.Create(VoltUi, OnLoginSuccess)
+    end
     
     maid:GiveTask(SidebarElements.AccountBtn.MouseButton1Click:Connect(function()
         SidebarElements.Instance.Visible = false
         SidebarSeparator.Visible = false
         MainContent.Visible = false
-        AccountPageElements.Visible = true
+        AccountPageElements.Instance.Visible = true
     end))
     
     local BottombarElements = Bottombar.Create(Main, maid)
