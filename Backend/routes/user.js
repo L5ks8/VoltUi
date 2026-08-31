@@ -104,6 +104,15 @@ router.post('/redeem', authMiddleware, async (req, res) => {
             return res.status(400).json({ error: 'License Key already claimed.' });
         }
         
+        if (license.discordId) {
+            if (user.discordId && user.discordId !== license.discordId) {
+                return res.status(400).json({ error: 'This key is linked to a different Discord account.' });
+            }
+            if (!user.discordId) {
+                user.discordId = license.discordId;
+            }
+        }
+        
         if (license.durationMs === null) {
             user.subscriptionEnd = null; // Upgraded to lifetime
         } else {

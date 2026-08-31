@@ -18,6 +18,10 @@ const licenseSchema = new mongoose.Schema({
     claimedAt: {
         type: Date,
         default: null
+    },
+    discordId: {
+        type: String,
+        default: null
     }
 }, { timestamps: true });
 

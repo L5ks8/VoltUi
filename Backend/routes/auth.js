@@ -39,7 +39,8 @@ router.post('/register', async (req, res) => {
             password: hashedPassword,
             hwid: hwid || null,
             keys: [licenseKey],
-            subscriptionEnd: subEnd
+            subscriptionEnd: subEnd,
+            discordId: license.discordId || null
         });
         
         await user.save();

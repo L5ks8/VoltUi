@@ -1,4 +1,4 @@
-const { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
 const mongoose = require('mongoose');
 const License = require('./models/License');
 const User = require('./models/User');
@@ -21,7 +21,10 @@ const commands = [
             option.setName('key')
                 .setDescription('The license key')
                 .setRequired(true)
-        )
+        ),
+    new SlashCommandBuilder()
+        .setName('panel')
+        .setDescription('Generate the interactive control panel')
 ].map(command => command.toJSON());
 
 const parseDuration = (str) => {
@@ -65,13 +68,12 @@ client.on('ready', async () => {
 });
 
 client.on('interactionCreate', async interaction => {
-    if (!interaction.isChatInputCommand()) return;
+    if (interaction.isChatInputCommand()) {
+        if (interaction.user.id !== process.env.OWNER) {
+            return interaction.reply({ content: 'You do not have permission to use this command.', ephemeral: true });
+        }
 
-    if (interaction.user.id !== process.env.OWNER) {
-        return interaction.reply({ content: 'You do not have permission to use this command.', ephemeral: true });
-    }
-
-    if (interaction.commandName === 'key') {
+        if (interaction.commandName === 'key') {
         const durationStr = interaction.options.getString('duration');
         const durationMs = parseDuration(durationStr);
 
@@ -137,6 +139,79 @@ client.on('interactionCreate', async interaction => {
         } catch (err) {
             console.error(err);
             await interaction.reply({ content: 'Error fetching key info.', ephemeral: true });
+        }
+    } else if (interaction.commandName === 'panel') {
+        const embed = new EmbedBuilder()
+            .setTitle('Volt UI')
+            .setDescription("This control panel is for the project: **Volt UI**\nIf you're a buyer, click on the buttons below to redeem your key, get the script or get your role")
+            .setColor('#2b2d31');
+        
+        const row = new ActionRowBuilder().addComponents(
+            new ButtonBuilder().setCustomId('panel_redeem').setLabel('🔑 Redeem Key').setStyle(ButtonStyle.Success),
+            new ButtonBuilder().setCustomId('panel_script').setLabel('📜 Get Script').setStyle(ButtonStyle.Primary),
+            new ButtonBuilder().setCustomId('panel_role').setLabel('👤 Get Role').setStyle(ButtonStyle.Primary),
+            new ButtonBuilder().setCustomId('panel_hwid').setLabel('⚙️ Reset HWID').setStyle(ButtonStyle.Secondary),
+            new ButtonBuilder().setCustomId('panel_stats').setLabel('📊 Get Stats').setStyle(ButtonStyle.Secondary)
+        );
+        
+        await interaction.reply({ embeds: [embed], components: [row] });
+    }
+    } else if (interaction.isButton()) {
+        if (interaction.customId === 'panel_redeem') {
+            const modal = new ModalBuilder()
+                .setCustomId('redeem_modal')
+                .setTitle('Redeem License Key');
+                
+            const keyInput = new TextInputBuilder()
+                .setCustomId('key_input')
+                .setLabel('Enter script key below: *')
+                .setStyle(TextInputStyle.Short)
+                .setRequired(true);
+                
+            const actionRow = new ActionRowBuilder().addComponents(keyInput);
+            modal.addComponents(actionRow);
+            
+            await interaction.showModal(modal);
+        } else if (interaction.customId.startsWith('panel_')) {
+            await interaction.reply({ content: 'This feature is coming soon!', ephemeral: true });
+        }
+    } else if (interaction.isModalSubmit()) {
+        if (interaction.customId === 'redeem_modal') {
+            const keyInput = interaction.fields.getTextInputValue('key_input');
+            
+            try {
+                const license = await License.findOne({ key: keyInput });
+                
+                if (!license) {
+                    return interaction.reply({ content: 'Invalid license key.', ephemeral: true });
+                }
+                
+                if (license.claimedBy) {
+                    return interaction.reply({ content: 'This key has already been fully claimed and used.', ephemeral: true });
+                }
+                
+                if (license.discordId && license.discordId !== interaction.user.id) {
+                    return interaction.reply({ content: 'This key is already linked to another Discord account.', ephemeral: true });
+                }
+                
+                license.discordId = interaction.user.id;
+                await license.save();
+                
+                const roleId = '1544012798097367040';
+                if (interaction.guild) {
+                    const role = interaction.guild.roles.cache.get(roleId);
+                    if (role) {
+                        await interaction.member.roles.add(role).catch(console.error);
+                    } else {
+                        console.log(`Role ${roleId} not found in guild.`);
+                    }
+                }
+                
+                await interaction.reply({ content: 'Key successfully linked to your Discord account! You have received your role. You can now use the key in the script.', ephemeral: true });
+            } catch (err) {
+                console.error(err);
+                await interaction.reply({ content: 'An error occurred while processing your key.', ephemeral: true });
+            }
         }
     }
 });
