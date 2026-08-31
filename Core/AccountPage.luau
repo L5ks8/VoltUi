@@ -498,6 +498,39 @@ function AccountPage.Create(Content, maid, BackCallback)
     KeyIcon.ImageColor3 = Color3.new(0.8, 0.8, 0.8)
     KeyIcon.Parent = KeysHeader
     
+    local RedeemContainer = Instance.new("Frame")
+    RedeemContainer.BackgroundTransparency = 1
+    RedeemContainer.Size = UDim2.new(1, 0, 0, 36)
+    RedeemContainer.LayoutOrder = -1
+    RedeemContainer.Parent = KeysCard
+    
+    local RedeemInput = Instance.new("TextBox")
+    RedeemInput.BackgroundColor3 = Color3.new(0.12, 0.12, 0.12)
+    RedeemInput.Size = UDim2.new(1, -75, 1, 0)
+    RedeemInput.Position = UDim2.new(0, 0, 0, 0)
+    RedeemInput.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+    RedeemInput.PlaceholderText = "Enter license key..."
+    RedeemInput.Text = ""
+    RedeemInput.TextColor3 = Color3.new(0.9, 0.9, 0.9)
+    RedeemInput.TextSize = 12
+    RedeemInput.Parent = RedeemContainer
+    Instance.new("UICorner", RedeemInput).CornerRadius = UDim.new(0, 6)
+    Instance.new("UIStroke", RedeemInput).Color = Color3.new(0.2, 0.2, 0.2)
+    local RedeemPad = Instance.new("UIPadding", RedeemInput)
+    RedeemPad.PaddingLeft = UDim.new(0, 10)
+    
+    local RedeemBtn = Instance.new("TextButton")
+    RedeemBtn.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+    RedeemBtn.Size = UDim2.new(0, 70, 1, 0)
+    RedeemBtn.Position = UDim2.new(1, -70, 0, 0)
+    RedeemBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    RedeemBtn.Text = "Redeem"
+    RedeemBtn.TextColor3 = Color3.new(1, 1, 1)
+    RedeemBtn.TextSize = 12
+    RedeemBtn.Parent = RedeemContainer
+    Instance.new("UICorner", RedeemBtn).CornerRadius = UDim.new(0, 6)
+    Instance.new("UIStroke", RedeemBtn).Color = Color3.new(0.3, 0.3, 0.3)
+    
     local KeysTitle = Instance.new("TextLabel")
     KeysTitle.BackgroundTransparency = 1
     KeysTitle.Size = UDim2.new(1, -25, 1, 0)
@@ -532,60 +565,63 @@ function AccountPage.Create(Content, maid, BackCallback)
     KeysLayout.Parent = KeysCard
     KeysHeader.LayoutOrder = 0
     
-    -- Single Key Row
-    local KeyItem = Instance.new("TextButton")
-    KeyItem.Text = ""
-    KeyItem.AutoButtonColor = false
-    KeyItem.BackgroundTransparency = 1
-    KeyItem.BackgroundColor3 = Color3.new(0.12, 0.12, 0.12)
-    KeyItem.Size = UDim2.new(1, 10, 0, 40)
-    KeyItem.Position = UDim2.new(0, -5, 0, 0)
-    KeyItem.LayoutOrder = 1
-    KeyItem.Parent = KeysCard
-    Instance.new("UICorner", KeyItem).CornerRadius = UDim.new(0, 4)
+    local function CreateKeyItem(keyText, keyType)
+        local KeyItem = Instance.new("TextButton")
+        KeyItem.Text = ""
+        KeyItem.AutoButtonColor = false
+        KeyItem.BackgroundTransparency = 1
+        KeyItem.BackgroundColor3 = Color3.new(0.12, 0.12, 0.12)
+        KeyItem.Size = UDim2.new(1, 10, 0, 40)
+        KeyItem.Position = UDim2.new(0, -5, 0, 0)
+        KeyItem.LayoutOrder = 1
+        KeyItem.Parent = KeysCard
+        Instance.new("UICorner", KeyItem).CornerRadius = UDim.new(0, 4)
+        
+        maid:GiveTask(KeyItem.MouseEnter:Connect(function() Tween(KeyItem, TweenInfo.new(0.2), {BackgroundTransparency = 0}) end))
+        maid:GiveTask(KeyItem.MouseLeave:Connect(function() Tween(KeyItem, TweenInfo.new(0.2), {BackgroundTransparency = 1}) end))
+        
+        local KeyCode = Instance.new("TextLabel")
+        KeyCode.BackgroundTransparency = 1
+        KeyCode.Size = UDim2.new(1, -60, 0, 16)
+        KeyCode.Position = UDim2.new(0, 5, 0, 0)
+        KeyCode.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+        KeyCode.Text = keyText
+        KeyCode.TextColor3 = Color3.new(0.9, 0.9, 0.9)
+        KeyCode.TextSize = 11
+        KeyCode.TextXAlignment = Enum.TextXAlignment.Left
+        KeyCode.Parent = KeyItem
+        
+        local KeyDates = Instance.new("TextLabel")
+        KeyDates.BackgroundTransparency = 1
+        KeyDates.Size = UDim2.new(1, 0, 0, 14)
+        KeyDates.Position = UDim2.new(0, 5, 0, 18)
+        KeyDates.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+        KeyDates.Text = keyType .. " Key"
+        KeyDates.TextColor3 = Color3.new(0.6, 0.6, 0.6)
+        KeyDates.TextSize = 10
+        KeyDates.TextXAlignment = Enum.TextXAlignment.Left
+        KeyDates.Parent = KeyItem
+        
+        local TypeBadge = Instance.new("Frame")
+        TypeBadge.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
+        TypeBadge.Size = UDim2.new(0, 50, 0, 18)
+        TypeBadge.AnchorPoint = Vector2.new(1, 0.5)
+        TypeBadge.Position = UDim2.new(1, -5, 0.5, 0)
+        TypeBadge.Parent = KeyItem
+        Instance.new("UICorner", TypeBadge).CornerRadius = UDim.new(0, 4)
+        Instance.new("UIStroke", TypeBadge).Color = Color3.new(0.3, 0.3, 0.3)
+        
+        local TypeText = Instance.new("TextLabel")
+        TypeText.BackgroundTransparency = 1
+        TypeText.Size = UDim2.new(1, 0, 1, 0)
+        TypeText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+        TypeText.Text = string.lower(keyType)
+        TypeText.TextColor3 = Color3.new(0.8, 0.8, 0.8)
+        TypeText.TextSize = 10
+        TypeText.Parent = TypeBadge
+    end
     
-    maid:GiveTask(KeyItem.MouseEnter:Connect(function() Tween(KeyItem, TweenInfo.new(0.2), {BackgroundTransparency = 0}) end))
-    maid:GiveTask(KeyItem.MouseLeave:Connect(function() Tween(KeyItem, TweenInfo.new(0.2), {BackgroundTransparency = 1}) end))
-    
-    local KeyCode = Instance.new("TextLabel")
-    KeyCode.BackgroundTransparency = 1
-    KeyCode.Size = UDim2.new(1, -60, 0, 16)
-    KeyCode.Position = UDim2.new(0, 5, 0, 0)
-    KeyCode.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
-    KeyCode.Text = "Voltontop"
-    KeyCode.TextColor3 = Color3.new(0.9, 0.9, 0.9)
-    KeyCode.TextSize = 11
-    KeyCode.TextXAlignment = Enum.TextXAlignment.Left
-    KeyCode.Parent = KeyItem
-    
-    local KeyDates = Instance.new("TextLabel")
-    KeyDates.BackgroundTransparency = 1
-    KeyDates.Size = UDim2.new(1, 0, 0, 14)
-    KeyDates.Position = UDim2.new(0, 5, 0, 18)
-    KeyDates.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
-    KeyDates.Text = "Lifetime Key"
-    KeyDates.TextColor3 = Color3.new(0.6, 0.6, 0.6)
-    KeyDates.TextSize = 10
-    KeyDates.TextXAlignment = Enum.TextXAlignment.Left
-    KeyDates.Parent = KeyItem
-    
-    local TypeBadge = Instance.new("Frame")
-    TypeBadge.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
-    TypeBadge.Size = UDim2.new(0, 50, 0, 18)
-    TypeBadge.AnchorPoint = Vector2.new(1, 0.5)
-    TypeBadge.Position = UDim2.new(1, -5, 0.5, 0)
-    TypeBadge.Parent = KeyItem
-    Instance.new("UICorner", TypeBadge).CornerRadius = UDim.new(0, 4)
-    Instance.new("UIStroke", TypeBadge).Color = Color3.new(0.3, 0.3, 0.3)
-    
-    local TypeText = Instance.new("TextLabel")
-    TypeText.BackgroundTransparency = 1
-    TypeText.Size = UDim2.new(1, 0, 1, 0)
-    TypeText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
-    TypeText.Text = "lifetime"
-    TypeText.TextColor3 = Color3.new(0.8, 0.8, 0.8)
-    TypeText.TextSize = 10
-    TypeText.Parent = TypeBadge
+    CreateKeyItem("Voltontop", "Lifetime")
     
     -- [ SECURITY HEADER ]
     local SecHeader = Instance.new("Frame")
@@ -799,6 +835,8 @@ function AccountPage.Create(Content, maid, BackCallback)
             JoinDate.Text = "Member since " .. string.sub(data.createdAt, 1, 10)
         end
         
+        local isLifetime = true
+        
         -- Update Subscription (Hardcoded to Lifetime since everyone has Voltontop for now)
         RemVal.Text = "Lifetime"
         StartVal.Text = data.createdAt and string.sub(data.createdAt, 1, 10) or "N/A"
@@ -806,6 +844,26 @@ function AccountPage.Create(Content, maid, BackCallback)
         OrigVal.Text = "Never"
         ActiveText.Text = "Active"
         ActiveBadge.BackgroundColor3 = Color3.new(0.1, 0.3, 0.1)
+        
+        maid:GiveTask(RedeemBtn.MouseButton1Click:Connect(function()
+            if isLifetime then
+                local Notifications = require(script.Parent.Notifications)
+                Notifications.Notify({ Title = "Redeem Failed", Content = "You already have a Lifetime subscription!", Type = "Error" })
+                return
+            end
+            
+            local keyText = RedeemInput.Text
+            if keyText == "" then return end
+            
+            -- Call Api (mock success for now, usually Api.Request("/keys/redeem", "POST", {token=..., key=keyText}))
+            RedeemInput.Text = ""
+            CreateKeyItem(keyText, "Premium")
+            
+            local Notifications = require(script.Parent.Notifications)
+            Notifications.Notify({ Title = "Key Redeemed", Content = "Your subscription time has been extended.", Type = "Success" })
+            
+            -- Stack the time logic would go here
+        end))
     end
 
     return {

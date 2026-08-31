@@ -46,18 +46,31 @@ function Notifications.Notify(options)
     local duration = options.Duration or 3
     local type = options.Type or "Success" -- "Success" or "Error"
 
-    local isError = (type == "Error")
+    local isError = (string.lower(type) == "error")
     local mainColor = isError and Config.ErrorColor or Config.SuccessColor
-    local iconBgColor = isError and Config.ErrorIconBg or Config.SuccessIconBg
     local iconAsset = isError and "rbxassetid://97388232453690" or "rbxassetid://10651060934" -- X or Check
+    
+    local Wrapper = Instance.new("Frame")
+    Wrapper.Name = "NotificationWrapper"
+    Wrapper.BackgroundTransparency = 1
+    Wrapper.Size = UDim2.new(1, 0, 0, Config.BaseHeight)
+    Wrapper.Parent = Notifications.Container
 
     local Notif = Instance.new("Frame")
     Notif.Name = "Notification"
     Notif.BackgroundColor3 = Config.BgColor
-    Notif.Size = UDim2.new(1, 0, 0, Config.BaseHeight)
-    Notif.Position = UDim2.new(1, Config.Width + 50, 0, 0) -- Start off-screen right
+    Notif.Size = UDim2.new(1, 0, 1, 0)
+    Notif.Position = UDim2.new(1, Config.Width, 0, 0) -- Start off-screen right
     Notif.BackgroundTransparency = 0.05
-    Notif.Parent = Notifications.Container
+    Notif.Parent = Wrapper
+    
+    local Accent = Instance.new("Frame")
+    Accent.Name = "Accent"
+    Accent.BackgroundColor3 = mainColor
+    Accent.BorderSizePixel = 0
+    Accent.Size = UDim2.new(0, 3, 1, 0)
+    Accent.Parent = Notif
+    Instance.new("UICorner", Accent).CornerRadius = UDim.new(0, 6)
 
     local Corner = Instance.new("UICorner")
     Corner.CornerRadius = UDim.new(0, 6)
@@ -124,9 +137,9 @@ function Notifications.Notify(options)
     local function CloseNotif()
         if closed then return end
         closed = true
-        Tween(Notif, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.In), {Position = UDim2.new(1, Config.Width + 50, 0, 0)})
+        Tween(Notif, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.In), {Position = UDim2.new(1, Config.Width, 0, 0)})
         task.delay(0.3, function()
-            Notif:Destroy()
+            Wrapper:Destroy()
         end)
     end
 
