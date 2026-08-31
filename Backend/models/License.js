@@ -22,6 +22,10 @@ const licenseSchema = new mongoose.Schema({
     discordId: {
         type: String,
         default: null
+    },
+    isFree: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true });
 

@@ -7,13 +7,16 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 const commands = [
     new SlashCommandBuilder()
-        .setName('key')
-        .setDescription('Generate a new license key')
+        .setName('createkey')
+        .setDescription('Generate a new license key (Owner only)')
         .addStringOption(option =>
             option.setName('duration')
                 .setDescription('Duration (1h, 1d, 2d, 7d, 1w, 1m, 1y, l)')
                 .setRequired(true)
         ),
+    new SlashCommandBuilder()
+        .setName('key')
+        .setDescription('Get a free 24-hour key'),
     new SlashCommandBuilder()
         .setName('keyinfo')
         .setDescription('Get information about a key')
@@ -69,11 +72,11 @@ client.on('ready', async () => {
 
 client.on('interactionCreate', async interaction => {
     if (interaction.isChatInputCommand()) {
-        if (interaction.user.id !== process.env.OWNER) {
+        if (interaction.user.id !== process.env.OWNER && !['panel', 'key'].includes(interaction.commandName)) {
             return interaction.reply({ content: 'You do not have permission to use this command.', ephemeral: true });
         }
 
-        if (interaction.commandName === 'key') {
+        if (interaction.commandName === 'createkey') {
         const durationStr = interaction.options.getString('duration');
         const durationMs = parseDuration(durationStr);
 
@@ -103,6 +106,40 @@ client.on('interactionCreate', async interaction => {
         } catch (err) {
             console.error(err);
             await interaction.reply({ content: 'Error generating key.', ephemeral: true });
+        }
+    } else if (interaction.commandName === 'key') {
+        try {
+            const cooldownMs = 24 * 60 * 60 * 1000;
+            const lastFreeKey = await License.findOne({ discordId: interaction.user.id, isFree: true }).sort({ createdAt: -1 });
+
+            if (lastFreeKey && (Date.now() - lastFreeKey.createdAt.getTime()) < cooldownMs) {
+                const availableAt = Math.floor((lastFreeKey.createdAt.getTime() + cooldownMs) / 1000);
+                return interaction.reply({ content: `You can generate another free key <t:${availableAt}:R>.`, ephemeral: true });
+            }
+
+            const newKey = generateKey();
+            const license = new License({
+                key: newKey,
+                durationMs: cooldownMs,
+                discordId: interaction.user.id,
+                isFree: true
+            });
+            await license.save();
+
+            const embed = new EmbedBuilder()
+                .setTitle('Free Key Generated')
+                .setDescription('Here is your 24-hour key! It is already linked to your Discord account. You can now use it directly in the script.')
+                .addFields(
+                    { name: 'Key', value: `\`${newKey}\`` },
+                    { name: 'Duration', value: '24 hours' }
+                )
+                .setColor('#2ecc71')
+                .setTimestamp();
+
+            await interaction.reply({ embeds: [embed], ephemeral: true });
+        } catch (err) {
+            console.error(err);
+            await interaction.reply({ content: 'Error generating free key.', ephemeral: true });
         }
     } else if (interaction.commandName === 'keyinfo') {
         const keyString = interaction.options.getString('key');
