@@ -128,7 +128,7 @@ client.on('interactionCreate', async interaction => {
 
                 const embed = new EmbedBuilder()
                     .setTitle('Free Key Generated')
-                    .setDescription('Here is your 24-hour key! It is already linked to your Discord account. You can now use it directly in the script.')
+                    .setDescription('Here is your 24-hour key!\nBefore you use the script, go to <#1544012102044352532> to redeem it and get your role.')
                     .addFields(
                         { name: 'Key', value: `\`${newKey}\`` },
                         { name: 'Duration', value: '24 hours' }
