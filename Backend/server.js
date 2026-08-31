@@ -6,6 +6,7 @@ const rateLimit = require('express-rate-limit');
 const { encryptionMiddleware } = require('./encryption');
 
 const app = express();
+app.set('trust proxy', 1); // Trust first proxy (Render, Cloudflare, etc)
 app.use(express.json());
 app.use(cors());
 
