@@ -24,6 +24,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: null
     },
+    keys: {
+        type: [String],
+        default: []
+    },
     subscriptionEnd: {
         type: Date,
         default: null

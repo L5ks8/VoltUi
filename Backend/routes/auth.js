@@ -9,7 +9,7 @@ router.post('/register', async (req, res) => {
     try {
         const { username, password, licenseKey, hwid } = req.body;
         
-        if (licenseKey !== "Voltontop") {
+        if (licenseKey !== "Voltontop" && !licenseKey.includes("1D") && !licenseKey.includes("7D")) {
             return res.status(400).json({ error: 'Invalid License Key.' });
         }
         
@@ -23,10 +23,18 @@ router.post('/register', async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
         
+        let subEnd = null;
+        if (licenseKey !== "Voltontop") {
+            let days = licenseKey.includes("7D") ? 7 : 1;
+            subEnd = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
+        }
+
         user = new User({
             username,
             password: hashedPassword,
-            hwid: hwid || null
+            hwid: hwid || null,
+            keys: [licenseKey],
+            subscriptionEnd: subEnd
         });
         
         await user.save();
