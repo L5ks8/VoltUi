@@ -708,7 +708,8 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     local UsernameContainerLayout = Instance.new("UIListLayout")
     UsernameContainerLayout.FillDirection = Enum.FillDirection.Horizontal
     UsernameContainerLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    UsernameContainerLayout.Padding = UDim.new(0, 5)
+    UsernameContainerLayout.VerticalAlignment = Enum.VerticalAlignment.Bottom
+    UsernameContainerLayout.Padding = UDim.new(0, 8)
     UsernameContainerLayout.Parent = UsernameContainer
 
     local Username = Instance.new("TextLabel")
@@ -718,28 +719,31 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     Username.BorderColor3 = Color3.new(0, 0, 0)
     Username.BorderSizePixel = 0
     Username.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    Username.AutomaticSize = Enum.AutomaticSize.X
-    Username.Size = UDim2.new(0, 0, 1, 0)
+    Username.AutomaticSize = Enum.AutomaticSize.XY
+    Username.Size = UDim2.new(0, 0, 0, 25)
     Username.Text = "Username"
     Username.TextColor3 = Color3.new(0.8, 0.8, 0.8)
     Username.TextSize = 20
     Username.TextXAlignment = Enum.TextXAlignment.Left
+    Username.TextYAlignment = Enum.TextYAlignment.Bottom
     Username.Parent = UsernameContainer
 
-    local HiddenId = Instance.new("TextButton")
+    local HiddenId = Instance.new("TextBox")
     HiddenId.Name = "HiddenId"
     HiddenId.BackgroundColor3 = Color3.new(1, 1, 1)
     HiddenId.BackgroundTransparency = 1
     HiddenId.BorderColor3 = Color3.new(0, 0, 0)
     HiddenId.BorderSizePixel = 0
     HiddenId.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-    HiddenId.AutomaticSize = Enum.AutomaticSize.X
-    HiddenId.Size = UDim2.new(0, 0, 1, 0)
+    HiddenId.AutomaticSize = Enum.AutomaticSize.XY
+    HiddenId.Size = UDim2.new(0, 0, 0, 22)
     HiddenId.Text = "********"
-    HiddenId.TextColor3 = Color3.new(0.3, 0.3, 0.3)
+    HiddenId.TextColor3 = Color3.new(0.5, 0.5, 0.5)
     HiddenId.TextSize = 14
     HiddenId.TextXAlignment = Enum.TextXAlignment.Left
     HiddenId.TextYAlignment = Enum.TextYAlignment.Bottom
+    HiddenId.TextEditable = false
+    HiddenId.ClearTextOnFocus = false
     HiddenId.Parent = UsernameContainer
 
     local MemberSince = Instance.new("TextLabel")
@@ -1874,9 +1878,11 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
                 HiddenId.Visible = true
                 HiddenId.Text = "********"
                 local idRevealed = false
-                Maid:GiveTask(HiddenId.MouseButton1Click:Connect(function()
-                    idRevealed = not idRevealed
-                    HiddenId.Text = idRevealed and tostring(data._id) or "********"
+                Maid:GiveTask(HiddenId.Focused:Connect(function()
+                    if not idRevealed then
+                        idRevealed = true
+                        HiddenId.Text = tostring(data._id)
+                    end
                 end))
             else
                 HiddenId.Visible = false
