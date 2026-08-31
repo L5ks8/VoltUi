@@ -1425,14 +1425,40 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
             end
             
             -- Subscription
-            if data and data.subscriptionEnd then
-                StatusBadgeText.Text = "Expired"
-                StatusBadgeText.TextColor3 = Color3.new(0.8, 0.4, 0.4)
+            local subEnd = data.subscriptionEnd or data.expiresAt or data.endsAt
+            local subStart = data.subscriptionStart or data.startedAt or data.createdAt
+            local remainingStr = data.remaining
+            local isActive = false
+            
+            if data.subscription and type(data.subscription) == "table" then
+                local sub = data.subscription
+                subEnd = subEnd or sub.expiresAt or sub.endsAt or sub.subscriptionEnd
+                subStart = subStart or sub.startedAt or sub.createdAt
+                remainingStr = remainingStr or sub.remaining
+                if sub.active ~= nil then isActive = sub.active end
+            end
+            
+            if subEnd then isActive = true end
+            
+            if isActive then
+                StatusBadgeText.Text = "Active"
+                StatusBadgeText.TextColor3 = Color3.new(0.4, 0.8, 0.4)
                 
-                local dateStr = string.match(tostring(data.subscriptionEnd), "^(%d+%-%d+%-%d+)") or tostring(data.subscriptionEnd)
-                EndsValue.Text = dateStr
-                StartedValue.Text = "N/A"
-                RemainingValue.Text = "None"
+                if subEnd then
+                    local endStr = string.match(tostring(subEnd), "^(%d+%-%d+%-%d+)") or tostring(subEnd)
+                    EndsValue.Text = endStr
+                else
+                    EndsValue.Text = "N/A"
+                end
+                
+                if subStart then
+                    local startStr = string.match(tostring(subStart), "^(%d+%-%d+%-%d+)") or tostring(subStart)
+                    StartedValue.Text = startStr
+                else
+                    StartedValue.Text = "N/A"
+                end
+                
+                RemainingValue.Text = remainingStr and tostring(remainingStr) or "Active"
             else
                 StatusBadgeText.Text = "Inactive"
                 StatusBadgeText.TextColor3 = Color3.new(0.6, 0.6, 0.6)
@@ -1442,11 +1468,16 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
             end
             
             -- Claimed Keys Count
-            if data and data.claimedKeys then
-                if type(data.claimedKeys) == "table" then
-                    CountLabel.Text = tostring(#data.claimedKeys)
+            local keysData = data.keys or data.claimedKeys or data.licenses or data.licenseKeys
+            if data.subscription and type(data.subscription) == "table" then
+                keysData = keysData or data.subscription.keys or data.subscription.claimedKeys
+            end
+            
+            if keysData then
+                if type(keysData) == "table" then
+                    CountLabel.Text = tostring(#keysData)
                 else
-                    CountLabel.Text = tostring(data.claimedKeys)
+                    CountLabel.Text = tostring(keysData)
                 end
             else
                 CountLabel.Text = "0"
