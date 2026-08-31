@@ -32,14 +32,33 @@ function LoginPage.Create(ParentGui, OnSuccess)
     Stroke.Color = Color3.new(0.15, 0.15, 0.15)
     
     -- Headers
-    local Logo = Instance.new("TextLabel", Container)
-    Logo.BackgroundTransparency = 1
-    Logo.Size = UDim2.new(1, 0, 0, 50)
-    Logo.Position = UDim2.new(0, 0, 0, 30)
-    Logo.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    Logo.Text = "Volt"
-    Logo.TextColor3 = Color3.new(1, 1, 1)
-    Logo.TextSize = 24
+    local LogoContainer = Instance.new("Frame", Container)
+    LogoContainer.BackgroundTransparency = 1
+    LogoContainer.Size = UDim2.new(1, 0, 0, 50)
+    LogoContainer.Position = UDim2.new(0, 0, 0, 30)
+
+    local LogoLayout = Instance.new("UIListLayout", LogoContainer)
+    LogoLayout.FillDirection = Enum.FillDirection.Horizontal
+    LogoLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    LogoLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    LogoLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    LogoLayout.Padding = UDim.new(0, 8)
+
+    local LogoImg = Instance.new("ImageLabel", LogoContainer)
+    LogoImg.BackgroundTransparency = 1
+    LogoImg.Size = UDim2.new(0, 24, 0, 24)
+    LogoImg.Image = "rbxassetid://71942076965693"
+    LogoImg.LayoutOrder = 1
+
+    local LogoText = Instance.new("TextLabel", LogoContainer)
+    LogoText.BackgroundTransparency = 1
+    LogoText.Size = UDim2.new(0, 50, 0, 50)
+    LogoText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    LogoText.Text = "Volt"
+    LogoText.TextColor3 = Color3.new(1, 1, 1)
+    LogoText.TextSize = 24
+    LogoText.LayoutOrder = 2
+    LogoText.TextXAlignment = Enum.TextXAlignment.Left
     
     local Title = Instance.new("TextLabel", Container)
     Title.BackgroundTransparency = 1

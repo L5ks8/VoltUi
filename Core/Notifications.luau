@@ -49,7 +49,7 @@ function Notifications.Notify(options)
     local isError = (type == "Error")
     local mainColor = isError and Config.ErrorColor or Config.SuccessColor
     local iconBgColor = isError and Config.ErrorIconBg or Config.SuccessIconBg
-    local iconAsset = isError and "rbxassetid://10651061109" or "rbxassetid://10651060934" -- X or Check
+    local iconAsset = isError and "rbxassetid://124569484183614" or "rbxassetid://10651060934" -- X or Check
 
     local Notif = Instance.new("Frame")
     Notif.Name = "Notification"
@@ -110,14 +110,16 @@ function Notifications.Notify(options)
     ContentLbl.TextWrapped = true
     ContentLbl.Parent = Notif
 
-    -- Close Button
-    local CloseBtn = Instance.new("ImageButton")
+    -- Close Button (Text since image was a star)
+    local CloseBtn = Instance.new("TextButton")
     CloseBtn.BackgroundTransparency = 1
     CloseBtn.Size = UDim2.new(0, 14, 0, 14)
     CloseBtn.AnchorPoint = Vector2.new(1, 0.5)
     CloseBtn.Position = UDim2.new(1, -Config.Padding, 0.5, 0)
-    CloseBtn.Image = "rbxassetid://10651061109" -- X icon
-    CloseBtn.ImageColor3 = Color3.new(0.5, 0.5, 0.5)
+    CloseBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    CloseBtn.Text = "X"
+    CloseBtn.TextColor3 = Color3.new(0.5, 0.5, 0.5)
+    CloseBtn.TextSize = 12
     CloseBtn.Parent = Notif
 
     local closed = false
