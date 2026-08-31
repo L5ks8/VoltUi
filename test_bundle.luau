@@ -2015,7 +2015,8 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
                 
                 local KeyItem = Instance.new("Frame")
                 KeyItem.Name = "KeyItem"
-                KeyItem.BackgroundColor3 = Color3.new(0.12, 0.12, 0.12)
+                KeyItem.BackgroundColor3 = Color3.new(0.16, 0.16, 0.16)
+                KeyItem.BackgroundTransparency = 1
                 KeyItem.BorderSizePixel = 0
                 KeyItem.Size = UDim2.new(0, 555, 0, 50)
                 KeyItem.Parent = Claimed
@@ -2032,10 +2033,10 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
                 HoverButton.Parent = KeyItem
                 
                 Maid:GiveTask(HoverButton.MouseEnter:Connect(function()
-                    Tween(KeyItem, 0.2, {BackgroundColor3 = Color3.new(0.16, 0.16, 0.16)})
+                    Tween(KeyItem, TweenInfo.new(0.2), {BackgroundTransparency = 0})
                 end))
                 Maid:GiveTask(HoverButton.MouseLeave:Connect(function()
-                    Tween(KeyItem, 0.2, {BackgroundColor3 = Color3.new(0.12, 0.12, 0.12)})
+                    Tween(KeyItem, TweenInfo.new(0.2), {BackgroundTransparency = 1})
                 end))
                 
                 local KeyLabel = Instance.new("TextLabel")
@@ -2080,7 +2081,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
                 BadgeText.Size = UDim2.new(1, 0, 1, 0)
                 BadgeText.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
                 BadgeText.TextSize = 13
-                BadgeText.TextColor3 = Color3.fromRGB(255, 170, 0)
+                BadgeText.TextColor3 = Color3.fromRGB(255, 255, 255)
                 
                 local badgeName = "unknown"
                 if type(licenseObj) == "table" then
