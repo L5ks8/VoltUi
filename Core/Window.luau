@@ -93,9 +93,10 @@ function Window:CreateWindow(Config)
     -- Authenticate and fetch user data
     Main.Visible = false
     
-    local AccountPageElements = AccountPage.Create(Content, maid, function()
+    local AccountPageElements
+    AccountPageElements = AccountPage.Create(Content, maid, function()
         -- Slide Out
-        Tween(AccountPageElements.Instance, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2.new(1, 0, 0, 0)})
+        Tween(AccountPageElements.Instance, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2.new(1, 0, 0, 30)})
         
         SidebarElements.Instance.Visible = true
         SidebarSeparator.Visible = true
@@ -130,11 +131,11 @@ function Window:CreateWindow(Config)
     end
     
     maid:GiveTask(SidebarElements.AccountBtn.MouseButton1Click:Connect(function()
-        AccountPageElements.Instance.Position = UDim2.new(1, 0, 0, 0)
+        AccountPageElements.Instance.Position = UDim2.new(1, 0, 0, 30)
         AccountPageElements.Instance.Visible = true
         
         -- Slide In
-        Tween(AccountPageElements.Instance, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2.new(0, 0, 0, 0)})
+        Tween(AccountPageElements.Instance, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2.new(0, 0, 0, 30)})
         
         task.delay(0.2, function()
             SidebarElements.Instance.Visible = false

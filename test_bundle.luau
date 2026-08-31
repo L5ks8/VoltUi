@@ -471,10 +471,11 @@ function AccountPage.Create(Content, maid, BackCallback)
     Page.BackgroundTransparency = 1
     Page.BorderColor3 = Color3.new(0, 0, 0)
     Page.BorderSizePixel = 0
-    Page.Size = UDim2.new(1, 0, 1, 0)
+    Page.Position = UDim2.new(1, 0, 0, 30)
+    Page.Size = UDim2.new(1, 0, 1, -50)
     Page.Visible = false
     Page.ZIndex = 20
-    Page.Parent = Content
+    Page.Parent = Content.Parent
     
     local Header = Instance.new("Frame")
     Header.Name = "Header"
@@ -2762,8 +2763,9 @@ function Window:CreateWindow(Config)
     
     Main.Visible = false
     
-    local AccountPageElements = AccountPage.Create(Content, maid, function()
-        Tween(AccountPageElements.Instance, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2.new(1, 0, 0, 0)})
+    local AccountPageElements
+    AccountPageElements = AccountPage.Create(Content, maid, function()
+        Tween(AccountPageElements.Instance, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2.new(1, 0, 0, 30)})
         
         SidebarElements.Instance.Visible = true
         SidebarSeparator.Visible = true
@@ -2796,10 +2798,10 @@ function Window:CreateWindow(Config)
     end
     
     maid:GiveTask(SidebarElements.AccountBtn.MouseButton1Click:Connect(function()
-        AccountPageElements.Instance.Position = UDim2.new(1, 0, 0, 0)
+        AccountPageElements.Instance.Position = UDim2.new(1, 0, 0, 30)
         AccountPageElements.Instance.Visible = true
         
-        Tween(AccountPageElements.Instance, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2.new(0, 0, 0, 0)})
+        Tween(AccountPageElements.Instance, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2.new(0, 0, 0, 30)})
         
         task.delay(0.2, function()
             SidebarElements.Instance.Visible = false

@@ -10,10 +10,11 @@ function AccountPage.Create(Content, maid, BackCallback)
     Page.BackgroundTransparency = 1
     Page.BorderColor3 = Color3.new(0, 0, 0)
     Page.BorderSizePixel = 0
-    Page.Size = UDim2.new(1, 0, 1, 0)
+    Page.Position = UDim2.new(1, 0, 0, 30) -- Start off-screen right, below topbar
+    Page.Size = UDim2.new(1, 0, 1, -50) -- Exclude top and bottom bars
     Page.Visible = false
     Page.ZIndex = 20
-    Page.Parent = Content
+    Page.Parent = Content.Parent
     
     -- [ HEADER ]
     local Header = Instance.new("Frame")
