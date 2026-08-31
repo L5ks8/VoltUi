@@ -251,67 +251,72 @@ function AccountPage.Create(Content, maid, BackCallback)
     JoinDate.TextSize = 11
     JoinDate.Parent = BadgeRow
     
-    -- [ LICENSES HEADER ]
-    local LicensesHeader = Instance.new("Frame")
-    LicensesHeader.Name = "LicensesHeader"
-    LicensesHeader.BackgroundTransparency = 1
-    LicensesHeader.Size = UDim2.new(1, 0, 0, 35)
-    LicensesHeader.Parent = Scroll
+    -- [ LICENSES ROW ]
+    local LicensesRow = Instance.new("Frame")
+    LicensesRow.Name = "LicensesRow"
+    LicensesRow.BackgroundTransparency = 1
+    LicensesRow.Size = UDim2.new(1, 0, 0, 35)
+    LicensesRow.Parent = Scroll
     
+    -- Left Side (Icon + Text)
     local LicIcon = Instance.new("ImageLabel")
     LicIcon.BackgroundTransparency = 1
     LicIcon.Size = UDim2.new(0, 16, 0, 16)
     LicIcon.Position = UDim2.new(0, 0, 0, 0)
-    LicIcon.Image = "rbxassetid://10651062060" -- Key/License Icon
+    LicIcon.Image = "rbxassetid://115826927882045" -- Updated License Icon
     LicIcon.ImageColor3 = Color3.new(0.8, 0.8, 0.8)
-    LicIcon.Parent = LicensesHeader
+    LicIcon.Parent = LicensesRow
     
     local LicTitle = Instance.new("TextLabel")
     LicTitle.BackgroundTransparency = 1
-    LicTitle.Size = UDim2.new(1, -25, 0, 16)
+    LicTitle.Size = UDim2.new(0, 200, 0, 16)
     LicTitle.Position = UDim2.new(0, 25, 0, 0)
     LicTitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     LicTitle.Text = "Licenses"
     LicTitle.TextColor3 = Color3.new(1, 1, 1)
     LicTitle.TextSize = 12
     LicTitle.TextXAlignment = Enum.TextXAlignment.Left
-    LicTitle.Parent = LicensesHeader
+    LicTitle.Parent = LicensesRow
     
     local LicDesc = Instance.new("TextLabel")
     LicDesc.BackgroundTransparency = 1
-    LicDesc.Size = UDim2.new(1, -25, 0, 14)
+    LicDesc.Size = UDim2.new(0, 200, 0, 14)
     LicDesc.Position = UDim2.new(0, 25, 0, 16)
     LicDesc.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     LicDesc.Text = "Subscription and claimed keys"
     LicDesc.TextColor3 = Color3.new(0.6, 0.6, 0.6)
     LicDesc.TextSize = 11
     LicDesc.TextXAlignment = Enum.TextXAlignment.Left
-    LicDesc.Parent = LicensesHeader
+    LicDesc.Parent = LicensesRow
     
-    -- [ LICENSES INPUT ]
-    local LicInputRow = Instance.new("Frame")
-    LicInputRow.Name = "LicInputRow"
-    LicInputRow.BackgroundTransparency = 1
-    LicInputRow.Size = UDim2.new(1, 0, 0, 30)
-    LicInputRow.Parent = Scroll
+    -- Right Side (Input + Button)
+    local RightContainer = Instance.new("Frame")
+    RightContainer.BackgroundTransparency = 1
+    RightContainer.Size = UDim2.new(0, 250, 1, 0)
+    RightContainer.AnchorPoint = Vector2.new(1, 0)
+    RightContainer.Position = UDim2.new(1, 0, 0, 0)
+    RightContainer.Parent = LicensesRow
     
-    local LicInputLayout = Instance.new("UIListLayout")
-    LicInputLayout.FillDirection = Enum.FillDirection.Horizontal
-    LicInputLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    LicInputLayout.Padding = UDim.new(0, 10)
-    LicInputLayout.Parent = LicInputRow
+    local RightLayout = Instance.new("UIListLayout")
+    RightLayout.FillDirection = Enum.FillDirection.Horizontal
+    RightLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
+    RightLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    RightLayout.Padding = UDim.new(0, 10)
+    RightLayout.Parent = RightContainer
     
     local LicTextBox = Instance.new("TextBox")
     LicTextBox.Name = "Input"
     LicTextBox.BackgroundColor3 = Color3.new(0.06, 0.06, 0.06)
-    LicTextBox.Size = UDim2.new(1, -80, 1, 0)
+    LicTextBox.Size = UDim2.new(0, 170, 1, -5) -- slightly smaller height to center well
+    LicTextBox.Position = UDim2.new(0, 0, 0, 2.5)
     LicTextBox.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     LicTextBox.Text = ""
     LicTextBox.PlaceholderText = "Enter license key"
     LicTextBox.TextColor3 = Color3.new(1, 1, 1)
     LicTextBox.TextSize = 12
     LicTextBox.TextXAlignment = Enum.TextXAlignment.Left
-    LicTextBox.Parent = LicInputRow
+    LicTextBox.LayoutOrder = 1
+    LicTextBox.Parent = RightContainer
     
     local LicBoxCorner = Instance.new("UICorner")
     LicBoxCorner.CornerRadius = UDim.new(0, 4)
@@ -328,12 +333,14 @@ function AccountPage.Create(Content, maid, BackCallback)
     local ClaimBtn = Instance.new("TextButton")
     ClaimBtn.Name = "ClaimButton"
     ClaimBtn.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
-    ClaimBtn.Size = UDim2.new(0, 70, 1, 0)
+    ClaimBtn.Size = UDim2.new(0, 70, 1, -5)
+    ClaimBtn.Position = UDim2.new(0, 0, 0, 2.5)
     ClaimBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     ClaimBtn.Text = "Claim"
     ClaimBtn.TextColor3 = Color3.new(0.8, 0.8, 0.8)
     ClaimBtn.TextSize = 12
-    ClaimBtn.Parent = LicInputRow
+    ClaimBtn.LayoutOrder = 2
+    ClaimBtn.Parent = RightContainer
     
     local ClaimCorner = Instance.new("UICorner")
     ClaimCorner.CornerRadius = UDim.new(0, 4)
