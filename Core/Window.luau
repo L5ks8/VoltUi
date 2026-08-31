@@ -50,17 +50,28 @@ function Window:CreateWindow(Config)
     
     local TopbarElements = Topbar.Create(Main, Config, maid)
     
+    local PagesContainer = Instance.new("Frame")
+    PagesContainer.Name = "PagesContainer"
+    PagesContainer.AnchorPoint = Vector2.new(0, 0)
+    PagesContainer.BackgroundTransparency = 1
+    PagesContainer.Position = UDim2.new(0, 0, 0, 30)
+    PagesContainer.Size = UDim2.new(1, 0, 1, -50)
+    PagesContainer.ClipsDescendants = true
+    PagesContainer.Parent = Main
+    
+    local PageLayout = Instance.new("UIPageLayout")
+    PageLayout.TweenTime = 0.4
+    PageLayout.EasingStyle = Enum.EasingStyle.Quint
+    PageLayout.EasingDirection = Enum.EasingDirection.Out
+    PageLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    PageLayout.Parent = PagesContainer
+    
     local Content = Instance.new("Frame")
     Content.Name = "Content"
-    Content.AnchorPoint = Vector2.new(0, 0)
-    Content.BackgroundColor3 = Color3.new(1, 1, 1)
     Content.BackgroundTransparency = 1
-    Content.BorderColor3 = Color3.new(0, 0, 0)
-    Content.BorderSizePixel = 0
+    Content.Size = UDim2.new(1, 0, 1, 0)
     Content.LayoutOrder = 1
-    Content.Position = UDim2.new(0, 0, 0, 30)
-    Content.Size = UDim2.new(1, 0, 1, -50)
-    Content.Parent = Main
+    Content.Parent = PagesContainer
     
     local ContentLayout = Instance.new("UIListLayout")
     ContentLayout.FillDirection = Enum.FillDirection.Horizontal
@@ -94,17 +105,8 @@ function Window:CreateWindow(Config)
     Main.Visible = false
     
     local AccountPageElements
-    AccountPageElements = AccountPage.Create(Content, maid, function()
-        -- Slide Out
-        Tween(AccountPageElements.Instance, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2.new(1, 0, 0, 30)})
-        
-        SidebarElements.Instance.Visible = true
-        SidebarSeparator.Visible = true
-        MainContent.Visible = true
-        
-        task.delay(0.4, function()
-            AccountPageElements.Instance.Visible = false
-        end)
+    AccountPageElements = AccountPage.Create(PagesContainer, maid, function()
+        PageLayout:JumpTo(Content)
     end, Api)
 
     local function OnLoginSuccess()
@@ -131,17 +133,7 @@ function Window:CreateWindow(Config)
     end
     
     maid:GiveTask(SidebarElements.AccountBtn.MouseButton1Click:Connect(function()
-        AccountPageElements.Instance.Position = UDim2.new(1, 0, 0, 30)
-        AccountPageElements.Instance.Visible = true
-        
-        -- Slide In
-        Tween(AccountPageElements.Instance, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2.new(0, 0, 0, 30)})
-        
-        task.delay(0.2, function()
-            SidebarElements.Instance.Visible = false
-            SidebarSeparator.Visible = false
-            MainContent.Visible = false
-        end)
+        PageLayout:JumpTo(AccountPageElements.Instance)
     end))
     
     local BottombarElements = Bottombar.Create(Main, maid)
