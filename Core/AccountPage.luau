@@ -37,7 +37,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     BackBtn.Name = "BackButton"
     BackBtn.BackgroundTransparency = 1
     BackBtn.Size = UDim2.new(0, 20, 0, 20)
-    BackBtn.Image = "rbxassetid://91727336448940" -- Left Arrow Icon
+    BackBtn.Image = "rbxassetid://93526157530558" -- Left Arrow Icon
     BackBtn.ImageColor3 = Color3.new(1, 1, 1)
     BackBtn.ImageTransparency = 0.4
     BackBtn.Parent = Header
@@ -263,7 +263,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     LicIcon.BackgroundTransparency = 1
     LicIcon.Size = UDim2.new(0, 16, 0, 16)
     LicIcon.Position = UDim2.new(0, 0, 0, 0)
-    LicIcon.Image = "rbxassetid://115826927882045" -- Updated License Icon
+    LicIcon.Image = "rbxassetid://79413295774210" -- Updated License Icon
     LicIcon.ImageColor3 = Color3.new(0.8, 0.8, 0.8)
     LicIcon.Parent = LicensesRow
     
@@ -493,7 +493,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     local KeyIcon = Instance.new("ImageLabel")
     KeyIcon.BackgroundTransparency = 1
     KeyIcon.Size = UDim2.new(0, 16, 0, 16)
-    KeyIcon.Image = "rbxassetid://73004699045411"
+    KeyIcon.Image = "rbxassetid://113646711739432"
     KeyIcon.ImageColor3 = Color3.new(0.8, 0.8, 0.8)
     KeyIcon.Parent = KeysHeader
     
@@ -596,7 +596,7 @@ function AccountPage.Create(Content, maid, BackCallback)
     local SecIcon = Instance.new("ImageLabel")
     SecIcon.BackgroundTransparency = 1
     SecIcon.Size = UDim2.new(0, 16, 0, 16)
-    SecIcon.Image = "rbxassetid://10651062060" -- Shield Icon fallback to key for now
+    SecIcon.Image = "rbxassetid://104512588477874" -- Security Icon
     SecIcon.ImageColor3 = Color3.new(0.8, 0.8, 0.8)
     SecIcon.Parent = SecHeader
     
