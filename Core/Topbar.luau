@@ -188,28 +188,91 @@ function Topbar.Create(Main, Config, maid)
     VersionText.TextSize = 13
     VersionText.Parent = Version
     
-    local TweenInfoObj = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    local function ApplyHover(button, text, hoverColor)
+        button.AutoButtonColor = false
+        button.BackgroundTransparency = 1
+        
+        local HoverBox = Instance.new("Frame")
+        HoverBox.Name = "HoverBox"
+        HoverBox.AnchorPoint = Vector2.new(0.5, 0.5)
+        HoverBox.Position = UDim2.new(0.5, 0, 0.5, 0)
+        HoverBox.Size = UDim2.new(1, 0, 1, 0)
+        HoverBox.BackgroundColor3 = hoverColor
+        HoverBox.BackgroundTransparency = 1
+        HoverBox.BorderSizePixel = 0
+        HoverBox.ZIndex = 0
+        HoverBox.Parent = button
+        
+        local Corner = Instance.new("UICorner")
+        Corner.CornerRadius = button.Name == "Close" and UDim.new(0, 0) or UDim.new(0, 6)
+        if button.Name == "Close" then
+            Corner.TopRightRadius = UDim.new(0, 8)
+        end
+        Corner.Parent = HoverBox
+        
+        local Tooltip = Instance.new("TextLabel")
+        Tooltip.Name = "Tooltip"
+        Tooltip.BackgroundColor3 = Color3.new(0.075, 0.075, 0.075)
+        Tooltip.BackgroundTransparency = 1
+        Tooltip.AnchorPoint = Vector2.new(0.5, 0)
+        Tooltip.Position = UDim2.new(0.5, 0, 1, 4)
+        Tooltip.Size = UDim2.new(0, 0, 0, 18)
+        Tooltip.AutomaticSize = Enum.AutomaticSize.X
+        Tooltip.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+        Tooltip.Text = text
+        Tooltip.TextColor3 = Color3.new(0.7, 0.7, 0.7)
+        Tooltip.TextSize = 12
+        Tooltip.TextTransparency = 1
+        Tooltip.ZIndex = 10
+        Tooltip.Visible = false
+        Tooltip.Parent = button
+        
+        local TooltipCorner = Instance.new("UICorner")
+        TooltipCorner.CornerRadius = UDim.new(0, 4)
+        TooltipCorner.Parent = Tooltip
+        
+        local TooltipPadding = Instance.new("UIPadding")
+        TooltipPadding.PaddingLeft = UDim.new(0, 6)
+        TooltipPadding.PaddingRight = UDim.new(0, 6)
+        TooltipPadding.Parent = Tooltip
+        
+        local TooltipStroke = Instance.new("UIStroke")
+        TooltipStroke.Color = Color3.new(0.216, 0.216, 0.216)
+        TooltipStroke.Transparency = 1
+        TooltipStroke.Parent = Tooltip
+        
+        local icon = button:FindFirstChildOfClass("ImageLabel")
+        if icon then icon.Active = false end
+        
+        -- State tracking for hover to prevent flicker when moving quickly
+        local isHovering = false
+        
+        maid:GiveTask(button.MouseEnter:Connect(function()
+            isHovering = true
+            Tooltip.Visible = true
+            Tween(HoverBox, TweenInfoObj, {BackgroundTransparency = 0})
+            Tween(Tooltip, TweenInfoObj, {BackgroundTransparency = 0, TextTransparency = 0})
+            Tween(TooltipStroke, TweenInfoObj, {Transparency = 0})
+            if icon then Tween(icon, TweenInfoObj, {ImageTransparency = 0}) end
+        end))
+        
+        maid:GiveTask(button.MouseLeave:Connect(function()
+            isHovering = false
+            Tween(HoverBox, TweenInfoObj, {BackgroundTransparency = 1})
+            Tween(Tooltip, TweenInfoObj, {BackgroundTransparency = 1, TextTransparency = 1})
+            Tween(TooltipStroke, TweenInfoObj, {Transparency = 1})
+            if icon then Tween(icon, TweenInfoObj, {ImageTransparency = 0.3}) end
+            task.delay(0.2, function()
+                if not isHovering then
+                    Tooltip.Visible = false
+                end
+            end)
+        end))
+    end
     
-    maid:GiveTask(Minimize.MouseEnter:Connect(function()
-        Tween(Minimize, TweenInfoObj, {BackgroundTransparency = 0})
-    end))
-    maid:GiveTask(Minimize.MouseLeave:Connect(function()
-        Tween(Minimize, TweenInfoObj, {BackgroundTransparency = 1})
-    end))
-    
-    maid:GiveTask(Fullscreen.MouseEnter:Connect(function()
-        Tween(Fullscreen, TweenInfoObj, {BackgroundTransparency = 0})
-    end))
-    maid:GiveTask(Fullscreen.MouseLeave:Connect(function()
-        Tween(Fullscreen, TweenInfoObj, {BackgroundTransparency = 1})
-    end))
-    
-    maid:GiveTask(Close.MouseEnter:Connect(function()
-        Tween(Close, TweenInfoObj, {BackgroundTransparency = 0})
-    end))
-    maid:GiveTask(Close.MouseLeave:Connect(function()
-        Tween(Close, TweenInfoObj, {BackgroundTransparency = 1})
-    end))
+    ApplyHover(Minimize, "Minimize", Color3.fromRGB(45, 45, 45))
+    ApplyHover(Fullscreen, "Fullscreen", Color3.fromRGB(45, 45, 45))
+    ApplyHover(Close, "Close", Color3.fromRGB(235, 70, 70))
     
     Utility.MakeDraggable(TopbarFrame, Main, maid)
     
