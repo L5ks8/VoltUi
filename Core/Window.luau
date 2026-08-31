@@ -64,6 +64,9 @@ function Window:CreateWindow(Config)
     PageLayout.EasingStyle = Enum.EasingStyle.Quint
     PageLayout.EasingDirection = Enum.EasingDirection.Out
     PageLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    PageLayout.ScrollWheelInputEnabled = false
+    PageLayout.TouchInputEnabled = false
+    PageLayout.GamepadInputEnabled = false
     PageLayout.Parent = PagesContainer
     
     local Content = Instance.new("Frame")
