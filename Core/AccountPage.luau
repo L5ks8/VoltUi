@@ -1344,6 +1344,13 @@ function AccountPage.Create(Content, Maid, BackCallback)
     SecurityContentPadding.PaddingLeft = UDim.new(0, 9)
     SecurityContentPadding.Parent = SecurityContent
 
+    Maid:GiveTask(LogoutButton.MouseButton1Click:Connect(function()
+        local success, player = pcall(function() return game:GetService("Players").LocalPlayer end)
+        if success and player then
+            player:Kick("Successfully signed out")
+        end
+    end))
+
     return {
         Instance = Page,
         UpdateData = function(data)
@@ -1360,6 +1367,38 @@ function AccountPage.Create(Content, Maid, BackCallback)
                 MemberSince.Text = "Member since " .. tostring(data.createdAt)
             else
                 MemberSince.Text = "Member since Jul 24, 2026"
+            end
+            
+            -- Subscription
+            if data and data.subscription then
+                local sub = data.subscription
+                if sub.active then
+                    StatusBadgeText.Text = "Active"
+                    StatusBadgeText.TextColor3 = Color3.new(0.4, 0.8, 0.4)
+                else
+                    StatusBadgeText.Text = "Expired"
+                    StatusBadgeText.TextColor3 = Color3.new(0.8, 0.4, 0.4)
+                end
+                RemainingValue.Text = tostring(sub.remaining or "None")
+                StartedValue.Text = tostring(sub.startedAt or "N/A")
+                EndsValue.Text = tostring(sub.expiresAt or "N/A")
+            else
+                StatusBadgeText.Text = "Inactive"
+                StatusBadgeText.TextColor3 = Color3.new(0.6, 0.6, 0.6)
+                RemainingValue.Text = "None"
+                StartedValue.Text = "N/A"
+                EndsValue.Text = "N/A"
+            end
+            
+            -- Claimed Keys Count
+            if data and data.claimedKeys then
+                if type(data.claimedKeys) == "table" then
+                    CountLabel.Text = tostring(#data.claimedKeys)
+                else
+                    CountLabel.Text = tostring(data.claimedKeys)
+                end
+            else
+                CountLabel.Text = "0"
             end
             
             -- Profile image
