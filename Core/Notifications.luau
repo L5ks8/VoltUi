@@ -4,7 +4,6 @@ local Tween = require(Utils.Tween)
 local Notifications = {}
 Notifications.Container = nil
 
--- Configuration
 local Config = {
     Width = 320,
     BaseHeight = 65,
@@ -44,11 +43,11 @@ function Notifications.Notify(options)
     local title = options.Title or "Notification"
     local content = options.Content or ""
     local duration = options.Duration or 3
-    local type = options.Type or "Success" -- "Success" or "Error"
+    local type = options.Type or "Success"
 
     local isError = (string.lower(type) == "error")
     local mainColor = isError and Config.ErrorColor or Config.SuccessColor
-    local iconAsset = isError and "rbxassetid://85824584748112" or "rbxassetid://118922551501473" -- X or Check
+    local iconAsset = isError and "rbxassetid://85824584748112" or "rbxassetid://118922551501473"
     
     local Wrapper = Instance.new("Frame")
     Wrapper.Name = "NotificationWrapper"
@@ -60,7 +59,7 @@ function Notifications.Notify(options)
     Notif.Name = "Notification"
     Notif.BackgroundColor3 = Config.BgColor
     Notif.Size = UDim2.new(1, 0, 1, 0)
-    Notif.Position = UDim2.new(1, Config.Width, 0, 0) -- Start off-screen right
+    Notif.Position = UDim2.new(1, Config.Width, 0, 0)
     Notif.BackgroundTransparency = 0.05
     Notif.Parent = Wrapper
     
@@ -80,24 +79,21 @@ function Notifications.Notify(options)
     Stroke.Color = Config.StrokeColor
     Stroke.Parent = Notif
 
-    -- Icon Background
     local IconBg = Instance.new("Frame")
     IconBg.BackgroundTransparency = 1
     IconBg.Size = UDim2.new(0, 30, 0, 30)
     IconBg.Position = UDim2.new(0, Config.Padding, 0.5, -15)
     IconBg.Parent = Notif
 
-    -- Icon
     local Icon = Instance.new("ImageLabel")
     Icon.BackgroundTransparency = 1
     Icon.Size = UDim2.new(0, 16, 0, 16)
     Icon.AnchorPoint = Vector2.new(0.5, 0.5)
     Icon.Position = UDim2.new(0.5, 0, 0.5, 0)
     Icon.Image = iconAsset
-    Icon.ImageColor3 = Color3.new(1, 1, 1) -- White icons
+    Icon.ImageColor3 = Color3.new(1, 1, 1)
     Icon.Parent = IconBg
 
-    -- Title
     local TitleLbl = Instance.new("TextLabel")
     TitleLbl.BackgroundTransparency = 1
     TitleLbl.Size = UDim2.new(1, -90, 0, 18)
@@ -109,7 +105,6 @@ function Notifications.Notify(options)
     TitleLbl.TextXAlignment = Enum.TextXAlignment.Left
     TitleLbl.Parent = Notif
 
-    -- Content
     local ContentLbl = Instance.new("TextLabel")
     ContentLbl.BackgroundTransparency = 1
     ContentLbl.Size = UDim2.new(1, -90, 0, 14)
@@ -122,13 +117,12 @@ function Notifications.Notify(options)
     ContentLbl.TextWrapped = true
     ContentLbl.Parent = Notif
 
-    -- Close Button
     local CloseBtn = Instance.new("ImageButton")
     CloseBtn.BackgroundTransparency = 1
     CloseBtn.Size = UDim2.new(0, 14, 0, 14)
     CloseBtn.AnchorPoint = Vector2.new(1, 0.5)
     CloseBtn.Position = UDim2.new(1, -Config.Padding, 0.5, 0)
-    CloseBtn.Image = "rbxassetid://121170570745612" -- X icon
+    CloseBtn.Image = "rbxassetid://121170570745612"
     CloseBtn.ImageColor3 = Color3.new(0.5, 0.5, 0.5)
     CloseBtn.Parent = Notif
 
@@ -145,10 +139,8 @@ function Notifications.Notify(options)
 
     CloseBtn.MouseButton1Click:Connect(CloseNotif)
 
-    -- Animate In
     Tween(Notif, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2.new(0, 0, 0, 0)})
 
-    -- Auto Close
     task.delay(duration, CloseNotif)
 end
 

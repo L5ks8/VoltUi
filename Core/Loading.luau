@@ -47,7 +47,7 @@ function Loading.Create(ParentGui)
     Text.BorderColor3 = Color3.new(0, 0, 0)
     Text.BorderSizePixel = 0
     Text.FontFace = Font.new("rbxasset://fonts/families/LegacyArial.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    Text.Size = UDim2.new(0, 0, 0, 100) -- Starts at 0 width to center icon
+    Text.Size = UDim2.new(0, 0, 0, 100)
     Text.Text = "olt"
     Text.TextColor3 = Color3.new(0.984, 0.984, 0.984)
     Text.TextSize = 76
@@ -67,16 +67,15 @@ function Loading.Create(ParentGui)
             ContentProvider:PreloadAsync({Icon})
         end)
         
-        -- Initial buffer for executor lag to settle
         task.wait(0.2)
         
         Tween(Icon, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0})
-        task.wait(1) -- Wait duration of tween
+        task.wait(1)
         
         task.wait(0.2)
         
         Tween(Text, TweenInfo.new(0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {Size = UDim2.new(0, 150, 0, 100)})
-        task.wait(0.8) -- Wait duration of tween
+        task.wait(0.8)
         
         for i = 1, 3 do
             Text.MaxVisibleGraphemes = i
@@ -99,7 +98,6 @@ function Loading.Create(ParentGui)
         self.Faded = true
         
         task.spawn(function()
-            -- First fade out the content (Icon, Text, Stroke)
             Tween(Icon, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 1})
             Tween(Text, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 1})
             

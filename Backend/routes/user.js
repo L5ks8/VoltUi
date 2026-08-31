@@ -3,7 +3,6 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-// Middleware to verify JWT token
 const authMiddleware = (req, res, next) => {
     const authHeader = req.header('Authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -20,7 +19,6 @@ const authMiddleware = (req, res, next) => {
     }
 };
 
-// GET /api/user/me
 router.get('/me', authMiddleware, async (req, res) => {
     try {
         const user = await User.findById(req.user.id).select('-password').lean();
@@ -93,7 +91,6 @@ router.get('/me', authMiddleware, async (req, res) => {
     }
 });
 
-// POST /api/user/redeem
 router.post('/redeem', authMiddleware, async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
@@ -136,7 +133,7 @@ router.post('/redeem', authMiddleware, async (req, res) => {
         }
 
         if (license.durationMs === null) {
-            user.subscriptionEnd = null; // Upgraded to lifetime
+            user.subscriptionEnd = null;
         } else {
             const now = new Date();
             if (user.subscriptionEnd && user.subscriptionEnd > now) {

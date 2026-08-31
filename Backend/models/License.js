@@ -8,7 +8,7 @@ const licenseSchema = new mongoose.Schema({
     },
     durationMs: {
         type: Number,
-        default: null // null for lifetime
+        default: null
     },
     claimedBy: {
         type: mongoose.Schema.Types.ObjectId,

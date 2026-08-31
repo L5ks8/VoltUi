@@ -48,7 +48,6 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
     TabTitle.TextXAlignment = Enum.TextXAlignment.Left
     TabTitle.Parent = TabBtn
     
-    -- 2. Create Content ScrollingFrame
     local TabContent = Instance.new("ScrollingFrame")
     TabContent.Name = Name .. "Content"
     TabContent.BackgroundTransparency = 1
@@ -77,11 +76,9 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
     
     table.insert(Tabs.Instances, TabObj)
     
-    -- 3. Activation Logic
     local function ActivateTab()
         if Tabs.ActiveTab == TabObj then return end
         
-        -- Deactivate all
         for _, otherTab in ipairs(Tabs.Instances) do
             otherTab.Content.Visible = false
             Tween(otherTab.Button, TweenInfo.new(0.2), {BackgroundTransparency = 1})
@@ -89,11 +86,10 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
             Tween(otherTab.Button:FindFirstChildOfClass("ImageLabel"), TweenInfo.new(0.2), {ImageColor3 = Color3.new(0.6, 0.6, 0.6)})
         end
         
-        -- Activate this
         Tabs.ActiveTab = TabObj
         TabContent.Visible = true
         
-        Tween(TabBtn, TweenInfo.new(0.2), {BackgroundTransparency = 0.95}) -- Slight highlight
+        Tween(TabBtn, TweenInfo.new(0.2), {BackgroundTransparency = 0.95})
         Tween(TabTitle, TweenInfo.new(0.2), {TextColor3 = Color3.new(1, 1, 1)})
         Tween(TabIcon, TweenInfo.new(0.2), {ImageColor3 = Color3.new(1, 1, 1)})
         
@@ -104,7 +100,6 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
     
     Maid:GiveTask(TabBtn.MouseButton1Click:Connect(ActivateTab))
     
-    -- Hover Effects
     Maid:GiveTask(TabBtn.MouseEnter:Connect(function()
         if Tabs.ActiveTab ~= TabObj then
             Tween(TabBtn, TweenInfo.new(0.2), {BackgroundTransparency = 0.98})
@@ -137,7 +132,6 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
         ActivateTab()
     end
     
-    -- 4. Expose Component Methods
     local TabMethods = {}
     
     function TabMethods:CreateButton(Config)

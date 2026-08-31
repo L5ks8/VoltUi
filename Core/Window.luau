@@ -151,7 +151,6 @@ function Window:CreateWindow(Config)
         })
     end))
 
-    -- Authenticate and fetch user data
     Main.Visible = false
     
     local BottombarElements = Bottombar.Create(Main, maid)
@@ -185,13 +184,11 @@ function Window:CreateWindow(Config)
 
     local token = Api.GetToken()
     if token then
-        -- Auto login with saved token
         task.spawn(function()
             local data = Api.FetchMe()
             if data then
                 OnLoginSuccess()
             else
-                -- Token invalid, show login
                 loadingScreen:WaitForReady()
                 LoginPage.Create(VoltUi, OnLoginSuccess)
                 loadingScreen:FadeOut()

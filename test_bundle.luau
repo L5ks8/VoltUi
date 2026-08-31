@@ -1,6 +1,4 @@
--- ======================================== --
 -- [[ Utils/Tween.luau ]] --
--- ======================================== --
 local TweenService = game:GetService("TweenService")
 
 local Tween = {}
@@ -13,9 +11,7 @@ end
 
 
 
--- ======================================== --
 -- [[ Utils/AES.luau ]] --
--- ======================================== --
 local AES = {}
 
 local Key = "VoltUiSuperSecretKey1234567890!!"
@@ -175,9 +171,7 @@ end
 
 
 
--- ======================================== --
 -- [[ Utils/Api.luau ]] --
--- ======================================== --
 local HttpService = game:GetService("HttpService")
 
 
@@ -359,9 +353,7 @@ end
 
 
 
--- ======================================== --
 -- [[ Utils/Signal.luau ]] --
--- ======================================== --
 local Signal = {}
 Signal.__index = Signal
 
@@ -394,9 +386,7 @@ end
 
 
 
--- ======================================== --
 -- [[ Utils/Maid.luau ]] --
--- ======================================== --
 local Maid = {}
 Maid.__index = Maid
 
@@ -435,9 +425,7 @@ end
 
 
 
--- ======================================== --
 -- [[ Utils/Utility.luau ]] --
--- ======================================== --
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local Players = game:GetService("Players")
@@ -510,9 +498,7 @@ end
 
 
 
--- ======================================== --
 -- [[ Themes/Dark.luau ]] --
--- ======================================== --
 local DarkTheme = {
     MainBackground = Color3.new(0.075, 0.075, 0.075),
     SecondaryBackground = Color3.new(0.11, 0.11, 0.11),
@@ -529,14 +515,10 @@ local DarkTheme = {
 
 
 
--- ======================================== --
 -- [[ Themes/Light.luau ]] --
--- ======================================== --
 
 
--- ======================================== --
 -- [[ Components/Button.luau ]] --
--- ======================================== --
 local ButtonComponent = {}
 
 
@@ -676,44 +658,28 @@ end
 
 
 
--- ======================================== --
 -- [[ Components/Toggle.luau ]] --
--- ======================================== --
 
 
--- ======================================== --
 -- [[ Components/Slider.luau ]] --
--- ======================================== --
 
 
--- ======================================== --
 -- [[ Components/Dropdown.luau ]] --
--- ======================================== --
 
 
--- ======================================== --
 -- [[ Components/Paragraph.luau ]] --
--- ======================================== --
 
 
--- ======================================== --
 -- [[ Components/Label.luau ]] --
--- ======================================== --
 
 
--- ======================================== --
 -- [[ Components/Input.luau ]] --
--- ======================================== --
 
 
--- ======================================== --
 -- [[ Core/Sections.luau ]] --
--- ======================================== --
 
 
--- ======================================== --
 -- [[ Core/Notifications.luau ]] --
--- ======================================== --
 
 
 
@@ -862,9 +828,7 @@ end
 
 
 
--- ======================================== --
 -- [[ Core/AccountPage.luau ]] --
--- ======================================== --
 
 local AccountPage = {}
 
@@ -2522,9 +2486,7 @@ end
 
 
 
--- ======================================== --
 -- [[ Core/Topbar.luau ]] --
--- ======================================== --
 
 
 
@@ -2759,8 +2721,7 @@ function Topbar.Create(Main, Config, maid)
         local icon = button:FindFirstChildOfClass("ImageLabel")
         if icon then icon.Active = false end
         
-
--- == STATE TRACKING FOR HOVER TO PREVENT FLICKER WHEN MOVING QUICKLY == --
+        -- State tracking for hover to prevent flicker when moving quickly
         local isHovering = false
         
         maid:GiveTask(button.MouseEnter:Connect(function()
@@ -2802,9 +2763,7 @@ end
 
 
 
--- ======================================== --
 -- [[ Core/Loading.luau ]] --
--- ======================================== --
 
 
 
@@ -2868,8 +2827,7 @@ function Loading.Create(ParentGui)
     local obj = {IsReady = false, Faded = false, ReadyEvent = ReadyEvent}
     
     task.spawn(function()
-
--- == PRELOAD THE ICON IMAGE SO THE ANIMATION DOESN'T PLAY WHILE THE IMAGE IS STILL DOWNLOADING! == --
+        -- Preload the icon image so the animation doesn't play while the image is still downloading!
         local ContentProvider = game:GetService("ContentProvider")
         pcall(function()
             ContentProvider:PreloadAsync({Icon})
@@ -2911,8 +2869,7 @@ function Loading.Create(ParentGui)
             
             task.wait(0.3)
             
-
--- == THEN FADE OUT THE SOLID BACKGROUND TO SMOOTHLY REVEAL THE UI BEHIND IT == --
+            -- Then fade out the solid background to smoothly reveal the UI behind it
             Tween(Main, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1})
             task.wait(0.4)
             
@@ -2925,9 +2882,7 @@ end
 
 
 
--- ======================================== --
 -- [[ Core/LoginPage.luau ]] --
--- ======================================== --
 
 
 
@@ -3286,9 +3241,7 @@ end
 
 
 
--- ======================================== --
 -- [[ Core/CloseWarn.luau ]] --
--- ======================================== --
 
 
 
@@ -3442,8 +3395,7 @@ function CloseWarn.Create(ParentGui, maid, ConfirmCallback, CancelCallback)
         if ConfirmCallback then ConfirmCallback() end
     end))
     
-
--- == INTERCEPT THE VISIBLE PROPERTY CHANGE TO TRIGGER A NICE ANIMATION == --
+    -- Intercept the Visible property change to trigger a nice animation
     maid:GiveTask(Overlay:GetPropertyChangedSignal("Visible"):Connect(function()
         if Overlay.Visible and Overlay.BackgroundTransparency == 1 then
             UIScale.Scale = 0.8
@@ -3457,9 +3409,7 @@ end
 
 
 
--- ======================================== --
 -- [[ Core/Minimized.luau ]] --
--- ======================================== --
 
 
 
@@ -3512,9 +3462,7 @@ end
 
 
 
--- ======================================== --
 -- [[ Core/Bottombar.luau ]] --
--- ======================================== --
 local Bottombar = {}
 
 function Bottombar.Create(Main, maid)
@@ -3686,9 +3634,7 @@ end
 
 
 
--- ======================================== --
 -- [[ Core/Sidebar.luau ]] --
--- ======================================== --
 
 
 
@@ -4091,14 +4037,10 @@ end
 
 
 
--- ======================================== --
 -- [[ Core/Theme.luau ]] --
--- ======================================== --
 
 
--- ======================================== --
 -- [[ Core/Tabs.luau ]] --
--- ======================================== --
 
 
 
@@ -4244,9 +4186,7 @@ end
 
 
 
--- ======================================== --
 -- [[ Core/Window.luau ]] --
--- ======================================== --
 
 
 
@@ -4542,9 +4482,7 @@ end
 
 
 
--- ======================================== --
 -- [[ Library.luau ]] --
--- ======================================== --
 local Library = {}
 
 

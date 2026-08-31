@@ -35,7 +35,7 @@ function LoginPage.Create(ParentGui, OnSuccess)
     local ContentFrame = Instance.new("Frame", Page)
     ContentFrame.AnchorPoint = Vector2.new(0.5, 0)
     ContentFrame.Position = UDim2.new(0.5, 0, 0, 30)
-    ContentFrame.Size = UDim2.new(0, 450, 1, -30) -- Leave room for Topbar
+    ContentFrame.Size = UDim2.new(0, 450, 1, -30)
     ContentFrame.BackgroundTransparency = 1
     
     local Layout = Instance.new("UIListLayout", ContentFrame)
@@ -97,7 +97,7 @@ function LoginPage.Create(ParentGui, OnSuccess)
     
     local Box = Instance.new("Frame", ContentFrame)
     Box.BackgroundColor3 = Color3.new(0.09, 0.09, 0.09)
-    Box.Size = UDim2.new(0, 400, 0, 0) -- Height is determined by AutomaticSize
+    Box.Size = UDim2.new(0, 400, 0, 0)
     Box.AutomaticSize = Enum.AutomaticSize.Y
     Box.LayoutOrder = 5
     Instance.new("UICorner", Box).CornerRadius = UDim.new(0, 8)

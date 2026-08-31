@@ -44,7 +44,7 @@ const commands = [
 
 const parseDuration = (str) => {
     str = str.toLowerCase();
-    if (str === 'l') return null; // lifetime
+    if (str === 'l') return null;
 
     const amount = parseInt(str);
     if (isNaN(amount)) return undefined;

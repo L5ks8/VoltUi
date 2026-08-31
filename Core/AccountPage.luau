@@ -1458,7 +1458,6 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
 
     PageData.Instance = Page
     PageData.UpdateData = function(data)
-            -- Username
             if data and data.username then
                 Username.Text = data.username
             else
@@ -1466,7 +1465,6 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
                 Username.Text = success and name or "Username"
             end
             
-            -- Hidden ID
             if data and data._id then
                 HiddenId.Visible = true
                 HiddenId.Text = "********"
@@ -1481,7 +1479,6 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
                 HiddenId.Visible = false
             end
             
-            -- Member since
             if data and data.createdAt then
                 local dateStr = string.match(tostring(data.createdAt), "^(%d+%-%d+%-%d+)") or tostring(data.createdAt)
                 MemberSince.Text = "Member since " .. dateStr
@@ -1489,7 +1486,6 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
                 MemberSince.Text = "Member since Jul 24, 2026"
             end
             
-            -- Subscription
             local subEnd = data.subscriptionEnd or data.expiresAt or data.endsAt
             local subStart = data.subscriptionStart or data.startedAt or data.createdAt
             local remainingStr = data.remaining
@@ -1536,7 +1532,6 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
                 EndsValue.Text = "N/A"
             end
             
-            -- Claimed Keys Count
             for _, child in ipairs(Claimed:GetChildren()) do
                 if child:IsA("Frame") then child:Destroy() end
             end
@@ -1650,7 +1645,6 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
                 BadgeText.Parent = BadgeFrame
             end
             
-            -- Profile image
             local success, userId = pcall(function() return game:GetService("Players").LocalPlayer.UserId end)
             if success and userId then
                 ProfileImage.Image = "rbxthumb://type=AvatarHeadShot&id=" .. tostring(userId) .. "&w=150&h=150"

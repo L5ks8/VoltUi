@@ -1,7 +1,7 @@
 local AES = {}
 
-local Key = "VoltUiSuperSecretKey1234567890!!" -- 32 bytes
-local IV = "VoltUiSecretIV!!" -- 16 bytes
+local Key = "VoltUiSuperSecretKey1234567890!!"
+local IV = "VoltUiSecretIV!!"
 local KeyB64 = "Vm9sdFVpU3VwZXJTZWNyZXRLZXkxMjM0NTY3ODkwISE="
 local IVB64 = "Vm9sdFVpU2VjcmV0SVYhIQ=="
 
@@ -20,7 +20,6 @@ function AES.encrypt(data)
         return nil
     end
 
-    -- Try signature with Base64 Key and IV [Delta/Macsploit expect Key/IV to be base64 strings]
     local success, result = pcall(function()
         return encrypt(data, KeyB64, IVB64, "CBC")
     end)
@@ -34,7 +33,6 @@ function AES.encrypt(data)
     local err0b = not success and result or nil
 
     if not success then
-        -- Try signature: encrypt(data, key, iv, mode) with raw strings
         success, result = pcall(function()
             return encrypt(data, Key, IV, "CBC")
         end)
@@ -42,7 +40,6 @@ function AES.encrypt(data)
     local err1 = not success and result or nil
     
     if not success then
-        -- Try signature: encrypt(algorithm, data, key, iv) with raw strings
         success, result = pcall(function()
             return encrypt("aes-cbc", data, Key, IV)
         end)
@@ -66,9 +63,6 @@ function AES.encrypt(data)
     end
     
     if success and result then
-        -- Some executors return raw string instead of base64. 
-        -- We must return base64 to the server.
-        -- We can try to decode it from base64; if it fails, it's raw, so we encode it.
         if b64encode and b64decode then
             local isBase64 = pcall(function() return b64decode(result) end)
             if not isBase64 then
@@ -99,8 +93,6 @@ function AES.decrypt(cipher_b64)
         return nil
     end
 
-    -- We will try both the raw base64 string and the decoded raw bytes.
-    -- First, let's try with base64 Key and IV, since some executors expect base64 for these arguments
     local success, result = pcall(function()
         return decrypt(cipher_b64, KeyB64, IVB64, "CBC")
     end)
@@ -127,7 +119,6 @@ function AES.decrypt(cipher_b64)
     end
     local err2 = not success and result or nil
 
-    -- If that failed, maybe it expects raw bytes instead of base64 string
     local cipher_raw = cipher_b64
     if b64decode then
         pcall(function() cipher_raw = b64decode(cipher_b64) end)

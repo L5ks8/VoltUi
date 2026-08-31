@@ -47,7 +47,6 @@ function Api.Request(endpoint, method, body)
         end)
         
         if decodeSuccess then
-            -- Server response is also AES encrypted in { encrypted: "..." }
             if decoded.encrypted then
                 local decryptedStr = AES.decrypt(decoded.encrypted)
                 if decryptedStr then
@@ -68,7 +67,6 @@ function Api.Request(endpoint, method, body)
 end
 
 function Api.GetHWID()
-    -- Some executors support getting HWID
     local gethwid = gethwid or get_hwid or function() return "DUMMY_HWID_123" end
     local success, hwid = pcall(gethwid)
     if success and hwid then return hwid end

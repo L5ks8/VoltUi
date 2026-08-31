@@ -1,6 +1,5 @@
 const CryptoJS = require('crypto-js');
 
-// 32-byte Key and 16-byte IV for AES-CBC
 const AES_KEY = CryptoJS.enc.Utf8.parse("VoltUiSuperSecretKey1234567890!!");
 const AES_IV = CryptoJS.enc.Utf8.parse("VoltUiSecretIV!!");
 
@@ -29,7 +28,6 @@ const decryptPayload = (ciphertext) => {
 };
 
 const encryptionMiddleware = (req, res, next) => {
-    // Intercept incoming requests
     if (['POST', 'PUT', 'PATCH'].includes(req.method)) {
         if (req.body && req.body.encrypted) {
             const decryptedBody = decryptPayload(req.body.encrypted);
@@ -39,16 +37,12 @@ const encryptionMiddleware = (req, res, next) => {
                 return res.status(400).json({ error: "Invalid encrypted payload" });
             }
         } else {
-            // Force AES encryption
             return res.status(403).json({ error: "All payloads must be AES encrypted." });
         }
     }
 
-    // Intercept outgoing json responses
     const originalJson = res.json;
     res.json = function(data) {
-        // If data is already an error response that shouldn't be encrypted, we could skip it,
-        // but it's safer to encrypt all JSON responses to the client.
         const encrypted = encryptPayload(data);
         return originalJson.call(this, { encrypted: encrypted });
     };
