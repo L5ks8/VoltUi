@@ -474,7 +474,7 @@ end
 -- [[ Core/AccountPage.luau ]] --
 local AccountPage = {}
 
-function AccountPage.Create(Content, Maid, BackCallback)
+function AccountPage.Create(Content, Maid, BackCallback, Api)
     local Page = Instance.new("Frame")
     Page.Name = "AccountPage"
     Page.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -696,6 +696,21 @@ function AccountPage.Create(Content, Maid, BackCallback)
     TextContainerLayout.SortOrder = Enum.SortOrder.LayoutOrder
     TextContainerLayout.Parent = TextContainer
 
+    local UsernameContainer = Instance.new("Frame")
+    UsernameContainer.Name = "UsernameContainer"
+    UsernameContainer.BackgroundColor3 = Color3.new(1, 1, 1)
+    UsernameContainer.BackgroundTransparency = 1
+    UsernameContainer.BorderColor3 = Color3.new(0, 0, 0)
+    UsernameContainer.BorderSizePixel = 0
+    UsernameContainer.Size = UDim2.new(1, 0, 0, 25)
+    UsernameContainer.Parent = TextContainer
+    
+    local UsernameContainerLayout = Instance.new("UIListLayout")
+    UsernameContainerLayout.FillDirection = Enum.FillDirection.Horizontal
+    UsernameContainerLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    UsernameContainerLayout.Padding = UDim.new(0, 5)
+    UsernameContainerLayout.Parent = UsernameContainer
+
     local Username = Instance.new("TextLabel")
     Username.Name = "Name"
     Username.BackgroundColor3 = Color3.new(1, 1, 1)
@@ -703,12 +718,29 @@ function AccountPage.Create(Content, Maid, BackCallback)
     Username.BorderColor3 = Color3.new(0, 0, 0)
     Username.BorderSizePixel = 0
     Username.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    Username.Size = UDim2.new(0, 150, 0, 25)
+    Username.AutomaticSize = Enum.AutomaticSize.X
+    Username.Size = UDim2.new(0, 0, 1, 0)
     Username.Text = "Username"
     Username.TextColor3 = Color3.new(0.8, 0.8, 0.8)
     Username.TextSize = 20
     Username.TextXAlignment = Enum.TextXAlignment.Left
-    Username.Parent = TextContainer
+    Username.Parent = UsernameContainer
+
+    local HiddenId = Instance.new("TextButton")
+    HiddenId.Name = "HiddenId"
+    HiddenId.BackgroundColor3 = Color3.new(1, 1, 1)
+    HiddenId.BackgroundTransparency = 1
+    HiddenId.BorderColor3 = Color3.new(0, 0, 0)
+    HiddenId.BorderSizePixel = 0
+    HiddenId.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+    HiddenId.AutomaticSize = Enum.AutomaticSize.X
+    HiddenId.Size = UDim2.new(0, 0, 1, 0)
+    HiddenId.Text = "********"
+    HiddenId.TextColor3 = Color3.new(0.3, 0.3, 0.3)
+    HiddenId.TextSize = 14
+    HiddenId.TextXAlignment = Enum.TextXAlignment.Left
+    HiddenId.TextYAlignment = Enum.TextYAlignment.Bottom
+    HiddenId.Parent = UsernameContainer
 
     local MemberSince = Instance.new("TextLabel")
     MemberSince.Name = "MemberSince"
@@ -1819,6 +1851,9 @@ function AccountPage.Create(Content, Maid, BackCallback)
     SecurityContentPadding.Parent = SecurityContent
 
     Maid:GiveTask(LogoutButton.MouseButton1Click:Connect(function()
+        if Api and Api.SaveToken then
+            Api.SaveToken("")
+        end
         local success, player = pcall(function() return game:GetService("Players").LocalPlayer end)
         if success and player then
             player:Kick("Successfully signed out")
@@ -1835,24 +1870,33 @@ function AccountPage.Create(Content, Maid, BackCallback)
                 Username.Text = success and name or "Username"
             end
             
+            if data and data._id then
+                HiddenId.Visible = true
+                HiddenId.Text = "********"
+                local idRevealed = false
+                Maid:GiveTask(HiddenId.MouseButton1Click:Connect(function()
+                    idRevealed = not idRevealed
+                    HiddenId.Text = idRevealed and tostring(data._id) or "********"
+                end))
+            else
+                HiddenId.Visible = false
+            end
+            
             if data and data.createdAt then
-                MemberSince.Text = "Member since " .. tostring(data.createdAt)
+                local dateStr = string.match(tostring(data.createdAt), "^(%d+%-%d+%-%d+)") or tostring(data.createdAt)
+                MemberSince.Text = "Member since " .. dateStr
             else
                 MemberSince.Text = "Member since Jul 24, 2026"
             end
             
-            if data and data.subscription then
-                local sub = data.subscription
-                if sub.active then
-                    StatusBadgeText.Text = "Active"
-                    StatusBadgeText.TextColor3 = Color3.new(0.4, 0.8, 0.4)
-                else
-                    StatusBadgeText.Text = "Expired"
-                    StatusBadgeText.TextColor3 = Color3.new(0.8, 0.4, 0.4)
-                end
-                RemainingValue.Text = tostring(sub.remaining or "None")
-                StartedValue.Text = tostring(sub.startedAt or "N/A")
-                EndsValue.Text = tostring(sub.expiresAt or "N/A")
+            if data and data.subscriptionEnd then
+                StatusBadgeText.Text = "Expired"
+                StatusBadgeText.TextColor3 = Color3.new(0.8, 0.4, 0.4)
+                
+                local dateStr = string.match(tostring(data.subscriptionEnd), "^(%d+%-%d+%-%d+)") or tostring(data.subscriptionEnd)
+                EndsValue.Text = dateStr
+                StartedValue.Text = "N/A"
+                RemainingValue.Text = "None"
             else
                 StatusBadgeText.Text = "Inactive"
                 StatusBadgeText.TextColor3 = Color3.new(0.6, 0.6, 0.6)
