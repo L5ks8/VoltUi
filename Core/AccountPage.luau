@@ -1499,9 +1499,9 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
                 if child:IsA("Frame") then child:Destroy() end
             end
             
-            local keysData = data.keys or data.claimedKeys or data.licenses or data.licenseKeys or data.usedKey or data.license
+            local keysData = data.keys or data.key or data.claimedKeys or data.claimedkey or data.claimedKey or data.licenses or data.licenseKeys or data.usedKey or data.license
             if data.subscription and type(data.subscription) == "table" then
-                keysData = keysData or data.subscription.keys or data.subscription.claimedKeys
+                keysData = keysData or data.subscription.keys or data.subscription.key or data.subscription.claimedKeys or data.subscription.claimedkey or data.subscription.claimedKey
             end
             
             local keyList = {}
