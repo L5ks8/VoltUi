@@ -4253,6 +4253,7 @@ end
 
 
 
+
 local Tabs = {}
 Tabs.ActiveTab = nil
 Tabs.Instances = {}
@@ -4386,6 +4387,10 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
     
     function TabMethods:CreateButton(Config)
         return ButtonComponent.Create(TabContent, Maid, Config)
+    end
+    
+    function TabMethods:CreateToggle(Config)
+        return ToggleComponent.Create(TabContent, Maid, Config)
     end
     
     return TabMethods
