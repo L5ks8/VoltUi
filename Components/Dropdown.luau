@@ -364,16 +364,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
         end))
     end
     
-    Maid:GiveTask(DropdownBtn.MouseEnter:Connect(function()
-        Tween(DropdownStroke, TweenInfo.new(0.2), {Color = Color3.new(0.4, 0.4, 0.4)})
-    end))
-    
-    Maid:GiveTask(DropdownBtn.MouseLeave:Connect(function()
-        if not MenuOpen then
-            Tween(DropdownStroke, TweenInfo.new(0.2), {Color = Color3.new(0.2, 0.2, 0.2)})
-        end
-    end))
-    
+
     -- Tooltip logic (attaches to the frame)
     local TooltipTarget = ClickTarget.Parent == DropdownFrame and ClickTarget or DropdownFrame
     

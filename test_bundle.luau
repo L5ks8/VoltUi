@@ -627,18 +627,7 @@ function ButtonComponent.Create(TabContent, Maid, Config)
         cb()
     end))
     
-    Maid:GiveTask(ClickBtn.MouseEnter:Connect(function()
-        Tween(ClickBtn, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.new(0.18, 0.18, 0.18)})
-        Tween(ClickBtnStroke, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Color = Color3.new(0.35, 0.35, 0.35)})
-        Tween(ClickBtn, TweenInfo.new(0.25), {TextColor3 = Color3.new(1, 1, 1)})
-    end))
-    
-    Maid:GiveTask(ClickBtn.MouseLeave:Connect(function()
-        Tween(ClickBtn, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.new(0.141, 0.141, 0.141)})
-        Tween(ClickBtnStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Color = Color3.new(0.2, 0.2, 0.2)})
-        Tween(ClickBtn, TweenInfo.new(0.3), {TextColor3 = Color3.new(0.8, 0.8, 0.8)})
-    end))
-    
+
     Maid:GiveTask(ClickBtn.MouseButton1Down:Connect(function()
         Tween(ClickBtn, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.new(0.22, 0.22, 0.22)})
     end))
@@ -1246,16 +1235,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
         end))
     end
     
-    Maid:GiveTask(DropdownBtn.MouseEnter:Connect(function()
-        Tween(DropdownStroke, TweenInfo.new(0.2), {Color = Color3.new(0.4, 0.4, 0.4)})
-    end))
-    
-    Maid:GiveTask(DropdownBtn.MouseLeave:Connect(function()
-        if not MenuOpen then
-            Tween(DropdownStroke, TweenInfo.new(0.2), {Color = Color3.new(0.2, 0.2, 0.2)})
-        end
-    end))
-    
+
     local TooltipTarget = ClickTarget.Parent == DropdownFrame and ClickTarget or DropdownFrame
     
     Maid:GiveTask(TooltipTarget.MouseEnter:Connect(function()
