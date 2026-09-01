@@ -100,7 +100,7 @@ function ToggleComponent.Create(TabContent, Maid, Config)
     
     local SwitchStroke = Instance.new("UIStroke")
     SwitchStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-    SwitchStroke.Color = Color3.new(0.275, 0.275, 0.275)
+    SwitchStroke.Color = state and Color3.new(0.4, 0.4, 0.4) or Color3.new(0.275, 0.275, 0.275)
     SwitchStroke.Parent = SwitchBg
     
     local SwitchDot = Instance.new("Frame")
@@ -152,8 +152,10 @@ function ToggleComponent.Create(TabContent, Maid, Config)
     
     local function UpdateToggle()
         if state then
+            Tween(SwitchStroke, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Color = Color3.new(0.4, 0.4, 0.4)})
             Tween(SwitchDot, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(1, -18, 0.5, 0), BackgroundColor3 = Color3.new(1, 1, 1)})
         else
+            Tween(SwitchStroke, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Color = Color3.new(0.275, 0.275, 0.275)})
             Tween(SwitchDot, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(0, 2, 0.5, 0), BackgroundColor3 = Color3.new(0.6, 0.6, 0.6)})
         end
     end
