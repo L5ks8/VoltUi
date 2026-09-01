@@ -449,7 +449,10 @@ client.on('interactionCreate', async interaction => {
 module.exports = {
     start: () => {
         if (process.env.TOKEN && process.env.OWNER) {
-            client.login(process.env.TOKEN.trim()).catch(console.error);
+            console.log('Attempting to login to Discord...');
+            client.login(process.env.TOKEN.trim()).catch(err => {
+                console.error('Discord login error:', err);
+            });
         } else {
             console.log('Missing TOKEN or OWNER in .env, Discord Bot not started.');
         }
