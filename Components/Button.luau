@@ -99,7 +99,7 @@ function ButtonComponent.Create(TabContent, Maid, Config)
     
     local ClickBtnStroke = Instance.new("UIStroke")
     ClickBtnStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-    ClickBtnStroke.Color = Color3.new(0.149, 0.149, 0.149)
+    ClickBtnStroke.Color = Color3.new(0.06, 0.06, 0.06)
     ClickBtnStroke.Parent = ClickBtn
     
     Maid:GiveTask(ClickBtn.MouseButton1Click:Connect(function()
@@ -114,7 +114,7 @@ function ButtonComponent.Create(TabContent, Maid, Config)
     
     Maid:GiveTask(ClickBtn.MouseLeave:Connect(function()
         Tween(ClickBtn, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.new(0.141, 0.141, 0.141)})
-        Tween(ClickBtnStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Color = Color3.new(0.149, 0.149, 0.149)})
+        Tween(ClickBtnStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Color = Color3.new(0.06, 0.06, 0.06)})
         Tween(ClickBtn, TweenInfo.new(0.3), {TextColor3 = Color3.new(0.8, 0.8, 0.8)})
     end))
     
