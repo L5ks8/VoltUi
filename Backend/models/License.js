@@ -26,6 +26,10 @@ const licenseSchema = new mongoose.Schema({
     isFree: {
         type: Boolean,
         default: false
+    },
+    note: {
+        type: String,
+        default: null
     }
 }, { timestamps: true });
 

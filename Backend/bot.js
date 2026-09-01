@@ -1,4 +1,4 @@
-const { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
+const { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle, AttachmentBuilder } = require('discord.js');
 const mongoose = require('mongoose');
 const License = require('./models/License');
 const User = require('./models/User');
@@ -53,7 +53,14 @@ const commands = [
     new SlashCommandBuilder()
         .setName('unwhitelist')
         .setDescription('Unwhitelists the user from a project')
-        .addUserOption(option => option.setName('user').setDescription('The Discord user to unwhitelist').setRequired(true))
+        .addUserOption(option => option.setName('user').setDescription('The Discord user to unwhitelist').setRequired(true)),
+    new SlashCommandBuilder()
+        .setName('mass-generate')
+        .setDescription('Generates multiple keys. Make sure DMs are ENABLED.')
+        .addUserOption(option => option.setName('user').setDescription('User to DM the keys to').setRequired(true))
+        .addIntegerOption(option => option.setName('amount').setDescription('Amount of keys to generate').setRequired(true))
+        .addStringOption(option => option.setName('note').setDescription('Note to add to every key').setRequired(false))
+        .addIntegerOption(option => option.setName('days').setDescription('Duration in days').setRequired(false))
 ].map(command => command.toJSON());
 
 const parseDuration = (str) => {
@@ -313,6 +320,61 @@ client.on('interactionCreate', async interaction => {
             } catch (err) {
                 console.error(err);
                 await interaction.reply({ embeds: [new EmbedBuilder().setDescription('Error unwhitelisting user.').setColor('#e74c3c')], ephemeral: true });
+            }
+        } else if (interaction.commandName === 'mass-generate') {
+            const targetUser = interaction.options.getUser('user');
+            const amount = interaction.options.getInteger('amount');
+            const note = interaction.options.getString('note') || null;
+            const days = interaction.options.getInteger('days');
+
+            if (amount <= 0 || amount > 100) {
+                return interaction.reply({ embeds: [new EmbedBuilder().setDescription('Amount must be between 1 and 100.').setColor('#e74c3c')], ephemeral: true });
+            }
+
+            try {
+                await interaction.deferReply({ ephemeral: true });
+
+                const durationMs = days ? days * 24 * 60 * 60 * 1000 : null;
+                const generatedKeys = [];
+                const licenseDocs = [];
+
+                for (let i = 0; i < amount; i++) {
+                    const key = generateKey();
+                    generatedKeys.push(key);
+                    licenseDocs.push({
+                        key: key,
+                        durationMs: durationMs,
+                        note: note
+                    });
+                }
+
+                await License.insertMany(licenseDocs);
+
+                const buffer = Buffer.from(generatedKeys.join('\n'), 'utf-8');
+                const attachment = new AttachmentBuilder(buffer, { name: 'keys.txt' });
+
+                const dmEmbed = new EmbedBuilder()
+                    .setTitle('Mass Generated Keys')
+                    .setDescription(`Here are your ${amount} keys.\n**Duration:** ${days ? days + ' days' : 'Lifetime'}${note ? `\n**Note:** ${note}` : ''}`)
+                    .setColor('#2ecc71');
+
+                const dmOptions = { embeds: [dmEmbed], files: [attachment] };
+                
+                try {
+                    const user = await client.users.fetch(targetUser.id);
+                    await user.send(dmOptions);
+                    await interaction.followUp({ embeds: [new EmbedBuilder().setDescription(`Successfully generated ${amount} keys and DMed them to <@${targetUser.id}>.`).setColor('#2ecc71')] });
+                } catch (dmErr) {
+                    await interaction.followUp({ embeds: [new EmbedBuilder().setDescription(`Keys generated, but could not DM <@${targetUser.id}>. Make sure their DMs are open.`).setColor('#e74c3c')] });
+                }
+
+            } catch (err) {
+                console.error(err);
+                if (interaction.deferred) {
+                    await interaction.followUp({ embeds: [new EmbedBuilder().setDescription('Error mass-generating keys.').setColor('#e74c3c')] });
+                } else {
+                    await interaction.reply({ embeds: [new EmbedBuilder().setDescription('Error mass-generating keys.').setColor('#e74c3c')], ephemeral: true });
+                }
             }
         } else if (interaction.commandName === 'panel') {
             const embed = new EmbedBuilder()
