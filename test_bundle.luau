@@ -1104,10 +1104,10 @@ function DropdownComponent.Create(TabContent, Maid, Config)
         
         DropdownMenu = Instance.new("Frame")
         DropdownMenu.Name = "DropdownMenu"
-        DropdownMenu.BackgroundColor3 = Color3.new(0.11, 0.11, 0.11)
+        DropdownMenu.BackgroundColor3 = Color3.new(0.141, 0.141, 0.141)
         DropdownMenu.BorderSizePixel = 0
         DropdownMenu.ClipsDescendants = true
-        DropdownMenu.Position = UDim2.new(0, DropdownBtn.AbsolutePosition.X, 0, DropdownBtn.AbsolutePosition.Y + DropdownBtn.AbsoluteSize.Y + 4)
+        DropdownMenu.Position = UDim2.new(0, DropdownBtn.AbsolutePosition.X - ScreenGui.AbsolutePosition.X, 0, (DropdownBtn.AbsolutePosition.Y - ScreenGui.AbsolutePosition.Y) + DropdownBtn.AbsoluteSize.Y + 4)
         DropdownMenu.Size = UDim2.new(0, DropdownBtn.AbsoluteSize.X, 0, 0)
         DropdownMenu.ZIndex = 10001
         DropdownMenu.Parent = ScreenGui
