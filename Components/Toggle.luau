@@ -1,6 +1,10 @@
 local ToggleComponent = {}
 local Utils = script.Parent.Parent.Utils
 local Tween = require(Utils.Tween)
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
+local Mouse = LocalPlayer:GetMouse()
 
 function ToggleComponent.Create(TabContent, Maid, Config)
     local config = type(Config) == "string" and {Header = Config} or Config
@@ -112,13 +116,12 @@ function ToggleComponent.Create(TabContent, Maid, Config)
     DotCorner.Parent = SwitchDot
 
     local Tooltip
+    local MouseMoveConn
     if hoverText ~= "" then
         Tooltip = Instance.new("TextLabel")
         Tooltip.Name = "Tooltip"
         Tooltip.BackgroundColor3 = Color3.new(0.075, 0.075, 0.075)
         Tooltip.BackgroundTransparency = 1
-        Tooltip.AnchorPoint = Vector2.new(0.5, 1)
-        Tooltip.Position = UDim2.new(0.5, 0, 0, -5)
         Tooltip.Size = UDim2.new(0, 0, 0, 22)
         Tooltip.AutomaticSize = Enum.AutomaticSize.X
         Tooltip.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
@@ -126,9 +129,11 @@ function ToggleComponent.Create(TabContent, Maid, Config)
         Tooltip.TextColor3 = Color3.new(0.8, 0.8, 0.8)
         Tooltip.TextSize = 12
         Tooltip.TextTransparency = 1
-        Tooltip.ZIndex = 10
+        Tooltip.ZIndex = 100000
         Tooltip.Visible = false
-        Tooltip.Parent = ToggleFrame
+        
+        local ScreenGui = TabContent:FindFirstAncestorOfClass("ScreenGui")
+        Tooltip.Parent = ScreenGui or ToggleFrame
         
         local TooltipCorner = Instance.new("UICorner")
         TooltipCorner.CornerRadius = UDim.new(0, 4)
@@ -169,6 +174,11 @@ function ToggleComponent.Create(TabContent, Maid, Config)
             Tooltip.Visible = true
             Tween(Tooltip, TweenInfo.new(0.2), {BackgroundTransparency = 0, TextTransparency = 0})
             Tween(Tooltip.UIStroke, TweenInfo.new(0.2), {Transparency = 0})
+            
+            if MouseMoveConn then MouseMoveConn:Disconnect() end
+            MouseMoveConn = RunService.RenderStepped:Connect(function()
+                Tooltip.Position = UDim2.new(0, Mouse.X + 15, 0, Mouse.Y + 15)
+            end)
         end
     end))
     
@@ -177,6 +187,12 @@ function ToggleComponent.Create(TabContent, Maid, Config)
         if Tooltip then
             Tween(Tooltip, TweenInfo.new(0.2), {BackgroundTransparency = 1, TextTransparency = 1})
             Tween(Tooltip.UIStroke, TweenInfo.new(0.2), {Transparency = 1})
+            
+            if MouseMoveConn then
+                MouseMoveConn:Disconnect()
+                MouseMoveConn = nil
+            end
+            
             task.delay(0.2, function()
                 if Tooltip.BackgroundTransparency == 1 then
                     Tooltip.Visible = false
@@ -184,6 +200,16 @@ function ToggleComponent.Create(TabContent, Maid, Config)
             end)
         end
     end))
+    
+    -- Cleanup Tooltip when Toggle is destroyed
+    Maid:GiveTask(function()
+        if MouseMoveConn then
+            MouseMoveConn:Disconnect()
+        end
+        if Tooltip then
+            Tooltip:Destroy()
+        end
+    end)
     
     return ToggleFrame
 end
