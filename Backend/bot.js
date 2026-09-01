@@ -68,7 +68,7 @@ const generateKey = () => {
     return key;
 };
 
-client.on('ready', async () => {
+client.on('clientReady', async () => {
     console.log(`Bot logged in as ${client.user.tag}`);
     try {
         const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
