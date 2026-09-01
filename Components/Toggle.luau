@@ -12,20 +12,11 @@ function ToggleComponent.Create(TabContent, Maid, Config)
     
     local ToggleFrame = Instance.new("Frame")
     ToggleFrame.Name = headerText
-    ToggleFrame.BackgroundColor3 = Color3.new(0.11, 0.11, 0.11)
-    ToggleFrame.BorderColor3 = Color3.new(0, 0, 0)
+    ToggleFrame.BackgroundColor3 = Color3.new(0.13, 0.13, 0.13)
+    ToggleFrame.BackgroundTransparency = 1
     ToggleFrame.BorderSizePixel = 0
     ToggleFrame.Size = UDim2.new(1, 0, 0, descText == "" and 42 or 52)
     ToggleFrame.Parent = TabContent
-    
-    local ToggleCorner = Instance.new("UICorner")
-    ToggleCorner.CornerRadius = UDim.new(0, 5)
-    ToggleCorner.Parent = ToggleFrame
-    
-    local ToggleStroke = Instance.new("UIStroke")
-    ToggleStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
-    ToggleStroke.Color = Color3.new(0.216, 0.216, 0.216)
-    ToggleStroke.Parent = ToggleFrame
     
     local ToggleLayout = Instance.new("UIListLayout")
     ToggleLayout.FillDirection = Enum.FillDirection.Horizontal
@@ -178,7 +169,7 @@ function ToggleComponent.Create(TabContent, Maid, Config)
     end))
     
     Maid:GiveTask(InteractBtn.MouseEnter:Connect(function()
-        Tween(ToggleFrame, TweenInfo.new(0.2), {BackgroundColor3 = Color3.new(0.13, 0.13, 0.13)})
+        Tween(ToggleFrame, TweenInfo.new(0.2), {BackgroundTransparency = 0})
         if Tooltip then
             Tooltip.Visible = true
             Tween(Tooltip, TweenInfo.new(0.2), {BackgroundTransparency = 0, TextTransparency = 0})
@@ -187,7 +178,7 @@ function ToggleComponent.Create(TabContent, Maid, Config)
     end))
     
     Maid:GiveTask(InteractBtn.MouseLeave:Connect(function()
-        Tween(ToggleFrame, TweenInfo.new(0.2), {BackgroundColor3 = Color3.new(0.11, 0.11, 0.11)})
+        Tween(ToggleFrame, TweenInfo.new(0.2), {BackgroundTransparency = 1})
         if Tooltip then
             Tween(Tooltip, TweenInfo.new(0.2), {BackgroundTransparency = 1, TextTransparency = 1})
             Tween(Tooltip.UIStroke, TweenInfo.new(0.2), {Transparency = 1})

@@ -1,8 +1,8 @@
 local Utils = script.Parent.Parent.Utils
 local Components = script.Parent.Parent.Components
+local Core = script.Parent
 local Tween = require(Utils.Tween)
-local ButtonComponent = require(Components.Button)
-local ToggleComponent = require(Components.Toggle)
+local Sections = require(Core.Sections)
 
 local Tabs = {}
 Tabs.ActiveTab = nil
@@ -135,12 +135,8 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
     
     local TabMethods = {}
     
-    function TabMethods:CreateButton(Config)
-        return ButtonComponent.Create(TabContent, Maid, Config)
-    end
-    
-    function TabMethods:CreateToggle(Config)
-        return ToggleComponent.Create(TabContent, Maid, Config)
+    function TabMethods:CreateSection(Title)
+        return Sections.CreateSection(TabContent, Maid, Title)
     end
     
     return TabMethods

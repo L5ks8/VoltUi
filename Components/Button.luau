@@ -11,20 +11,11 @@ function ButtonComponent.Create(TabContent, Maid, Config)
     
     local BtnFrame = Instance.new("Frame")
     BtnFrame.Name = headerText
-    BtnFrame.BackgroundColor3 = Color3.new(0.11, 0.11, 0.11)
-    BtnFrame.BorderColor3 = Color3.new(0, 0, 0)
+    BtnFrame.BackgroundColor3 = Color3.new(0.13, 0.13, 0.13)
+    BtnFrame.BackgroundTransparency = 1
     BtnFrame.BorderSizePixel = 0
     BtnFrame.Size = UDim2.new(1, 0, 0, descText == "" and 42 or 52)
     BtnFrame.Parent = TabContent
-    
-    local BtnCorner = Instance.new("UICorner")
-    BtnCorner.CornerRadius = UDim.new(0, 5)
-    BtnCorner.Parent = BtnFrame
-    
-    local BtnStroke = Instance.new("UIStroke")
-    BtnStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
-    BtnStroke.Color = Color3.new(0.216, 0.216, 0.216)
-    BtnStroke.Parent = BtnFrame
     
     local BtnLayout = Instance.new("UIListLayout")
     BtnLayout.FillDirection = Enum.FillDirection.Horizontal
@@ -133,6 +124,14 @@ function ButtonComponent.Create(TabContent, Maid, Config)
     
     Maid:GiveTask(ClickBtn.MouseButton1Up:Connect(function()
         Tween(ClickBtn, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.new(0.18, 0.18, 0.18)})
+    end))
+    
+    Maid:GiveTask(BtnFrame.MouseEnter:Connect(function()
+        Tween(BtnFrame, TweenInfo.new(0.2), {BackgroundTransparency = 0})
+    end))
+    
+    Maid:GiveTask(BtnFrame.MouseLeave:Connect(function()
+        Tween(BtnFrame, TweenInfo.new(0.2), {BackgroundTransparency = 1})
     end))
     
     return BtnFrame

@@ -532,20 +532,11 @@ function ButtonComponent.Create(TabContent, Maid, Config)
     
     local BtnFrame = Instance.new("Frame")
     BtnFrame.Name = headerText
-    BtnFrame.BackgroundColor3 = Color3.new(0.11, 0.11, 0.11)
-    BtnFrame.BorderColor3 = Color3.new(0, 0, 0)
+    BtnFrame.BackgroundColor3 = Color3.new(0.13, 0.13, 0.13)
+    BtnFrame.BackgroundTransparency = 1
     BtnFrame.BorderSizePixel = 0
     BtnFrame.Size = UDim2.new(1, 0, 0, descText == "" and 42 or 52)
     BtnFrame.Parent = TabContent
-    
-    local BtnCorner = Instance.new("UICorner")
-    BtnCorner.CornerRadius = UDim.new(0, 5)
-    BtnCorner.Parent = BtnFrame
-    
-    local BtnStroke = Instance.new("UIStroke")
-    BtnStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
-    BtnStroke.Color = Color3.new(0.216, 0.216, 0.216)
-    BtnStroke.Parent = BtnFrame
     
     local BtnLayout = Instance.new("UIListLayout")
     BtnLayout.FillDirection = Enum.FillDirection.Horizontal
@@ -656,6 +647,14 @@ function ButtonComponent.Create(TabContent, Maid, Config)
         Tween(ClickBtn, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.new(0.18, 0.18, 0.18)})
     end))
     
+    Maid:GiveTask(BtnFrame.MouseEnter:Connect(function()
+        Tween(BtnFrame, TweenInfo.new(0.2), {BackgroundTransparency = 0})
+    end))
+    
+    Maid:GiveTask(BtnFrame.MouseLeave:Connect(function()
+        Tween(BtnFrame, TweenInfo.new(0.2), {BackgroundTransparency = 1})
+    end))
+    
     return BtnFrame
 end
 
@@ -676,20 +675,11 @@ function ToggleComponent.Create(TabContent, Maid, Config)
     
     local ToggleFrame = Instance.new("Frame")
     ToggleFrame.Name = headerText
-    ToggleFrame.BackgroundColor3 = Color3.new(0.11, 0.11, 0.11)
-    ToggleFrame.BorderColor3 = Color3.new(0, 0, 0)
+    ToggleFrame.BackgroundColor3 = Color3.new(0.13, 0.13, 0.13)
+    ToggleFrame.BackgroundTransparency = 1
     ToggleFrame.BorderSizePixel = 0
     ToggleFrame.Size = UDim2.new(1, 0, 0, descText == "" and 42 or 52)
     ToggleFrame.Parent = TabContent
-    
-    local ToggleCorner = Instance.new("UICorner")
-    ToggleCorner.CornerRadius = UDim.new(0, 5)
-    ToggleCorner.Parent = ToggleFrame
-    
-    local ToggleStroke = Instance.new("UIStroke")
-    ToggleStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
-    ToggleStroke.Color = Color3.new(0.216, 0.216, 0.216)
-    ToggleStroke.Parent = ToggleFrame
     
     local ToggleLayout = Instance.new("UIListLayout")
     ToggleLayout.FillDirection = Enum.FillDirection.Horizontal
@@ -842,7 +832,7 @@ function ToggleComponent.Create(TabContent, Maid, Config)
     end))
     
     Maid:GiveTask(InteractBtn.MouseEnter:Connect(function()
-        Tween(ToggleFrame, TweenInfo.new(0.2), {BackgroundColor3 = Color3.new(0.13, 0.13, 0.13)})
+        Tween(ToggleFrame, TweenInfo.new(0.2), {BackgroundTransparency = 0})
         if Tooltip then
             Tooltip.Visible = true
             Tween(Tooltip, TweenInfo.new(0.2), {BackgroundTransparency = 0, TextTransparency = 0})
@@ -851,7 +841,7 @@ function ToggleComponent.Create(TabContent, Maid, Config)
     end))
     
     Maid:GiveTask(InteractBtn.MouseLeave:Connect(function()
-        Tween(ToggleFrame, TweenInfo.new(0.2), {BackgroundColor3 = Color3.new(0.11, 0.11, 0.11)})
+        Tween(ToggleFrame, TweenInfo.new(0.2), {BackgroundTransparency = 1})
         if Tooltip then
             Tween(Tooltip, TweenInfo.new(0.2), {BackgroundTransparency = 1, TextTransparency = 1})
             Tween(Tooltip.UIStroke, TweenInfo.new(0.2), {Transparency = 1})
@@ -884,6 +874,93 @@ end
 
 
 -- [[ Core/Sections.luau ]] --
+
+
+
+
+
+local Sections = {}
+
+function Sections.CreateSection(TabContent, Maid, Title)
+    local SectionFrame = Instance.new("Frame")
+    SectionFrame.Name = Title or "Section"
+    SectionFrame.BackgroundColor3 = Color3.new(0.11, 0.11, 0.11)
+    SectionFrame.BorderColor3 = Color3.new(0, 0, 0)
+    SectionFrame.BorderSizePixel = 0
+    SectionFrame.Size = UDim2.new(1, 0, 0, 0)
+    SectionFrame.AutomaticSize = Enum.AutomaticSize.Y
+    SectionFrame.ClipsDescendants = true
+    SectionFrame.Parent = TabContent
+    
+    local SectionCorner = Instance.new("UICorner")
+    SectionCorner.CornerRadius = UDim.new(0, 6)
+    SectionCorner.Parent = SectionFrame
+    
+    local SectionStroke = Instance.new("UIStroke")
+    SectionStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
+    SectionStroke.Color = Color3.new(0.216, 0.216, 0.216)
+    SectionStroke.Parent = SectionFrame
+    
+    local SectionLayout = Instance.new("UIListLayout")
+    SectionLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    SectionLayout.Padding = UDim.new(0, 0)
+    SectionLayout.Parent = SectionFrame
+    
+    local ElementCount = 0
+    
+    local function AddSeparator()
+        if ElementCount > 0 then
+            local Separator = Instance.new("Frame")
+            Separator.Name = "Separator"
+            Separator.BackgroundColor3 = Color3.new(0.216, 0.216, 0.216)
+            Separator.BorderSizePixel = 0
+            Separator.Size = UDim2.new(1, 0, 0, 1)
+            Separator.Parent = SectionFrame
+        end
+    end
+    
+    if Title and Title ~= "" then
+        local TitleLabel = Instance.new("TextLabel")
+        TitleLabel.Name = "Title"
+        TitleLabel.BackgroundTransparency = 1
+        TitleLabel.Size = UDim2.new(1, -20, 0, 30)
+        TitleLabel.Position = UDim2.new(0, 10, 0, 0)
+        TitleLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+        TitleLabel.Text = Title
+        TitleLabel.TextColor3 = Color3.new(0.9, 0.9, 0.9)
+        TitleLabel.TextSize = 14
+        TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+        TitleLabel.TextYAlignment = Enum.TextYAlignment.Center
+        
+        local TitleFrame = Instance.new("Frame")
+        TitleFrame.Name = "TitleFrame"
+        TitleFrame.BackgroundTransparency = 1
+        TitleFrame.Size = UDim2.new(1, 0, 0, 30)
+        TitleFrame.Parent = SectionFrame
+        
+        TitleLabel.Parent = TitleFrame
+        ElementCount = ElementCount + 1
+    end
+    
+    local SectionMethods = {}
+    
+    function SectionMethods:CreateButton(Config)
+        AddSeparator()
+        local Element = ButtonComponent.Create(SectionFrame, Maid, Config)
+        ElementCount = ElementCount + 1
+        return Element
+    end
+    
+    function SectionMethods:CreateToggle(Config)
+        AddSeparator()
+        local Element = ToggleComponent.Create(SectionFrame, Maid, Config)
+        ElementCount = ElementCount + 1
+        return Element
+    end
+    
+    return SectionMethods
+end
+
 
 
 -- [[ Core/Notifications.luau ]] --
@@ -4385,12 +4462,8 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
     
     local TabMethods = {}
     
-    function TabMethods:CreateButton(Config)
-        return ButtonComponent.Create(TabContent, Maid, Config)
-    end
-    
-    function TabMethods:CreateToggle(Config)
-        return ToggleComponent.Create(TabContent, Maid, Config)
+    function TabMethods:CreateSection(Title)
+        return Sections.CreateSection(TabContent, Maid, Title)
     end
     
     return TabMethods
@@ -4733,7 +4806,9 @@ local Window = Library:CreateWindow({
 
 local MainTab = Window:CreateTab("Main", "rbxassetid://4483345998")
 
-local Button = MainTab:CreateButton({
+local Section = MainTab:CreateSection("General Settings")
+
+local Button = Section:CreateButton({
     Name = "Test Button",
     Description = "Dies ist ein Test Button mit einer Beschreibung",
     ButtonText = "Click",
@@ -4742,7 +4817,7 @@ local Button = MainTab:CreateButton({
     end
 })
 
-local Toggle = MainTab:CreateToggle({
+local Toggle = Section:CreateToggle({
     Name = "Test Toggle",
     Description = "Das ist ein schöner Toggle Schalter",
     HoverText = "Hier ist eine Tooltip Info!",
