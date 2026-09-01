@@ -3569,6 +3569,7 @@ end
 -- [[ Core/CloseWarn.luau ]] --
 
 
+local ContextActionService = game:GetService("ContextActionService")
 
 local CloseWarn = {}
 
@@ -3581,6 +3582,7 @@ function CloseWarn.Create(ParentGui, maid, ConfirmCallback, CancelCallback)
     Overlay.Size = UDim2.new(1, 0, 1, 0)
     Overlay.ZIndex = 9999
     Overlay.Visible = false
+    Overlay.Active = true
     Overlay.Parent = ParentGui
     
     local Main = Instance.new("Frame")
@@ -3623,7 +3625,7 @@ function CloseWarn.Create(ParentGui, maid, ConfirmCallback, CancelCallback)
     Subtext.BackgroundTransparency = 1
     Subtext.Position = UDim2.new(0, 20, 0, 50)
     Subtext.Size = UDim2.new(1, -40, 0, 40)
-    Subtext.Font = Enum.Font.Gotham
+    Subtext.Font = Enum.Font.GothamMedium
     Subtext.Text = "Are you sure you want to close this window? You will need to re-inject to open it again."
     Subtext.TextColor3 = Color3.fromRGB(150, 150, 150)
     Subtext.TextSize = 14
@@ -3702,6 +3704,7 @@ function CloseWarn.Create(ParentGui, maid, ConfirmCallback, CancelCallback)
     end))
     
     local function Hide()
+        ContextActionService:UnbindAction("VoltUi_Modal_Block")
         Tween(Overlay, TweenInfoObj, {BackgroundTransparency = 1})
         local hideTween = Tween(UIScale, TweenInfo.new(0.2, Enum.EasingStyle.Back, Enum.EasingDirection.In), {Scale = 0})
         task.spawn(function()
@@ -3720,9 +3723,12 @@ function CloseWarn.Create(ParentGui, maid, ConfirmCallback, CancelCallback)
         if ConfirmCallback then ConfirmCallback() end
     end))
     
-    -- Intercept the Visible property change to trigger a nice animation
     maid:GiveTask(Overlay:GetPropertyChangedSignal("Visible"):Connect(function()
         if Overlay.Visible and Overlay.BackgroundTransparency == 1 then
+            ContextActionService:BindAction("VoltUi_Modal_Block", function()
+                return Enum.ContextActionResult.Sink
+            end, false, Enum.KeyCode.W, Enum.KeyCode.A, Enum.KeyCode.S, Enum.KeyCode.D, Enum.KeyCode.Space, Enum.KeyCode.Up, Enum.KeyCode.Down, Enum.KeyCode.Left, Enum.KeyCode.Right)
+            
             UIScale.Scale = 0.8
             Tween(Overlay, TweenInfoObj, {BackgroundTransparency = 0.5})
             Tween(UIScale, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Scale = 1})
