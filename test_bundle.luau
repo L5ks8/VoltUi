@@ -532,21 +532,19 @@ function ButtonComponent.Create(TabContent, Maid, Config)
     
     local BtnFrame = Instance.new("Frame")
     BtnFrame.Name = headerText
-    BtnFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
-    BtnFrame.BackgroundTransparency = 0.4
+    BtnFrame.BackgroundColor3 = Color3.new(0.11, 0.11, 0.11)
     BtnFrame.BorderColor3 = Color3.new(0, 0, 0)
     BtnFrame.BorderSizePixel = 0
     BtnFrame.Size = UDim2.new(1, 0, 0, descText == "" and 42 or 52)
     BtnFrame.Parent = TabContent
     
     local BtnCorner = Instance.new("UICorner")
-    BtnCorner.CornerRadius = UDim.new(0, 8)
+    BtnCorner.CornerRadius = UDim.new(0, 5)
     BtnCorner.Parent = BtnFrame
     
     local BtnStroke = Instance.new("UIStroke")
     BtnStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
-    BtnStroke.Color = Color3.fromRGB(60, 60, 70)
-    BtnStroke.Transparency = 0.6
+    BtnStroke.Color = Color3.new(0.216, 0.216, 0.216)
     BtnStroke.Parent = BtnFrame
     
     local BtnLayout = Instance.new("UIListLayout")
@@ -576,7 +574,7 @@ function ButtonComponent.Create(TabContent, Maid, Config)
     Header.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     Header.Size = UDim2.new(1, 0, 0, 16)
     Header.Text = headerText
-    Header.TextColor3 = Color3.fromRGB(240, 240, 240)
+    Header.TextColor3 = Color3.new(0.9, 0.9, 0.9)
     Header.TextSize = 14
     Header.TextXAlignment = Enum.TextXAlignment.Left
     Header.TextYAlignment = Enum.TextYAlignment.Center
@@ -589,7 +587,7 @@ function ButtonComponent.Create(TabContent, Maid, Config)
         Description.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
         Description.Size = UDim2.new(1, 0, 0, 14)
         Description.Text = descText
-        Description.TextColor3 = Color3.fromRGB(150, 150, 160)
+        Description.TextColor3 = Color3.new(0.6, 0.6, 0.6)
         Description.TextSize = 12
         Description.TextXAlignment = Enum.TextXAlignment.Left
         Description.TextYAlignment = Enum.TextYAlignment.Center
@@ -616,23 +614,22 @@ function ButtonComponent.Create(TabContent, Maid, Config)
     local ClickBtn = Instance.new("TextButton")
     ClickBtn.Name = "Button"
     ClickBtn.AutoButtonColor = false
-    ClickBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 48)
+    ClickBtn.BackgroundColor3 = Color3.new(0.141, 0.141, 0.141)
     ClickBtn.BorderSizePixel = 0
     ClickBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
     ClickBtn.Size = UDim2.new(0, 100, 0, 30)
     ClickBtn.Text = buttonText
-    ClickBtn.TextColor3 = Color3.fromRGB(200, 200, 210)
+    ClickBtn.TextColor3 = Color3.new(0.8, 0.8, 0.8)
     ClickBtn.TextSize = 13
     ClickBtn.Parent = ButtonContainer
     
     local ClickBtnCorner = Instance.new("UICorner")
-    ClickBtnCorner.CornerRadius = UDim.new(0, 6)
+    ClickBtnCorner.CornerRadius = UDim.new(0, 5)
     ClickBtnCorner.Parent = ClickBtn
     
     local ClickBtnStroke = Instance.new("UIStroke")
     ClickBtnStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-    ClickBtnStroke.Color = Color3.fromRGB(70, 70, 80)
-    ClickBtnStroke.Transparency = 0.5
+    ClickBtnStroke.Color = Color3.new(0.275, 0.275, 0.275)
     ClickBtnStroke.Parent = ClickBtn
     
     Maid:GiveTask(ClickBtn.MouseButton1Click:Connect(function()
@@ -640,23 +637,23 @@ function ButtonComponent.Create(TabContent, Maid, Config)
     end))
     
     Maid:GiveTask(ClickBtn.MouseEnter:Connect(function()
-        Tween(ClickBtn, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(60, 60, 75)})
-        Tween(ClickBtnStroke, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Color = Color3.fromRGB(100, 100, 120), Transparency = 0.2})
-        Tween(ClickBtn, TweenInfo.new(0.25), {TextColor3 = Color3.fromRGB(255, 255, 255)})
+        Tween(ClickBtn, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.new(0.18, 0.18, 0.18)})
+        Tween(ClickBtnStroke, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Color = Color3.new(0.35, 0.35, 0.35)})
+        Tween(ClickBtn, TweenInfo.new(0.25), {TextColor3 = Color3.new(1, 1, 1)})
     end))
     
     Maid:GiveTask(ClickBtn.MouseLeave:Connect(function()
-        Tween(ClickBtn, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(40, 40, 48)})
-        Tween(ClickBtnStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Color = Color3.fromRGB(70, 70, 80), Transparency = 0.5})
-        Tween(ClickBtn, TweenInfo.new(0.3), {TextColor3 = Color3.fromRGB(200, 200, 210)})
+        Tween(ClickBtn, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.new(0.141, 0.141, 0.141)})
+        Tween(ClickBtnStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Color = Color3.new(0.275, 0.275, 0.275)})
+        Tween(ClickBtn, TweenInfo.new(0.3), {TextColor3 = Color3.new(0.8, 0.8, 0.8)})
     end))
     
     Maid:GiveTask(ClickBtn.MouseButton1Down:Connect(function()
-        Tween(ClickBtn, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(80, 80, 100)})
+        Tween(ClickBtn, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.new(0.22, 0.22, 0.22)})
     end))
     
     Maid:GiveTask(ClickBtn.MouseButton1Up:Connect(function()
-        Tween(ClickBtn, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(60, 60, 75)})
+        Tween(ClickBtn, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.new(0.18, 0.18, 0.18)})
     end))
     
     return BtnFrame
@@ -4529,6 +4526,8 @@ local MainTab = Window:CreateTab("Main", "rbxassetid://4483345998")
 
 local Button = MainTab:CreateButton({
     Name = "Test Button",
+    Description = "Dies ist ein Test Button mit einer Beschreibung",
+    ButtonText = "Click",
     Callback = function()
         print("Erfolg! Die UI funktioniert!")
     end
