@@ -1056,7 +1056,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
         Tween(DropdownStroke, TweenInfo.new(0.2), {Color = Color3.new(0.2, 0.2, 0.2)})
         
         if DropdownMenu then
-            local tween = Tween(DropdownMenu, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0, DropdownBtn.AbsoluteSize.X, 0, 0)})
+            local tween = Tween(DropdownMenu, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0, DropdownFrame.AbsoluteSize.X - 28, 0, 0)})
             task.delay(0.2, function()
                 if not MenuOpen and DropdownMenu then
                     DropdownMenu:Destroy()
@@ -1096,8 +1096,10 @@ function DropdownComponent.Create(TabContent, Maid, Config)
         DropdownMenu.BackgroundColor3 = Color3.new(0.141, 0.141, 0.141)
         DropdownMenu.BorderSizePixel = 0
         DropdownMenu.ClipsDescendants = true
-        DropdownMenu.Position = UDim2.new(0, DropdownBtn.AbsolutePosition.X - ScreenGui.AbsolutePosition.X, 0, (DropdownBtn.AbsolutePosition.Y - ScreenGui.AbsolutePosition.Y) + DropdownBtn.AbsoluteSize.Y + 4)
-        DropdownMenu.Size = UDim2.new(0, DropdownBtn.AbsoluteSize.X, 0, 0)
+        local startX = DropdownFrame.AbsolutePosition.X + 14 - ScreenGui.AbsolutePosition.X
+        local startY = (isLarge and DropdownBtn.AbsolutePosition.Y or DropdownFrame.AbsolutePosition.Y) - ScreenGui.AbsolutePosition.Y + (isLarge and DropdownBtn.AbsoluteSize.Y or DropdownFrame.AbsoluteSize.Y) + 4
+        DropdownMenu.Position = UDim2.new(0, startX, 0, startY)
+        DropdownMenu.Size = UDim2.new(0, DropdownFrame.AbsoluteSize.X - 28, 0, 0)
         DropdownMenu.ZIndex = 10001
         DropdownMenu.Parent = ScreenGui
         
@@ -1206,7 +1208,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
             targetHeight = 150
         end
         
-        Tween(DropdownMenu, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0, DropdownBtn.AbsoluteSize.X, 0, targetHeight)})
+        Tween(DropdownMenu, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0, DropdownFrame.AbsoluteSize.X - 28, 0, targetHeight)})
     end
     
     Maid:GiveTask(DropdownBtn.MouseButton1Click:Connect(function()
