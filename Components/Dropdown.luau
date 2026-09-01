@@ -112,7 +112,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
     DropdownCorner.Parent = DropdownBtn
     
     local DropdownStroke = Instance.new("UIStroke")
-    DropdownStroke.Color = Color3.new(0.275, 0.275, 0.275)
+    DropdownStroke.Color = Color3.new(0.149, 0.149, 0.149)
     DropdownStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     DropdownStroke.Parent = DropdownBtn
     
@@ -182,7 +182,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
         MenuOpen = false
         
         Tween(Icon, TweenInfo.new(0.2), {Rotation = 0})
-        Tween(DropdownStroke, TweenInfo.new(0.2), {Color = Color3.new(0.275, 0.275, 0.275)})
+        Tween(DropdownStroke, TweenInfo.new(0.2), {Color = Color3.new(0.149, 0.149, 0.149)})
         
         if DropdownMenu then
             local tween = Tween(DropdownMenu, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0, DropdownBtn.AbsoluteSize.X, 0, 0)})
@@ -235,7 +235,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
         MenuCorner.Parent = DropdownMenu
         
         local MenuStroke = Instance.new("UIStroke")
-        MenuStroke.Color = Color3.new(0.275, 0.275, 0.275)
+        MenuStroke.Color = Color3.new(0.149, 0.149, 0.149)
         MenuStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
         MenuStroke.Parent = DropdownMenu
         
@@ -370,7 +370,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
     
     Maid:GiveTask(DropdownBtn.MouseLeave:Connect(function()
         if not MenuOpen then
-            Tween(DropdownStroke, TweenInfo.new(0.2), {Color = Color3.new(0.275, 0.275, 0.275)})
+            Tween(DropdownStroke, TweenInfo.new(0.2), {Color = Color3.new(0.149, 0.149, 0.149)})
         end
     end))
     
