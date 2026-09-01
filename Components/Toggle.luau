@@ -90,7 +90,7 @@ function ToggleComponent.Create(TabContent, Maid, Config)
     
     local SwitchBg = Instance.new("Frame")
     SwitchBg.Name = "SwitchBg"
-    SwitchBg.BackgroundColor3 = state and Color3.new(1, 1, 1) or Color3.new(0.141, 0.141, 0.141)
+    SwitchBg.BackgroundColor3 = Color3.new(0.141, 0.141, 0.141)
     SwitchBg.Size = UDim2.new(0, 36, 0, 20)
     SwitchBg.Parent = SwitchContainer
     
@@ -100,12 +100,12 @@ function ToggleComponent.Create(TabContent, Maid, Config)
     
     local SwitchStroke = Instance.new("UIStroke")
     SwitchStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-    SwitchStroke.Color = state and Color3.new(1, 1, 1) or Color3.new(0.275, 0.275, 0.275)
+    SwitchStroke.Color = Color3.new(0.275, 0.275, 0.275)
     SwitchStroke.Parent = SwitchBg
     
     local SwitchDot = Instance.new("Frame")
     SwitchDot.Name = "Dot"
-    SwitchDot.BackgroundColor3 = state and Color3.new(0, 0, 0) or Color3.new(0.6, 0.6, 0.6)
+    SwitchDot.BackgroundColor3 = state and Color3.new(1, 1, 1) or Color3.new(0.6, 0.6, 0.6)
     SwitchDot.Position = state and UDim2.new(1, -18, 0.5, 0) or UDim2.new(0, 2, 0.5, 0)
     SwitchDot.AnchorPoint = Vector2.new(0, 0.5)
     SwitchDot.Size = UDim2.new(0, 16, 0, 16)
@@ -152,12 +152,8 @@ function ToggleComponent.Create(TabContent, Maid, Config)
     
     local function UpdateToggle()
         if state then
-            Tween(SwitchBg, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.new(1, 1, 1)})
-            Tween(SwitchStroke, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Color = Color3.new(1, 1, 1)})
-            Tween(SwitchDot, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(1, -18, 0.5, 0), BackgroundColor3 = Color3.new(0, 0, 0)})
+            Tween(SwitchDot, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(1, -18, 0.5, 0), BackgroundColor3 = Color3.new(1, 1, 1)})
         else
-            Tween(SwitchBg, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.new(0.141, 0.141, 0.141)})
-            Tween(SwitchStroke, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Color = Color3.new(0.275, 0.275, 0.275)})
             Tween(SwitchDot, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(0, 2, 0.5, 0), BackgroundColor3 = Color3.new(0.6, 0.6, 0.6)})
         end
     end
