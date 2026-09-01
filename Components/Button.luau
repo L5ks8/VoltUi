@@ -11,19 +11,21 @@ function ButtonComponent.Create(TabContent, Maid, Config)
     
     local BtnFrame = Instance.new("Frame")
     BtnFrame.Name = headerText
-    BtnFrame.BackgroundColor3 = Color3.new(0.11, 0.11, 0.11)
+    BtnFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
+    BtnFrame.BackgroundTransparency = 0.4
     BtnFrame.BorderColor3 = Color3.new(0, 0, 0)
     BtnFrame.BorderSizePixel = 0
-    BtnFrame.Size = UDim2.new(1, 0, 0, 40)
+    BtnFrame.Size = UDim2.new(1, 0, 0, descText == "" and 42 or 52)
     BtnFrame.Parent = TabContent
     
     local BtnCorner = Instance.new("UICorner")
-    BtnCorner.CornerRadius = UDim.new(0, 5)
+    BtnCorner.CornerRadius = UDim.new(0, 8)
     BtnCorner.Parent = BtnFrame
     
     local BtnStroke = Instance.new("UIStroke")
     BtnStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
-    BtnStroke.Color = Color3.new(0.216, 0.216, 0.216)
+    BtnStroke.Color = Color3.fromRGB(60, 60, 70)
+    BtnStroke.Transparency = 0.6
     BtnStroke.Parent = BtnFrame
     
     local BtnLayout = Instance.new("UIListLayout")
@@ -34,41 +36,42 @@ function ButtonComponent.Create(TabContent, Maid, Config)
     local TextContainer = Instance.new("Frame")
     TextContainer.Name = "Text"
     TextContainer.BackgroundTransparency = 1
-    TextContainer.Size = UDim2.new(1, -120, 1, 0)
+    TextContainer.Size = UDim2.new(1, -130, 1, 0)
     TextContainer.Parent = BtnFrame
     
     local TextLayout = Instance.new("UIListLayout")
     TextLayout.SortOrder = Enum.SortOrder.LayoutOrder
     TextLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    TextLayout.Padding = UDim.new(0, 2)
     TextLayout.Parent = TextContainer
     
     local TextPadding = Instance.new("UIPadding")
-    TextPadding.PaddingLeft = UDim.new(0, 9)
+    TextPadding.PaddingLeft = UDim.new(0, 14)
     TextPadding.Parent = TextContainer
     
     local Header = Instance.new("TextLabel")
     Header.Name = "Header"
     Header.BackgroundTransparency = 1
-    Header.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    Header.Size = UDim2.new(1, 0, 0, descText == "" and 40 or 20)
+    Header.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    Header.Size = UDim2.new(1, 0, 0, 16)
     Header.Text = headerText
-    Header.TextColor3 = Color3.new(0.8, 0.8, 0.8)
-    Header.TextSize = 15
+    Header.TextColor3 = Color3.fromRGB(240, 240, 240)
+    Header.TextSize = 14
     Header.TextXAlignment = Enum.TextXAlignment.Left
-    Header.TextYAlignment = descText == "" and Enum.TextYAlignment.Center or Enum.TextYAlignment.Bottom
+    Header.TextYAlignment = Enum.TextYAlignment.Center
     Header.Parent = TextContainer
     
     if descText ~= "" then
         local Description = Instance.new("TextLabel")
         Description.Name = "Description"
         Description.BackgroundTransparency = 1
-        Description.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-        Description.Size = UDim2.new(1, 0, 0, 20)
+        Description.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+        Description.Size = UDim2.new(1, 0, 0, 14)
         Description.Text = descText
-        Description.TextColor3 = Color3.new(0.6, 0.6, 0.6)
-        Description.TextSize = 14
+        Description.TextColor3 = Color3.fromRGB(150, 150, 160)
+        Description.TextSize = 12
         Description.TextXAlignment = Enum.TextXAlignment.Left
-        Description.TextYAlignment = Enum.TextYAlignment.Top
+        Description.TextYAlignment = Enum.TextYAlignment.Center
         Description.Parent = TextContainer
     end
     
@@ -76,7 +79,7 @@ function ButtonComponent.Create(TabContent, Maid, Config)
     ButtonContainer.Name = "ButtonContainer"
     ButtonContainer.BackgroundTransparency = 1
     ButtonContainer.LayoutOrder = 1
-    ButtonContainer.Size = UDim2.new(0, 120, 1, 0)
+    ButtonContainer.Size = UDim2.new(0, 130, 1, 0)
     ButtonContainer.Parent = BtnFrame
     
     local ButtonLayout = Instance.new("UIListLayout")
@@ -86,28 +89,29 @@ function ButtonComponent.Create(TabContent, Maid, Config)
     ButtonLayout.Parent = ButtonContainer
     
     local ButtonPadding = Instance.new("UIPadding")
-    ButtonPadding.PaddingRight = UDim.new(0, 9)
+    ButtonPadding.PaddingRight = UDim.new(0, 14)
     ButtonPadding.Parent = ButtonContainer
     
     local ClickBtn = Instance.new("TextButton")
     ClickBtn.Name = "Button"
     ClickBtn.AutoButtonColor = false
-    ClickBtn.BackgroundColor3 = Color3.new(0.141, 0.141, 0.141)
+    ClickBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 48)
     ClickBtn.BorderSizePixel = 0
-    ClickBtn.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-    ClickBtn.Size = UDim2.new(0, 100, 0, 25)
+    ClickBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+    ClickBtn.Size = UDim2.new(0, 100, 0, 30)
     ClickBtn.Text = buttonText
-    ClickBtn.TextColor3 = Color3.new(0.8, 0.8, 0.8)
-    ClickBtn.TextSize = 14
+    ClickBtn.TextColor3 = Color3.fromRGB(200, 200, 210)
+    ClickBtn.TextSize = 13
     ClickBtn.Parent = ButtonContainer
     
     local ClickBtnCorner = Instance.new("UICorner")
-    ClickBtnCorner.CornerRadius = UDim.new(0, 5)
+    ClickBtnCorner.CornerRadius = UDim.new(0, 6)
     ClickBtnCorner.Parent = ClickBtn
     
     local ClickBtnStroke = Instance.new("UIStroke")
     ClickBtnStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-    ClickBtnStroke.Color = Color3.new(0.275, 0.275, 0.275)
+    ClickBtnStroke.Color = Color3.fromRGB(70, 70, 80)
+    ClickBtnStroke.Transparency = 0.5
     ClickBtnStroke.Parent = ClickBtn
     
     Maid:GiveTask(ClickBtn.MouseButton1Click:Connect(function()
@@ -115,21 +119,23 @@ function ButtonComponent.Create(TabContent, Maid, Config)
     end))
     
     Maid:GiveTask(ClickBtn.MouseEnter:Connect(function()
-        Tween(ClickBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.new(0.18, 0.18, 0.18)})
-        Tween(ClickBtnStroke, TweenInfo.new(0.2), {Color = Color3.new(0.35, 0.35, 0.35)})
+        Tween(ClickBtn, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(60, 60, 75)})
+        Tween(ClickBtnStroke, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Color = Color3.fromRGB(100, 100, 120), Transparency = 0.2})
+        Tween(ClickBtn, TweenInfo.new(0.25), {TextColor3 = Color3.fromRGB(255, 255, 255)})
     end))
     
     Maid:GiveTask(ClickBtn.MouseLeave:Connect(function()
-        Tween(ClickBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.new(0.141, 0.141, 0.141)})
-        Tween(ClickBtnStroke, TweenInfo.new(0.2), {Color = Color3.new(0.275, 0.275, 0.275)})
+        Tween(ClickBtn, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(40, 40, 48)})
+        Tween(ClickBtnStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Color = Color3.fromRGB(70, 70, 80), Transparency = 0.5})
+        Tween(ClickBtn, TweenInfo.new(0.3), {TextColor3 = Color3.fromRGB(200, 200, 210)})
     end))
     
     Maid:GiveTask(ClickBtn.MouseButton1Down:Connect(function()
-        Tween(ClickBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.new(0.22, 0.22, 0.22)})
+        Tween(ClickBtn, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(80, 80, 100)})
     end))
     
     Maid:GiveTask(ClickBtn.MouseButton1Up:Connect(function()
-        Tween(ClickBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.new(0.18, 0.18, 0.18)})
+        Tween(ClickBtn, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(60, 60, 75)})
     end))
     
     return BtnFrame
