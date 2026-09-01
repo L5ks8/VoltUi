@@ -222,7 +222,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
         
         DropdownMenu = Instance.new("Frame")
         DropdownMenu.Name = "DropdownMenu"
-        DropdownMenu.BackgroundColor3 = Color3.new(0.141, 0.141, 0.141)
+        DropdownMenu.BackgroundColor3 = Color3.new(0.11, 0.11, 0.11)
         DropdownMenu.BorderSizePixel = 0
         DropdownMenu.ClipsDescendants = true
         DropdownMenu.Position = UDim2.new(0, DropdownBtn.AbsolutePosition.X, 0, DropdownBtn.AbsolutePosition.Y + DropdownBtn.AbsoluteSize.Y + 4)
@@ -255,6 +255,8 @@ function DropdownComponent.Create(TabContent, Maid, Config)
         local ScrollPadding = Instance.new("UIPadding")
         ScrollPadding.PaddingTop = UDim.new(0, 4)
         ScrollPadding.PaddingBottom = UDim.new(0, 4)
+        ScrollPadding.PaddingLeft = UDim.new(0, 4)
+        ScrollPadding.PaddingRight = UDim.new(0, 4)
         ScrollPadding.Parent = ScrollFrame
         
         local targetHeight = 8
@@ -262,34 +264,59 @@ function DropdownComponent.Create(TabContent, Maid, Config)
         for i, option in ipairs(options) do
             local OptBtn = Instance.new("TextButton")
             OptBtn.Name = option
-            OptBtn.BackgroundTransparency = 1
+            OptBtn.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+            OptBtn.BackgroundTransparency = option == selected and 0 or 1
             OptBtn.Size = UDim2.new(1, 0, 0, 26)
             OptBtn.Text = ""
+            OptBtn.AutoButtonColor = false
             OptBtn.ZIndex = 10003
             OptBtn.Parent = ScrollFrame
             
+            local OptCorner = Instance.new("UICorner")
+            OptCorner.CornerRadius = UDim.new(0, 4)
+            OptCorner.Parent = OptBtn
+            
+            local OptStroke = Instance.new("UIStroke")
+            OptStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+            OptStroke.Color = Color3.new(0.3, 0.3, 0.3)
+            OptStroke.Transparency = option == selected and 0 or 1
+            OptStroke.Parent = OptBtn
+            
             local OptText = Instance.new("TextLabel")
             OptText.BackgroundTransparency = 1
-            OptText.Size = UDim2.new(1, -20, 1, 0)
-            OptText.Position = UDim2.new(0, 10, 0, 0)
+            OptText.Size = UDim2.new(1, -30, 1, 0)
+            OptText.Position = UDim2.new(0, 8, 0, 0)
             OptText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
             OptText.Text = option
-            OptText.TextColor3 = option == selected and Color3.new(1, 1, 1) or Color3.new(0.6, 0.6, 0.6)
+            OptText.TextColor3 = option == selected and Color3.new(0.9, 0.9, 0.9) or Color3.new(0.6, 0.6, 0.6)
             OptText.TextSize = 13
             OptText.TextXAlignment = Enum.TextXAlignment.Left
             OptText.ZIndex = 10004
             OptText.Parent = OptBtn
             
+            local Checkmark = Instance.new("ImageLabel")
+            Checkmark.Name = "Checkmark"
+            Checkmark.BackgroundTransparency = 1
+            Checkmark.Position = UDim2.new(1, -22, 0.5, -8)
+            Checkmark.Size = UDim2.new(0, 16, 0, 16)
+            Checkmark.Image = "rbxassetid://118922551501473"
+            Checkmark.ImageColor3 = Color3.new(0.8, 0.8, 0.8)
+            Checkmark.ZIndex = 10004
+            Checkmark.Visible = (option == selected)
+            Checkmark.Parent = OptBtn
+            
             OptBtn.MouseEnter:Connect(function()
-                Tween(OptText, TweenInfo.new(0.15), {TextColor3 = Color3.new(1, 1, 1)})
-                Tween(OptBtn, TweenInfo.new(0.15), {BackgroundTransparency = 0.9, BackgroundColor3 = Color3.new(1, 1, 1)})
+                if option ~= selected then
+                    Tween(OptBtn, TweenInfo.new(0.15), {BackgroundTransparency = 0.5})
+                    Tween(OptText, TweenInfo.new(0.15), {TextColor3 = Color3.new(0.9, 0.9, 0.9)})
+                end
             end)
             
             OptBtn.MouseLeave:Connect(function()
                 if option ~= selected then
+                    Tween(OptBtn, TweenInfo.new(0.15), {BackgroundTransparency = 1})
                     Tween(OptText, TweenInfo.new(0.15), {TextColor3 = Color3.new(0.6, 0.6, 0.6)})
                 end
-                Tween(OptBtn, TweenInfo.new(0.15), {BackgroundTransparency = 1})
             end)
             
             OptBtn.MouseButton1Click:Connect(function()
