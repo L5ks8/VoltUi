@@ -3574,7 +3574,7 @@ local ContextActionService = game:GetService("ContextActionService")
 local CloseWarn = {}
 
 function CloseWarn.Create(ParentGui, maid, ConfirmCallback, CancelCallback)
-    local Overlay = Instance.new("Frame")
+    local Overlay = Instance.new("TextButton")
     Overlay.Name = "CloseWarnOverlay"
     Overlay.BackgroundColor3 = Color3.new(0, 0, 0)
     Overlay.BackgroundTransparency = 1
@@ -3583,6 +3583,8 @@ function CloseWarn.Create(ParentGui, maid, ConfirmCallback, CancelCallback)
     Overlay.ZIndex = 9999
     Overlay.Visible = false
     Overlay.Active = true
+    Overlay.Text = ""
+    Overlay.AutoButtonColor = false
     Overlay.Parent = ParentGui
     
     local Main = Instance.new("Frame")
