@@ -315,7 +315,11 @@ client.on('interactionCreate', async interaction => {
                 await interaction.reply({ embeds: [statsEmbed], ephemeral: true });
             } catch (err) {
                 console.error(err);
-                await interaction.reply({ embeds: [new EmbedBuilder().setDescription('An error occurred.').setColor('#e74c3c')], ephemeral: true });
+                if (interaction.deferred || interaction.replied) {
+                    await interaction.followUp({ embeds: [new EmbedBuilder().setDescription('An error occurred.').setColor('#e74c3c')], ephemeral: true }).catch(console.error);
+                } else {
+                    await interaction.reply({ embeds: [new EmbedBuilder().setDescription('An error occurred.').setColor('#e74c3c')], ephemeral: true }).catch(console.error);
+                }
             }
         } else if (interaction.customId.startsWith('panel_')) {
             await interaction.reply({ embeds: [new EmbedBuilder().setDescription('This feature is coming soon!').setColor('#e74c3c')], ephemeral: true });
@@ -345,7 +349,11 @@ client.on('interactionCreate', async interaction => {
                 await interaction.reply({ embeds: [new EmbedBuilder().setDescription('Key successfully linked to your Discord account! Please click the **Get Role** button to receive your role.').setColor('#2ecc71')], ephemeral: true });
             } catch (err) {
                 console.error(err);
-                await interaction.reply({ embeds: [new EmbedBuilder().setDescription('An error occurred while processing your key.').setColor('#e74c3c')], ephemeral: true });
+                if (interaction.deferred || interaction.replied) {
+                    await interaction.followUp({ embeds: [new EmbedBuilder().setDescription('An error occurred while processing your key.').setColor('#e74c3c')], ephemeral: true }).catch(console.error);
+                } else {
+                    await interaction.reply({ embeds: [new EmbedBuilder().setDescription('An error occurred while processing your key.').setColor('#e74c3c')], ephemeral: true }).catch(console.error);
+                }
             }
         }
     }
