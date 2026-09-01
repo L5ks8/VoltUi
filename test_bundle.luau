@@ -2689,7 +2689,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     Filler.Size = UDim2.new(1, -150, 0, 30)
     Filler.Parent = KeysTextFrame
 
-    local Claimed = Instance.new("Frame")
+    local Claimed = Instance.new("ScrollingFrame")
     Claimed.Name = "Claimed"
     Claimed.BackgroundColor3 = Color3.new(1, 1, 1)
     Claimed.BackgroundTransparency = 1
@@ -2697,6 +2697,9 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     Claimed.BorderSizePixel = 0
     Claimed.Position = UDim2.new(0, 0, 0.143, 0)
     Claimed.Size = UDim2.new(1, 0, 1, -30)
+    Claimed.CanvasSize = UDim2.new(0, 0, 0, 0)
+    Claimed.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    Claimed.ScrollBarThickness = 2
     Claimed.Parent = KeysFrame
 
     local ClaimedLayout = Instance.new("UIListLayout")
