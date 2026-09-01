@@ -135,8 +135,8 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
     
     local TabMethods = {}
     
-    function TabMethods:CreateSection(Title)
-        return Sections.CreateSection(TabContent, Maid, Title)
+    function TabMethods:CreateSection(Title, Description)
+        return Sections.CreateSection(TabContent, Maid, Title, Description)
     end
     
     return TabMethods

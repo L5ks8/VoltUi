@@ -10,8 +10,10 @@ function ToggleComponent.Create(TabContent, Maid, Config)
     local state = config.Default or false
     local cb = config.Callback or function() end
     
-    local ToggleFrame = Instance.new("Frame")
+    local ToggleFrame = Instance.new("TextButton")
     ToggleFrame.Name = headerText
+    ToggleFrame.AutoButtonColor = false
+    ToggleFrame.Text = ""
     ToggleFrame.BackgroundColor3 = Color3.new(0.13, 0.13, 0.13)
     ToggleFrame.BackgroundTransparency = 1
     ToggleFrame.BorderSizePixel = 0
@@ -143,13 +145,6 @@ function ToggleComponent.Create(TabContent, Maid, Config)
         TooltipPadding.Parent = Tooltip
     end
     
-    local InteractBtn = Instance.new("TextButton")
-    InteractBtn.Name = "Interact"
-    InteractBtn.BackgroundTransparency = 1
-    InteractBtn.Size = UDim2.new(1, 0, 1, 0)
-    InteractBtn.Text = ""
-    InteractBtn.Parent = ToggleFrame
-    
     local function UpdateToggle()
         if state then
             Tween(SwitchBg, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.new(1, 1, 1)})
@@ -162,13 +157,13 @@ function ToggleComponent.Create(TabContent, Maid, Config)
         end
     end
     
-    Maid:GiveTask(InteractBtn.MouseButton1Click:Connect(function()
+    Maid:GiveTask(ToggleFrame.MouseButton1Click:Connect(function()
         state = not state
         UpdateToggle()
         cb(state)
     end))
     
-    Maid:GiveTask(InteractBtn.MouseEnter:Connect(function()
+    Maid:GiveTask(ToggleFrame.MouseEnter:Connect(function()
         Tween(ToggleFrame, TweenInfo.new(0.2), {BackgroundTransparency = 0})
         if Tooltip then
             Tooltip.Visible = true
@@ -177,7 +172,7 @@ function ToggleComponent.Create(TabContent, Maid, Config)
         end
     end))
     
-    Maid:GiveTask(InteractBtn.MouseLeave:Connect(function()
+    Maid:GiveTask(ToggleFrame.MouseLeave:Connect(function()
         Tween(ToggleFrame, TweenInfo.new(0.2), {BackgroundTransparency = 1})
         if Tooltip then
             Tween(Tooltip, TweenInfo.new(0.2), {BackgroundTransparency = 1, TextTransparency = 1})

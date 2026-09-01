@@ -673,8 +673,10 @@ function ToggleComponent.Create(TabContent, Maid, Config)
     local state = config.Default or false
     local cb = config.Callback or function() end
     
-    local ToggleFrame = Instance.new("Frame")
+    local ToggleFrame = Instance.new("TextButton")
     ToggleFrame.Name = headerText
+    ToggleFrame.AutoButtonColor = false
+    ToggleFrame.Text = ""
     ToggleFrame.BackgroundColor3 = Color3.new(0.13, 0.13, 0.13)
     ToggleFrame.BackgroundTransparency = 1
     ToggleFrame.BorderSizePixel = 0
@@ -806,13 +808,6 @@ function ToggleComponent.Create(TabContent, Maid, Config)
         TooltipPadding.Parent = Tooltip
     end
     
-    local InteractBtn = Instance.new("TextButton")
-    InteractBtn.Name = "Interact"
-    InteractBtn.BackgroundTransparency = 1
-    InteractBtn.Size = UDim2.new(1, 0, 1, 0)
-    InteractBtn.Text = ""
-    InteractBtn.Parent = ToggleFrame
-    
     local function UpdateToggle()
         if state then
             Tween(SwitchBg, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.new(1, 1, 1)})
@@ -825,13 +820,13 @@ function ToggleComponent.Create(TabContent, Maid, Config)
         end
     end
     
-    Maid:GiveTask(InteractBtn.MouseButton1Click:Connect(function()
+    Maid:GiveTask(ToggleFrame.MouseButton1Click:Connect(function()
         state = not state
         UpdateToggle()
         cb(state)
     end))
     
-    Maid:GiveTask(InteractBtn.MouseEnter:Connect(function()
+    Maid:GiveTask(ToggleFrame.MouseEnter:Connect(function()
         Tween(ToggleFrame, TweenInfo.new(0.2), {BackgroundTransparency = 0})
         if Tooltip then
             Tooltip.Visible = true
@@ -840,7 +835,7 @@ function ToggleComponent.Create(TabContent, Maid, Config)
         end
     end))
     
-    Maid:GiveTask(InteractBtn.MouseLeave:Connect(function()
+    Maid:GiveTask(ToggleFrame.MouseLeave:Connect(function()
         Tween(ToggleFrame, TweenInfo.new(0.2), {BackgroundTransparency = 1})
         if Tooltip then
             Tween(Tooltip, TweenInfo.new(0.2), {BackgroundTransparency = 1, TextTransparency = 1})
@@ -881,7 +876,7 @@ end
 
 local Sections = {}
 
-function Sections.CreateSection(TabContent, Maid, Title)
+function Sections.CreateSection(TabContent, Maid, Title, Description)
     local SectionFrame = Instance.new("Frame")
     SectionFrame.Name = Title or "Section"
     SectionFrame.BackgroundColor3 = Color3.new(0.11, 0.11, 0.11)
@@ -920,25 +915,48 @@ function Sections.CreateSection(TabContent, Maid, Title)
     end
     
     if Title and Title ~= "" then
+        local TitleFrame = Instance.new("Frame")
+        TitleFrame.Name = "TitleFrame"
+        TitleFrame.BackgroundTransparency = 1
+        TitleFrame.Size = UDim2.new(1, 0, 0, (Description and Description ~= "") and 45 or 30)
+        TitleFrame.Parent = SectionFrame
+        
+        local TitleLayout = Instance.new("UIListLayout")
+        TitleLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        TitleLayout.Padding = UDim.new(0, 2)
+        TitleLayout.Parent = TitleFrame
+        
+        local TitlePadding = Instance.new("UIPadding")
+        TitlePadding.PaddingTop = UDim.new(0, 8)
+        TitlePadding.PaddingLeft = UDim.new(0, 10)
+        TitlePadding.Parent = TitleFrame
+        
         local TitleLabel = Instance.new("TextLabel")
         TitleLabel.Name = "Title"
         TitleLabel.BackgroundTransparency = 1
-        TitleLabel.Size = UDim2.new(1, -20, 0, 30)
-        TitleLabel.Position = UDim2.new(0, 10, 0, 0)
+        TitleLabel.Size = UDim2.new(1, -20, 0, 16)
         TitleLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
         TitleLabel.Text = Title
         TitleLabel.TextColor3 = Color3.new(0.9, 0.9, 0.9)
         TitleLabel.TextSize = 14
         TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
         TitleLabel.TextYAlignment = Enum.TextYAlignment.Center
-        
-        local TitleFrame = Instance.new("Frame")
-        TitleFrame.Name = "TitleFrame"
-        TitleFrame.BackgroundTransparency = 1
-        TitleFrame.Size = UDim2.new(1, 0, 0, 30)
-        TitleFrame.Parent = SectionFrame
-        
         TitleLabel.Parent = TitleFrame
+        
+        if Description and Description ~= "" then
+            local DescLabel = Instance.new("TextLabel")
+            DescLabel.Name = "Description"
+            DescLabel.BackgroundTransparency = 1
+            DescLabel.Size = UDim2.new(1, -20, 0, 14)
+            DescLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+            DescLabel.Text = Description
+            DescLabel.TextColor3 = Color3.new(0.6, 0.6, 0.6)
+            DescLabel.TextSize = 12
+            DescLabel.TextXAlignment = Enum.TextXAlignment.Left
+            DescLabel.TextYAlignment = Enum.TextYAlignment.Center
+            DescLabel.Parent = TitleFrame
+        end
+        
         ElementCount = ElementCount + 1
     end
     
@@ -4462,8 +4480,8 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
     
     local TabMethods = {}
     
-    function TabMethods:CreateSection(Title)
-        return Sections.CreateSection(TabContent, Maid, Title)
+    function TabMethods:CreateSection(Title, Description)
+        return Sections.CreateSection(TabContent, Maid, Title, Description)
     end
     
     return TabMethods
@@ -4806,7 +4824,7 @@ local Window = Library:CreateWindow({
 
 local MainTab = Window:CreateTab("Main", "rbxassetid://4483345998")
 
-local Section = MainTab:CreateSection("General Settings")
+local Section = MainTab:CreateSection("General Settings", "Das sind die Haupteinstellungen.")
 
 local Button = Section:CreateButton({
     Name = "Test Button",

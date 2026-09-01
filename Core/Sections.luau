@@ -5,7 +5,7 @@ local ToggleComponent = require(Components.Toggle)
 
 local Sections = {}
 
-function Sections.CreateSection(TabContent, Maid, Title)
+function Sections.CreateSection(TabContent, Maid, Title, Description)
     local SectionFrame = Instance.new("Frame")
     SectionFrame.Name = Title or "Section"
     SectionFrame.BackgroundColor3 = Color3.new(0.11, 0.11, 0.11)
@@ -44,25 +44,48 @@ function Sections.CreateSection(TabContent, Maid, Title)
     end
     
     if Title and Title ~= "" then
+        local TitleFrame = Instance.new("Frame")
+        TitleFrame.Name = "TitleFrame"
+        TitleFrame.BackgroundTransparency = 1
+        TitleFrame.Size = UDim2.new(1, 0, 0, (Description and Description ~= "") and 45 or 30)
+        TitleFrame.Parent = SectionFrame
+        
+        local TitleLayout = Instance.new("UIListLayout")
+        TitleLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        TitleLayout.Padding = UDim.new(0, 2)
+        TitleLayout.Parent = TitleFrame
+        
+        local TitlePadding = Instance.new("UIPadding")
+        TitlePadding.PaddingTop = UDim.new(0, 8)
+        TitlePadding.PaddingLeft = UDim.new(0, 10)
+        TitlePadding.Parent = TitleFrame
+        
         local TitleLabel = Instance.new("TextLabel")
         TitleLabel.Name = "Title"
         TitleLabel.BackgroundTransparency = 1
-        TitleLabel.Size = UDim2.new(1, -20, 0, 30)
-        TitleLabel.Position = UDim2.new(0, 10, 0, 0)
+        TitleLabel.Size = UDim2.new(1, -20, 0, 16)
         TitleLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
         TitleLabel.Text = Title
         TitleLabel.TextColor3 = Color3.new(0.9, 0.9, 0.9)
         TitleLabel.TextSize = 14
         TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
         TitleLabel.TextYAlignment = Enum.TextYAlignment.Center
-        
-        local TitleFrame = Instance.new("Frame")
-        TitleFrame.Name = "TitleFrame"
-        TitleFrame.BackgroundTransparency = 1
-        TitleFrame.Size = UDim2.new(1, 0, 0, 30)
-        TitleFrame.Parent = SectionFrame
-        
         TitleLabel.Parent = TitleFrame
+        
+        if Description and Description ~= "" then
+            local DescLabel = Instance.new("TextLabel")
+            DescLabel.Name = "Description"
+            DescLabel.BackgroundTransparency = 1
+            DescLabel.Size = UDim2.new(1, -20, 0, 14)
+            DescLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+            DescLabel.Text = Description
+            DescLabel.TextColor3 = Color3.new(0.6, 0.6, 0.6)
+            DescLabel.TextSize = 12
+            DescLabel.TextXAlignment = Enum.TextXAlignment.Left
+            DescLabel.TextYAlignment = Enum.TextYAlignment.Center
+            DescLabel.Parent = TitleFrame
+        end
+        
         ElementCount = ElementCount + 1
     end
     
