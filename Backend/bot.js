@@ -39,7 +39,21 @@ const commands = [
     new SlashCommandBuilder()
         .setName('reset_hwid')
         .setDescription('Reset HWID for a user')
-        .addUserOption(option => option.setName('user').setDescription('The Discord user to reset HWID').setRequired(true))
+        .addUserOption(option => option.setName('user').setDescription('The Discord user to reset HWID').setRequired(true)),
+    new SlashCommandBuilder()
+        .setName('compensate')
+        .setDescription('Adds days to everyone in a project.')
+        .addIntegerOption(option => option.setName('days').setDescription('Days to compensate').setRequired(true)),
+    new SlashCommandBuilder()
+        .setName('whitelist')
+        .setDescription('Whitelists a user')
+        .addUserOption(option => option.setName('user').setDescription('The Discord user to whitelist').setRequired(true))
+        .addStringOption(option => option.setName('note').setDescription('Note for this whitelist').setRequired(false))
+        .addIntegerOption(option => option.setName('days').setDescription('Duration in days').setRequired(false)),
+    new SlashCommandBuilder()
+        .setName('unwhitelist')
+        .setDescription('Unwhitelists the user from a project')
+        .addUserOption(option => option.setName('user').setDescription('The Discord user to unwhitelist').setRequired(true))
 ].map(command => command.toJSON());
 
 const parseDuration = (str) => {
@@ -226,6 +240,79 @@ client.on('interactionCreate', async interaction => {
             } catch (err) {
                 console.error(err);
                 await interaction.reply({ embeds: [new EmbedBuilder().setDescription('Error resetting HWID.').setColor('#2ecc71')], ephemeral: true });
+            }
+        } else if (interaction.commandName === 'compensate') {
+            const days = interaction.options.getInteger('days');
+            try {
+                const now = new Date();
+                const users = await User.find({ subscriptionEnd: { $gt: now } });
+                for (let user of users) {
+                    user.subscriptionEnd = new Date(user.subscriptionEnd.getTime() + days * 24 * 60 * 60 * 1000);
+                    await user.save();
+                }
+                await interaction.reply({ embeds: [new EmbedBuilder().setDescription(`Added ${days} days to ${users.length} active users.`).setColor('#2ecc71')], ephemeral: true });
+            } catch (err) {
+                console.error(err);
+                await interaction.reply({ embeds: [new EmbedBuilder().setDescription('Error compensating users.').setColor('#e74c3c')], ephemeral: true });
+            }
+        } else if (interaction.commandName === 'whitelist') {
+            const targetUser = interaction.options.getUser('user');
+            const note = interaction.options.getString('note') || 'No note';
+            const days = interaction.options.getInteger('days') || 0;
+            
+            try {
+                let user = await User.findOne({ discordId: targetUser.id });
+                if (user) {
+                    if (days > 0) {
+                        const now = new Date();
+                        if (!user.subscriptionEnd || user.subscriptionEnd < now) {
+                            user.subscriptionEnd = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
+                        } else {
+                            user.subscriptionEnd = new Date(user.subscriptionEnd.getTime() + days * 24 * 60 * 60 * 1000);
+                        }
+                    } else {
+                        user.subscriptionEnd = new Date('2099-12-31');
+                    }
+                    user.banned = false;
+                    await user.save();
+                    await interaction.reply({ embeds: [new EmbedBuilder().setDescription(`User <@${targetUser.id}> has been whitelisted for ${days > 0 ? days + ' days' : 'lifetime'}.\n**Note:** ${note}`).setColor('#2ecc71')], ephemeral: true });
+                } else {
+                    const durationMs = days > 0 ? days * 24 * 60 * 60 * 1000 : null;
+                    const key = generateKey();
+                    const license = new License({
+                        key: key,
+                        durationMs: durationMs,
+                        discordId: targetUser.id
+                    });
+                    await license.save();
+                    
+                    const dmEmbed = new EmbedBuilder()
+                        .setTitle('You have been Whitelisted!')
+                        .setDescription(`You have been granted access. Since you don't have an account yet, here is your license key to register:\n\n**Key:** \`${key}\`\n**Duration:** ${days > 0 ? days + ' days' : 'Lifetime'}\n**Note:** ${note}`)
+                        .setColor('#2ecc71');
+                        
+                    await module.exports.sendDM(targetUser.id, '', dmEmbed);
+                    await interaction.reply({ embeds: [new EmbedBuilder().setDescription(`User <@${targetUser.id}> has been whitelisted for ${days > 0 ? days + ' days' : 'lifetime'}. A license key has been DMed to them.\n**Note:** ${note}`).setColor('#2ecc71')], ephemeral: true });
+                }
+            } catch (err) {
+                console.error(err);
+                await interaction.reply({ embeds: [new EmbedBuilder().setDescription('Error whitelisting user.').setColor('#e74c3c')], ephemeral: true });
+            }
+        } else if (interaction.commandName === 'unwhitelist') {
+            const targetUser = interaction.options.getUser('user');
+            try {
+                const user = await User.findOne({ discordId: targetUser.id });
+                if (user) {
+                    user.subscriptionEnd = new Date(Date.now() - 1000);
+                    await user.save();
+                    await interaction.reply({ embeds: [new EmbedBuilder().setDescription(`User <@${targetUser.id}> has been unwhitelisted (subscription revoked).`).setColor('#2ecc71')], ephemeral: true });
+                } else {
+                    await License.deleteMany({ discordId: targetUser.id, claimedBy: null });
+                    await interaction.reply({ embeds: [new EmbedBuilder().setDescription(`User <@${targetUser.id}> does not have an account. Any unused license keys linked to them have been revoked.`).setColor('#2ecc71')], ephemeral: true });
+                }
+            } catch (err) {
+                console.error(err);
+                await interaction.reply({ embeds: [new EmbedBuilder().setDescription('Error unwhitelisting user.').setColor('#e74c3c')], ephemeral: true });
             }
         } else if (interaction.commandName === 'panel') {
             const embed = new EmbedBuilder()
