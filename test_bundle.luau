@@ -662,6 +662,210 @@ end
 
 
 -- [[ Components/Toggle.luau ]] --
+local ToggleComponent = {}
+
+
+
+function ToggleComponent.Create(TabContent, Maid, Config)
+    local config = type(Config) == "string" and {Header = Config} or Config
+    local headerText = config.Header or config.Name or "Toggle"
+    local descText = config.Description or ""
+    local hoverText = config.HoverText or ""
+    local state = config.Default or false
+    local cb = config.Callback or function() end
+    
+    local ToggleFrame = Instance.new("Frame")
+    ToggleFrame.Name = headerText
+    ToggleFrame.BackgroundColor3 = Color3.new(0.11, 0.11, 0.11)
+    ToggleFrame.BorderColor3 = Color3.new(0, 0, 0)
+    ToggleFrame.BorderSizePixel = 0
+    ToggleFrame.Size = UDim2.new(1, 0, 0, descText == "" and 42 or 52)
+    ToggleFrame.Parent = TabContent
+    
+    local ToggleCorner = Instance.new("UICorner")
+    ToggleCorner.CornerRadius = UDim.new(0, 5)
+    ToggleCorner.Parent = ToggleFrame
+    
+    local ToggleStroke = Instance.new("UIStroke")
+    ToggleStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
+    ToggleStroke.Color = Color3.new(0.216, 0.216, 0.216)
+    ToggleStroke.Parent = ToggleFrame
+    
+    local ToggleLayout = Instance.new("UIListLayout")
+    ToggleLayout.FillDirection = Enum.FillDirection.Horizontal
+    ToggleLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    ToggleLayout.Parent = ToggleFrame
+    
+    local TextContainer = Instance.new("Frame")
+    TextContainer.Name = "Text"
+    TextContainer.BackgroundTransparency = 1
+    TextContainer.Size = UDim2.new(1, -70, 1, 0)
+    TextContainer.Parent = ToggleFrame
+    
+    local TextLayout = Instance.new("UIListLayout")
+    TextLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    TextLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    TextLayout.Padding = UDim.new(0, 2)
+    TextLayout.Parent = TextContainer
+    
+    local TextPadding = Instance.new("UIPadding")
+    TextPadding.PaddingLeft = UDim.new(0, 14)
+    TextPadding.Parent = TextContainer
+    
+    local Header = Instance.new("TextLabel")
+    Header.Name = "Header"
+    Header.BackgroundTransparency = 1
+    Header.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    Header.Size = UDim2.new(1, 0, 0, 16)
+    Header.Text = headerText
+    Header.TextColor3 = Color3.new(0.9, 0.9, 0.9)
+    Header.TextSize = 14
+    Header.TextXAlignment = Enum.TextXAlignment.Left
+    Header.TextYAlignment = Enum.TextYAlignment.Center
+    Header.Parent = TextContainer
+    
+    if descText ~= "" then
+        local Description = Instance.new("TextLabel")
+        Description.Name = "Description"
+        Description.BackgroundTransparency = 1
+        Description.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+        Description.Size = UDim2.new(1, 0, 0, 14)
+        Description.Text = descText
+        Description.TextColor3 = Color3.new(0.6, 0.6, 0.6)
+        Description.TextSize = 12
+        Description.TextXAlignment = Enum.TextXAlignment.Left
+        Description.TextYAlignment = Enum.TextYAlignment.Center
+        Description.Parent = TextContainer
+    end
+    
+    local SwitchContainer = Instance.new("Frame")
+    SwitchContainer.Name = "SwitchContainer"
+    SwitchContainer.BackgroundTransparency = 1
+    SwitchContainer.LayoutOrder = 1
+    SwitchContainer.Size = UDim2.new(0, 70, 1, 0)
+    SwitchContainer.Parent = ToggleFrame
+    
+    local SwitchLayout = Instance.new("UIListLayout")
+    SwitchLayout.FillDirection = Enum.FillDirection.Horizontal
+    SwitchLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
+    SwitchLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    SwitchLayout.Parent = SwitchContainer
+    
+    local SwitchPadding = Instance.new("UIPadding")
+    SwitchPadding.PaddingRight = UDim.new(0, 14)
+    SwitchPadding.Parent = SwitchContainer
+    
+    local SwitchBg = Instance.new("Frame")
+    SwitchBg.Name = "SwitchBg"
+    SwitchBg.BackgroundColor3 = state and Color3.new(1, 1, 1) or Color3.new(0.141, 0.141, 0.141)
+    SwitchBg.Size = UDim2.new(0, 36, 0, 20)
+    SwitchBg.Parent = SwitchContainer
+    
+    local SwitchCorner = Instance.new("UICorner")
+    SwitchCorner.CornerRadius = UDim.new(1, 0)
+    SwitchCorner.Parent = SwitchBg
+    
+    local SwitchStroke = Instance.new("UIStroke")
+    SwitchStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    SwitchStroke.Color = state and Color3.new(1, 1, 1) or Color3.new(0.275, 0.275, 0.275)
+    SwitchStroke.Parent = SwitchBg
+    
+    local SwitchDot = Instance.new("Frame")
+    SwitchDot.Name = "Dot"
+    SwitchDot.BackgroundColor3 = state and Color3.new(0, 0, 0) or Color3.new(0.6, 0.6, 0.6)
+    SwitchDot.Position = state and UDim2.new(1, -18, 0.5, 0) or UDim2.new(0, 2, 0.5, 0)
+    SwitchDot.AnchorPoint = Vector2.new(0, 0.5)
+    SwitchDot.Size = UDim2.new(0, 16, 0, 16)
+    SwitchDot.Parent = SwitchBg
+    
+    local DotCorner = Instance.new("UICorner")
+    DotCorner.CornerRadius = UDim.new(1, 0)
+    DotCorner.Parent = SwitchDot
+
+    local Tooltip
+    if hoverText ~= "" then
+        Tooltip = Instance.new("TextLabel")
+        Tooltip.Name = "Tooltip"
+        Tooltip.BackgroundColor3 = Color3.new(0.075, 0.075, 0.075)
+        Tooltip.BackgroundTransparency = 1
+        Tooltip.AnchorPoint = Vector2.new(0.5, 1)
+        Tooltip.Position = UDim2.new(0.5, 0, 0, -5)
+        Tooltip.Size = UDim2.new(0, 0, 0, 22)
+        Tooltip.AutomaticSize = Enum.AutomaticSize.X
+        Tooltip.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+        Tooltip.Text = hoverText
+        Tooltip.TextColor3 = Color3.new(0.8, 0.8, 0.8)
+        Tooltip.TextSize = 12
+        Tooltip.TextTransparency = 1
+        Tooltip.ZIndex = 10
+        Tooltip.Visible = false
+        Tooltip.Parent = ToggleFrame
+        
+        local TooltipCorner = Instance.new("UICorner")
+        TooltipCorner.CornerRadius = UDim.new(0, 4)
+        TooltipCorner.Parent = Tooltip
+        
+        local TooltipStroke = Instance.new("UIStroke")
+        TooltipStroke.Color = Color3.new(0.2, 0.2, 0.2)
+        TooltipStroke.Transparency = 1
+        TooltipStroke.Parent = Tooltip
+        
+        local TooltipPadding = Instance.new("UIPadding")
+        TooltipPadding.PaddingLeft = UDim.new(0, 8)
+        TooltipPadding.PaddingRight = UDim.new(0, 8)
+        TooltipPadding.Parent = Tooltip
+    end
+    
+    local InteractBtn = Instance.new("TextButton")
+    InteractBtn.Name = "Interact"
+    InteractBtn.BackgroundTransparency = 1
+    InteractBtn.Size = UDim2.new(1, 0, 1, 0)
+    InteractBtn.Text = ""
+    InteractBtn.Parent = ToggleFrame
+    
+    local function UpdateToggle()
+        if state then
+            Tween(SwitchBg, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.new(1, 1, 1)})
+            Tween(SwitchStroke, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Color = Color3.new(1, 1, 1)})
+            Tween(SwitchDot, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(1, -18, 0.5, 0), BackgroundColor3 = Color3.new(0, 0, 0)})
+        else
+            Tween(SwitchBg, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.new(0.141, 0.141, 0.141)})
+            Tween(SwitchStroke, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Color = Color3.new(0.275, 0.275, 0.275)})
+            Tween(SwitchDot, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(0, 2, 0.5, 0), BackgroundColor3 = Color3.new(0.6, 0.6, 0.6)})
+        end
+    end
+    
+    Maid:GiveTask(InteractBtn.MouseButton1Click:Connect(function()
+        state = not state
+        UpdateToggle()
+        cb(state)
+    end))
+    
+    Maid:GiveTask(InteractBtn.MouseEnter:Connect(function()
+        Tween(ToggleFrame, TweenInfo.new(0.2), {BackgroundColor3 = Color3.new(0.13, 0.13, 0.13)})
+        if Tooltip then
+            Tooltip.Visible = true
+            Tween(Tooltip, TweenInfo.new(0.2), {BackgroundTransparency = 0, TextTransparency = 0})
+            Tween(Tooltip.UIStroke, TweenInfo.new(0.2), {Transparency = 0})
+        end
+    end))
+    
+    Maid:GiveTask(InteractBtn.MouseLeave:Connect(function()
+        Tween(ToggleFrame, TweenInfo.new(0.2), {BackgroundColor3 = Color3.new(0.11, 0.11, 0.11)})
+        if Tooltip then
+            Tween(Tooltip, TweenInfo.new(0.2), {BackgroundTransparency = 1, TextTransparency = 1})
+            Tween(Tooltip.UIStroke, TweenInfo.new(0.2), {Transparency = 1})
+            task.delay(0.2, function()
+                if Tooltip.BackgroundTransparency == 1 then
+                    Tooltip.Visible = false
+                end
+            end)
+        end
+    end))
+    
+    return ToggleFrame
+end
+
 
 
 -- [[ Components/Slider.luau ]] --
@@ -4530,6 +4734,16 @@ local Button = MainTab:CreateButton({
     ButtonText = "Click",
     Callback = function()
         print("Erfolg! Die UI funktioniert!")
+    end
+})
+
+local Toggle = MainTab:CreateToggle({
+    Name = "Test Toggle",
+    Description = "Das ist ein schöner Toggle Schalter",
+    HoverText = "Hier ist eine Tooltip Info!",
+    Default = false,
+    Callback = function(state)
+        print("Toggle ist jetzt: ", state)
     end
 })
 
