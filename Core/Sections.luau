@@ -2,6 +2,7 @@ local Utils = script.Parent.Parent.Utils
 local Components = script.Parent.Parent.Components
 local ButtonComponent = require(Components.Button)
 local ToggleComponent = require(Components.Toggle)
+local DropdownComponent = require(Components.Dropdown)
 
 local Sections = {}
 
@@ -101,6 +102,13 @@ function Sections.CreateSection(TabContent, Maid, Title, Description)
     function SectionMethods:CreateToggle(Config)
         AddSeparator()
         local Element = ToggleComponent.Create(SectionFrame, Maid, Config)
+        ElementCount = ElementCount + 1
+        return Element
+    end
+    
+    function SectionMethods:CreateDropdown(Config)
+        AddSeparator()
+        local Element = DropdownComponent.Create(SectionFrame, Maid, Config)
         ElementCount = ElementCount + 1
         return Element
     end
