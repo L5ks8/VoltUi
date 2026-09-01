@@ -10,9 +10,14 @@ app.set('trust proxy', 1);
 app.use(express.json());
 app.use(cors());
 
+const requireApiKey = require('./middleware/requireApiKey');
+
 app.get('/', (req, res) => {
     res.type('json').send(JSON.stringify({ message: "Volt API is running" }));
 });
+
+// Developer API (unencrypted, uses Admin API Key)
+app.use('/api/v1', requireApiKey, require('./routes/adminApi'));
 
 app.use('/api', encryptionMiddleware);
 

@@ -72,7 +72,17 @@ router.post('/login', async (req, res) => {
         }
         
         if (user.banned) {
-            return res.status(403).json({ error: 'You are banned from using VoltUi.' });
+            // Check if ban is expired
+            if (user.banExpire && user.banExpire < new Date()) {
+                user.banned = false;
+                user.banReason = null;
+                user.banExpire = null;
+                await user.save();
+            } else {
+                const reasonStr = user.banReason ? `\nReason: ${user.banReason}` : '';
+                const expireStr = user.banExpire ? `\nExpires: ${user.banExpire.toLocaleString()}` : '';
+                return res.status(403).json({ error: `You are banned from using VoltUi.${reasonStr}${expireStr}` });
+            }
         }
         
         if (!user.hwid) {
@@ -82,6 +92,7 @@ router.post('/login', async (req, res) => {
         }
         
         user.executions = (user.executions || 0) + 1;
+        user.lastExecutedAt = new Date();
         await user.save();
         
         const payload = {

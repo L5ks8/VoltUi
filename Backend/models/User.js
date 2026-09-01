@@ -44,6 +44,22 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: null
     },
+    banned: {
+        type: Boolean,
+        default: false
+    },
+    banReason: {
+        type: String,
+        default: null
+    },
+    banExpire: {
+        type: Date,
+        default: null
+    },
+    lastExecutedAt: {
+        type: Date,
+        default: null
+    },
     resetCode: {
         type: String,
         default: null
@@ -51,10 +67,6 @@ const userSchema = new mongoose.Schema({
     resetCodeExpires: {
         type: Date,
         default: null
-    },
-    banned: {
-        type: Boolean,
-        default: false
     }
 }, { timestamps: true });
 

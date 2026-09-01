@@ -31,7 +31,9 @@ const commands = [
     new SlashCommandBuilder()
         .setName('blacklist')
         .setDescription('Blacklist a user')
-        .addUserOption(option => option.setName('user').setDescription('The Discord user to blacklist').setRequired(true)),
+        .addUserOption(option => option.setName('user').setDescription('The Discord user to blacklist').setRequired(true))
+        .addStringOption(option => option.setName('reason').setDescription('Reason for blacklisting').setRequired(false))
+        .addIntegerOption(option => option.setName('days').setDescription('Ban duration in days').setRequired(false)),
     new SlashCommandBuilder()
         .setName('unblacklist')
         .setDescription('Unblacklist a user')
@@ -39,7 +41,8 @@ const commands = [
     new SlashCommandBuilder()
         .setName('reset_hwid')
         .setDescription('Reset HWID for a user')
-        .addUserOption(option => option.setName('user').setDescription('The Discord user to reset HWID').setRequired(true)),
+        .addUserOption(option => option.setName('user').setDescription('The Discord user to reset HWID').setRequired(true))
+        .addBooleanOption(option => option.setName('force').setDescription('Bypass the cooldown').setRequired(false)),
     new SlashCommandBuilder()
         .setName('compensate')
         .setDescription('Adds days to everyone in a project.')
@@ -212,12 +215,25 @@ client.on('interactionCreate', async interaction => {
             }
         } else if (interaction.commandName === 'blacklist') {
             const targetUser = interaction.options.getUser('user');
+            const reason = interaction.options.getString('reason') || 'No reason provided';
+            const days = interaction.options.getInteger('days');
+            
             try {
                 const user = await User.findOne({ discordId: targetUser.id });
                 if (!user) return interaction.reply({ embeds: [new EmbedBuilder().setDescription('That Discord user has not registered an account yet.').setColor('#e74c3c')], ephemeral: true });
+                
                 user.banned = true;
+                user.banReason = reason;
+                if (days) {
+                    user.banExpire = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
+                } else {
+                    user.banExpire = null; // Infinite
+                }
+                
                 await user.save();
-                await interaction.reply({ embeds: [new EmbedBuilder().setDescription(`User **${user.username}** (<@${targetUser.id}>) has been blacklisted.`).setColor('#2ecc71')], ephemeral: true });
+                
+                const banStr = days ? `for ${days} days` : 'permanently';
+                await interaction.reply({ embeds: [new EmbedBuilder().setDescription(`User **${user.username}** (<@${targetUser.id}>) has been blacklisted ${banStr}.\n**Reason:** ${reason}`).setColor('#2ecc71')], ephemeral: true });
             } catch (err) {
                 console.error(err);
                 await interaction.reply({ embeds: [new EmbedBuilder().setDescription('Error blacklisting user.').setColor('#e74c3c')], ephemeral: true });
@@ -227,8 +243,12 @@ client.on('interactionCreate', async interaction => {
             try {
                 const user = await User.findOne({ discordId: targetUser.id });
                 if (!user) return interaction.reply({ embeds: [new EmbedBuilder().setDescription('That Discord user has not registered an account yet.').setColor('#e74c3c')], ephemeral: true });
+                
                 user.banned = false;
+                user.banReason = null;
+                user.banExpire = null;
                 await user.save();
+                
                 await interaction.reply({ embeds: [new EmbedBuilder().setDescription(`User **${user.username}** (<@${targetUser.id}>) has been unblacklisted.`).setColor('#2ecc71')], ephemeral: true });
             } catch (err) {
                 console.error(err);
@@ -236,9 +256,18 @@ client.on('interactionCreate', async interaction => {
             }
         } else if (interaction.commandName === 'reset_hwid') {
             const targetUser = interaction.options.getUser('user');
+            const force = interaction.options.getBoolean('force');
             try {
                 const user = await User.findOne({ discordId: targetUser.id });
                 if (!user) return interaction.reply({ embeds: [new EmbedBuilder().setDescription('That Discord user has not registered an account yet.').setColor('#e74c3c')], ephemeral: true });
+                
+                if (!force && user.lastReset) {
+                    const cooldown = 48 * 60 * 60 * 1000;
+                    if ((Date.now() - user.lastReset.getTime()) < cooldown) {
+                        return interaction.reply({ embeds: [new EmbedBuilder().setDescription(`User is on HWID reset cooldown. Available <t:${Math.floor((user.lastReset.getTime() + cooldown) / 1000)}:R>.\nUse \`force: true\` to bypass.`).setColor('#e74c3c')], ephemeral: true });
+                    }
+                }
+                
                 user.hwid = null;
                 user.hwidResets = (user.hwidResets || 0) + 1;
                 user.lastReset = new Date();
@@ -435,6 +464,30 @@ client.on('interactionCreate', async interaction => {
 
                     await interaction.reply({ embeds: [errorEmbed], ephemeral: true });
                 }
+            } catch (err) {
+                console.error(err);
+                await interaction.reply({ embeds: [new EmbedBuilder().setDescription('An error occurred.').setColor('#e74c3c')], ephemeral: true });
+            }
+        } else if (interaction.customId === 'panel_hwid') {
+            try {
+                const user = await User.findOne({ discordId: interaction.user.id });
+                if (!user) {
+                    return interaction.reply({ embeds: [new EmbedBuilder().setDescription('You have not registered an account yet.').setColor('#e74c3c')], ephemeral: true });
+                }
+                
+                if (user.lastReset) {
+                    const cooldown = 48 * 60 * 60 * 1000;
+                    if ((Date.now() - user.lastReset.getTime()) < cooldown) {
+                        return interaction.reply({ embeds: [new EmbedBuilder().setDescription(`You are on cooldown! You can reset your HWID again <t:${Math.floor((user.lastReset.getTime() + cooldown) / 1000)}:R>.`).setColor('#e74c3c')], ephemeral: true });
+                    }
+                }
+                
+                user.hwid = null;
+                user.hwidResets = (user.hwidResets || 0) + 1;
+                user.lastReset = new Date();
+                await user.save();
+                
+                await interaction.reply({ embeds: [new EmbedBuilder().setDescription('Your HWID has been reset!').setColor('#2ecc71')], ephemeral: true });
             } catch (err) {
                 console.error(err);
                 await interaction.reply({ embeds: [new EmbedBuilder().setDescription('An error occurred.').setColor('#e74c3c')], ephemeral: true });
