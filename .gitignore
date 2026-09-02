@@ -1,0 +1,11 @@
+# Build artifacts
+test_bundle.luau
+build/
+build.bat
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node (Backend has its own .gitignore)
+node_modules/
