@@ -5227,7 +5227,7 @@ function Library:CreateWindow(Config)
 end
 
 
-
+return Library
 
 local Window = Library:CreateWindow({
     Name = "VoltUi",
