@@ -997,6 +997,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
     DropdownText.TextColor3 = Color3.new(0.8, 0.8, 0.8)
     DropdownText.TextSize = 13
     DropdownText.TextXAlignment = Enum.TextXAlignment.Left
+    DropdownText.TextTruncate = Enum.TextTruncate.AtEnd
     DropdownText.Parent = DropdownBtn
     
     local Icon = Instance.new("ImageLabel")
@@ -1056,7 +1057,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
         Tween(DropdownStroke, TweenInfo.new(0.2), {Color = Color3.new(0.2, 0.2, 0.2)})
         
         if DropdownMenu then
-            local tween = Tween(DropdownMenu, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0, DropdownFrame.AbsoluteSize.X - 28, 0, 0)})
+            local tween = Tween(DropdownMenu, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0, DropdownBtn.AbsoluteSize.X, 0, 0)})
             task.delay(0.2, function()
                 if not MenuOpen and DropdownMenu then
                     DropdownMenu:Destroy()
@@ -1096,10 +1097,10 @@ function DropdownComponent.Create(TabContent, Maid, Config)
         DropdownMenu.BackgroundColor3 = Color3.new(0.141, 0.141, 0.141)
         DropdownMenu.BorderSizePixel = 0
         DropdownMenu.ClipsDescendants = true
-        local startX = DropdownFrame.AbsolutePosition.X + 14 - ScreenGui.AbsolutePosition.X
-        local startY = (isLarge and DropdownBtn.AbsolutePosition.Y or DropdownFrame.AbsolutePosition.Y) - ScreenGui.AbsolutePosition.Y + (isLarge and DropdownBtn.AbsoluteSize.Y or DropdownFrame.AbsoluteSize.Y) + 4
+        local startX = DropdownBtn.AbsolutePosition.X - ScreenGui.AbsolutePosition.X
+        local startY = (DropdownBtn.AbsolutePosition.Y - ScreenGui.AbsolutePosition.Y) + DropdownBtn.AbsoluteSize.Y + 4
         DropdownMenu.Position = UDim2.new(0, startX, 0, startY)
-        DropdownMenu.Size = UDim2.new(0, DropdownFrame.AbsoluteSize.X - 28, 0, 0)
+        DropdownMenu.Size = UDim2.new(0, DropdownBtn.AbsoluteSize.X, 0, 0)
         DropdownMenu.ZIndex = 10001
         DropdownMenu.Parent = ScreenGui
         
@@ -1164,6 +1165,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
             OptText.TextColor3 = option == selected and Color3.new(0.9, 0.9, 0.9) or Color3.new(0.6, 0.6, 0.6)
             OptText.TextSize = 13
             OptText.TextXAlignment = Enum.TextXAlignment.Left
+            OptText.TextTruncate = Enum.TextTruncate.AtEnd
             OptText.ZIndex = 10004
             OptText.Parent = OptBtn
             
@@ -1208,7 +1210,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
             targetHeight = 150
         end
         
-        Tween(DropdownMenu, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0, DropdownFrame.AbsoluteSize.X - 28, 0, targetHeight)})
+        Tween(DropdownMenu, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0, DropdownBtn.AbsoluteSize.X, 0, targetHeight)})
     end
     
     Maid:GiveTask(DropdownBtn.MouseButton1Click:Connect(function()
@@ -1219,28 +1221,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
         end
     end))
     
-    local ClickTarget = isLarge and DropdownBtn or DropdownFrame
-    if ClickTarget == DropdownFrame then
-        ClickTarget = Instance.new("TextButton")
-        ClickTarget.BackgroundTransparency = 1
-        ClickTarget.Text = ""
-        ClickTarget.Size = UDim2.new(1, 0, 1, 0)
-        ClickTarget.ZIndex = 10
-        ClickTarget.Parent = DropdownFrame
-        
-        Maid:GiveTask(ClickTarget.MouseButton1Click:Connect(function()
-            if MenuOpen then
-                CloseDropdown()
-            else
-                OpenDropdown()
-            end
-        end))
-    end
-    
-
-    local TooltipTarget = ClickTarget.Parent == DropdownFrame and ClickTarget or DropdownFrame
-    
-    Maid:GiveTask(TooltipTarget.MouseEnter:Connect(function()
+    Maid:GiveTask(DropdownFrame.MouseEnter:Connect(function()
         if not isLarge then
             Tween(DropdownFrame, TweenInfo.new(0.2), {BackgroundTransparency = 0})
         end
@@ -1256,7 +1237,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
         end
     end))
     
-    Maid:GiveTask(TooltipTarget.MouseLeave:Connect(function()
+    Maid:GiveTask(DropdownFrame.MouseLeave:Connect(function()
         if not isLarge then
             Tween(DropdownFrame, TweenInfo.new(0.2), {BackgroundTransparency = 1})
         end
