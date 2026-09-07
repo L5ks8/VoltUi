@@ -1,4 +1,4 @@
-const { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle, AttachmentBuilder } = require('discord.js');
+const { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle, AttachmentBuilder, Events } = require('discord.js');
 const mongoose = require('mongoose');
 const License = require('./models/License');
 const User = require('./models/User');
@@ -92,7 +92,7 @@ const generateKey = () => {
     return key;
 };
 
-client.on('ready', async () => {
+client.once(Events?.ClientReady || 'clientReady', async () => {
     console.log(`Bot logged in as ${client.user.tag}`);
     try {
         const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
