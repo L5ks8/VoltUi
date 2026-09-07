@@ -229,6 +229,10 @@ function DropdownComponent.Create(TabContent, Maid, Config)
         if not MenuOpen then return end
         MenuOpen = false
 
+        if TabContent and TabContent:IsA("ScrollingFrame") then
+            TabContent.ScrollingEnabled = wasScrollingEnabled
+        end
+
         Tween(ChevronIcon, TweenInfo.new(0.2), {Rotation = 0})
         Tween(DropdownStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(48, 48, 48)})
 
@@ -247,12 +251,18 @@ function DropdownComponent.Create(TabContent, Maid, Config)
             DropdownOverlay = nil
         end
     end
+    local wasScrollingEnabled = false
 
     local function OpenDropdown()
         if MenuOpen then return end
         local ScreenGui = TabContent:FindFirstAncestorOfClass("ScreenGui")
         if not ScreenGui then return end
         MenuOpen = true
+
+        if TabContent and TabContent:IsA("ScrollingFrame") then
+            wasScrollingEnabled = TabContent.ScrollingEnabled
+            TabContent.ScrollingEnabled = false
+        end
 
         Tween(ChevronIcon, TweenInfo.new(0.2), {Rotation = 180})
         Tween(DropdownStroke, TweenInfo.new(0.2), {Color = config.AccentColor or Color3.fromRGB(245, 245, 245)})
