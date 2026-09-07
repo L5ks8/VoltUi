@@ -1,5 +1,6 @@
-local Library = {}
-
+local Library = {
+    Version = "1.1.4"
+}
 local isStudio = false
 pcall(function()
     isStudio = (typeof(script) == "Instance" and script:FindFirstChild("Core") ~= nil and script.Core:FindFirstChild("Window") ~= nil)

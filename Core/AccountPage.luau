@@ -1610,7 +1610,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
                 local endTimeEpoch = nil
                 if subEnd then
                     local str = tostring(subEnd)
-                    local y, m, d, h, min, s = string.match(str, "^(%d+)%-(%d+)%-(%d+)[T ](%d+):(%d+):(%d+)")
+                    local y, m, d, h, min, s = string.match(str, "^(%d+)%-(%d+)%-(%d+)T(%d+):(%d+):(%d+)")
                     if y and m and d and h and min and s then
                         pcall(function()
                             endTimeEpoch = os.time({year = tonumber(y), month = tonumber(m), day = tonumber(d), hour = tonumber(h), min = tonumber(min), sec = tonumber(s)})
@@ -1619,6 +1619,9 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
                     else
                         local y2, m2, day2 = string.match(str, "^(%d+)%-(%d+)%-(%d+)")
                         if y2 and m2 and day2 then
+                            pcall(function()
+                                endTimeEpoch = os.time({year = tonumber(y2), month = tonumber(m2), day = tonumber(day2), hour = 0, min = 0, sec = 0})
+                            end)
                             endFormatted = string.format("%d.%d.%s", tonumber(day2), tonumber(m2), y2)
                         else
                             endFormatted = str
@@ -1641,10 +1644,15 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
                         StatusBadgeText.Text = "Expired"
                         StatusBadgeText.TextColor3 = Color3.fromRGB(220, 80, 80)
                     end
-                elseif remainingStr and remainingStr ~= "" and not string.find(string.lower(tostring(remainingStr)), "month") then
-                    calcRemaining = tostring(remainingStr)
+                elseif remainingStr and remainingStr ~= "" then
+                    local rStr = tostring(remainingStr)
+                    if string.find(string.lower(rStr), "month") then
+                        calcRemaining = "30d 0h 0m"
+                    else
+                        calcRemaining = rStr
+                    end
                 end
-                RemainingValue.Text = calcRemaining or (remainingStr and tostring(remainingStr)) or "Active"
+                RemainingValue.Text = calcRemaining or "Active"
             end
 
             if subStart then

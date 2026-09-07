@@ -531,7 +531,7 @@ function Window:CreateWindow(Config)
         end)
     end
 
-    local showLoading = Config.Loading or Config.LoadingScreen or Config.LoadingTitle
+    local showLoading = true
 
     if isAuthSystem then
         if not Api then
@@ -593,18 +593,20 @@ function Window:CreateWindow(Config)
         else
             ShowKeySystem(function() OnLoginSuccess() end)
         end
-    elseif showLoading then
-        local loadingScreen
-        pcall(function()
-            loadingScreen = Loading.Create(VoltUi)
-        end)
-        task.spawn(function()
-            if loadingScreen then loadingScreen:WaitForReady() end
-            Main.Visible = true
-            if loadingScreen then loadingScreen:FadeOut() end
-        end)
     else
-        Main.Visible = true
+        if showLoading then
+            local loadingScreen
+            pcall(function()
+                loadingScreen = Loading.Create(VoltUi)
+            end)
+            task.spawn(function()
+                if loadingScreen then loadingScreen:WaitForReady() end
+                Main.Visible = true
+                if loadingScreen then loadingScreen:FadeOut() end
+            end)
+        else
+            Main.Visible = true
+        end
     end
     
     maid:GiveTask(SidebarElements.AccountBtn.MouseButton1Click:Connect(function()
