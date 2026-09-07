@@ -153,7 +153,11 @@ function Topbar.Create(Main, Config, maid)
     local baseTitle = Config.Title or Config.Name or "Volt"
     local initialVersion = Config.Version or "1.0.0"
     
+    local isSpecialPage = (baseTitle == "Sign In" or baseTitle == "Register" or baseTitle == "Reset Password" or baseTitle == "Enter Code" or baseTitle:find("Forgot") ~= nil)
     local function formatHeader(t, v)
+        if isSpecialPage then
+            return t
+        end
         if t:find("%d+%.%d+") then
             return t
         end
@@ -184,23 +188,25 @@ function Topbar.Create(Main, Config, maid)
     VersionText.TextSize = 13
     VersionText.Parent = Version
 
-    task.spawn(function()
-        pcall(function()
-            local getFunc = (game and game.HttpGet and function(u) return game:HttpGet(u) end)
-                         or (request and function(u) return request({Url = u, Method = "GET"}).Body end)
-            if getFunc then
-                local res = getFunc("https://volthub-18b3.onrender.com/version")
-                if res then
-                    local HttpService = game:GetService("HttpService")
-                    local ok, decoded = pcall(function() return HttpService:JSONDecode(res) end)
-                    local v = (ok and decoded and decoded.version) or res:match('"(%d+%.%d+%.%d+)"') or res:match('(%d+%.%d+%.%d+)')
-                    if v and v ~= "" then
-                        VersionText.Text = formatHeader(baseTitle, v)
+    if not isSpecialPage then
+        task.spawn(function()
+            pcall(function()
+                local getFunc = (game and game.HttpGet and function(u) return game:HttpGet(u) end)
+                             or (request and function(u) return request({Url = u, Method = "GET"}).Body end)
+                if getFunc then
+                    local res = getFunc("https://volthub-18b3.onrender.com/version")
+                    if res then
+                        local HttpService = game:GetService("HttpService")
+                        local ok, decoded = pcall(function() return HttpService:JSONDecode(res) end)
+                        local v = (ok and decoded and decoded.version) or res:match('"(%d+%.%d+%.%d+)"') or res:match('(%d+%.%d+%.%d+)')
+                        if v and v ~= "" then
+                            VersionText.Text = formatHeader(baseTitle, v)
+                        end
                     end
                 end
-            end
+            end)
         end)
-    end)
+    end
     
     local TweenInfoObj = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 

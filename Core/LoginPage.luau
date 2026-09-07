@@ -28,7 +28,11 @@ function LoginPage.Create(ParentGui, OnSuccess)
     local TopbarElements = Topbar.Create(Page, {Title = "Sign In"}, maid)
     
     maid:GiveTask(TopbarElements.CloseButton.MouseButton1Click:Connect(function()
-        Page:Destroy()
+        if ParentGui and ParentGui.Parent then
+            ParentGui:Destroy()
+        else
+            Page:Destroy()
+        end
         maid:Destroy()
     end))
     
@@ -305,6 +309,7 @@ function LoginPage.Create(ParentGui, OnSuccess)
                     Notifications.Notify({ Title = "Login Successful", Content = "Welcome back!", Type = "Success" })
                     Page.Visible = false
                     if OnSuccess then OnSuccess() end
+                    task.delay(1, function() pcall(function() Page:Destroy() maid:Destroy() end) end)
                 else
                     Notifications.Notify({ Title = "Login Failed", Content = msg or "Invalid credentials", Type = "Error" })
                     ActionBtn.Text = "Sign In"
@@ -319,6 +324,7 @@ function LoginPage.Create(ParentGui, OnSuccess)
                         Notifications.Notify({ Title = "Registration Successful", Content = "Welcome to Volt!", Type = "Success" })
                         Page.Visible = false
                         if OnSuccess then OnSuccess() end
+                        task.delay(1, function() pcall(function() Page:Destroy() maid:Destroy() end) end)
                     else
                         Notifications.Notify({ Title = "Auto-Login Failed", Content = msg2, Type = "Error" })
                         ActionBtn.Text = "Create Account"

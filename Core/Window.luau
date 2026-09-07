@@ -4,6 +4,11 @@ local Signal = require(Utils.Signal)
 local Tween = require(Utils.Tween)
 local Utility = require(Utils.Utility)
 
+local Api = nil
+pcall(function()
+    Api = require(Utils.Api)
+end)
+
 local Topbar = require(script.Parent.Topbar)
 local Sidebar = require(script.Parent.Sidebar)
 local Bottombar = require(script.Parent.Bottombar)
@@ -40,6 +45,7 @@ function Window:CreateWindow(Config)
     Main.ClipsDescendants = false
     Main.Position = UDim2.new(0.5, 0, 0.5, 0)
     Main.Size = UDim2.new(0, 800, 0, 600)
+    Main.Visible = false
     Main.Parent = VoltUi
     
     local UICorner = Instance.new("UICorner")
@@ -151,11 +157,10 @@ function Window:CreateWindow(Config)
         })
     end))
 
-    local isKeySystem = (Config.KeySystem == true) or (Config.KeySettings ~= nil)
-    local isBackendAuth = (Config.Login == true) or (Config.EnableAuth == true)
+    local isStandaloneKey = (Config.StandaloneKey == true) or (Config.SimpleKey == true) or (Config.KeyOnly == true)
+    local isAuthSystem = (Config.KeySystem == true) or (Config.Login == true) or (Config.Auth == true) or (Config.EnableAuth == true) or (Config.KeySettings ~= nil and not isStandaloneKey)
 
-    local Api = nil
-    if isBackendAuth then
+    if not Api then
         pcall(function()
             Api = require(Utils.Api)
         end)
@@ -505,28 +510,24 @@ function Window:CreateWindow(Config)
 
     local showLoading = Config.Loading or Config.LoadingScreen or Config.LoadingTitle
 
-    if isKeySystem then
-        if showLoading then
-            local loadingScreen
-            pcall(function() loadingScreen = Loading.Create(VoltUi) end)
-            task.spawn(function()
-                if loadingScreen then loadingScreen:WaitForReady() end
-                ShowKeySystem(function() OnLoginSuccess() end)
-                if loadingScreen then loadingScreen:FadeOut() end
-            end)
-        else
-            ShowKeySystem(function() OnLoginSuccess() end)
+    if isAuthSystem then
+        if not Api then
+            pcall(function() Api = require(Utils.Api) end)
         end
-    elseif isBackendAuth and Api then
+
         local loadingScreen
-        pcall(function()
-            loadingScreen = Loading.Create(VoltUi)
-        end)
+        if showLoading then
+            pcall(function()
+                loadingScreen = Loading.Create(VoltUi)
+            end)
+        end
 
         local token = nil
-        pcall(function() token = Api.GetToken() end)
+        if Api then
+            pcall(function() token = Api.GetToken() end)
+        end
 
-        if token then
+        if token and Api then
             task.spawn(function()
                 local data = nil
                 pcall(function() data = Api.FetchMe() end)
@@ -543,11 +544,31 @@ function Window:CreateWindow(Config)
                 end
             end)
         else
-            if loadingScreen then loadingScreen:WaitForReady() end
-            LoginPage.Create(VoltUi, function()
-                OnLoginSuccess()
+            if loadingScreen then
+                task.spawn(function()
+                    loadingScreen:WaitForReady()
+                    LoginPage.Create(VoltUi, function()
+                        OnLoginSuccess()
+                    end)
+                    loadingScreen:FadeOut()
+                end)
+            else
+                LoginPage.Create(VoltUi, function()
+                    OnLoginSuccess()
+                end)
+            end
+        end
+    elseif isStandaloneKey then
+        if showLoading then
+            local loadingScreen
+            pcall(function() loadingScreen = Loading.Create(VoltUi) end)
+            task.spawn(function()
+                if loadingScreen then loadingScreen:WaitForReady() end
+                ShowKeySystem(function() OnLoginSuccess() end)
+                if loadingScreen then loadingScreen:FadeOut() end
             end)
-            if loadingScreen then loadingScreen:FadeOut() end
+        else
+            ShowKeySystem(function() OnLoginSuccess() end)
         end
     elseif showLoading then
         local loadingScreen
