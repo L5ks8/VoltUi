@@ -19,8 +19,8 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
     TabBtn.Name = Name
     TabBtn.BackgroundColor3 = Color3.new(1, 1, 1)
     TabBtn.BackgroundTransparency = 1
-    TabBtn.Size = UDim2.new(1, -20, 0, 34)
-    TabBtn.Position = UDim2.new(0, 10, 0, 0)
+    TabBtn.Size = UDim2.new(1, -6, 0, 34)
+    TabBtn.Position = UDim2.new(0, 6, 0, 0)
     TabBtn.Text = ""
     TabBtn.ClipsDescendants = true
     TabBtn.Parent = SidebarContainer
@@ -84,10 +84,10 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
     ContentLayout.Parent = TabContent
     
     local ContentPadding = Instance.new("UIPadding")
-    ContentPadding.PaddingTop = UDim.new(0, 15)
-    ContentPadding.PaddingBottom = UDim.new(0, 15)
-    ContentPadding.PaddingLeft = UDim.new(0, 15)
-    ContentPadding.PaddingRight = UDim.new(0, 15)
+    ContentPadding.PaddingTop = UDim.new(0, 10)
+    ContentPadding.PaddingBottom = UDim.new(0, 10)
+    ContentPadding.PaddingLeft = UDim.new(0, 4)
+    ContentPadding.PaddingRight = UDim.new(0, 10)
     ContentPadding.Parent = TabContent
 
     local function UpdateContentScroll()
