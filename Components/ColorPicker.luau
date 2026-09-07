@@ -88,14 +88,13 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
     HexLabel.ZIndex = 50002
     HexLabel.Parent = Header
 
-    local CloseBtn = Instance.new("TextButton")
+    local CloseBtn = Instance.new("ImageButton")
     CloseBtn.Name = "Close"
     CloseBtn.BackgroundTransparency = 1
-    CloseBtn.Position = UDim2.new(1, -24, 0, 4)
+    CloseBtn.Position = UDim2.new(1, -26, 0, 4)
     CloseBtn.Size = UDim2.new(0, 20, 0, 20)
-    CloseBtn.Text = "✕"
-    CloseBtn.TextColor3 = Color3.fromRGB(150, 150, 160)
-    CloseBtn.TextSize = 12
+    CloseBtn.Image = "rbxassetid://121170570745612"
+    CloseBtn.ImageColor3 = Color3.fromRGB(150, 150, 160)
     CloseBtn.ZIndex = 50002
     CloseBtn.Parent = Header
 
