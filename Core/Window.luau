@@ -113,17 +113,17 @@ function Window:CreateWindow(Config)
     MainContent.BackgroundTransparency = 1
     MainContent.BorderColor3 = Color3.new(0, 0, 0)
     MainContent.BorderSizePixel = 0
-    MainContent.Position = UDim2.new(0, 201, 0, 0)
-    MainContent.Size = UDim2.new(1, -201, 1, 0)
+    MainContent.Position = UDim2.new(0, 207, 0, 0)
+    MainContent.Size = UDim2.new(1, -207, 1, 0)
     MainContent.LayoutOrder = 2
     MainContent.Parent = Content
     
     maid:GiveTask(OnCollapse:Connect(function(isCollapsed)
         local SidebarTweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
         if isCollapsed then
-            Tween(MainContent, SidebarTweenInfo, {Size = UDim2.new(1, -51, 1, 0)})
+            Tween(MainContent, SidebarTweenInfo, {Size = UDim2.new(1, -57, 1, 0)})
         else
-            Tween(MainContent, SidebarTweenInfo, {Size = UDim2.new(1, -201, 1, 0)})
+            Tween(MainContent, SidebarTweenInfo, {Size = UDim2.new(1, -207, 1, 0)})
         end
     end))
     
@@ -182,20 +182,40 @@ function Window:CreateWindow(Config)
     local AccountPageElements
     pcall(function()
         AccountPageElements = AccountPage.Create(PagesContainer, maid, function()
-            PageLayout:JumpTo(Content)
-            BottombarElements.Instance.Visible = true
-            Tween(PagesContainer, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -50)})
-            if Api and Api.UserData and Api.UserData.remaining == "Expired" then
-                ExpiredOverlay.Visible = true
-            else
-                ExpiredOverlay.Visible = false
-            end
+            WindowObject:OpenHome()
         end, Api, function()
             LoginPage.Create(VoltUi, function()
                 OnLoginSuccess()
             end)
         end)
     end)
+    
+    local SettingsPage = require(script.Parent.SettingsPage)
+    local SettingsPageElements
+    pcall(function()
+        SettingsPageElements = SettingsPage.Create(PagesContainer, maid, function()
+            WindowObject:OpenHome()
+        end, Config)
+    end)
+    
+    -- Connect Sidebar clicks
+    maid:GiveTask(SidebarElements.Home.MouseButton1Click:Connect(function()
+        if WindowObject and WindowObject.OpenHome then
+            WindowObject:OpenHome()
+        end
+    end))
+    maid:GiveTask(SidebarElements.Account.MouseButton1Click:Connect(function()
+        if WindowObject and WindowObject.OpenAccount then
+            WindowObject:OpenAccount()
+        end
+    end))
+    maid:GiveTask(SidebarElements.Settings.MouseButton1Click:Connect(function()
+        if SettingsPageElements and SettingsPageElements.Instance then
+            PageLayout:JumpTo(SettingsPageElements.Instance)
+            BottombarElements.Instance.Visible = false
+            Tween(PagesContainer, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -30)})
+        end
+    end))
 
     local function RefreshAccountData()
         if not Api then
@@ -742,6 +762,11 @@ function Window:CreateWindow(Config)
         PageLayout:JumpTo(Content)
         BottombarElements.Instance.Visible = true
         Tween(PagesContainer, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -50)})
+        if Api and Api.UserData and Api.UserData.remaining == "Expired" then
+            ExpiredOverlay.Visible = true
+        else
+            ExpiredOverlay.Visible = false
+        end
     end
     
     function WindowObject:Notify(Config)
