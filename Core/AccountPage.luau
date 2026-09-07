@@ -1077,7 +1077,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     CountFrame.Name = "Count"
     CountFrame.BackgroundColor3 = Color3.new(0.173, 0.173, 0.173)
     CountFrame.BorderSizePixel = 0
-    CountFrame.LayoutOrder = 2
+    CountFrame.LayoutOrder = 3
     CountFrame.Size = UDim2.new(0, 20, 0, 20)
     CountFrame.Parent = KeysTextFrame
 
@@ -1112,8 +1112,8 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     Filler.BackgroundTransparency = 1
     Filler.BorderColor3 = Color3.new(0, 0, 0)
     Filler.BorderSizePixel = 0
-    Filler.LayoutOrder = 3
-    Filler.Size = UDim2.new(1, -150, 0, 30)
+    Filler.LayoutOrder = 2
+    Filler.Size = UDim2.new(1, -165, 0, 30)
     Filler.Parent = KeysTextFrame
 
     local Claimed = Instance.new("ScrollingFrame")
@@ -1130,6 +1130,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     Claimed.Parent = KeysFrame
 
     local ClaimedLayout = Instance.new("UIListLayout")
+    ClaimedLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
     ClaimedLayout.SortOrder = Enum.SortOrder.LayoutOrder
     ClaimedLayout.Padding = UDim.new(0, 6)
     ClaimedLayout.Parent = Claimed
@@ -1761,7 +1762,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
                 KeyLabel.Position = UDim2.new(0, 16, 0, 5)
                 KeyLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
                 KeyLabel.TextSize = 15
-                KeyLabel.TextColor3 = Color3.fromRGB(130, 190, 255)
+                KeyLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
                 KeyLabel.TextXAlignment = Enum.TextXAlignment.Left
                 KeyLabel.Text = tostring(keyStr)
                 KeyLabel.Parent = KeyItem
