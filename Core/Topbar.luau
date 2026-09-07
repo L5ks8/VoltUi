@@ -150,29 +150,57 @@ function Topbar.Create(Main, Config, maid)
     CloseIcon.Size = UDim2.new(0, 30, 0, 30)
     CloseIcon.Parent = Close
     
+    local baseTitle = Config.Title or Config.Name or "Volt"
+    local initialVersion = Config.Version or "1.0.0"
+    
+    local function formatHeader(t, v)
+        if t:find("%d+%.%d+") then
+            return t
+        end
+        return t .. " - " .. v
+    end
+
     local Version = Instance.new("Frame")
     Version.Name = "Version"
     Version.AnchorPoint = Vector2.new(0.5, 0.5)
     Version.BackgroundColor3 = Color3.new(1, 1, 1)
     Version.BackgroundTransparency = 1
-    Version.BorderColor3 = Color3.new(0, 0, 0)
     Version.BorderSizePixel = 0
     Version.Position = UDim2.new(0.5, 0, 0.5, 0)
-    Version.Size = UDim2.new(0, 100, 0, 30)
+    Version.Size = UDim2.new(0, 120, 0, 30)
+    Version.AutomaticSize = Enum.AutomaticSize.X
     Version.Parent = TopbarFrame
     
     local VersionText = Instance.new("TextLabel")
     VersionText.Name = "Text"
     VersionText.BackgroundColor3 = Color3.new(1, 1, 1)
     VersionText.BackgroundTransparency = 1
-    VersionText.BorderColor3 = Color3.new(0, 0, 0)
     VersionText.BorderSizePixel = 0
     VersionText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     VersionText.Size = UDim2.new(1, 0, 1, 0)
-    VersionText.Text = Title
+    VersionText.AutomaticSize = Enum.AutomaticSize.X
+    VersionText.Text = formatHeader(baseTitle, initialVersion)
     VersionText.TextColor3 = Color3.new(0.537, 0.537, 0.537)
     VersionText.TextSize = 13
     VersionText.Parent = Version
+
+    task.spawn(function()
+        pcall(function()
+            local getFunc = (game and game.HttpGet and function(u) return game:HttpGet(u) end)
+                         or (request and function(u) return request({Url = u, Method = "GET"}).Body end)
+            if getFunc then
+                local res = getFunc("https://volthub-18b3.onrender.com/version")
+                if res then
+                    local HttpService = game:GetService("HttpService")
+                    local ok, decoded = pcall(function() return HttpService:JSONDecode(res) end)
+                    local v = (ok and decoded and decoded.version) or res:match('"(%d+%.%d+%.%d+)"') or res:match('(%d+%.%d+%.%d+)')
+                    if v and v ~= "" then
+                        VersionText.Text = formatHeader(baseTitle, v)
+                    end
+                end
+            end
+        end)
+    end)
     
     local TweenInfoObj = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 

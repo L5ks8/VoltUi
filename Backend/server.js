@@ -25,6 +25,12 @@ app.get('/api', (req, res) => {
     }));
 });
 
+app.get('/version', (req, res) => {
+    res.type('json').send(JSON.stringify({
+        version: "1.0.0"
+    }));
+});
+
 app.get('/api/version', (req, res) => {
     res.type('json').send(JSON.stringify({
         version: "1.0.0"
