@@ -90,13 +90,6 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
     table.insert(Tabs.Instances, TabObj)
     
     local function ActivateTab()
-        if string.lower(Name) == "account" or string.lower(Name) == "accountpage" then
-            if WindowObject.OpenAccount then
-                WindowObject:OpenAccount()
-                return
-            end
-        end
-
         if WindowObject.PageLayout and WindowObject.Content then
             WindowObject.PageLayout:JumpTo(WindowObject.Content)
             if WindowObject.Bottombar and WindowObject.Bottombar.Instance then

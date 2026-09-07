@@ -585,17 +585,6 @@ function Window:CreateWindow(Config)
             PageLayout:JumpTo(AccountPageElements.Instance)
             BottombarElements.Instance.Visible = false
             Tween(PagesContainer, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -30)})
-            if AccountPageElements.UpdateData then
-                AccountPageElements.UpdateData(Api and Api.UserData or {})
-            end
-            task.spawn(function()
-                if Api and Api.FetchMe then
-                    local freshData = Api.FetchMe()
-                    if freshData and AccountPageElements and AccountPageElements.UpdateData then
-                        AccountPageElements.UpdateData(freshData)
-                    end
-                end
-            end)
         end
     end))
     
@@ -706,17 +695,6 @@ function Window:CreateWindow(Config)
             PageLayout:JumpTo(AccountPageElements.Instance)
             BottombarElements.Instance.Visible = false
             Tween(PagesContainer, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -30)})
-            if AccountPageElements.UpdateData then
-                AccountPageElements.UpdateData(Api and Api.UserData or {})
-            end
-            task.spawn(function()
-                if Api and Api.FetchMe then
-                    local freshData = Api.FetchMe()
-                    if freshData and AccountPageElements and AccountPageElements.UpdateData then
-                        AccountPageElements.UpdateData(freshData)
-                    end
-                end
-            end)
         end
     end
 
