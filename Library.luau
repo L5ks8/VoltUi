@@ -101,7 +101,7 @@ if not Window then
         elseif isfile and isfile(path) then
             code = readfile(path)
         else
-            code = httpGet(baseUrl .. path .. "?v=" .. tostring(os.time()))
+            code = httpGet(baseUrl .. path .. "?v=" .. tostring(tick()) .. "_" .. tostring(math.random(100000, 999999)))
         end
 
         local fn, err
