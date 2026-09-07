@@ -138,6 +138,23 @@ if not Window then
 end
 
 function Library:CreateWindow(Config)
+    pcall(function()
+        local mkfolder = makefolder or (file and file.CreateDir) or nil
+        local isf = isfolder or (file and file.Exists) or nil
+        local writef = writefile or (file and file.Write) or nil
+        local isf2 = isfile or (file and file.Exists) or nil
+
+        if mkfolder and isf then
+            if not isf("VoltHub") then mkfolder("VoltHub") end
+            if not isf("VoltHub/Games") then mkfolder("VoltHub/Games") end
+        end
+
+        if writef and isf2 then
+            if not isf2("VoltHub/Settings.json") then
+                writef("VoltHub/Settings.json", "{}")
+            end
+        end
+    end)
     return Window:CreateWindow(Config)
 end
 

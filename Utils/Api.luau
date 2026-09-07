@@ -17,7 +17,7 @@ function Api.GetToken()
     if Api.Token and Api.Token ~= "" then return Api.Token end
     local readfileFunc = readfile or (file and file.Read) or nil
     if readfileFunc then
-        local paths = {"VoltToken.txt", "Volt/VoltToken.txt", "VoltUi/VoltToken.txt"}
+        local paths = {"VoltHub/VoltToken.txt", "VoltToken.txt", "Volt/VoltToken.txt", "VoltUi/VoltToken.txt"}
         for _, path in ipairs(paths) do
             local success, token = pcall(function() return readfileFunc(path) end)
             if success and token and token ~= "" then
@@ -36,7 +36,7 @@ function Api.SaveToken(token)
     Api.Token = token
     local writefileFunc = writefile or (file and file.Write) or nil
     if writefileFunc then
-        pcall(function() writefileFunc("VoltToken.txt", token or "") end)
+        pcall(function() writefileFunc("VoltHub/VoltToken.txt", token or "") end)
     end
 end
 
@@ -45,10 +45,12 @@ function Api.ClearToken()
     Api.UserData = nil
     local delfileFunc = delfile or (file and file.Delete) or nil
     if delfileFunc then
+        pcall(function() delfileFunc("VoltHub/VoltToken.txt") end)
         pcall(function() delfileFunc("VoltToken.txt") end)
     else
         local writefileFunc = writefile or (file and file.Write) or nil
         if writefileFunc then
+            pcall(function() writefileFunc("VoltHub/VoltToken.txt", "") end)
             pcall(function() writefileFunc("VoltToken.txt", "") end)
         end
     end
