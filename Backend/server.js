@@ -16,6 +16,21 @@ app.get('/', (req, res) => {
     res.type('json').send(JSON.stringify({ message: "Volt API is running" }));
 });
 
+app.get('/api', (req, res) => {
+    res.type('json').send(JSON.stringify({
+        status: "online",
+        name: "Volt API",
+        version: "1.0.0",
+        message: "Volt API is operational"
+    }));
+});
+
+app.get('/api/version', (req, res) => {
+    res.type('json').send(JSON.stringify({
+        version: "1.0.0"
+    }));
+});
+
 // Developer API (unencrypted, uses Admin API Key)
 app.use('/api/v1', requireApiKey, require('./routes/adminApi'));
 
