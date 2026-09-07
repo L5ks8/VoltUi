@@ -8,9 +8,13 @@ end)
 local Window, Notifications
 
 if isStudio then
-    Window = require(script.Core.Window)
-    Notifications = require(script.Core.Notifications)
-else
+    pcall(function()
+        Window = require(script.Core.Window)
+        Notifications = require(script.Core.Notifications)
+    end)
+end
+
+if not Window then
     -- Virtual loader
     local baseUrl = "https://raw.githubusercontent.com/L5ks8/VoltUi/main/"
     local cache = {}
@@ -97,7 +101,7 @@ else
         elseif isfile and isfile(path) then
             code = readfile(path)
         else
-            code = httpGet(baseUrl .. path)
+            code = httpGet(baseUrl .. path .. "?v=" .. tostring(os.time()))
         end
 
         local fn, err
