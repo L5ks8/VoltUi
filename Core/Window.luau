@@ -312,7 +312,7 @@ function Window:CreateWindow(Config)
             NoteLbl.BackgroundTransparency = 1
             NoteLbl.Size = UDim2.new(1, 0, 0, 0)
             NoteLbl.AutomaticSize = Enum.AutomaticSize.Y
-            NoteLbl.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Normal, Enum.FontStyle.Normal)
+            NoteLbl.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
             NoteLbl.Text = ks.Note
             NoteLbl.TextColor3 = Color3.fromRGB(170, 170, 180)
             NoteLbl.TextSize = 12
