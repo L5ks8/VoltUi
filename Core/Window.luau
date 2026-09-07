@@ -151,59 +151,96 @@ function Window:CreateWindow(Config)
         })
     end))
 
-    Main.Visible = false
-    
+    local requireAuth = (Config.KeySystem == true) or (Config.Login == true) or (Config.EnableAuth == true)
+    local Api = nil
+    if requireAuth then
+        pcall(function()
+            Api = require(Utils.Api)
+        end)
+    end
+
     local BottombarElements = Bottombar.Create(Main, maid)
     
-    AccountPageElements = AccountPage.Create(PagesContainer, maid, function()
-        PageLayout:JumpTo(Content)
-        BottombarElements.Instance.Visible = true
-        Tween(PagesContainer, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -50)})
-        if Api.UserData and Api.UserData.remaining == "Expired" then
-            ExpiredOverlay.Visible = true
-        else
-            ExpiredOverlay.Visible = false
-        end
-    end, Api)
-
-    local loadingScreen = Loading.Create(VoltUi)
-
-    local function OnLoginSuccess()
-        loadingScreen:WaitForReady()
-        Main.Visible = true
-        if AccountPageElements and Api.UserData then
-            AccountPageElements.UpdateData(Api.UserData)
-            if Api.UserData.remaining == "Expired" then
+    local AccountPageElements
+    pcall(function()
+        AccountPageElements = AccountPage.Create(PagesContainer, maid, function()
+            PageLayout:JumpTo(Content)
+            BottombarElements.Instance.Visible = true
+            Tween(PagesContainer, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -50)})
+            if Api and Api.UserData and Api.UserData.remaining == "Expired" then
                 ExpiredOverlay.Visible = true
             else
                 ExpiredOverlay.Visible = false
             end
+        end, Api)
+    end)
+
+    local function OnLoginSuccess()
+        Main.Visible = true
+        if AccountPageElements and Api and Api.UserData then
+            pcall(function()
+                AccountPageElements.UpdateData(Api.UserData)
+                if Api.UserData.remaining == "Expired" then
+                    ExpiredOverlay.Visible = true
+                else
+                    ExpiredOverlay.Visible = false
+                end
+            end)
         end
-        loadingScreen:FadeOut()
     end
 
-    local token = Api.GetToken()
-    if token then
-        task.spawn(function()
-            local data = Api.FetchMe()
-            if data then
+    if requireAuth and Api then
+        local loadingScreen
+        pcall(function()
+            loadingScreen = Loading.Create(VoltUi)
+        end)
+
+        local token = nil
+        pcall(function() token = Api.GetToken() end)
+
+        if token then
+            task.spawn(function()
+                local data = nil
+                pcall(function() data = Api.FetchMe() end)
+                if data then
+                    if loadingScreen then loadingScreen:WaitForReady() end
+                    OnLoginSuccess()
+                    if loadingScreen then loadingScreen:FadeOut() end
+                else
+                    if loadingScreen then loadingScreen:WaitForReady() end
+                    LoginPage.Create(VoltUi, function()
+                        OnLoginSuccess()
+                    end)
+                    if loadingScreen then loadingScreen:FadeOut() end
+                end
+            end)
+        else
+            if loadingScreen then loadingScreen:WaitForReady() end
+            LoginPage.Create(VoltUi, function()
                 OnLoginSuccess()
-            else
-                loadingScreen:WaitForReady()
-                LoginPage.Create(VoltUi, OnLoginSuccess)
-                loadingScreen:FadeOut()
-            end
+            end)
+            if loadingScreen then loadingScreen:FadeOut() end
+        end
+    elseif Config.Loading or Config.LoadingScreen then
+        local loadingScreen
+        pcall(function()
+            loadingScreen = Loading.Create(VoltUi)
+        end)
+        task.spawn(function()
+            if loadingScreen then loadingScreen:WaitForReady() end
+            Main.Visible = true
+            if loadingScreen then loadingScreen:FadeOut() end
         end)
     else
-        loadingScreen:WaitForReady()
-        LoginPage.Create(VoltUi, OnLoginSuccess)
-        loadingScreen:FadeOut()
+        Main.Visible = true
     end
     
     maid:GiveTask(SidebarElements.AccountBtn.MouseButton1Click:Connect(function()
-        PageLayout:JumpTo(AccountPageElements.Instance)
-        BottombarElements.Instance.Visible = false
-        Tween(PagesContainer, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -30)})
+        if AccountPageElements and AccountPageElements.Instance then
+            PageLayout:JumpTo(AccountPageElements.Instance)
+            BottombarElements.Instance.Visible = false
+            Tween(PagesContainer, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -30)})
+        end
     end))
     
     local ClosePrompt = CloseWarn.Create(VoltUi, maid, function()
