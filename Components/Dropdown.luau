@@ -25,20 +25,21 @@ function DropdownComponent.Create(TabContent, Maid, Config)
     local selectedSingle = ""
     local selectedMulti = {}
 
+    local defaultVal = config.CurrentOption or config.CurrentValue or config.Default
     if isMulti then
-        if type(config.Default) == "table" then
-            for k, v in pairs(config.Default) do
+        if type(defaultVal) == "table" then
+            for k, v in pairs(defaultVal) do
                 if type(k) == "number" then
                     selectedMulti[tostring(v)] = true
                 elseif v == true then
                     selectedMulti[tostring(k)] = true
                 end
             end
-        elseif type(config.Default) == "string" and config.Default ~= "" then
-            selectedMulti[config.Default] = true
+        elseif type(defaultVal) == "string" and defaultVal ~= "" then
+            selectedMulti[defaultVal] = true
         end
     else
-        selectedSingle = config.Default or (options[1] or "")
+        selectedSingle = (defaultVal and defaultVal ~= "") and defaultVal or (options[1] or "")
     end
 
     local function getMultiList()
