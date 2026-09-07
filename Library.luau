@@ -146,7 +146,7 @@ function Library:CreateWindow(Config)
 
         if mkfolder and isf then
             if not isf("VoltHub") then mkfolder("VoltHub") end
-            if not isf("VoltHub/Games") then mkfolder("VoltHub/Games") end
+            if not isf("VoltHub/Configs") then mkfolder("VoltHub/Configs") end
         end
 
         if writef and isf2 then
