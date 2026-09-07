@@ -1,6 +1,5 @@
 local DividerComponent = {}
 
--- Divider
 function DividerComponent.Create(TabContent, Maid, Config)
     local config = type(Config) == "string" and {Text = Config} or (Config or {})
     local dividerText = config.Text or config.Name or ""
@@ -21,7 +20,7 @@ function DividerComponent.Create(TabContent, Maid, Config)
         Layout.Parent = DividerFrame
 
         local LeftLine = Instance.new("Frame")
-        LeftLine.BackgroundColor3 = Color3.fromRGB(48, 45, 58)
+        LeftLine.BackgroundColor3 = Color3.fromRGB(48, 48, 48)
         LeftLine.BorderSizePixel = 0
         LeftLine.Size = UDim2.new(0.35, 0, 0, 1)
         LeftLine.Parent = DividerFrame
@@ -37,14 +36,14 @@ function DividerComponent.Create(TabContent, Maid, Config)
         Text.Parent = DividerFrame
 
         local RightLine = Instance.new("Frame")
-        RightLine.BackgroundColor3 = Color3.fromRGB(48, 45, 58)
+        RightLine.BackgroundColor3 = Color3.fromRGB(48, 48, 48)
         RightLine.BorderSizePixel = 0
         RightLine.Size = UDim2.new(0.35, 0, 0, 1)
         RightLine.Parent = DividerFrame
     else
         local Line = Instance.new("Frame")
         Line.Name = "Line"
-        Line.BackgroundColor3 = Color3.fromRGB(48, 45, 58)
+        Line.BackgroundColor3 = Color3.fromRGB(48, 48, 48)
         Line.BorderSizePixel = 0
         Line.AnchorPoint = Vector2.new(0.5, 0.5)
         Line.Position = UDim2.new(0.5, 0, 0.5, 0)

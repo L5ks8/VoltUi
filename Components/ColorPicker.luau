@@ -8,7 +8,6 @@ local function Tween(instance, tweenInfo, properties)
     return tw
 end
 
--- Overlay
 local function getRootOverlay(instance)
     local screenGui = instance:FindFirstAncestorOfClass("ScreenGui")
     if not screenGui then return nil end
@@ -24,9 +23,8 @@ local function getRootOverlay(instance)
     return overlay
 end
 
--- Color Picker Popup
 local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, onChangeCallback)
-    local currentColor = initialColor or Color3.fromRGB(180, 175, 230)
+    local currentColor = initialColor or Color3.fromRGB(245, 245, 245)
     local currentAlpha = initialAlpha or 0
     local h, s, v = currentColor:ToHSV()
 
@@ -41,7 +39,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
 
     local Card = Instance.new("Frame")
     Card.Name = "ColorPickerCard"
-    Card.BackgroundColor3 = Color3.fromRGB(18, 17, 23)
+    Card.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
     Card.BorderSizePixel = 0
     Card.Size = UDim2.new(0, 230, 0, 260)
     Card.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -54,7 +52,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
     CardCorner.Parent = Card
 
     local CardStroke = Instance.new("UIStroke")
-    CardStroke.Color = Color3.fromRGB(48, 45, 58)
+    CardStroke.Color = Color3.fromRGB(48, 48, 48)
     CardStroke.Thickness = 1
     CardStroke.Parent = Card
 
@@ -224,7 +222,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
     PaletteLayout.Parent = PaletteRow
 
     local presets = {
-        Color3.fromRGB(180, 175, 230),
+        Color3.fromRGB(245, 245, 245),
         Color3.fromRGB(46, 204, 113),
         Color3.fromRGB(52, 152, 219),
         Color3.fromRGB(155, 89, 182),
@@ -333,18 +331,17 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
     }
 end
 
--- ColorPicker
 function ColorPickerComponent.Create(TabContent, Maid, Config)
     local config = type(Config) == "string" and {Header = Config} or Config
     local headerText = config.Header or config.Name or "Color Picker"
     local descText = config.Description or ""
-    local currentColor = config.Default or config.CurrentValue or Color3.fromRGB(180, 175, 230)
+    local currentColor = config.Default or config.CurrentValue or Color3.fromRGB(245, 245, 245)
     local currentAlpha = config.Alpha or 0
     local cb = config.Callback or function() end
 
     local RowFrame = Instance.new("Frame")
     RowFrame.Name = headerText
-    RowFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 36)
+    RowFrame.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
     RowFrame.BackgroundTransparency = 1
     RowFrame.BorderSizePixel = 0
     RowFrame.Size = UDim2.new(1, 0, 0, descText == "" and 42 or 52)

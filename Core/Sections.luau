@@ -13,11 +13,10 @@ local KeybindComponent = require(Components.Keybind)
 
 local Sections = {}
 
--- Sections
 function Sections.CreateSection(TabContent, Maid, Title, Description)
     local SectionFrame = Instance.new("Frame")
     SectionFrame.Name = Title or "Section"
-    SectionFrame.BackgroundColor3 = Color3.fromRGB(18, 17, 23)
+    SectionFrame.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
     SectionFrame.BorderColor3 = Color3.new(0, 0, 0)
     SectionFrame.BorderSizePixel = 0
     SectionFrame.Size = UDim2.new(1, 0, 0, 0)
@@ -31,7 +30,7 @@ function Sections.CreateSection(TabContent, Maid, Title, Description)
     
     local SectionStroke = Instance.new("UIStroke")
     SectionStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
-    SectionStroke.Color = Color3.fromRGB(48, 45, 58)
+    SectionStroke.Color = Color3.fromRGB(48, 48, 48)
     SectionStroke.Parent = SectionFrame
     
     local SectionLayout = Instance.new("UIListLayout")
@@ -45,7 +44,7 @@ function Sections.CreateSection(TabContent, Maid, Title, Description)
         if ElementCount > 0 then
             local Separator = Instance.new("Frame")
             Separator.Name = "Separator"
-            Separator.BackgroundColor3 = Color3.fromRGB(38, 36, 46)
+            Separator.BackgroundColor3 = Color3.fromRGB(36, 36, 36)
             Separator.BorderSizePixel = 0
             Separator.Size = UDim2.new(1, 0, 0, 1)
             Separator.Parent = SectionFrame

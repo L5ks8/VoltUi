@@ -394,7 +394,9 @@ function Sidebar.Create(Content, maid, OnCollapse)
         Instance = SidebarFrame,
         TabsContainer = TabsScrolling,
         SearchInput = SearchInput,
-        AccountBtn = Account
+        AccountBtn = Account,
+        HomeBtn = Home,
+        SettingsBtn = Settings
     }
 end
 

@@ -23,17 +23,16 @@ local function getRootOverlay(instance)
     return overlay
 end
 
--- Label
 function LabelComponent.Create(TabContent, Maid, Config)
     local config = type(Config) == "string" and {Header = Config} or Config
     local headerText = config.Header or config.Name or "Label"
     local descText = config.Description or ""
     local iconAsset = config.Icon
-    local accentColor = config.AccentColor or Color3.fromRGB(180, 175, 230)
+    local accentColor = config.AccentColor or Color3.fromRGB(245, 245, 245)
 
     local LabelFrame = Instance.new("Frame")
     LabelFrame.Name = headerText
-    LabelFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 36)
+    LabelFrame.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
     LabelFrame.BackgroundTransparency = 1
     LabelFrame.BorderSizePixel = 0
     LabelFrame.Size = UDim2.new(1, 0, 0, descText == "" and 38 or 48)
@@ -140,7 +139,6 @@ function LabelComponent.Create(TabContent, Maid, Config)
         return headerText
     end
 
-    -- AddKeybind
     function LabelObject:AddKeybind(kbConfig)
         kbConfig = kbConfig or {}
         local currentKey = kbConfig.Default or kbConfig.CurrentValue or "None"
@@ -150,7 +148,7 @@ function LabelComponent.Create(TabContent, Maid, Config)
         local KeybindBtn = Instance.new("TextButton")
         KeybindBtn.Name = "KeybindBadge"
         KeybindBtn.AutoButtonColor = false
-        KeybindBtn.BackgroundColor3 = Color3.fromRGB(22, 21, 28)
+        KeybindBtn.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
         KeybindBtn.Size = UDim2.new(0, 0, 0, 22)
         KeybindBtn.AutomaticSize = Enum.AutomaticSize.X
         KeybindBtn.Text = ""
@@ -161,7 +159,7 @@ function LabelComponent.Create(TabContent, Maid, Config)
         KbCorner.Parent = KeybindBtn
 
         local KbStroke = Instance.new("UIStroke")
-        KbStroke.Color = Color3.fromRGB(48, 45, 58)
+        KbStroke.Color = Color3.fromRGB(48, 48, 48)
         KbStroke.Thickness = 1
         KbStroke.Parent = KeybindBtn
 
@@ -176,7 +174,7 @@ function LabelComponent.Create(TabContent, Maid, Config)
         KbLabel.Size = UDim2.new(1, 0, 1, 0)
         KbLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
         KbLabel.Text = tostring(currentKey)
-        KbLabel.TextColor3 = Color3.fromRGB(220, 220, 230)
+        KbLabel.TextColor3 = Color3.fromRGB(240, 240, 245)
         KbLabel.TextSize = 12
         KbLabel.Parent = KeybindBtn
 
@@ -207,7 +205,7 @@ function LabelComponent.Create(TabContent, Maid, Config)
                 if capturedKey then
                     currentKey = capturedKey
                     KbLabel.Text = currentKey
-                    Tween(KbStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(48, 45, 58)})
+                    Tween(KbStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(48, 48, 48)})
                     listening = false
                     listenConn:Disconnect()
                     kbCallback(currentKey)
@@ -225,7 +223,6 @@ function LabelComponent.Create(TabContent, Maid, Config)
     end
     LabelObject.AddBind = LabelObject.AddKeybind
 
-    -- AddColorPicker
     function LabelObject:AddColorPicker(cpConfig)
         cpConfig = cpConfig or {}
         local currentColor = cpConfig.Default or cpConfig.CurrentValue or Color3.fromRGB(196, 36, 104)
@@ -244,14 +241,13 @@ function LabelComponent.Create(TabContent, Maid, Config)
         SwatchCorner.Parent = SwatchBtn
 
         local SwatchStroke = Instance.new("UIStroke")
-        SwatchStroke.Color = Color3.fromRGB(55, 52, 65)
+        SwatchStroke.Color = Color3.fromRGB(48, 48, 48)
         SwatchStroke.Thickness = 1
         SwatchStroke.Parent = SwatchBtn
 
         SwatchBtn.MouseButton1Click:Connect(function()
             local overlay = getRootOverlay(LabelFrame)
             if not overlay then return end
-            -- Simple inline quick picker or prompt
             local newCol = (currentColor == Color3.fromRGB(196, 36, 104)) and Color3.fromRGB(46, 204, 113) or Color3.fromRGB(196, 36, 104)
             currentColor = newCol
             SwatchBtn.BackgroundColor3 = currentColor

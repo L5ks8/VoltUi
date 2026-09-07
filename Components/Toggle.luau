@@ -12,7 +12,6 @@ local function Tween(instance, tweenInfo, properties)
     return tw
 end
 
--- Overlay
 local function getRootOverlay(instance)
     local screenGui = instance:FindFirstAncestorOfClass("ScreenGui")
     if not screenGui then return nil end
@@ -28,7 +27,6 @@ local function getRootOverlay(instance)
     return overlay
 end
 
--- Color Picker Popup
 local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, onChangeCallback)
     local currentColor = initialColor or Color3.fromRGB(196, 36, 104)
     local currentAlpha = initialAlpha or 0
@@ -45,7 +43,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
 
     local Card = Instance.new("Frame")
     Card.Name = "ColorPickerCard"
-    Card.BackgroundColor3 = Color3.fromRGB(18, 17, 23)
+    Card.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
     Card.BorderSizePixel = 0
     Card.Size = UDim2.new(0, 230, 0, 260)
     Card.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -58,7 +56,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
     CardCorner.Parent = Card
 
     local CardStroke = Instance.new("UIStroke")
-    CardStroke.Color = Color3.fromRGB(48, 45, 58)
+    CardStroke.Color = Color3.fromRGB(48, 48, 48)
     CardStroke.Thickness = 1
     CardStroke.Parent = Card
 
@@ -229,7 +227,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
 
     local presets = {
         Color3.fromRGB(196, 36, 104),
-        Color3.fromRGB(180, 175, 230),
+        Color3.fromRGB(245, 245, 245),
         Color3.fromRGB(46, 204, 113),
         Color3.fromRGB(52, 152, 219),
         Color3.fromRGB(155, 89, 182),
@@ -335,7 +333,6 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
     }
 end
 
--- Toggle
 function ToggleComponent.Create(TabContent, Maid, Config, Flag)
     local config = type(Config) == "string" and {Header = Config} or Config
     local headerText = config.Header or config.Name or "Toggle"
@@ -346,16 +343,18 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
 
     local isCheckbox = (config.Style == 1 or config.Style == "Box" or config.Style == "Checkbox" or config.Box == true)
 
-    local switchOnColor = config.SwitchColor or Color3.fromRGB(185, 175, 235)
-    local switchOffColor = Color3.fromRGB(24, 23, 30)
-    local strokeOffColor = Color3.fromRGB(48, 45, 58)
-    local strokeOnColor = Color3.fromRGB(170, 160, 220)
+    local switchOnColor = config.SwitchColor or config.AccentColor or Color3.fromRGB(245, 245, 245)
+    local switchOffColor = Color3.fromRGB(28, 28, 28)
+    local strokeOffColor = Color3.fromRGB(48, 48, 48)
+    local strokeOnColor = config.SwitchColor or config.AccentColor or Color3.fromRGB(245, 245, 245)
+    local isLightOn = (switchOnColor.R * 0.299 + switchOnColor.G * 0.587 + switchOnColor.B * 0.114) > 0.5
+    local dotOnColor = isLightOn and Color3.fromRGB(24, 24, 24) or Color3.fromRGB(255, 255, 255)
 
     local ToggleFrame = Instance.new("TextButton")
     ToggleFrame.Name = headerText
     ToggleFrame.AutoButtonColor = false
     ToggleFrame.Text = ""
-    ToggleFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 36)
+    ToggleFrame.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
     ToggleFrame.BackgroundTransparency = 1
     ToggleFrame.BorderSizePixel = 0
     ToggleFrame.Size = UDim2.new(1, 0, 0, descText == "" and 44 or 54)
@@ -439,7 +438,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
         BoxBg.Name = "CheckboxBg"
         BoxBg.AutoButtonColor = false
         BoxBg.Text = ""
-        BoxBg.BackgroundColor3 = state and switchOnColor or Color3.fromRGB(24, 23, 30)
+        BoxBg.BackgroundColor3 = state and switchOnColor or Color3.fromRGB(28, 28, 28)
         BoxBg.BackgroundTransparency = state and 0 or 0.2
         BoxBg.Size = UDim2.new(0, 22, 0, 22)
         BoxBg.LayoutOrder = 100
@@ -462,7 +461,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
         CheckIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
         CheckIcon.AnchorPoint = Vector2.new(0.5, 0.5)
         CheckIcon.Image = "rbxassetid://10709790387"
-        CheckIcon.ImageColor3 = Color3.fromRGB(255, 255, 255)
+        CheckIcon.ImageColor3 = dotOnColor
         CheckIcon.ImageTransparency = state and 0 or 1
         CheckIcon.Parent = BoxBg
 
@@ -479,11 +478,12 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
                 })
                 Tween(CheckIcon, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
                     ImageTransparency = 0,
+                    ImageColor3 = dotOnColor,
                     Size = UDim2.new(0, 14, 0, 14),
                 })
             else
                 Tween(BoxBg, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-                    BackgroundColor3 = Color3.fromRGB(24, 23, 30),
+                    BackgroundColor3 = Color3.fromRGB(28, 28, 28),
                     BackgroundTransparency = 0.2,
                 })
                 Tween(BoxStroke, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
@@ -517,7 +517,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
 
         local SwitchDot = Instance.new("Frame")
         SwitchDot.Name = "Dot"
-        SwitchDot.BackgroundColor3 = state and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(130, 128, 145)
+        SwitchDot.BackgroundColor3 = state and dotOnColor or Color3.fromRGB(150, 150, 150)
         SwitchDot.Position = state and UDim2.new(1, -18, 0.5, 0) or UDim2.new(0, 2, 0.5, 0)
         SwitchDot.AnchorPoint = Vector2.new(0, 0.5)
         SwitchDot.Size = UDim2.new(0, 16, 0, 16)
@@ -533,11 +533,11 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
             if state then
                 Tween(SwitchBg, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = switchOnColor})
                 Tween(SwitchStroke, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Color = strokeOnColor})
-                Tween(SwitchDot, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(1, -18, 0.5, 0), BackgroundColor3 = Color3.fromRGB(255, 255, 255)})
+                Tween(SwitchDot, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(1, -18, 0.5, 0), BackgroundColor3 = dotOnColor})
             else
                 Tween(SwitchBg, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = switchOffColor})
                 Tween(SwitchStroke, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Color = strokeOffColor})
-                Tween(SwitchDot, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(0, 2, 0.5, 0), BackgroundColor3 = Color3.fromRGB(130, 128, 145)})
+                Tween(SwitchDot, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(0, 2, 0.5, 0), BackgroundColor3 = Color3.fromRGB(150, 150, 150)})
             end
         end
     end
@@ -572,7 +572,6 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
         return state
     end
 
-    -- AddColorPicker
     function ToggleObject:AddColorPicker(cpConfig, cpFlag)
         cpConfig = cpConfig or {}
         local currentColor = cpConfig.CurrentValue or cpConfig.Default or Color3.fromRGB(196, 36, 104)
@@ -593,15 +592,15 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
         SwatchCorner.Parent = SwatchBtn
 
         local SwatchStroke = Instance.new("UIStroke")
-        SwatchStroke.Color = Color3.fromRGB(55, 52, 65)
+        SwatchStroke.Color = Color3.fromRGB(48, 48, 48)
         SwatchStroke.Thickness = 1
         SwatchStroke.Parent = SwatchBtn
 
         SwatchBtn.MouseEnter:Connect(function()
-            Tween(SwatchStroke, TweenInfo.new(0.15), {Color = Color3.fromRGB(120, 115, 140)})
+            Tween(SwatchStroke, TweenInfo.new(0.15), {Color = Color3.fromRGB(80, 80, 80)})
         end)
         SwatchBtn.MouseLeave:Connect(function()
-            Tween(SwatchStroke, TweenInfo.new(0.15), {Color = Color3.fromRGB(55, 52, 65)})
+            Tween(SwatchStroke, TweenInfo.new(0.15), {Color = Color3.fromRGB(48, 48, 48)})
         end)
 
         SwatchBtn.MouseButton1Click:Connect(function()
@@ -628,7 +627,6 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
         return CPObject
     end
 
-    -- AddKeybind
     function ToggleObject:AddKeybind(kbConfig, kbFlag)
         kbConfig = kbConfig or {}
         local currentKey = kbConfig.CurrentValue or kbConfig.Default or "None"
@@ -641,7 +639,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
         local KeybindBtn = Instance.new("TextButton")
         KeybindBtn.Name = "KeybindBadge"
         KeybindBtn.AutoButtonColor = false
-        KeybindBtn.BackgroundColor3 = Color3.fromRGB(22, 21, 28)
+        KeybindBtn.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
         KeybindBtn.Size = UDim2.new(0, 0, 0, 22)
         KeybindBtn.AutomaticSize = Enum.AutomaticSize.X
         KeybindBtn.LayoutOrder = 20
@@ -653,7 +651,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
         KbCorner.Parent = KeybindBtn
 
         local KbStroke = Instance.new("UIStroke")
-        KbStroke.Color = Color3.fromRGB(48, 45, 58)
+        KbStroke.Color = Color3.fromRGB(48, 48, 48)
         KbStroke.Thickness = 1
         KbStroke.Parent = KeybindBtn
 
@@ -668,7 +666,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
         KbLabel.Size = UDim2.new(1, 0, 1, 0)
         KbLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
         KbLabel.Text = tostring(currentKey)
-        KbLabel.TextColor3 = Color3.fromRGB(220, 220, 230)
+        KbLabel.TextColor3 = Color3.fromRGB(240, 240, 245)
         KbLabel.TextSize = 12
         KbLabel.Parent = KeybindBtn
 
@@ -701,7 +699,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
                 if capturedKey then
                     currentKey = capturedKey
                     KbLabel.Text = currentKey
-                    Tween(KbStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(48, 45, 58)})
+                    Tween(KbStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(48, 48, 48)})
                     listening = false
                     if listenConn then
                         listenConn:Disconnect()
@@ -749,7 +747,6 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
     end
     ToggleObject.AddBind = ToggleObject.AddKeybind
 
-    -- AddDropdown
     function ToggleObject:AddDropdown(ddConfig, ddFlag)
         ddConfig = ddConfig or {}
         local options = ddConfig.Options or {}
@@ -759,7 +756,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
         local DropBtn = Instance.new("TextButton")
         DropBtn.Name = "MiniDropdown"
         DropBtn.AutoButtonColor = false
-        DropBtn.BackgroundColor3 = Color3.fromRGB(22, 21, 28)
+        DropBtn.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
         DropBtn.Size = UDim2.new(0, 0, 0, 22)
         DropBtn.AutomaticSize = Enum.AutomaticSize.X
         DropBtn.LayoutOrder = 5
@@ -771,7 +768,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
         Dc.Parent = DropBtn
 
         local Ds = Instance.new("UIStroke")
-        Ds.Color = Color3.fromRGB(48, 45, 58)
+        Ds.Color = Color3.fromRGB(48, 48, 48)
         Ds.Thickness = 1
         Ds.Parent = DropBtn
 
@@ -785,7 +782,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
         Dl.Size = UDim2.new(1, 0, 1, 0)
         Dl.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
         Dl.Text = tostring(currentOption) .. "  ▾"
-        Dl.TextColor3 = Color3.fromRGB(200, 200, 215)
+        Dl.TextColor3 = Color3.fromRGB(240, 240, 245)
         Dl.TextSize = 12
         Dl.Parent = DropBtn
 
@@ -812,7 +809,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
 
             menuFrame = Instance.new("Frame")
             menuFrame.Name = "MiniDropdownMenu"
-            menuFrame.BackgroundColor3 = Color3.fromRGB(22, 21, 28)
+            menuFrame.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
             menuFrame.BorderSizePixel = 0
             menuFrame.ZIndex = 50010
             menuFrame.Parent = overlay
@@ -822,7 +819,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
             mc.Parent = menuFrame
 
             local ms = Instance.new("UIStroke")
-            ms.Color = Color3.fromRGB(48, 45, 58)
+            ms.Color = Color3.fromRGB(48, 48, 48)
             ms.Parent = menuFrame
 
             local ml = Instance.new("UIListLayout")
@@ -844,7 +841,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
 
             for _, opt in ipairs(options) do
                 local OptBtn = Instance.new("TextButton")
-                OptBtn.BackgroundColor3 = Color3.fromRGB(35, 33, 44)
+                OptBtn.BackgroundColor3 = Color3.fromRGB(36, 36, 36)
                 OptBtn.BackgroundTransparency = (opt == currentOption) and 0 or 1
                 OptBtn.Size = UDim2.new(1, 0, 0, 22)
                 OptBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)

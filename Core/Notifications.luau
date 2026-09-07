@@ -12,7 +12,6 @@ local function Tween(instance, tweenInfo, properties)
     return tw
 end
 
--- Init
 function Notifications.Init(ParentGui)
     Notifications.ParentGui = ParentGui
 
@@ -40,7 +39,6 @@ function Notifications.Init(ParentGui)
     Notifications.Container = Container
 end
 
--- Notify
 function Notifications.Notify(options)
     options = options or {}
     local ParentGui = Notifications.ParentGui or (Notifications.Container and Notifications.Container.Parent)
@@ -99,7 +97,7 @@ function Notifications.Notify(options)
 
     local Notif = Instance.new("Frame")
     Notif.Name = "NotificationCard"
-    Notif.BackgroundColor3 = Color3.fromRGB(18, 17, 23)
+    Notif.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
     Notif.BackgroundTransparency = 1
     Notif.BorderSizePixel = 0
     Notif.ClipsDescendants = true
@@ -111,7 +109,7 @@ function Notifications.Notify(options)
     Corner.Parent = Notif
 
     local Stroke = Instance.new("UIStroke")
-    Stroke.Color = Color3.fromRGB(48, 45, 58)
+    Stroke.Color = Color3.fromRGB(48, 48, 48)
     Stroke.Thickness = 1
     Stroke.Transparency = 1
     Stroke.Parent = Notif

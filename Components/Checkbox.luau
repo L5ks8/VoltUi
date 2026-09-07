@@ -12,7 +12,6 @@ local function Tween(instance, tweenInfo, properties)
     return tw
 end
 
--- Overlay
 local function getRootOverlay(instance)
     local screenGui = instance:FindFirstAncestorOfClass("ScreenGui")
     if not screenGui then return nil end
@@ -28,7 +27,6 @@ local function getRootOverlay(instance)
     return overlay
 end
 
--- Color Picker Popup
 local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, onChangeCallback)
     local currentColor = initialColor or Color3.fromRGB(196, 36, 104)
     local currentAlpha = initialAlpha or 0
@@ -45,7 +43,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
 
     local Card = Instance.new("Frame")
     Card.Name = "ColorPickerCard"
-    Card.BackgroundColor3 = Color3.fromRGB(18, 17, 23)
+    Card.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
     Card.BorderSizePixel = 0
     Card.Size = UDim2.new(0, 230, 0, 260)
     Card.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -58,7 +56,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
     CardCorner.Parent = Card
 
     local CardStroke = Instance.new("UIStroke")
-    CardStroke.Color = Color3.fromRGB(48, 45, 58)
+    CardStroke.Color = Color3.fromRGB(48, 48, 48)
     CardStroke.Thickness = 1
     CardStroke.Parent = Card
 
@@ -229,7 +227,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
 
     local presets = {
         Color3.fromRGB(196, 36, 104),
-        Color3.fromRGB(180, 175, 230),
+        Color3.fromRGB(245, 245, 245),
         Color3.fromRGB(46, 204, 113),
         Color3.fromRGB(52, 152, 219),
         Color3.fromRGB(155, 89, 182),
@@ -335,7 +333,6 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
     }
 end
 
--- Checkbox
 function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
     local config = type(Config) == "string" and {Header = Config} or Config
     local headerText = config.Header or config.Name or "Checkbox"
@@ -343,16 +340,17 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
     local hoverText = config.HoverText or config.Tooltip or ""
     local state = config.CurrentValue ~= nil and config.CurrentValue or (config.Default ~= nil and config.Default or false)
     local cb = config.Callback or function() end
-
-    local boxOnColor = config.AccentColor or Color3.fromRGB(180, 175, 230)
-    local strokeOffColor = Color3.fromRGB(48, 45, 58)
-    local strokeOnColor = Color3.fromRGB(160, 155, 210)
+    local boxOnColor = config.AccentColor or Color3.fromRGB(245, 245, 245)
+    local strokeOffColor = Color3.fromRGB(48, 48, 48)
+    local strokeOnColor = config.AccentColor or Color3.fromRGB(245, 245, 245)
+    local isLightOn = (boxOnColor.R * 0.299 + boxOnColor.G * 0.587 + boxOnColor.B * 0.114) > 0.5
+    local checkOnColor = isLightOn and Color3.fromRGB(24, 24, 24) or Color3.fromRGB(255, 255, 255)
 
     local CheckboxFrame = Instance.new("TextButton")
     CheckboxFrame.Name = headerText
     CheckboxFrame.AutoButtonColor = false
     CheckboxFrame.Text = ""
-    CheckboxFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 36)
+    CheckboxFrame.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
     CheckboxFrame.BackgroundTransparency = 1
     CheckboxFrame.BorderSizePixel = 0
     CheckboxFrame.Size = UDim2.new(1, 0, 0, descText == "" and 44 or 54)
@@ -398,7 +396,8 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
         Description.Name = "Description"
         Description.BackgroundTransparency = 1
         Description.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
-        Description.Size = UDim2.new(1, 0, 0, 14)
+        Description.Position = UDim2.new(0, 14, 0, 26)
+        Description.Size = UDim2.new(1, -28, 0, 14)
         Description.Text = descText
         Description.TextColor3 = Color3.fromRGB(150, 150, 160)
         Description.TextSize = 12
@@ -432,7 +431,7 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
     BoxBg.Name = "CheckboxBg"
     BoxBg.AutoButtonColor = false
     BoxBg.Text = ""
-    BoxBg.BackgroundColor3 = state and boxOnColor or Color3.fromRGB(24, 23, 30)
+    BoxBg.BackgroundColor3 = state and boxOnColor or Color3.fromRGB(28, 28, 28)
     BoxBg.BackgroundTransparency = state and 0 or 0.2
     BoxBg.Size = UDim2.new(0, 22, 0, 22)
     BoxBg.LayoutOrder = 100
@@ -455,7 +454,7 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
     CheckIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
     CheckIcon.AnchorPoint = Vector2.new(0.5, 0.5)
     CheckIcon.Image = "rbxassetid://10709790387"
-    CheckIcon.ImageColor3 = Color3.fromRGB(255, 255, 255)
+    CheckIcon.ImageColor3 = checkOnColor
     CheckIcon.ImageTransparency = state and 0 or 1
     CheckIcon.Parent = BoxBg
 
@@ -470,11 +469,12 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
             })
             Tween(CheckIcon, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
                 ImageTransparency = 0,
+                ImageColor3 = checkOnColor,
                 Size = UDim2.new(0, 14, 0, 14),
             })
         else
             Tween(BoxBg, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-                BackgroundColor3 = Color3.fromRGB(24, 23, 30),
+                BackgroundColor3 = Color3.fromRGB(28, 28, 28),
                 BackgroundTransparency = 0.2,
             })
             Tween(BoxStroke, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
@@ -517,7 +517,6 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
         return state
     end
 
-    -- AddColorPicker
     function CheckboxObject:AddColorPicker(cpConfig, cpFlag)
         cpConfig = cpConfig or {}
         local currentColor = cpConfig.CurrentValue or cpConfig.Default or Color3.fromRGB(196, 36, 104)
@@ -538,7 +537,7 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
         SwatchCorner.Parent = SwatchBtn
 
         local SwatchStroke = Instance.new("UIStroke")
-        SwatchStroke.Color = Color3.fromRGB(55, 52, 65)
+        SwatchStroke.Color = Color3.fromRGB(48, 48, 48)
         SwatchStroke.Thickness = 1
         SwatchStroke.Parent = SwatchBtn
 
@@ -566,7 +565,6 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
         return CPObject
     end
 
-    -- AddKeybind
     function CheckboxObject:AddKeybind(kbConfig, kbFlag)
         kbConfig = kbConfig or {}
         local currentKey = kbConfig.CurrentValue or kbConfig.Default or "None"
@@ -579,7 +577,7 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
         local KeybindBtn = Instance.new("TextButton")
         KeybindBtn.Name = "KeybindBadge"
         KeybindBtn.AutoButtonColor = false
-        KeybindBtn.BackgroundColor3 = Color3.fromRGB(22, 21, 28)
+        KeybindBtn.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
         KeybindBtn.Size = UDim2.new(0, 0, 0, 22)
         KeybindBtn.AutomaticSize = Enum.AutomaticSize.X
         KeybindBtn.LayoutOrder = 20
@@ -591,7 +589,7 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
         KbCorner.Parent = KeybindBtn
 
         local KbStroke = Instance.new("UIStroke")
-        KbStroke.Color = Color3.fromRGB(48, 45, 58)
+        KbStroke.Color = Color3.fromRGB(48, 48, 48)
         KbStroke.Thickness = 1
         KbStroke.Parent = KeybindBtn
 
@@ -606,7 +604,7 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
         KbLabel.Size = UDim2.new(1, 0, 1, 0)
         KbLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
         KbLabel.Text = tostring(currentKey)
-        KbLabel.TextColor3 = Color3.fromRGB(220, 220, 230)
+        KbLabel.TextColor3 = Color3.fromRGB(240, 240, 245)
         KbLabel.TextSize = 12
         KbLabel.Parent = KeybindBtn
 
@@ -639,7 +637,7 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
                 if capturedKey then
                     currentKey = capturedKey
                     KbLabel.Text = currentKey
-                    Tween(KbStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(48, 45, 58)})
+                    Tween(KbStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(48, 48, 48)})
                     listening = false
                     if listenConn then
                         listenConn:Disconnect()

@@ -8,7 +8,6 @@ local function Tween(instance, tweenInfo, properties)
     return tw
 end
 
--- Paragraph
 function ParagraphComponent.Create(TabContent, Maid, Config)
     local config = type(Config) == "string" and {Header = Config} or Config
     local headerText = config.Header or config.Name or config.Title or "Information"
@@ -17,7 +16,7 @@ function ParagraphComponent.Create(TabContent, Maid, Config)
 
     local ParagraphFrame = Instance.new("Frame")
     ParagraphFrame.Name = headerText
-    ParagraphFrame.BackgroundColor3 = Color3.fromRGB(24, 23, 30)
+    ParagraphFrame.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
     ParagraphFrame.BackgroundTransparency = 0.4
     ParagraphFrame.BorderSizePixel = 0
     ParagraphFrame.Size = UDim2.new(1, 0, 0, 0)
@@ -29,7 +28,7 @@ function ParagraphComponent.Create(TabContent, Maid, Config)
     Corner.Parent = ParagraphFrame
 
     local Stroke = Instance.new("UIStroke")
-    Stroke.Color = Color3.fromRGB(45, 43, 55)
+    Stroke.Color = Color3.fromRGB(48, 48, 48)
     Stroke.Thickness = 1
     Stroke.Parent = ParagraphFrame
 

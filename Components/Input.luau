@@ -7,7 +7,6 @@ local function Tween(instance, tweenInfo, properties)
     return tw
 end
 
--- Input
 function InputComponent.Create(TabContent, Maid, Config)
     local config = type(Config) == "string" and {Header = Config} or Config
     local headerText = config.Header or config.Name or "Input"
@@ -17,11 +16,11 @@ function InputComponent.Create(TabContent, Maid, Config)
     local numeric = config.Numeric or false
     local maxChars = config.MaxCharacters
     local cb = config.Callback or function() end
-    local accentColor = config.AccentColor or Color3.fromRGB(180, 175, 230)
+    local accentColor = config.AccentColor or Color3.fromRGB(245, 245, 245)
 
     local InputFrame = Instance.new("Frame")
     InputFrame.Name = headerText
-    InputFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 36)
+    InputFrame.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
     InputFrame.BackgroundTransparency = 1
     InputFrame.BorderSizePixel = 0
     InputFrame.Size = UDim2.new(1, 0, 0, descText == "" and 42 or 52)
@@ -84,7 +83,7 @@ function InputComponent.Create(TabContent, Maid, Config)
 
     local BoxWrapper = Instance.new("Frame")
     BoxWrapper.Name = "BoxWrapper"
-    BoxWrapper.BackgroundColor3 = Color3.fromRGB(22, 21, 28)
+    BoxWrapper.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
     BoxWrapper.BorderSizePixel = 0
     BoxWrapper.AnchorPoint = Vector2.new(1, 0.5)
     BoxWrapper.Position = UDim2.new(1, -14, 0.5, 0)
@@ -96,7 +95,7 @@ function InputComponent.Create(TabContent, Maid, Config)
     BoxCorner.Parent = BoxWrapper
 
     local BoxStroke = Instance.new("UIStroke")
-    BoxStroke.Color = Color3.fromRGB(48, 45, 58)
+    BoxStroke.Color = Color3.fromRGB(48, 48, 48)
     BoxStroke.Thickness = 1
     BoxStroke.Parent = BoxWrapper
 
@@ -132,7 +131,7 @@ function InputComponent.Create(TabContent, Maid, Config)
     end)
 
     TextBox.FocusLost:Connect(function(enterPressed)
-        Tween(BoxStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(48, 45, 58)})
+        Tween(BoxStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(48, 48, 48)})
         currentValue = TextBox.Text
         if config.RemoveTextAfterFocusLost then
             TextBox.Text = ""

@@ -15,7 +15,6 @@ if isStudio then
 end
 
 if not Window then
-    -- Virtual loader
     local baseUrl = "https://raw.githubusercontent.com/L5ks8/VoltUi/main/"
     local cache = {}
 

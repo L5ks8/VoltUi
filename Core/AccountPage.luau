@@ -1,3 +1,5 @@
+local Utils = script.Parent.Parent.Utils
+local Tween = require(Utils.Tween)
 local Notifications = require(script.Parent.Notifications)
 local AccountPage = {}
 
@@ -79,7 +81,6 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
         Maid:GiveTask(ReturnButton.MouseButton1Click:Connect(BackCallback))
     end
     
-    local Tween = require(script.Parent.Parent.Utils.Tween)
     Maid:GiveTask(ReturnButton.MouseEnter:Connect(function()
         Tween(ReturnButton, TweenInfo.new(0.2), {BackgroundTransparency = 0.9})
     end))
@@ -92,7 +93,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     AccountText.BackgroundTransparency = 1
     AccountText.BorderColor3 = Color3.new(0, 0, 0)
     AccountText.BorderSizePixel = 0
-    AccountText.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    AccountText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     AccountText.Size = UDim2.new(0, 200, 0, 35)
     AccountText.Text = "Account"
     AccountText.TextColor3 = Color3.new(0.71, 0.71, 0.71)
@@ -1035,7 +1036,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     KeysTitle.BackgroundTransparency = 1
     KeysTitle.BorderColor3 = Color3.new(0, 0, 0)
     KeysTitle.BorderSizePixel = 0
-    KeysTitle.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    KeysTitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     KeysTitle.LayoutOrder = 1
     KeysTitle.Size = UDim2.new(0, 100, 0, 30)
     KeysTitle.Text = "Claimed keys"
@@ -1418,9 +1419,18 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
         if Api and Api.SaveToken then
             Api.SaveToken("")
         end
-        local success, player = pcall(function() return game:GetService("Players").LocalPlayer end)
-        if success and player then
-            player:Kick("Successfully signed out")
+        if Api then
+            Api.Token = nil
+            Api.UserData = nil
+        end
+        Notifications.Notify({
+            Title = "Signed Out",
+            Content = "You have been signed out.",
+            Duration = 3,
+            Type = "Info"
+        })
+        if BackCallback then
+            BackCallback()
         end
     end))
 
@@ -1461,7 +1471,8 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
 
     PageData.Instance = Page
     PageData.UpdateData = function(data)
-            if data and data.username then
+        data = data or {}
+        if data.username then
                 Username.Text = data.username
             else
                 local success, name = pcall(function() return game:GetService("Players").LocalPlayer.Name end)
@@ -1653,6 +1664,11 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
                 ProfileImage.Image = "rbxthumb://type=AvatarHeadShot&id=" .. tostring(userId) .. "&w=150&h=150"
             end
         end
+    
+    pcall(function()
+        PageData.UpdateData(Api and Api.UserData or {})
+    end)
+    
     return PageData
 end
 

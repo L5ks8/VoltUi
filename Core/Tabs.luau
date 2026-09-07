@@ -78,6 +78,23 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
     table.insert(Tabs.Instances, TabObj)
     
     local function ActivateTab()
+        if string.lower(Name) == "account" or string.lower(Name) == "accountpage" then
+            if WindowObject.OpenAccount then
+                WindowObject:OpenAccount()
+                return
+            end
+        end
+
+        if WindowObject.PageLayout and WindowObject.Content then
+            WindowObject.PageLayout:JumpTo(WindowObject.Content)
+            if WindowObject.Bottombar and WindowObject.Bottombar.Instance then
+                WindowObject.Bottombar.Instance.Visible = true
+            end
+            if WindowObject.PagesContainer then
+                Tween(WindowObject.PagesContainer, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -50)})
+            end
+        end
+
         if Tabs.ActiveTab == TabObj then return end
         
         for _, otherTab in ipairs(Tabs.Instances) do

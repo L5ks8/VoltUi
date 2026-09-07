@@ -266,7 +266,6 @@ function Topbar.Create(Main, Config, maid)
         local icon = button:FindFirstChildOfClass("ImageLabel")
         if icon then icon.Active = false end
         
-        -- State tracking for hover to prevent flicker when moving quickly
         local isHovering = false
         
         maid:GiveTask(button.MouseEnter:Connect(function()

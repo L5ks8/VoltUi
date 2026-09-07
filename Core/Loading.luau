@@ -61,7 +61,6 @@ function Loading.Create(ParentGui)
     local obj = {IsReady = false, Faded = false, ReadyEvent = ReadyEvent}
     
     task.spawn(function()
-        -- Preload the icon image so the animation doesn't play while the image is still downloading!
         local ContentProvider = game:GetService("ContentProvider")
         pcall(function()
             ContentProvider:PreloadAsync({Icon})
@@ -103,7 +102,6 @@ function Loading.Create(ParentGui)
             
             task.wait(0.3)
             
-            -- Then fade out the solid background to smoothly reveal the UI behind it
             Tween(Main, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1})
             task.wait(0.4)
             

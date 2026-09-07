@@ -10,7 +10,6 @@ local function Tween(instance, tweenInfo, properties)
     return tw
 end
 
--- Slider
 function SliderComponent.Create(TabContent, Maid, Config)
     local config = type(Config) == "string" and {Header = Config} or Config
     local headerText = config.Header or config.Name or "Slider"
@@ -21,13 +20,13 @@ function SliderComponent.Create(TabContent, Maid, Config)
     local suffix = config.Suffix or ""
     local currentValue = config.Default or config.CurrentValue or minVal
     local cb = config.Callback or function() end
-    local accentColor = config.AccentColor or Color3.fromRGB(180, 175, 230)
+    local accentColor = config.AccentColor or Color3.fromRGB(245, 245, 245)
 
     currentValue = math.clamp(currentValue, minVal, maxVal)
 
     local SliderFrame = Instance.new("Frame")
     SliderFrame.Name = headerText
-    SliderFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 36)
+    SliderFrame.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
     SliderFrame.BackgroundTransparency = 1
     SliderFrame.BorderSizePixel = 0
     SliderFrame.Size = UDim2.new(1, 0, 0, descText == "" and 48 or 58)
@@ -84,7 +83,7 @@ function SliderComponent.Create(TabContent, Maid, Config)
     SliderBar.Name = "SliderBar"
     SliderBar.AutoButtonColor = false
     SliderBar.Text = ""
-    SliderBar.BackgroundColor3 = Color3.fromRGB(24, 23, 30)
+    SliderBar.BackgroundColor3 = Color3.fromRGB(36, 36, 36)
     SliderBar.BorderSizePixel = 0
     SliderBar.Position = UDim2.new(0, 14, 1, -12)
     SliderBar.Size = UDim2.new(1, -28, 0, 6)
@@ -95,7 +94,7 @@ function SliderComponent.Create(TabContent, Maid, Config)
     BarCorner.Parent = SliderBar
 
     local BarStroke = Instance.new("UIStroke")
-    BarStroke.Color = Color3.fromRGB(48, 45, 58)
+    BarStroke.Color = Color3.fromRGB(55, 55, 55)
     BarStroke.Thickness = 1
     BarStroke.Parent = SliderBar
 
@@ -125,7 +124,7 @@ function SliderComponent.Create(TabContent, Maid, Config)
     KnobCorner.Parent = Knob
 
     local KnobStroke = Instance.new("UIStroke")
-    KnobStroke.Color = accentColor
+    KnobStroke.Color = Color3.fromRGB(55, 55, 55)
     KnobStroke.Thickness = 1.5
     KnobStroke.Parent = Knob
 

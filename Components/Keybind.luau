@@ -8,7 +8,6 @@ local function Tween(instance, tweenInfo, properties)
     return tw
 end
 
--- Keybind
 function KeybindComponent.Create(TabContent, Maid, Config)
     local config = type(Config) == "string" and {Header = Config} or Config
     local headerText = config.Header or config.Name or "Keybind"
@@ -18,11 +17,11 @@ function KeybindComponent.Create(TabContent, Maid, Config)
         currentKey = currentKey.Name
     end
     local cb = config.Callback or function() end
-    local accentColor = config.AccentColor or Color3.fromRGB(180, 175, 230)
+    local accentColor = config.AccentColor or Color3.fromRGB(245, 245, 245)
 
     local RowFrame = Instance.new("Frame")
     RowFrame.Name = headerText
-    RowFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 36)
+    RowFrame.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
     RowFrame.BackgroundTransparency = 1
     RowFrame.BorderSizePixel = 0
     RowFrame.Size = UDim2.new(1, 0, 0, descText == "" and 42 or 52)
@@ -96,7 +95,7 @@ function KeybindComponent.Create(TabContent, Maid, Config)
     local KeyBtn = Instance.new("TextButton")
     KeyBtn.Name = "KeyBtn"
     KeyBtn.AutoButtonColor = false
-    KeyBtn.BackgroundColor3 = Color3.fromRGB(22, 21, 28)
+    KeyBtn.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
     KeyBtn.Size = UDim2.new(0, 0, 0, 26)
     KeyBtn.AutomaticSize = Enum.AutomaticSize.X
     KeyBtn.Text = ""
@@ -107,7 +106,7 @@ function KeybindComponent.Create(TabContent, Maid, Config)
     KeyCorner.Parent = KeyBtn
 
     local KeyStroke = Instance.new("UIStroke")
-    KeyStroke.Color = Color3.fromRGB(48, 45, 58)
+    KeyStroke.Color = Color3.fromRGB(48, 48, 48)
     KeyStroke.Thickness = 1
     KeyStroke.Parent = KeyBtn
 
@@ -123,7 +122,7 @@ function KeybindComponent.Create(TabContent, Maid, Config)
     KeyLabel.AutomaticSize = Enum.AutomaticSize.X
     KeyLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     KeyLabel.Text = tostring(currentKey)
-    KeyLabel.TextColor3 = Color3.fromRGB(220, 220, 230)
+    KeyLabel.TextColor3 = Color3.fromRGB(240, 240, 245)
     KeyLabel.TextSize = 12
     KeyLabel.Parent = KeyBtn
 
@@ -134,7 +133,7 @@ function KeybindComponent.Create(TabContent, Maid, Config)
         if not listening then return end
         listening = false
         KeyLabel.Text = tostring(currentKey)
-        Tween(KeyStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(48, 45, 58)})
+        Tween(KeyStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(48, 48, 48)})
         if listenConn then
             listenConn:Disconnect()
             listenConn = nil
@@ -171,7 +170,7 @@ function KeybindComponent.Create(TabContent, Maid, Config)
             if capturedKey then
                 currentKey = capturedKey
                 KeyLabel.Text = currentKey
-                Tween(KeyStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(48, 45, 58)})
+                Tween(KeyStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(48, 48, 48)})
                 listening = false
                 if listenConn then
                     listenConn:Disconnect()

@@ -277,7 +277,7 @@ function Window:CreateWindow(Config)
         KeyCard.Position = UDim2.new(0.5, 0, 0.5, 0)
         KeyCard.Size = UDim2.new(0, 420, 0, 0)
         KeyCard.AutomaticSize = Enum.AutomaticSize.Y
-        KeyCard.BackgroundColor3 = Color3.fromRGB(18, 17, 23)
+        KeyCard.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
         KeyCard.BorderSizePixel = 0
         KeyCard.ZIndex = 80001
         KeyCard.Parent = KeyBackdrop
@@ -287,7 +287,7 @@ function Window:CreateWindow(Config)
         Corner.Parent = KeyCard
 
         local Stroke = Instance.new("UIStroke")
-        Stroke.Color = Color3.fromRGB(50, 47, 62)
+        Stroke.Color = Color3.fromRGB(48, 48, 48)
         Stroke.Thickness = 1.2
         Stroke.Parent = KeyCard
 
@@ -303,7 +303,6 @@ function Window:CreateWindow(Config)
         Layout.Padding = UDim.new(0, 12)
         Layout.Parent = KeyCard
 
-        -- Header Row
         local HeaderRow = Instance.new("Frame")
         HeaderRow.BackgroundTransparency = 1
         HeaderRow.Size = UDim2.new(1, 0, 0, 34)
@@ -344,7 +343,6 @@ function Window:CreateWindow(Config)
             VoltUi:Destroy()
         end)
 
-        -- Note
         if ks.Note and ks.Note ~= "" then
             local NoteLbl = Instance.new("TextLabel")
             NoteLbl.BackgroundTransparency = 1
@@ -360,9 +358,8 @@ function Window:CreateWindow(Config)
             NoteLbl.Parent = KeyCard
         end
 
-        -- Key Input
         local InputFrame = Instance.new("Frame")
-        InputFrame.BackgroundColor3 = Color3.fromRGB(24, 23, 30)
+        InputFrame.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
         InputFrame.Size = UDim2.new(1, 0, 0, 36)
         InputFrame.LayoutOrder = 3
         InputFrame.Parent = KeyCard
@@ -372,7 +369,7 @@ function Window:CreateWindow(Config)
         InputCorner.Parent = InputFrame
 
         local InputStroke = Instance.new("UIStroke")
-        InputStroke.Color = Color3.fromRGB(48, 45, 58)
+        InputStroke.Color = Color3.fromRGB(48, 48, 48)
         InputStroke.Thickness = 1
         InputStroke.Parent = InputFrame
 
@@ -389,7 +386,6 @@ function Window:CreateWindow(Config)
         InputBox.ClearTextOnFocus = false
         InputBox.Parent = InputFrame
 
-        -- Buttons Row
         local ButtonsRow = Instance.new("Frame")
         ButtonsRow.BackgroundTransparency = 1
         ButtonsRow.Size = UDim2.new(1, 0, 0, 34)
@@ -405,7 +401,7 @@ function Window:CreateWindow(Config)
         local keyLink = ks.KeyLink or ks.URL or ks.Link or (Config.Discord and Config.Discord.Invite and ("https://discord.gg/" .. Config.Discord.Invite))
         if keyLink and keyLink ~= "" then
             local GetBtn = Instance.new("TextButton")
-            GetBtn.BackgroundColor3 = Color3.fromRGB(30, 28, 38)
+            GetBtn.BackgroundColor3 = Color3.fromRGB(36, 36, 36)
             GetBtn.Size = UDim2.new(0, 100, 1, 0)
             GetBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
             GetBtn.Text = "Get Key"
@@ -418,7 +414,7 @@ function Window:CreateWindow(Config)
             GetCorner.Parent = GetBtn
 
             local GetStroke = Instance.new("UIStroke")
-            GetStroke.Color = Color3.fromRGB(48, 45, 58)
+            GetStroke.Color = Color3.fromRGB(48, 48, 48)
             GetStroke.Thickness = 1
             GetStroke.Parent = GetBtn
 
@@ -441,11 +437,11 @@ function Window:CreateWindow(Config)
         end
 
         local SubmitBtn = Instance.new("TextButton")
-        SubmitBtn.BackgroundColor3 = Color3.fromRGB(180, 175, 230)
+        SubmitBtn.BackgroundColor3 = Color3.fromRGB(245, 245, 245)
         SubmitBtn.Size = UDim2.new(0, 110, 1, 0)
         SubmitBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
         SubmitBtn.Text = "Submit Key"
-        SubmitBtn.TextColor3 = Color3.fromRGB(18, 17, 23)
+        SubmitBtn.TextColor3 = Color3.fromRGB(24, 24, 24)
         SubmitBtn.TextSize = 12
         SubmitBtn.Parent = ButtonsRow
 
@@ -496,7 +492,7 @@ function Window:CreateWindow(Config)
                 })
                 task.delay(1.5, function()
                     if InputStroke and InputStroke.Parent then
-                        InputStroke.Color = Color3.fromRGB(48, 45, 58)
+                        InputStroke.Color = Color3.fromRGB(48, 48, 48)
                     end
                 end)
             end
@@ -589,8 +585,27 @@ function Window:CreateWindow(Config)
             PageLayout:JumpTo(AccountPageElements.Instance)
             BottombarElements.Instance.Visible = false
             Tween(PagesContainer, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -30)})
+            if AccountPageElements.UpdateData then
+                AccountPageElements.UpdateData(Api and Api.UserData or {})
+            end
+            task.spawn(function()
+                if Api and Api.FetchMe then
+                    local freshData = Api.FetchMe()
+                    if freshData and AccountPageElements and AccountPageElements.UpdateData then
+                        AccountPageElements.UpdateData(freshData)
+                    end
+                end
+            end)
         end
     end))
+    
+    if SidebarElements.HomeBtn then
+        maid:GiveTask(SidebarElements.HomeBtn.MouseButton1Click:Connect(function()
+            PageLayout:JumpTo(Content)
+            BottombarElements.Instance.Visible = true
+            Tween(PagesContainer, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -50)})
+        end))
+    end
     
     local ClosePrompt = CloseWarn.Create(VoltUi, maid, function()
         maid:DoCleaning()
@@ -665,6 +680,10 @@ function Window:CreateWindow(Config)
         Sidebar = SidebarElements,
         Bottombar = BottombarElements,
         ContentContainer = MainContent,
+        PageLayout = PageLayout,
+        PagesContainer = PagesContainer,
+        Content = Content,
+        AccountPage = AccountPageElements,
         Maid = maid,
         OnClose = OnClose,
         OnCollapse = OnCollapse
@@ -681,6 +700,31 @@ function Window:CreateWindow(Config)
     end
     WindowObject.CreateTabSection = WindowObject.CreateTab
     WindowObject.AddTab = WindowObject.CreateTab
+
+    function WindowObject:OpenAccount()
+        if AccountPageElements and AccountPageElements.Instance then
+            PageLayout:JumpTo(AccountPageElements.Instance)
+            BottombarElements.Instance.Visible = false
+            Tween(PagesContainer, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -30)})
+            if AccountPageElements.UpdateData then
+                AccountPageElements.UpdateData(Api and Api.UserData or {})
+            end
+            task.spawn(function()
+                if Api and Api.FetchMe then
+                    local freshData = Api.FetchMe()
+                    if freshData and AccountPageElements and AccountPageElements.UpdateData then
+                        AccountPageElements.UpdateData(freshData)
+                    end
+                end
+            end)
+        end
+    end
+
+    function WindowObject:OpenHome()
+        PageLayout:JumpTo(Content)
+        BottombarElements.Instance.Visible = true
+        Tween(PagesContainer, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -50)})
+    end
     
     function WindowObject:Notify(Config)
         return Notifications.Notify(Config)
@@ -711,7 +755,7 @@ function Window:CreateWindow(Config)
 
         local DialogCard = Instance.new("Frame")
         DialogCard.Name = "DialogCard"
-        DialogCard.BackgroundColor3 = Color3.fromRGB(18, 17, 23)
+        DialogCard.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
         DialogCard.BorderSizePixel = 0
         DialogCard.AnchorPoint = Vector2.new(0.5, 0.5)
         DialogCard.Position = UDim2.new(0.5, 0, 0.5, 0)
@@ -726,7 +770,7 @@ function Window:CreateWindow(Config)
         DialogCorner.Parent = DialogCard
 
         local DialogStroke = Instance.new("UIStroke")
-        DialogStroke.Color = Color3.fromRGB(48, 45, 58)
+        DialogStroke.Color = Color3.fromRGB(48, 48, 48)
         DialogStroke.Thickness = 1
         DialogStroke.Parent = DialogCard
 
@@ -823,7 +867,7 @@ function Window:CreateWindow(Config)
             local ActionBtn = Instance.new("TextButton")
             ActionBtn.Name = bText
             ActionBtn.AutoButtonColor = false
-            ActionBtn.BackgroundColor3 = isPrimary and Color3.fromRGB(35, 33, 45) or Color3.fromRGB(24, 23, 30)
+            ActionBtn.BackgroundColor3 = isPrimary and Color3.fromRGB(40, 40, 40) or Color3.fromRGB(28, 28, 28)
             ActionBtn.Size = UDim2.new(0, 0, 1, 0)
             ActionBtn.AutomaticSize = Enum.AutomaticSize.X
             ActionBtn.Text = ""
@@ -835,7 +879,7 @@ function Window:CreateWindow(Config)
             BtnCorner.Parent = ActionBtn
 
             local BtnStroke = Instance.new("UIStroke")
-            BtnStroke.Color = isPrimary and Color3.fromRGB(180, 175, 230) or Color3.fromRGB(48, 45, 58)
+            BtnStroke.Color = isPrimary and (Config.AccentColor or Color3.fromRGB(245, 245, 245)) or Color3.fromRGB(48, 48, 48)
             BtnStroke.Thickness = 1
             BtnStroke.Parent = ActionBtn
 
