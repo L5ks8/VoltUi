@@ -5,7 +5,7 @@ local Utility = require(Utils.Utility)
 local Topbar = {}
 
 function Topbar.Create(Main, Config, maid)
-    local Title = Config.Title or "Volt - 1.0.0"
+    local Title = Config.Title or "Volt - 1.1.4"
     
     local TopbarFrame = Instance.new("Frame")
     TopbarFrame.Name = "Topbar"
@@ -151,7 +151,7 @@ function Topbar.Create(Main, Config, maid)
     CloseIcon.Parent = Close
     
     local baseTitle = Config.Title or Config.Name or "Volt"
-    local initialVersion = Config.Version or "1.0.0"
+    local initialVersion = Config.Version or "1.1.4"
     
     local isSpecialPage = (baseTitle == "Sign In" or baseTitle == "Register" or baseTitle == "Reset Password" or baseTitle == "Enter Code" or baseTitle:find("Forgot") ~= nil)
     local function formatHeader(t, v)
