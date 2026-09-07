@@ -1438,15 +1438,9 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
                 Api.SaveToken("")
             end
             if Api then Api.UserData = nil end
-            PageData.UpdateData(nil)
-            Notifications.Notify({
-                Title = "Signed Out",
-                Content = "You have been signed out.",
-                Duration = 3
-            })
-        else
-            if OnLoginRequest then
-                OnLoginRequest()
+            local Players = game:GetService("Players")
+            if Players.LocalPlayer then
+                Players.LocalPlayer:Kick("You have been signed out. Please rejoin to sign in again.")
             end
         end
     end))
@@ -1830,14 +1824,9 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
             LogoutButton.BackgroundColor3 = Color3.new(0.816, 0.243, 0.243)
             LogoutButtonStroke.Color = Color3.new(0.816, 0.243, 0.243)
             LogoutButtonIcon.ImageColor3 = Color3.new(0.816, 0.243, 0.243)
+            LogoutFrame.Visible = true
         else
-            LogoutHeader.Text = "Sign in"
-            LogoutDesc.Text = "Sign into your Volt account"
-            LogoutButtonText.Text = "Sign In"
-            LogoutButtonText.TextColor3 = Color3.fromRGB(220, 220, 220)
-            LogoutButton.BackgroundColor3 = Color3.fromRGB(36, 36, 36)
-            LogoutButtonStroke.Color = Color3.fromRGB(90, 90, 90)
-            LogoutButtonIcon.ImageColor3 = Color3.fromRGB(220, 220, 220)
+            LogoutFrame.Visible = false
         end
     end
 
