@@ -31,11 +31,12 @@ router.get('/me', authMiddleware, async (req, res) => {
         }
 
         if (user.subscriptionEnd) {
-            const ms = user.subscriptionEnd.getTime() - Date.now();
+            const ms = new Date(user.subscriptionEnd).getTime() - Date.now();
             if (ms > 0) {
                 const days = Math.floor(ms / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                user.remaining = days > 0 ? `${days}d ${hours}h` : `${hours}h`;
+                const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+                user.remaining = `${days}d ${hours}h ${minutes}m`;
             } else {
                 user.remaining = 'Expired';
             }

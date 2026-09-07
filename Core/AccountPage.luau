@@ -209,6 +209,24 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     ProfileImageStroke.Color = Color3.new(0.31, 0.31, 0.31)
     ProfileImageStroke.Parent = ProfileImage
 
+    local function LoadAvatar()
+        pcall(function()
+            local Players = game:GetService("Players")
+            local lp = Players.LocalPlayer
+            local uid = (lp and lp.UserId and lp.UserId > 0) and lp.UserId or 1
+            ProfileImage.Image = "rbxthumb://type=AvatarHeadShot&id=" .. tostring(uid) .. "&w=150&h=150"
+            task.spawn(function()
+                pcall(function()
+                    local content, isReady = Players:GetUserThumbnailAsync(uid, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size150x150)
+                    if content and isReady then
+                        ProfileImage.Image = content
+                    end
+                end)
+            end)
+        end)
+    end
+    LoadAvatar()
+
     local Info = Instance.new("Frame")
     Info.Name = "Info"
     Info.BackgroundColor3 = Color3.new(1, 1, 1)
@@ -292,13 +310,14 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     HiddenId.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
     HiddenId.AutomaticSize = Enum.AutomaticSize.XY
     HiddenId.Size = UDim2.new(0, 0, 0, 22)
-    HiddenId.Text = "********"
+    HiddenId.Text = ""
     HiddenId.TextColor3 = Color3.new(0.5, 0.5, 0.5)
     HiddenId.TextSize = 14
     HiddenId.TextXAlignment = Enum.TextXAlignment.Left
     HiddenId.TextYAlignment = Enum.TextYAlignment.Bottom
     HiddenId.TextEditable = false
     HiddenId.ClearTextOnFocus = false
+    HiddenId.Visible = false
     HiddenId.Parent = UsernameContainer
 
     local MemberSince = Instance.new("TextLabel")
@@ -309,7 +328,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     MemberSince.BorderSizePixel = 0
     MemberSince.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
     MemberSince.Size = UDim2.new(0, 150, 0, 25)
-    MemberSince.Text = "Member since Jul 24, 2026"
+    MemberSince.Text = ""
     MemberSince.TextColor3 = Color3.new(0.439, 0.439, 0.439)
     MemberSince.TextSize = 14
     MemberSince.TextXAlignment = Enum.TextXAlignment.Left
@@ -757,7 +776,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     RemainingValue.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     RemainingValue.LayoutOrder = 1
     RemainingValue.Size = UDim2.new(0, 175, 0, 22)
-    RemainingValue.Text = "1 month"
+    RemainingValue.Text = "-"
     RemainingValue.TextColor3 = Color3.new(0.8, 0.8, 0.8)
     RemainingValue.TextSize = 20
     RemainingValue.TextXAlignment = Enum.TextXAlignment.Left
@@ -853,7 +872,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     EndsValue.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
     EndsValue.LayoutOrder = 1
     EndsValue.Size = UDim2.new(0, 130, 0, 22)
-    EndsValue.Text = "38.8.2026"
+    EndsValue.Text = "-"
     EndsValue.TextColor3 = Color3.new(0.8, 0.8, 0.8)
     EndsValue.TextSize = 16
     EndsValue.TextXAlignment = Enum.TextXAlignment.Left
@@ -945,7 +964,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     StartedValue.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
     StartedValue.LayoutOrder = 1
     StartedValue.Size = UDim2.new(0, 130, 0, 22)
-    StartedValue.Text = "30.8.2026"
+    StartedValue.Text = "-"
     StartedValue.TextColor3 = Color3.new(0.8, 0.8, 0.8)
     StartedValue.TextSize = 16
     StartedValue.TextXAlignment = Enum.TextXAlignment.Left
@@ -1082,7 +1101,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     CountLabel.BorderSizePixel = 0
     CountLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     CountLabel.Size = UDim2.new(1, 0, 1, 0)
-    CountLabel.Text = "1"
+    CountLabel.Text = "0"
     CountLabel.TextColor3 = Color3.new(0.557, 0.557, 0.557)
     CountLabel.TextSize = 15
     CountLabel.Parent = CountFrame
@@ -1112,16 +1131,8 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
 
     local ClaimedLayout = Instance.new("UIListLayout")
     ClaimedLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    ClaimedLayout.Padding = UDim.new(0, 6)
     ClaimedLayout.Parent = Claimed
-
-    local ExampleKey = Instance.new("Frame")
-    ExampleKey.Name = "ExampleKey"
-    ExampleKey.BackgroundColor3 = Color3.new(1, 1, 1)
-    ExampleKey.BackgroundTransparency = 1
-    ExampleKey.BorderColor3 = Color3.new(0, 0, 0)
-    ExampleKey.BorderSizePixel = 0
-    ExampleKey.Size = UDim2.new(1, -10, 0, 50)
-    ExampleKey.Parent = Claimed
 
     local Security = Instance.new("Frame")
     Security.Name = "Security"
@@ -1461,198 +1472,284 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
 
     PageData.Instance = Page
     PageData.UpdateData = function(data)
-            if data and data.username then
-                Username.Text = data.username
-            else
-                local success, name = pcall(function() return game:GetService("Players").LocalPlayer.Name end)
-                Username.Text = success and name or "Username"
-            end
-            
-            if data and data._id then
-                HiddenId.Visible = true
-                HiddenId.Text = "********"
-                local idRevealed = false
-                Maid:GiveTask(HiddenId.Focused:Connect(function()
-                    if not idRevealed then
-                        idRevealed = true
-                        HiddenId.Text = tostring(data._id)
+        if data and type(data) == "table" and data.user and type(data.user) == "table" then
+            data = data.user
+        end
+        if not data or type(data) ~= "table" then
+            data = (Api and Api.UserData and (Api.UserData.user or Api.UserData)) or {}
+        end
+
+        pcall(function()
+            local Players = game:GetService("Players")
+            local lp = Players.LocalPlayer
+            local uid = (lp and lp.UserId and lp.UserId > 0) and lp.UserId or 1
+            ProfileImage.Image = "rbxthumb://type=AvatarHeadShot&id=" .. tostring(uid) .. "&w=150&h=150"
+            task.spawn(function()
+                pcall(function()
+                    local content, isReady = Players:GetUserThumbnailAsync(uid, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size150x150)
+                    if content and isReady then
+                        ProfileImage.Image = content
                     end
-                end))
+                end)
+            end)
+        end)
+
+        local acctUsername = data.username or (Api and Api.UserData and (Api.UserData.username or (Api.UserData.user and Api.UserData.user.username)))
+        if acctUsername and acctUsername ~= "" then
+            Username.Text = acctUsername
+        else
+            Username.Text = "Username"
+        end
+        
+        local acctId = data._id or data.id or (Api and Api.UserData and (Api.UserData._id or Api.UserData.id))
+        if acctId and tostring(acctId) ~= "" then
+            HiddenId.Visible = true
+            HiddenId.Text = tostring(acctId)
+        else
+            HiddenId.Visible = false
+            HiddenId.Text = ""
+        end
+        
+        local memberCreatedAt = data.createdAt or (Api and Api.UserData and Api.UserData.createdAt)
+        if memberCreatedAt then
+            local str = tostring(memberCreatedAt)
+            local y, m, day = string.match(str, "^(%d+)%-(%d+)%-(%d+)")
+            if y and m and day then
+                MemberSince.Text = "Member since " .. string.format("%d.%d.%s", tonumber(day), tonumber(m), y)
             else
-                HiddenId.Visible = false
+                MemberSince.Text = "Member since " .. str
             end
+        else
+            MemberSince.Text = ""
+        end
+        
+        local subEnd = data.subscriptionEnd or data.expiresAt or data.endsAt
+        local subStart = data.subscriptionStart or data.startedAt or data.createdAt
+        local remainingStr = data.remaining
+        local isActive = false
+        local isLifetime = (subEnd == nil and (data.isLifetime == true or data.tier == "lifetime"))
+        
+        if data.subscription and type(data.subscription) == "table" then
+            local sub = data.subscription
+            subEnd = subEnd or sub.expiresAt or sub.endsAt or sub.subscriptionEnd
+            subStart = subStart or sub.startedAt or sub.createdAt
+            remainingStr = remainingStr or sub.remaining
+            if sub.active ~= nil then isActive = sub.active end
+            if subEnd then isLifetime = false end
+        end
+        
+        if subEnd or isLifetime then isActive = true end
+        if remainingStr == "Expired" then isActive = false end
+        PageData.IsLifetime = isLifetime
+        
+        if isActive then
+            StatusBadgeText.Text = "Active"
+            StatusBadgeText.TextColor3 = Color3.new(0.4, 0.8, 0.4)
             
-            if data and data.createdAt then
-                local dateStr = string.match(tostring(data.createdAt), "^(%d+%-%d+%-%d+)") or tostring(data.createdAt)
-                MemberSince.Text = "Member since " .. dateStr
+            if isLifetime then
+                EndsValue.Text = "Lifetime"
+                RemainingValue.Text = "Lifetime"
             else
-                MemberSince.Text = "Member since Jul 24, 2026"
-            end
-            
-            local subEnd = data.subscriptionEnd or data.expiresAt or data.endsAt
-            local subStart = data.subscriptionStart or data.startedAt or data.createdAt
-            local remainingStr = data.remaining
-            local isActive = false
-            local isLifetime = (subEnd == nil)
-            
-            if data.subscription and type(data.subscription) == "table" then
-                local sub = data.subscription
-                subEnd = subEnd or sub.expiresAt or sub.endsAt or sub.subscriptionEnd
-                subStart = subStart or sub.startedAt or sub.createdAt
-                remainingStr = remainingStr or sub.remaining
-                if sub.active ~= nil then isActive = sub.active end
-                if subEnd then isLifetime = false end
-            end
-            
-            if subEnd or isLifetime then isActive = true end
-            if remainingStr == "Expired" then isActive = false end
-            PageData.IsLifetime = isLifetime
-            
-            if isActive then
-                StatusBadgeText.Text = "Active"
-                StatusBadgeText.TextColor3 = Color3.new(0.4, 0.8, 0.4)
-                
-                if isLifetime then
-                    EndsValue.Text = "Lifetime"
-                    RemainingValue.Text = "Lifetime"
-                else
-                    local endStr = string.match(tostring(subEnd), "^(%d+%-%d+%-%d+)") or tostring(subEnd)
-                    EndsValue.Text = endStr
-                    RemainingValue.Text = remainingStr and tostring(remainingStr) or "Active"
+                local endFormatted = "N/A"
+                if subEnd then
+                    local str = tostring(subEnd)
+                    local y, m, day = string.match(str, "^(%d+)%-(%d+)%-(%d+)")
+                    if y and m and day then
+                        endFormatted = string.format("%d.%d.%s", tonumber(day), tonumber(m), y)
+                    else
+                        endFormatted = str
+                    end
                 end
+                EndsValue.Text = endFormatted
                 
-                if subStart then
-                    local startStr = string.match(tostring(subStart), "^(%d+%-%d+%-%d+)") or tostring(subStart)
-                    StartedValue.Text = startStr
+                if remainingStr and remainingStr ~= "" and remainingStr ~= "1 month" and not string.find(string.lower(remainingStr), "month") then
+                    RemainingValue.Text = tostring(remainingStr)
                 else
-                    StartedValue.Text = "N/A"
+                    local calculatedRemaining = nil
+                    if subEnd then
+                        local str = tostring(subEnd)
+                        local y, m, d, h, min, s = string.match(str, "^(%d+)%-(%d+)%-(%d+)[T ](%d+):(%d+):(%d+)")
+                        if y and m and d and h and min and s then
+                            local endTime = os.time({year = tonumber(y), month = tonumber(m), day = tonumber(d), hour = tonumber(h), min = tonumber(min), sec = tonumber(s)})
+                            local diff = endTime - os.time()
+                            if diff > 0 then
+                                local days = math.floor(diff / 86400)
+                                local hours = math.floor((diff % 86400) / 3600)
+                                local minutes = math.floor((diff % 3600) / 60)
+                                calculatedRemaining = string.format("%dd %dh %dm", days, hours, minutes)
+                            else
+                                calculatedRemaining = "Expired"
+                            end
+                        end
+                    end
+                    RemainingValue.Text = calculatedRemaining or (remainingStr and tostring(remainingStr)) or "Active"
+                end
+            end
+            
+            if subStart then
+                local str = tostring(subStart)
+                local y, m, day = string.match(str, "^(%d+)%-(%d+)%-(%d+)")
+                if y and m and day then
+                    StartedValue.Text = string.format("%d.%d.%s", tonumber(day), tonumber(m), y)
+                else
+                    StartedValue.Text = str
                 end
             else
-                StatusBadgeText.Text = "Inactive"
-                StatusBadgeText.TextColor3 = Color3.new(0.6, 0.6, 0.6)
-                RemainingValue.Text = "None"
                 StartedValue.Text = "N/A"
-                EndsValue.Text = "N/A"
             end
-            
-            for _, child in ipairs(Claimed:GetChildren()) do
-                if child:IsA("Frame") then child:Destroy() end
-            end
-            
-            local keysData = data.keys or data.key or data.claimedKeys or data.claimedkey or data.claimedKey or data.licenses or data.licenseKeys or data.usedKey or data.license
-            if data.subscription and type(data.subscription) == "table" then
-                keysData = keysData or data.subscription.keys or data.subscription.key or data.subscription.claimedKeys or data.subscription.claimedkey or data.subscription.claimedKey
-            end
-            
-            local keyList = {}
-            if data.licenseObjects and type(data.licenseObjects) == "table" then
-                keyList = data.licenseObjects
-            else
-                if type(keysData) == "table" then
-                    for _, k in ipairs(keysData) do table.insert(keyList, { key = k }) end
-                elseif type(keysData) == "string" then
-                    keyList = {{ key = keysData }}
-                end
-            end
-            
-            CountLabel.Text = tostring(#keyList)
-            
-            local Tween = require(script.Parent.Parent.Utils.Tween)
-            
-            for _, licenseObj in ipairs(keyList) do
-                local keyStr = type(licenseObj) == "string" and licenseObj or licenseObj.key
-                
-                local KeyItem = Instance.new("Frame")
-                KeyItem.Name = "KeyItem"
-                KeyItem.BackgroundColor3 = Color3.new(0.16, 0.16, 0.16)
-                KeyItem.BackgroundTransparency = 1
-                KeyItem.BorderSizePixel = 0
-                KeyItem.Size = UDim2.new(1, 0, 0, 50)
-                KeyItem.Parent = Claimed
-                
-                local KeyCorner = Instance.new("UICorner")
-                KeyCorner.CornerRadius = UDim.new(0, 6)
-                KeyCorner.Parent = KeyItem
-                
-                local HoverButton = Instance.new("TextButton")
-                HoverButton.BackgroundTransparency = 1
-                HoverButton.Text = ""
-                HoverButton.Size = UDim2.new(1, 0, 1, 0)
-                HoverButton.ZIndex = 5
-                HoverButton.Parent = KeyItem
-                
-                Maid:GiveTask(HoverButton.MouseEnter:Connect(function()
-                    Tween(KeyItem, TweenInfo.new(0.2), {BackgroundTransparency = 0})
-                end))
-                Maid:GiveTask(HoverButton.MouseLeave:Connect(function()
-                    Tween(KeyItem, TweenInfo.new(0.2), {BackgroundTransparency = 1})
-                end))
-                
-                local KeyLabel = Instance.new("TextLabel")
-                KeyLabel.BackgroundTransparency = 1
-                KeyLabel.Size = UDim2.new(1, -100, 0, 25)
-                KeyLabel.Position = UDim2.new(0, 10, 0, 5)
-                KeyLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-                KeyLabel.TextSize = 15
-                KeyLabel.TextColor3 = Color3.fromRGB(130, 190, 255)
-                KeyLabel.TextXAlignment = Enum.TextXAlignment.Left
-                KeyLabel.Text = tostring(keyStr)
-                KeyLabel.Parent = KeyItem
-                
-                local DetailsLabel = Instance.new("TextLabel")
-                DetailsLabel.BackgroundTransparency = 1
-                DetailsLabel.Size = UDim2.new(1, -100, 0, 15)
-                DetailsLabel.Position = UDim2.new(0, 10, 0, 30)
-                DetailsLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-                DetailsLabel.TextSize = 13
-                DetailsLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
-                DetailsLabel.TextXAlignment = Enum.TextXAlignment.Left
-                
-                local claimedStr = type(licenseObj) == "table" and licenseObj.claimedStr or "N/A"
-                local expiresStr = type(licenseObj) == "table" and licenseObj.expiresStr or "N/A"
-                DetailsLabel.Text = "Claimed " .. claimedStr .. "   Expires " .. expiresStr
-                DetailsLabel.Parent = KeyItem
-                
-                local BadgeFrame = Instance.new("Frame")
-                BadgeFrame.AnchorPoint = Vector2.new(1, 0.5)
-                BadgeFrame.Position = UDim2.new(1, -10, 0.5, 0)
-                BadgeFrame.Size = UDim2.new(0, 70, 0, 22)
-                BadgeFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-                BadgeFrame.Parent = KeyItem
-                Instance.new("UICorner", BadgeFrame).CornerRadius = UDim.new(0, 4)
-                
-                local BadgeStroke = Instance.new("UIStroke")
-                BadgeStroke.Color = Color3.fromRGB(80, 80, 80)
-                BadgeStroke.Parent = BadgeFrame
-                
-                local BadgeText = Instance.new("TextLabel")
-                BadgeText.BackgroundTransparency = 1
-                BadgeText.Size = UDim2.new(1, 0, 1, 0)
-                BadgeText.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-                BadgeText.TextSize = 13
-                BadgeText.TextColor3 = Color3.fromRGB(255, 255, 255)
-                
-                local badgeName = "unknown"
-                if type(licenseObj) == "table" then
-                    if licenseObj.durationMs == nil then badgeName = "lifetime"
-                    elseif licenseObj.durationMs then
-                        local days = math.floor(licenseObj.durationMs / (1000 * 60 * 60 * 24))
-                        if days == 30 or days == 31 then badgeName = "monthly"
-                        elseif days == 7 then badgeName = "weekly"
-                        elseif days == 1 then badgeName = "daily"
-                        elseif days < 1 then badgeName = "hourly"
-                        else badgeName = tostring(days).." days" end
-                    end
-                end
-                BadgeText.Text = badgeName
-                BadgeText.Parent = BadgeFrame
-            end
-            
-            local success, userId = pcall(function() return game:GetService("Players").LocalPlayer.UserId end)
-            if success and userId then
-                ProfileImage.Image = "rbxthumb://type=AvatarHeadShot&id=" .. tostring(userId) .. "&w=150&h=150"
+        else
+            StatusBadgeText.Text = "Inactive"
+            StatusBadgeText.TextColor3 = Color3.new(0.6, 0.6, 0.6)
+            RemainingValue.Text = "None"
+            StartedValue.Text = "N/A"
+            EndsValue.Text = "N/A"
+        end
+        
+        for _, child in ipairs(Claimed:GetChildren()) do
+            if child:IsA("Frame") or child:IsA("TextLabel") then child:Destroy() end
+        end
+        
+        local keysData = data.keys or data.key or data.claimedKeys or data.claimedkey or data.claimedKey or data.licenses or data.licenseKeys or data.usedKey or data.license
+        if data.subscription and type(data.subscription) == "table" then
+            keysData = keysData or data.subscription.keys or data.subscription.key or data.subscription.claimedKeys or data.subscription.claimedkey or data.subscription.claimedKey
+        end
+        
+        local keyList = {}
+        if data.licenseObjects and type(data.licenseObjects) == "table" then
+            keyList = data.licenseObjects
+        else
+            if type(keysData) == "table" then
+                for _, k in ipairs(keysData) do table.insert(keyList, { key = k }) end
+            elseif type(keysData) == "string" then
+                keyList = {{ key = keysData }}
             end
         end
+        
+        CountLabel.Text = tostring(#keyList)
+        
+        if #keyList == 0 then
+            local EmptyLabel = Instance.new("TextLabel")
+            EmptyLabel.Name = "EmptyLabel"
+            EmptyLabel.BackgroundTransparency = 1
+            EmptyLabel.Size = UDim2.new(1, 0, 0, 40)
+            EmptyLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Italic)
+            EmptyLabel.TextSize = 14
+            EmptyLabel.TextColor3 = Color3.fromRGB(120, 120, 120)
+            EmptyLabel.Text = "No claimed keys"
+            EmptyLabel.Parent = Claimed
+        end
+        
+        local Tween = require(script.Parent.Parent.Utils.Tween)
+        
+        for _, licenseObj in ipairs(keyList) do
+            local keyStr = type(licenseObj) == "string" and licenseObj or (licenseObj.key or licenseObj.licenseKey or tostring(licenseObj))
+            
+            local KeyItem = Instance.new("Frame")
+            KeyItem.Name = "KeyItem"
+            KeyItem.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
+            KeyItem.BackgroundTransparency = 0
+            KeyItem.BorderSizePixel = 0
+            KeyItem.Size = UDim2.new(1, -10, 0, 50)
+            KeyItem.Parent = Claimed
+            
+            local KeyCorner = Instance.new("UICorner")
+            KeyCorner.CornerRadius = UDim.new(0, 6)
+            KeyCorner.Parent = KeyItem
+
+            local KeyStroke = Instance.new("UIStroke")
+            KeyStroke.Color = Color3.fromRGB(48, 48, 48)
+            KeyStroke.Thickness = 1
+            KeyStroke.Parent = KeyItem
+            
+            local HoverButton = Instance.new("TextButton")
+            HoverButton.BackgroundTransparency = 1
+            HoverButton.Text = ""
+            HoverButton.Size = UDim2.new(1, 0, 1, 0)
+            HoverButton.ZIndex = 5
+            HoverButton.Parent = KeyItem
+            
+            Maid:GiveTask(HoverButton.MouseEnter:Connect(function()
+                Tween(KeyItem, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(36, 36, 36)})
+            end))
+            Maid:GiveTask(HoverButton.MouseLeave:Connect(function()
+                Tween(KeyItem, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(28, 28, 28)})
+            end))
+            Maid:GiveTask(HoverButton.MouseButton1Click:Connect(function()
+                if setclipboard and keyStr then
+                    setclipboard(tostring(keyStr))
+                    Notifications.Notify({
+                        Title = "Key Copied",
+                        Content = "Copied license key to clipboard!",
+                        Duration = 2
+                    })
+                end
+            end))
+            
+            local KeyLabel = Instance.new("TextLabel")
+            KeyLabel.BackgroundTransparency = 1
+            KeyLabel.Size = UDim2.new(1, -110, 0, 25)
+            KeyLabel.Position = UDim2.new(0, 10, 0, 5)
+            KeyLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+            KeyLabel.TextSize = 15
+            KeyLabel.TextColor3 = Color3.fromRGB(130, 190, 255)
+            KeyLabel.TextXAlignment = Enum.TextXAlignment.Left
+            KeyLabel.Text = tostring(keyStr)
+            KeyLabel.Parent = KeyItem
+            
+            local DetailsLabel = Instance.new("TextLabel")
+            DetailsLabel.BackgroundTransparency = 1
+            DetailsLabel.Size = UDim2.new(1, -110, 0, 15)
+            DetailsLabel.Position = UDim2.new(0, 10, 0, 30)
+            DetailsLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+            DetailsLabel.TextSize = 13
+            DetailsLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+            DetailsLabel.TextXAlignment = Enum.TextXAlignment.Left
+            
+            local claimedStr = type(licenseObj) == "table" and licenseObj.claimedStr or "N/A"
+            local expiresStr = type(licenseObj) == "table" and licenseObj.expiresStr or "N/A"
+            DetailsLabel.Text = "Claimed " .. claimedStr .. "   Expires " .. expiresStr
+            DetailsLabel.Parent = KeyItem
+            
+            local BadgeFrame = Instance.new("Frame")
+            BadgeFrame.AnchorPoint = Vector2.new(1, 0.5)
+            BadgeFrame.Position = UDim2.new(1, -10, 0.5, 0)
+            BadgeFrame.Size = UDim2.new(0, 75, 0, 22)
+            BadgeFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+            BadgeFrame.Parent = KeyItem
+            Instance.new("UICorner", BadgeFrame).CornerRadius = UDim.new(0, 4)
+            
+            local BadgeStroke = Instance.new("UIStroke")
+            BadgeStroke.Color = Color3.fromRGB(80, 80, 80)
+            BadgeStroke.Parent = BadgeFrame
+            
+            local BadgeText = Instance.new("TextLabel")
+            BadgeText.BackgroundTransparency = 1
+            BadgeText.Size = UDim2.new(1, 0, 1, 0)
+            BadgeText.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+            BadgeText.TextSize = 13
+            BadgeText.TextColor3 = Color3.fromRGB(255, 255, 255)
+            
+            local badgeName = "unknown"
+            if type(licenseObj) == "table" then
+                if licenseObj.durationMs == nil then
+                    badgeName = "lifetime"
+                elseif licenseObj.durationMs then
+                    local days = math.floor(licenseObj.durationMs / (1000 * 60 * 60 * 24))
+                    local hours = math.floor((licenseObj.durationMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+                    local minutes = math.floor((licenseObj.durationMs % (1000 * 60 * 60)) / (1000 * 60))
+                    if days > 0 then
+                        badgeName = string.format("%dd %dh", days, hours)
+                    elseif hours > 0 then
+                        badgeName = string.format("%dh %dm", hours, minutes)
+                    else
+                        badgeName = string.format("%dm", minutes)
+                    end
+                end
+            end
+            BadgeText.Text = badgeName
+            BadgeText.Parent = BadgeFrame
+        end
+    end
     return PageData
 end
 

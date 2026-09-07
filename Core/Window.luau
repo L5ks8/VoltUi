@@ -182,17 +182,34 @@ function Window:CreateWindow(Config)
         end, Api)
     end)
 
+    local function RefreshAccountData()
+        if not Api then
+            pcall(function() Api = require(Utils.Api) end)
+        end
+        if Api and Api.UserData and AccountPageElements and AccountPageElements.UpdateData then
+            pcall(function() AccountPageElements.UpdateData(Api.UserData) end)
+        end
+        task.spawn(function()
+            if Api and Api.FetchMe then
+                local freshData = Api.FetchMe()
+                if freshData and AccountPageElements and AccountPageElements.UpdateData then
+                    pcall(function() AccountPageElements.UpdateData(freshData) end)
+                end
+            end
+        end)
+    end
+
+    task.spawn(function()
+        RefreshAccountData()
+    end)
+
     local function OnLoginSuccess()
         Main.Visible = true
-        if AccountPageElements and Api and Api.UserData then
-            pcall(function()
-                AccountPageElements.UpdateData(Api.UserData)
-                if Api.UserData.remaining == "Expired" then
-                    ExpiredOverlay.Visible = true
-                else
-                    ExpiredOverlay.Visible = false
-                end
-            end)
+        RefreshAccountData()
+        if Api and Api.UserData and Api.UserData.remaining == "Expired" then
+            ExpiredOverlay.Visible = true
+        else
+            ExpiredOverlay.Visible = false
         end
     end
 
@@ -585,6 +602,7 @@ function Window:CreateWindow(Config)
             PageLayout:JumpTo(AccountPageElements.Instance)
             BottombarElements.Instance.Visible = false
             Tween(PagesContainer, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -30)})
+            RefreshAccountData()
         end
     end))
     
@@ -695,6 +713,7 @@ function Window:CreateWindow(Config)
             PageLayout:JumpTo(AccountPageElements.Instance)
             BottombarElements.Instance.Visible = false
             Tween(PagesContainer, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -30)})
+            RefreshAccountData()
         end
     end
 
