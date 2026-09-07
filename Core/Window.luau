@@ -210,17 +210,50 @@ function Window:CreateWindow(Config)
             for _, k in ipairs(Config.Key) do validKeys[tostring(k)] = true end
         end
 
+        local function verifyOnline(k)
+            local postFunc = (request and function(u, b) return request({Url = u, Method = "POST", Headers = {["Content-Type"] = "application/json"}, Body = b}) end)
+                          or (http_request and function(u, b) return http_request({Url = u, Method = "POST", Headers = {["Content-Type"] = "application/json"}, Body = b}) end)
+                          or (syn and syn.request and function(u, b) return syn.request({Url = u, Method = "POST", Headers = {["Content-Type"] = "application/json"}, Body = b}) end)
+            if postFunc then
+                local HttpService = game:GetService("HttpService")
+                local body = HttpService:JSONEncode({ key = k })
+                local ok, res = pcall(postFunc, "https://volthub-18b3.onrender.com/check-key", body)
+                if ok and res and res.Body then
+                    local decOk, dec = pcall(function() return HttpService:JSONDecode(res.Body) end)
+                    if decOk and dec and dec.valid == true then
+                        return true, dec.message or "Key verified!"
+                    elseif decOk and dec and dec.message then
+                        return false, dec.message
+                    end
+                end
+            end
+            return false, nil
+        end
+
         local fileName = (ks.FileName or "VoltKey") .. ".txt"
         if ks.SaveKey and isfile and isfile(fileName) then
             local saved = readfile(fileName)
-            if saved and validKeys[saved] then
-                Notifications.Notify({
-                    Title = "Key System",
-                    Content = "Saved key loaded successfully!",
-                    Duration = 2.5
-                })
-                onSuccess()
-                return
+            if saved and saved ~= "" then
+                if validKeys[saved] then
+                    Notifications.Notify({
+                        Title = "Key System",
+                        Content = "Saved key loaded successfully!",
+                        Duration = 2.5
+                    })
+                    onSuccess()
+                    return
+                else
+                    local onlineOk = verifyOnline(saved)
+                    if onlineOk then
+                        Notifications.Notify({
+                            Title = "Key System",
+                            Content = "Saved key verified!",
+                            Duration = 2.5
+                        })
+                        onSuccess()
+                        return
+                    end
+                end
             end
         end
 
@@ -417,7 +450,24 @@ function Window:CreateWindow(Config)
 
         local function checkKey()
             local entered = InputBox.Text
-            if validKeys[entered] or next(validKeys) == nil then
+            if entered == "" then return end
+
+            local isValid = false
+            local msg = nil
+
+            if validKeys[entered] then
+                isValid = true
+            else
+                local onlineOk, onlineMsg = verifyOnline(entered)
+                if onlineOk then
+                    isValid = true
+                    msg = onlineMsg
+                else
+                    msg = onlineMsg
+                end
+            end
+
+            if isValid then
                 if ks.SaveKey and writefile then
                     pcall(function()
                         writefile(fileName, entered)
@@ -425,7 +475,7 @@ function Window:CreateWindow(Config)
                 end
                 Notifications.Notify({
                     Title = "Success",
-                    Content = "Key accepted! Welcome.",
+                    Content = msg or "Key accepted! Welcome.",
                     Duration = 2.5
                 })
                 Tween(KeyBackdrop, TweenInfo.new(0.3), {BackgroundTransparency = 1})
@@ -436,7 +486,7 @@ function Window:CreateWindow(Config)
                 InputStroke.Color = Color3.fromRGB(240, 70, 70)
                 Notifications.Notify({
                     Title = "Invalid Key",
-                    Content = "The key you entered is incorrect.",
+                    Content = msg or "The key you entered is incorrect.",
                     Duration = 3
                 })
                 task.delay(1.5, function()

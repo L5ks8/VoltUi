@@ -37,6 +37,39 @@ app.get('/api/version', (req, res) => {
     }));
 });
 
+const License = require('./models/License');
+
+const verifyKeyHandler = async (req, res) => {
+    try {
+        const key = req.body && (req.body.key || req.body.licenseKey);
+        if (!key || typeof key !== 'string') {
+            return res.status(400).json({ valid: false, message: 'No key provided.' });
+        }
+        const cleanKey = key.trim();
+        const license = await License.findOne({ key: cleanKey });
+        if (!license) {
+            return res.status(400).json({ valid: false, message: 'Invalid key.' });
+        }
+        if (license.claimedAt && license.durationMs) {
+            const expireTime = new Date(license.claimedAt.getTime() + license.durationMs);
+            if (Date.now() > expireTime.getTime()) {
+                return res.status(400).json({ valid: false, message: 'Key has expired.' });
+            }
+        }
+        if (!license.claimedAt) {
+            license.claimedAt = new Date();
+            await license.save();
+        }
+        return res.json({ valid: true, message: 'Key verified successfully!' });
+    } catch (err) {
+        console.error('Verify key error:', err);
+        return res.status(500).json({ valid: false, message: 'Server error' });
+    }
+};
+
+app.post('/check-key', verifyKeyHandler);
+app.post('/api/check-key', verifyKeyHandler);
+
 // Developer API (unencrypted, uses Admin API Key)
 app.use('/api/v1', requireApiKey, require('./routes/adminApi'));
 
