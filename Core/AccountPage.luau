@@ -1,7 +1,7 @@
 local Notifications = require(script.Parent.Notifications)
 local AccountPage = {}
 
-function AccountPage.Create(Content, Maid, BackCallback, Api)
+function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     local Page = Instance.new("Frame")
     Page.Name = "AccountPage"
     Page.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -1425,18 +1425,31 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
     SecurityContentPadding.PaddingLeft = UDim.new(0, 9)
     SecurityContentPadding.Parent = SecurityContent
 
+    local PageData = {}
+    PageData.CurrentIsLoggedIn = false
+    PageData.CurrentId = nil
+
     Maid:GiveTask(LogoutButton.MouseButton1Click:Connect(function()
-        if Api and Api.SaveToken then
-            Api.SaveToken("")
-        end
-        local success, player = pcall(function() return game:GetService("Players").LocalPlayer end)
-        if success and player then
-            player:Kick("Successfully signed out")
+        if PageData.CurrentIsLoggedIn then
+            if Api and Api.ClearToken then
+                Api.ClearToken()
+            elseif Api and Api.SaveToken then
+                Api.SaveToken("")
+            end
+            if Api then Api.UserData = nil end
+            PageData.UpdateData(nil)
+            Notifications.Notify({
+                Title = "Signed Out",
+                Content = "You have been signed out.",
+                Duration = 3
+            })
+        else
+            if OnLoginRequest then
+                OnLoginRequest()
+            end
         end
     end))
 
-    local PageData = {}
-    
     Maid:GiveTask(ClaimButton.MouseButton1Click:Connect(function()
         if PageData.IsLifetime then
             Notifications.Notify({
@@ -1445,6 +1458,18 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
                 Type = "Error",
                 Duration = 4
             })
+            return
+        end
+        if not (Api and Api.GetToken and Api.GetToken()) then
+            Notifications.Notify({
+                Title = "Error",
+                Content = "Please sign in to claim a license key.",
+                Type = "Error",
+                Duration = 3
+            })
+            if OnLoginRequest then
+                OnLoginRequest()
+            end
             return
         end
         local key = TextBox.Text
@@ -1459,6 +1484,12 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
                         if newData and PageData.UpdateData then
                             PageData.UpdateData(newData)
                         end
+                        Notifications.Notify({
+                            Title = "Success",
+                            Content = "License key claimed successfully!",
+                            Type = "Success",
+                            Duration = 3
+                        })
                     else
                         TextBox.Text = tostring(msg) or "Failed"
                         task.wait(2)
@@ -1475,9 +1506,12 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
         if data and type(data) == "table" and data.user and type(data.user) == "table" then
             data = data.user
         end
-        if not data or type(data) ~= "table" then
-            data = (Api and Api.UserData and (Api.UserData.user or Api.UserData)) or {}
+        if (not data or type(data) ~= "table") and Api and Api.UserData then
+            data = (Api.UserData.user or Api.UserData)
         end
+
+        local isLoggedIn = (data and type(data) == "table" and (data.username or data._id or data.id)) and true or false
+        PageData.CurrentIsLoggedIn = isLoggedIn
 
         pcall(function()
             local Players = game:GetService("Players")
@@ -1494,24 +1528,41 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
             end)
         end)
 
-        local acctUsername = data.username or (Api and Api.UserData and (Api.UserData.username or (Api.UserData.user and Api.UserData.user.username)))
-        if acctUsername and acctUsername ~= "" then
-            Username.Text = acctUsername
+        local acctUsername = data and data.username
+        if isLoggedIn and acctUsername and acctUsername ~= "" then
+            Username.Text = tostring(acctUsername)
         else
-            Username.Text = "Username"
+            Username.Text = isLoggedIn and "User" or "Not Signed In"
         end
-        
-        local acctId = data._id or data.id or (Api and Api.UserData and (Api.UserData._id or Api.UserData.id))
-        if acctId and tostring(acctId) ~= "" then
+
+        local acctId = data and (data._id or data.id)
+        if isLoggedIn and acctId and tostring(acctId) ~= "" then
+            local realId = tostring(acctId)
             HiddenId.Visible = true
-            HiddenId.Text = tostring(acctId)
+            HiddenId.Text = "********"
+            PageData.CurrentId = realId
+            if not HiddenId:GetAttribute("BoundFocus") then
+                HiddenId:SetAttribute("BoundFocus", true)
+                local idRevealed = false
+                Maid:GiveTask(HiddenId.Focused:Connect(function()
+                    if not idRevealed and PageData.CurrentId then
+                        idRevealed = true
+                        HiddenId.Text = PageData.CurrentId
+                    end
+                end))
+                Maid:GiveTask(HiddenId.FocusLost:Connect(function()
+                    idRevealed = false
+                    HiddenId.Text = "********"
+                end))
+            end
         else
             HiddenId.Visible = false
             HiddenId.Text = ""
+            PageData.CurrentId = nil
         end
-        
-        local memberCreatedAt = data.createdAt or (Api and Api.UserData and Api.UserData.createdAt)
-        if memberCreatedAt then
+
+        local memberCreatedAt = data and (data.createdAt or data.subscriptionStart)
+        if isLoggedIn and memberCreatedAt then
             local str = tostring(memberCreatedAt)
             local y, m, day = string.match(str, "^(%d+)%-(%d+)%-(%d+)")
             if y and m and day then
@@ -1522,14 +1573,14 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
         else
             MemberSince.Text = ""
         end
-        
-        local subEnd = data.subscriptionEnd or data.expiresAt or data.endsAt
-        local subStart = data.subscriptionStart or data.startedAt or data.createdAt
-        local remainingStr = data.remaining
+
+        local subEnd = data and (data.subscriptionEnd or data.expiresAt or data.endsAt)
+        local subStart = data and (data.subscriptionStart or data.startedAt or data.createdAt)
+        local remainingStr = data and data.remaining
         local isActive = false
-        local isLifetime = (subEnd == nil and (data.isLifetime == true or data.tier == "lifetime"))
-        
-        if data.subscription and type(data.subscription) == "table" then
+        local isLifetime = (data and (subEnd == nil and (data.isLifetime == true or data.tier == "lifetime"))) and true or false
+
+        if data and data.subscription and type(data.subscription) == "table" then
             local sub = data.subscription
             subEnd = subEnd or sub.expiresAt or sub.endsAt or sub.subscriptionEnd
             subStart = subStart or sub.startedAt or sub.createdAt
@@ -1537,55 +1588,65 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
             if sub.active ~= nil then isActive = sub.active end
             if subEnd then isLifetime = false end
         end
-        
-        if subEnd or isLifetime then isActive = true end
+
+        if subEnd then isLifetime = false end
+
+        if isLoggedIn then
+            if subEnd or isLifetime then isActive = true end
+        end
+
         if remainingStr == "Expired" then isActive = false end
         PageData.IsLifetime = isLifetime
-        
-        if isActive then
+
+        if isLoggedIn and isActive then
             StatusBadgeText.Text = "Active"
-            StatusBadgeText.TextColor3 = Color3.new(0.4, 0.8, 0.4)
-            
+            StatusBadgeText.TextColor3 = Color3.fromRGB(100, 220, 100)
+
             if isLifetime then
                 EndsValue.Text = "Lifetime"
                 RemainingValue.Text = "Lifetime"
             else
                 local endFormatted = "N/A"
+                local endTimeEpoch = nil
                 if subEnd then
                     local str = tostring(subEnd)
-                    local y, m, day = string.match(str, "^(%d+)%-(%d+)%-(%d+)")
-                    if y and m and day then
-                        endFormatted = string.format("%d.%d.%s", tonumber(day), tonumber(m), y)
+                    local y, m, d, h, min, s = string.match(str, "^(%d+)%-(%d+)%-(%d+)[T ](%d+):(%d+):(%d+)")
+                    if y and m and d and h and min and s then
+                        pcall(function()
+                            endTimeEpoch = os.time({year = tonumber(y), month = tonumber(m), day = tonumber(d), hour = tonumber(h), min = tonumber(min), sec = tonumber(s)})
+                        end)
+                        endFormatted = string.format("%d.%d.%s", tonumber(d), tonumber(m), y)
                     else
-                        endFormatted = str
+                        local y2, m2, day2 = string.match(str, "^(%d+)%-(%d+)%-(%d+)")
+                        if y2 and m2 and day2 then
+                            endFormatted = string.format("%d.%d.%s", tonumber(day2), tonumber(m2), y2)
+                        else
+                            endFormatted = str
+                        end
                     end
                 end
                 EndsValue.Text = endFormatted
-                
-                if remainingStr and remainingStr ~= "" and remainingStr ~= "1 month" and not string.find(string.lower(remainingStr), "month") then
-                    RemainingValue.Text = tostring(remainingStr)
-                else
-                    local calculatedRemaining = nil
-                    if subEnd then
-                        local str = tostring(subEnd)
-                        local y, m, d, h, min, s = string.match(str, "^(%d+)%-(%d+)%-(%d+)[T ](%d+):(%d+):(%d+)")
-                        if y and m and d and h and min and s then
-                            local endTime = os.time({year = tonumber(y), month = tonumber(m), day = tonumber(d), hour = tonumber(h), min = tonumber(min), sec = tonumber(s)})
-                            local diff = endTime - os.time()
-                            if diff > 0 then
-                                local days = math.floor(diff / 86400)
-                                local hours = math.floor((diff % 86400) / 3600)
-                                local minutes = math.floor((diff % 3600) / 60)
-                                calculatedRemaining = string.format("%dd %dh %dm", days, hours, minutes)
-                            else
-                                calculatedRemaining = "Expired"
-                            end
-                        end
+
+                local calcRemaining = nil
+                if endTimeEpoch then
+                    local diff = endTimeEpoch - os.time()
+                    if diff > 0 then
+                        local days = math.floor(diff / 86400)
+                        local hours = math.floor((diff % 86400) / 3600)
+                        local minutes = math.floor((diff % 3600) / 60)
+                        calcRemaining = string.format("%dd %dh %dm", days, hours, minutes)
+                    else
+                        calcRemaining = "Expired"
+                        isActive = false
+                        StatusBadgeText.Text = "Expired"
+                        StatusBadgeText.TextColor3 = Color3.fromRGB(220, 80, 80)
                     end
-                    RemainingValue.Text = calculatedRemaining or (remainingStr and tostring(remainingStr)) or "Active"
+                elseif remainingStr and remainingStr ~= "" and not string.find(string.lower(tostring(remainingStr)), "month") then
+                    calcRemaining = tostring(remainingStr)
                 end
+                RemainingValue.Text = calcRemaining or (remainingStr and tostring(remainingStr)) or "Active"
             end
-            
+
             if subStart then
                 local str = tostring(subStart)
                 local y, m, day = string.match(str, "^(%d+)%-(%d+)%-(%d+)")
@@ -1604,29 +1665,30 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
             StartedValue.Text = "N/A"
             EndsValue.Text = "N/A"
         end
-        
+
         for _, child in ipairs(Claimed:GetChildren()) do
             if child:IsA("Frame") or child:IsA("TextLabel") then child:Destroy() end
         end
-        
-        local keysData = data.keys or data.key or data.claimedKeys or data.claimedkey or data.claimedKey or data.licenses or data.licenseKeys or data.usedKey or data.license
-        if data.subscription and type(data.subscription) == "table" then
-            keysData = keysData or data.subscription.keys or data.subscription.key or data.subscription.claimedKeys or data.subscription.claimedkey or data.subscription.claimedKey
-        end
-        
+
         local keyList = {}
-        if data.licenseObjects and type(data.licenseObjects) == "table" then
-            keyList = data.licenseObjects
-        else
-            if type(keysData) == "table" then
-                for _, k in ipairs(keysData) do table.insert(keyList, { key = k }) end
-            elseif type(keysData) == "string" then
-                keyList = {{ key = keysData }}
+        if isLoggedIn and data then
+            if data.licenseObjects and type(data.licenseObjects) == "table" then
+                keyList = data.licenseObjects
+            else
+                local keysData = data.keys or data.key or data.claimedKeys or data.claimedkey or data.claimedKey or data.licenses or data.licenseKeys or data.usedKey or data.license
+                if data.subscription and type(data.subscription) == "table" then
+                    keysData = keysData or data.subscription.keys or data.subscription.key or data.subscription.claimedKeys or data.subscription.claimedkey or data.subscription.claimedKey
+                end
+                if type(keysData) == "table" then
+                    for _, k in ipairs(keysData) do table.insert(keyList, { key = tostring(k) }) end
+                elseif type(keysData) == "string" and keysData ~= "" then
+                    keyList = {{ key = tostring(keysData) }}
+                end
             end
         end
-        
+
         CountLabel.Text = tostring(#keyList)
-        
+
         if #keyList == 0 then
             local EmptyLabel = Instance.new("TextLabel")
             EmptyLabel.Name = "EmptyLabel"
@@ -1635,121 +1697,142 @@ function AccountPage.Create(Content, Maid, BackCallback, Api)
             EmptyLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Italic)
             EmptyLabel.TextSize = 14
             EmptyLabel.TextColor3 = Color3.fromRGB(120, 120, 120)
-            EmptyLabel.Text = "No claimed keys"
+            EmptyLabel.Text = isLoggedIn and "No claimed keys" or "Sign in to view claimed keys"
             EmptyLabel.Parent = Claimed
-        end
-        
-        local Tween = require(script.Parent.Parent.Utils.Tween)
-        
-        for _, licenseObj in ipairs(keyList) do
-            local keyStr = type(licenseObj) == "string" and licenseObj or (licenseObj.key or licenseObj.licenseKey or tostring(licenseObj))
-            
-            local KeyItem = Instance.new("Frame")
-            KeyItem.Name = "KeyItem"
-            KeyItem.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
-            KeyItem.BackgroundTransparency = 0
-            KeyItem.BorderSizePixel = 0
-            KeyItem.Size = UDim2.new(1, -10, 0, 50)
-            KeyItem.Parent = Claimed
-            
-            local KeyCorner = Instance.new("UICorner")
-            KeyCorner.CornerRadius = UDim.new(0, 6)
-            KeyCorner.Parent = KeyItem
+        else
+            local Tween = require(script.Parent.Parent.Utils.Tween)
 
-            local KeyStroke = Instance.new("UIStroke")
-            KeyStroke.Color = Color3.fromRGB(48, 48, 48)
-            KeyStroke.Thickness = 1
-            KeyStroke.Parent = KeyItem
-            
-            local HoverButton = Instance.new("TextButton")
-            HoverButton.BackgroundTransparency = 1
-            HoverButton.Text = ""
-            HoverButton.Size = UDim2.new(1, 0, 1, 0)
-            HoverButton.ZIndex = 5
-            HoverButton.Parent = KeyItem
-            
-            Maid:GiveTask(HoverButton.MouseEnter:Connect(function()
-                Tween(KeyItem, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(36, 36, 36)})
-            end))
-            Maid:GiveTask(HoverButton.MouseLeave:Connect(function()
-                Tween(KeyItem, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(28, 28, 28)})
-            end))
-            Maid:GiveTask(HoverButton.MouseButton1Click:Connect(function()
-                if setclipboard and keyStr then
-                    setclipboard(tostring(keyStr))
-                    Notifications.Notify({
-                        Title = "Key Copied",
-                        Content = "Copied license key to clipboard!",
-                        Duration = 2
-                    })
-                end
-            end))
-            
-            local KeyLabel = Instance.new("TextLabel")
-            KeyLabel.BackgroundTransparency = 1
-            KeyLabel.Size = UDim2.new(1, -110, 0, 25)
-            KeyLabel.Position = UDim2.new(0, 10, 0, 5)
-            KeyLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-            KeyLabel.TextSize = 15
-            KeyLabel.TextColor3 = Color3.fromRGB(130, 190, 255)
-            KeyLabel.TextXAlignment = Enum.TextXAlignment.Left
-            KeyLabel.Text = tostring(keyStr)
-            KeyLabel.Parent = KeyItem
-            
-            local DetailsLabel = Instance.new("TextLabel")
-            DetailsLabel.BackgroundTransparency = 1
-            DetailsLabel.Size = UDim2.new(1, -110, 0, 15)
-            DetailsLabel.Position = UDim2.new(0, 10, 0, 30)
-            DetailsLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-            DetailsLabel.TextSize = 13
-            DetailsLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
-            DetailsLabel.TextXAlignment = Enum.TextXAlignment.Left
-            
-            local claimedStr = type(licenseObj) == "table" and licenseObj.claimedStr or "N/A"
-            local expiresStr = type(licenseObj) == "table" and licenseObj.expiresStr or "N/A"
-            DetailsLabel.Text = "Claimed " .. claimedStr .. "   Expires " .. expiresStr
-            DetailsLabel.Parent = KeyItem
-            
-            local BadgeFrame = Instance.new("Frame")
-            BadgeFrame.AnchorPoint = Vector2.new(1, 0.5)
-            BadgeFrame.Position = UDim2.new(1, -10, 0.5, 0)
-            BadgeFrame.Size = UDim2.new(0, 75, 0, 22)
-            BadgeFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-            BadgeFrame.Parent = KeyItem
-            Instance.new("UICorner", BadgeFrame).CornerRadius = UDim.new(0, 4)
-            
-            local BadgeStroke = Instance.new("UIStroke")
-            BadgeStroke.Color = Color3.fromRGB(80, 80, 80)
-            BadgeStroke.Parent = BadgeFrame
-            
-            local BadgeText = Instance.new("TextLabel")
-            BadgeText.BackgroundTransparency = 1
-            BadgeText.Size = UDim2.new(1, 0, 1, 0)
-            BadgeText.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-            BadgeText.TextSize = 13
-            BadgeText.TextColor3 = Color3.fromRGB(255, 255, 255)
-            
-            local badgeName = "unknown"
-            if type(licenseObj) == "table" then
-                if licenseObj.durationMs == nil then
-                    badgeName = "lifetime"
-                elseif licenseObj.durationMs then
-                    local days = math.floor(licenseObj.durationMs / (1000 * 60 * 60 * 24))
-                    local hours = math.floor((licenseObj.durationMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-                    local minutes = math.floor((licenseObj.durationMs % (1000 * 60 * 60)) / (1000 * 60))
-                    if days > 0 then
-                        badgeName = string.format("%dd %dh", days, hours)
-                    elseif hours > 0 then
-                        badgeName = string.format("%dh %dm", hours, minutes)
-                    else
-                        badgeName = string.format("%dm", minutes)
+            for _, licenseObj in ipairs(keyList) do
+                local keyStr = type(licenseObj) == "string" and licenseObj or (licenseObj.key or licenseObj.licenseKey or tostring(licenseObj))
+
+                local KeyItem = Instance.new("Frame")
+                KeyItem.Name = "KeyItem"
+                KeyItem.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
+                KeyItem.BackgroundTransparency = 0
+                KeyItem.BorderSizePixel = 0
+                KeyItem.Size = UDim2.new(1, -10, 0, 50)
+                KeyItem.Parent = Claimed
+
+                local KeyCorner = Instance.new("UICorner")
+                KeyCorner.CornerRadius = UDim.new(0, 6)
+                KeyCorner.Parent = KeyItem
+
+                local KeyStroke = Instance.new("UIStroke")
+                KeyStroke.Color = Color3.fromRGB(48, 48, 48)
+                KeyStroke.Thickness = 1
+                KeyStroke.Parent = KeyItem
+
+                local HoverButton = Instance.new("TextButton")
+                HoverButton.BackgroundTransparency = 1
+                HoverButton.Text = ""
+                HoverButton.Size = UDim2.new(1, 0, 1, 0)
+                HoverButton.ZIndex = 5
+                HoverButton.Parent = KeyItem
+
+                Maid:GiveTask(HoverButton.MouseEnter:Connect(function()
+                    Tween(KeyItem, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(36, 36, 36)})
+                end))
+                Maid:GiveTask(HoverButton.MouseLeave:Connect(function()
+                    Tween(KeyItem, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(28, 28, 28)})
+                end))
+                Maid:GiveTask(HoverButton.MouseButton1Click:Connect(function()
+                    local setcb = setclipboard or (Clipboard and Clipboard.set) or nil
+                    if setcb and keyStr then
+                        setcb(tostring(keyStr))
+                        Notifications.Notify({
+                            Title = "Key Copied",
+                            Content = "Copied license key to clipboard!",
+                            Duration = 2
+                        })
+                    end
+                end))
+
+                local KeyLabel = Instance.new("TextLabel")
+                KeyLabel.BackgroundTransparency = 1
+                KeyLabel.Size = UDim2.new(1, -110, 0, 25)
+                KeyLabel.Position = UDim2.new(0, 10, 0, 5)
+                KeyLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+                KeyLabel.TextSize = 15
+                KeyLabel.TextColor3 = Color3.fromRGB(130, 190, 255)
+                KeyLabel.TextXAlignment = Enum.TextXAlignment.Left
+                KeyLabel.Text = tostring(keyStr)
+                KeyLabel.Parent = KeyItem
+
+                local DetailsLabel = Instance.new("TextLabel")
+                DetailsLabel.BackgroundTransparency = 1
+                DetailsLabel.Size = UDim2.new(1, -110, 0, 15)
+                DetailsLabel.Position = UDim2.new(0, 10, 0, 30)
+                DetailsLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+                DetailsLabel.TextSize = 13
+                DetailsLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+                DetailsLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+                local claimedStr = type(licenseObj) == "table" and licenseObj.claimedStr or "N/A"
+                local expiresStr = type(licenseObj) == "table" and licenseObj.expiresStr or "N/A"
+                DetailsLabel.Text = "Claimed " .. claimedStr .. "   Expires " .. expiresStr
+                DetailsLabel.Parent = KeyItem
+
+                local BadgeFrame = Instance.new("Frame")
+                BadgeFrame.AnchorPoint = Vector2.new(1, 0.5)
+                BadgeFrame.Position = UDim2.new(1, -10, 0.5, 0)
+                BadgeFrame.Size = UDim2.new(0, 75, 0, 22)
+                BadgeFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+                BadgeFrame.Parent = KeyItem
+                Instance.new("UICorner", BadgeFrame).CornerRadius = UDim.new(0, 4)
+
+                local BadgeStroke = Instance.new("UIStroke")
+                BadgeStroke.Color = Color3.fromRGB(80, 80, 80)
+                BadgeStroke.Parent = BadgeFrame
+
+                local BadgeText = Instance.new("TextLabel")
+                BadgeText.BackgroundTransparency = 1
+                BadgeText.Size = UDim2.new(1, 0, 1, 0)
+                BadgeText.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+                BadgeText.TextSize = 13
+                BadgeText.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+                local badgeName = "unknown"
+                if type(licenseObj) == "table" then
+                    if licenseObj.durationMs == nil then
+                        badgeName = "lifetime"
+                    elseif licenseObj.durationMs then
+                        local days = math.floor(licenseObj.durationMs / (1000 * 60 * 60 * 24))
+                        local hours = math.floor((licenseObj.durationMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+                        local minutes = math.floor((licenseObj.durationMs % (1000 * 60 * 60)) / (1000 * 60))
+                        if days > 0 then
+                            badgeName = string.format("%dd %dh", days, hours)
+                        elseif hours > 0 then
+                            badgeName = string.format("%dh %dm", hours, minutes)
+                        else
+                            badgeName = string.format("%dm", minutes)
+                        end
                     end
                 end
+                BadgeText.Text = badgeName
+                BadgeText.Parent = BadgeFrame
             end
-            BadgeText.Text = badgeName
-            BadgeText.Parent = BadgeFrame
+        end
+
+        if isLoggedIn then
+            LogoutHeader.Text = "Sign out"
+            LogoutDesc.Text = "End the session on this device"
+            LogoutButtonText.Text = "Sign Out"
+            LogoutButtonText.TextColor3 = Color3.new(0.816, 0.243, 0.243)
+            LogoutButton.BackgroundColor3 = Color3.new(0.816, 0.243, 0.243)
+            LogoutButtonStroke.Color = Color3.new(0.816, 0.243, 0.243)
+            LogoutButtonIcon.ImageColor3 = Color3.new(0.816, 0.243, 0.243)
+        else
+            LogoutHeader.Text = "Sign in"
+            LogoutDesc.Text = "Sign into your Volt account"
+            LogoutButtonText.Text = "Sign In"
+            LogoutButtonText.TextColor3 = Color3.fromRGB(220, 220, 220)
+            LogoutButton.BackgroundColor3 = Color3.fromRGB(36, 36, 36)
+            LogoutButtonStroke.Color = Color3.fromRGB(90, 90, 90)
+            LogoutButtonIcon.ImageColor3 = Color3.fromRGB(220, 220, 220)
         end
     end
+
+    PageData.UpdateData(Api and Api.UserData)
     return PageData
 end
 

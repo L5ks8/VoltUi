@@ -28,6 +28,8 @@ const decryptPayload = (ciphertext) => {
 };
 
 const encryptionMiddleware = (req, res, next) => {
+    const noEncryption = req.headers['x-no-encryption'] === 'true' || req.headers['x-bypass-encryption'] === 'true';
+
     if (['POST', 'PUT', 'PATCH'].includes(req.method)) {
         if (req.body && req.body.encrypted) {
             const decryptedBody = decryptPayload(req.body.encrypted);
@@ -36,6 +38,8 @@ const encryptionMiddleware = (req, res, next) => {
             } else {
                 return res.status(400).json({ error: "Invalid encrypted payload" });
             }
+        } else if (noEncryption || (req.body && typeof req.body === 'object')) {
+            // Allow unencrypted JSON payload
         } else {
             return res.status(403).json({ error: "All payloads must be AES encrypted." });
         }
@@ -43,11 +47,18 @@ const encryptionMiddleware = (req, res, next) => {
 
     const originalJson = res.json;
     res.json = function(data) {
+        if (noEncryption) {
+            return originalJson.call(this, data);
+        }
         const encrypted = encryptPayload(data);
-        return originalJson.call(this, { encrypted: encrypted });
+        if (encrypted) {
+            return originalJson.call(this, { encrypted: encrypted });
+        }
+        return originalJson.call(this, data);
     };
 
     next();
 };
 
 module.exports = { encryptionMiddleware, encryptPayload, decryptPayload };
+

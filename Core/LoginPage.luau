@@ -28,11 +28,7 @@ function LoginPage.Create(ParentGui, OnSuccess)
     local TopbarElements = Topbar.Create(Page, {Title = "Sign In"}, maid)
     
     maid:GiveTask(TopbarElements.CloseButton.MouseButton1Click:Connect(function()
-        if ParentGui and ParentGui.Parent then
-            ParentGui:Destroy()
-        else
-            Page:Destroy()
-        end
+        Page:Destroy()
         maid:Destroy()
     end))
     

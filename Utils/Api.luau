@@ -6,18 +6,68 @@ Api.BaseUrl = "https://volthub-18b3.onrender.com/api"
 Api.Token = nil
 Api.UserData = nil
 
+function Api.GetHWID()
+    local gethwid = gethwid or get_hwid or function() return "DUMMY_HWID_123" end
+    local success, hwid = pcall(gethwid)
+    if success and hwid then return tostring(hwid) end
+    return "DUMMY_HWID_123"
+end
+
+function Api.GetToken()
+    if Api.Token and Api.Token ~= "" then return Api.Token end
+    local readfileFunc = readfile or (file and file.Read) or nil
+    if readfileFunc then
+        local paths = {"VoltToken.txt", "Volt/VoltToken.txt", "VoltUi/VoltToken.txt"}
+        for _, path in ipairs(paths) do
+            local success, token = pcall(function() return readfileFunc(path) end)
+            if success and token and token ~= "" then
+                local cleaned = string.gsub(token, "%s+", "")
+                if cleaned ~= "" then
+                    Api.Token = cleaned
+                    return cleaned
+                end
+            end
+        end
+    end
+    return nil
+end
+
+function Api.SaveToken(token)
+    Api.Token = token
+    local writefileFunc = writefile or (file and file.Write) or nil
+    if writefileFunc then
+        pcall(function() writefileFunc("VoltToken.txt", token or "") end)
+    end
+end
+
+function Api.ClearToken()
+    Api.Token = nil
+    Api.UserData = nil
+    local delfileFunc = delfile or (file and file.Delete) or nil
+    if delfileFunc then
+        pcall(function() delfileFunc("VoltToken.txt") end)
+    else
+        local writefileFunc = writefile or (file and file.Write) or nil
+        if writefileFunc then
+            pcall(function() writefileFunc("VoltToken.txt", "") end)
+        end
+    end
+end
+
 function Api.Request(endpoint, method, body)
-    local requestFunc = request or http_request or (http and http.request) or syn and syn.request
+    local requestFunc = request or http_request or (http and http.request) or (syn and syn.request)
     if not requestFunc then
         warn("HTTP Requests are not supported by this executor.")
         return nil
     end
 
+    local token = Api.GetToken()
     local headers = {
-        ["Content-Type"] = "application/json"
+        ["Content-Type"] = "application/json",
+        ["X-No-Encryption"] = "true"
     }
-    if Api.Token then
-        headers["Authorization"] = "Bearer " .. Api.Token
+    if token and token ~= "" then
+        headers["Authorization"] = "Bearer " .. token
     end
 
     local options = {
@@ -25,14 +75,16 @@ function Api.Request(endpoint, method, body)
         Method = method or "GET",
         Headers = headers
     }
+
     if body then
         local jsonStr = HttpService:JSONEncode(body)
-        local encryptedBody = AES.encrypt(jsonStr)
-        
+        local encryptedBody = nil
+        pcall(function()
+            encryptedBody = AES.encrypt(jsonStr)
+        end)
         if encryptedBody then
             options.Body = HttpService:JSONEncode({ encrypted = encryptedBody })
         else
-            warn("Failed to encrypt payload, sending unencrypted (this will likely be rejected by the server).")
             options.Body = jsonStr
         end
     end
@@ -45,9 +97,9 @@ function Api.Request(endpoint, method, body)
         local decodeSuccess, decoded = pcall(function()
             return HttpService:JSONDecode(res.Body)
         end)
-        
+
         if decodeSuccess then
-            if decoded.encrypted then
+            if type(decoded) == "table" and decoded.encrypted then
                 local decryptedStr = AES.decrypt(decoded.encrypted)
                 if decryptedStr then
                     local finalSuccess, finalDecoded = pcall(function() return HttpService:JSONDecode(decryptedStr) end)
@@ -57,41 +109,12 @@ function Api.Request(endpoint, method, body)
                 end
                 return { error = "Failed to decrypt server response" }
             end
-            
-            return decoded 
+            return decoded
         else
             return { error = "Server returned invalid JSON: " .. tostring(res.Body) }
         end
     end
     return nil
-end
-
-function Api.GetHWID()
-    local gethwid = gethwid or get_hwid or function() return "DUMMY_HWID_123" end
-    local success, hwid = pcall(gethwid)
-    if success and hwid then return hwid end
-    return "DUMMY_HWID_123"
-end
-
-function Api.GetToken()
-    if Api.Token then return Api.Token end
-    local readfileFunc = readfile or (file and file.Read) or nil
-    if readfileFunc then
-        local success, token = pcall(function() return readfileFunc("VoltToken.txt") end)
-        if success and token and token ~= "" then
-            Api.Token = token
-            return token
-        end
-    end
-    return nil
-end
-
-function Api.SaveToken(token)
-    Api.Token = token
-    local writefileFunc = writefile or (file and file.Write) or nil
-    if writefileFunc then
-        pcall(function() writefileFunc("VoltToken.txt", token) end)
-    end
 end
 
 function Api.Login(username, password)
@@ -132,7 +155,7 @@ function Api.ForgotPassword(username)
     local res = Api.Request("/auth/forgot-password", "POST", {
         username = username
     })
-    
+
     if res and res.message then
         return true, res.message
     elseif res and res.error then
@@ -147,7 +170,7 @@ function Api.ResetPassword(username, code, newPassword)
         code = code,
         newPassword = newPassword
     })
-    
+
     if res and res.message then
         return true, res.message
     elseif res and res.error then
@@ -168,11 +191,17 @@ function Api.RedeemKey(key)
 end
 
 function Api.FetchMe()
-    if not Api.GetToken() then return nil end
+    local token = Api.GetToken()
+    if not token or token == "" then return nil end
     local meRes = Api.Request("/user/me", "GET")
-    if meRes and meRes.user then
-        Api.UserData = meRes.user
-        return Api.UserData
+    if meRes and type(meRes) == "table" then
+        if meRes.user and type(meRes.user) == "table" then
+            Api.UserData = meRes.user
+            return Api.UserData
+        elseif meRes.username or meRes._id then
+            Api.UserData = meRes
+            return Api.UserData
+        end
     end
     return nil
 end

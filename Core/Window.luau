@@ -168,6 +168,8 @@ function Window:CreateWindow(Config)
 
     local BottombarElements = Bottombar.Create(Main, maid)
     
+    local OnLoginSuccess
+
     local AccountPageElements
     pcall(function()
         AccountPageElements = AccountPage.Create(PagesContainer, maid, function()
@@ -179,7 +181,11 @@ function Window:CreateWindow(Config)
             else
                 ExpiredOverlay.Visible = false
             end
-        end, Api)
+        end, Api, function()
+            LoginPage.Create(VoltUi, function()
+                OnLoginSuccess()
+            end)
+        end)
     end)
 
     local function RefreshAccountData()
@@ -194,7 +200,11 @@ function Window:CreateWindow(Config)
                 local freshData = Api.FetchMe()
                 if freshData and AccountPageElements and AccountPageElements.UpdateData then
                     pcall(function() AccountPageElements.UpdateData(freshData) end)
+                elseif (not freshData) and (not Api.UserData) and AccountPageElements and AccountPageElements.UpdateData then
+                    pcall(function() AccountPageElements.UpdateData(nil) end)
                 end
+            elseif (not Api or not Api.UserData) and AccountPageElements and AccountPageElements.UpdateData then
+                pcall(function() AccountPageElements.UpdateData(nil) end)
             end
         end)
     end
@@ -203,7 +213,7 @@ function Window:CreateWindow(Config)
         RefreshAccountData()
     end)
 
-    local function OnLoginSuccess()
+    OnLoginSuccess = function()
         Main.Visible = true
         RefreshAccountData()
         if Api and Api.UserData and Api.UserData.remaining == "Expired" then
