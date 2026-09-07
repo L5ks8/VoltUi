@@ -29,19 +29,31 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
     TabCorner.CornerRadius = UDim.new(0, 6)
     TabCorner.Parent = TabBtn
     
+    local iconStr = ""
+    if IconAsset then
+        if type(IconAsset) == "number" then
+            iconStr = "rbxassetid://" .. tostring(IconAsset)
+        elseif type(IconAsset) == "string" and IconAsset ~= "" then
+            iconStr = string.find(IconAsset, "rbxassetid://") and IconAsset or ("rbxassetid://" .. IconAsset)
+        end
+    end
+
+    local hasIcon = (iconStr ~= "")
+    
     local TabIcon = Instance.new("ImageLabel")
     TabIcon.BackgroundTransparency = 1
     TabIcon.Size = UDim2.new(0, 16, 0, 16)
     TabIcon.AnchorPoint = Vector2.new(0.5, 0.5)
     TabIcon.Position = UDim2.new(0, 20, 0.5, 0)
-    TabIcon.Image = IconAsset or ""
+    TabIcon.Image = iconStr
     TabIcon.ImageColor3 = Color3.new(0.6, 0.6, 0.6)
+    TabIcon.Visible = hasIcon
     TabIcon.Parent = TabBtn
     
     local TabTitle = Instance.new("TextLabel")
     TabTitle.BackgroundTransparency = 1
-    TabTitle.Size = UDim2.new(1, -45, 1, 0)
-    TabTitle.Position = UDim2.new(0, 38, 0, 0)
+    TabTitle.Size = hasIcon and UDim2.new(1, -45, 1, 0) or UDim2.new(1, -20, 1, 0)
+    TabTitle.Position = hasIcon and UDim2.new(0, 38, 0, 0) or UDim2.new(0, 14, 0, 0)
     TabTitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     TabTitle.Text = Name
     TabTitle.TextColor3 = Color3.new(0.6, 0.6, 0.6)

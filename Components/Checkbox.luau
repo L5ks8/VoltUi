@@ -356,16 +356,12 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
     CheckboxFrame.Size = UDim2.new(1, 0, 0, descText == "" and 44 or 54)
     CheckboxFrame.Parent = TabContent
 
-    local MainLayout = Instance.new("UIListLayout")
-    MainLayout.FillDirection = Enum.FillDirection.Horizontal
-    MainLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    MainLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    MainLayout.Parent = CheckboxFrame
-
     local TextContainer = Instance.new("Frame")
     TextContainer.Name = "Text"
     TextContainer.BackgroundTransparency = 1
-    TextContainer.Size = UDim2.new(1, -200, 1, 0)
+    TextContainer.Position = UDim2.new(0, 0, 0, 0)
+    TextContainer.Size = UDim2.new(1, -220, 1, 0)
+    TextContainer.ClipsDescendants = true
     TextContainer.Parent = CheckboxFrame
 
     local TextLayout = Instance.new("UIListLayout")
@@ -396,8 +392,7 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
         Description.Name = "Description"
         Description.BackgroundTransparency = 1
         Description.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
-        Description.Position = UDim2.new(0, 14, 0, 26)
-        Description.Size = UDim2.new(1, -28, 0, 14)
+        Description.Size = UDim2.new(1, 0, 0, 14)
         Description.Text = descText
         Description.TextColor3 = Color3.fromRGB(150, 150, 160)
         Description.TextSize = 12
@@ -410,7 +405,8 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
     local RightControls = Instance.new("Frame")
     RightControls.Name = "RightControls"
     RightControls.BackgroundTransparency = 1
-    RightControls.LayoutOrder = 1
+    RightControls.AnchorPoint = Vector2.new(1, 0.5)
+    RightControls.Position = UDim2.new(1, -14, 0.5, 0)
     RightControls.Size = UDim2.new(0, 0, 1, 0)
     RightControls.AutomaticSize = Enum.AutomaticSize.X
     RightControls.Parent = CheckboxFrame
@@ -419,13 +415,9 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
     RightLayout.FillDirection = Enum.FillDirection.Horizontal
     RightLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
     RightLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    RightLayout.Padding = UDim.new(0, 10)
+    RightLayout.Padding = UDim.new(0, 8)
     RightLayout.SortOrder = Enum.SortOrder.LayoutOrder
     RightLayout.Parent = RightControls
-
-    local RightPadding = Instance.new("UIPadding")
-    RightPadding.PaddingRight = UDim.new(0, 14)
-    RightPadding.Parent = RightControls
 
     local BoxBg = Instance.new("TextButton")
     BoxBg.Name = "CheckboxBg"
