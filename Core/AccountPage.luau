@@ -1758,7 +1758,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
                 local KeyLabel = Instance.new("TextLabel")
                 KeyLabel.BackgroundTransparency = 1
                 KeyLabel.Size = UDim2.new(1, -110, 0, 25)
-                KeyLabel.Position = UDim2.new(0, 10, 0, 5)
+                KeyLabel.Position = UDim2.new(0, 16, 0, 5)
                 KeyLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
                 KeyLabel.TextSize = 15
                 KeyLabel.TextColor3 = Color3.fromRGB(130, 190, 255)
@@ -1769,7 +1769,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
                 local DetailsLabel = Instance.new("TextLabel")
                 DetailsLabel.BackgroundTransparency = 1
                 DetailsLabel.Size = UDim2.new(1, -110, 0, 15)
-                DetailsLabel.Position = UDim2.new(0, 10, 0, 30)
+                DetailsLabel.Position = UDim2.new(0, 16, 0, 30)
                 DetailsLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
                 DetailsLabel.TextSize = 13
                 DetailsLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
