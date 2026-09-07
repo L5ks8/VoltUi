@@ -19,7 +19,7 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
     TabBtn.Name = Name
     TabBtn.BackgroundColor3 = Color3.new(1, 1, 1)
     TabBtn.BackgroundTransparency = 1
-    TabBtn.Size = UDim2.new(1, -20, 0, 40)
+    TabBtn.Size = UDim2.new(1, -20, 0, 34)
     TabBtn.Position = UDim2.new(0, 10, 0, 0)
     TabBtn.Text = ""
     TabBtn.ClipsDescendants = true
@@ -34,7 +34,11 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
         if type(IconAsset) == "number" then
             iconStr = "rbxassetid://" .. tostring(IconAsset)
         elseif type(IconAsset) == "string" and IconAsset ~= "" then
-            iconStr = string.find(IconAsset, "rbxassetid://") and IconAsset or ("rbxassetid://" .. IconAsset)
+            if string.find(IconAsset, "://") then
+                iconStr = IconAsset
+            else
+                iconStr = "rbxassetid://" .. IconAsset
+            end
         end
     end
 
@@ -173,11 +177,11 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
         Maid:GiveTask(WindowObject.OnCollapse:Connect(function(isCollapsed)
             local SidebarTweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
             if isCollapsed then
-                Tween(TabBtn, SidebarTweenInfo, {Size = UDim2.new(0, 40, 0, 40)})
+                Tween(TabBtn, SidebarTweenInfo, {Size = UDim2.new(0, 34, 0, 34)})
                 Tween(TabIcon, SidebarTweenInfo, {Position = UDim2.new(0.5, 0, 0.5, 0)})
                 TabTitle.Visible = false
             else
-                Tween(TabBtn, SidebarTweenInfo, {Size = UDim2.new(1, -20, 0, 40)})
+                Tween(TabBtn, SidebarTweenInfo, {Size = UDim2.new(1, -20, 0, 34)})
                 Tween(TabIcon, SidebarTweenInfo, {Position = UDim2.new(0, 20, 0.5, 0)})
                 TabTitle.Visible = true
             end
