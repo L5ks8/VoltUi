@@ -1,147 +1,297 @@
-local Utils = script.Parent.Parent.Utils
-local Tween = require(Utils.Tween)
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+local TextService = game:GetService("TextService")
 
 local Notifications = {}
 Notifications.Container = nil
+Notifications.ParentGui = nil
 
-local Config = {
-    Width = 320,
-    BaseHeight = 65,
-    Padding = 15,
-    Gap = 10,
-    SuccessColor = Color3.fromRGB(39, 174, 96),
-    SuccessIconBg = Color3.fromRGB(25, 45, 35),
-    ErrorColor = Color3.fromRGB(231, 76, 60),
-    ErrorIconBg = Color3.fromRGB(55, 25, 25),
-    BgColor = Color3.fromRGB(20, 25, 22),
-    StrokeColor = Color3.fromRGB(40, 50, 45)
-}
+local function Tween(instance, tweenInfo, properties)
+    local tw = TweenService:Create(instance, tweenInfo, properties)
+    tw:Play()
+    return tw
+end
 
+-- Init
 function Notifications.Init(ParentGui)
+    Notifications.ParentGui = ParentGui
+
+    if Notifications.Container and Notifications.Container.Parent then
+        Notifications.Container:Destroy()
+    end
+
     local Container = Instance.new("Frame")
-    Container.Name = "NotificationContainer"
+    Container.Name = "VoltNotifications"
     Container.BackgroundTransparency = 1
     Container.AnchorPoint = Vector2.new(1, 1)
     Container.Position = UDim2.new(1, -20, 1, -20)
-    Container.Size = UDim2.new(0, Config.Width, 1, -40)
-    Container.ZIndex = 100
+    Container.Size = UDim2.new(0, 320, 1, -40)
+    Container.ZIndex = 10000
     Container.ClipsDescendants = false
     Container.Parent = ParentGui
 
     local Layout = Instance.new("UIListLayout")
     Layout.SortOrder = Enum.SortOrder.LayoutOrder
     Layout.VerticalAlignment = Enum.VerticalAlignment.Bottom
-    Layout.Padding = UDim.new(0, Config.Gap)
+    Layout.HorizontalAlignment = Enum.HorizontalAlignment.Right
+    Layout.Padding = UDim.new(0, 8)
     Layout.Parent = Container
 
     Notifications.Container = Container
 end
 
+-- Notify
 function Notifications.Notify(options)
-    if not Notifications.Container then return end
+    options = options or {}
+    local ParentGui = Notifications.ParentGui or (Notifications.Container and Notifications.Container.Parent)
+    if not Notifications.Container or not Notifications.Container.Parent then
+        if ParentGui then
+            Notifications.Init(ParentGui)
+        else
+            return
+        end
+    end
 
-    local title = options.Title or "Notification"
-    local content = options.Content or ""
-    local duration = options.Duration or 3
-    local type = options.Type or "Success"
+    local title = options.Title or options.Header or "Notification"
+    local content = options.Content or options.Description or options.Text or ""
+    local duration = options.Duration
+    if duration == nil then
+        duration = math.clamp((#content * 0.05) + 3, 3, 10)
+    end
+    local notifType = string.lower(options.Type or "info")
 
-    local isError = (string.lower(type) == "error")
-    local mainColor = isError and Config.ErrorColor or Config.SuccessColor
-    local iconAsset = isError and "rbxassetid://85824584748112" or "rbxassetid://118922551501473"
-    
+    local accentColor = Color3.fromRGB(196, 36, 104)
+    local iconAsset = "rbxassetid://10709791437"
+
+    if notifType == "success" then
+        accentColor = Color3.fromRGB(46, 204, 113)
+        iconAsset = "rbxassetid://10709790387"
+    elseif notifType == "error" then
+        accentColor = Color3.fromRGB(231, 76, 60)
+        iconAsset = "rbxassetid://10709790537"
+    elseif notifType == "warning" then
+        accentColor = Color3.fromRGB(241, 196, 15)
+        iconAsset = "rbxassetid://10709790537"
+    end
+
+    if options.Icon then
+        if type(options.Icon) == "number" then
+            iconAsset = "rbxassetid://" .. tostring(options.Icon)
+        elseif type(options.Icon) == "string" then
+            iconAsset = string.find(options.Icon, "rbxassetid://") and options.Icon or ("rbxassetid://" .. options.Icon)
+        end
+    end
+
+    local contentHeight = 16
+    if content ~= "" then
+        local bounds = TextService:GetTextSize(content, 12, Enum.Font.GothamMedium, Vector2.new(280, 2000))
+        contentHeight = math.max(16, bounds.Y + 4)
+    end
+    local targetHeight = 36 + contentHeight + 14
+
     local Wrapper = Instance.new("Frame")
     Wrapper.Name = "NotificationWrapper"
     Wrapper.BackgroundTransparency = 1
-    Wrapper.Size = UDim2.new(1, 0, 0, Config.BaseHeight)
+    Wrapper.BorderSizePixel = 0
+    Wrapper.ClipsDescendants = false
+    Wrapper.Size = UDim2.new(1, 0, 0, 0)
     Wrapper.Parent = Notifications.Container
 
     local Notif = Instance.new("Frame")
-    Notif.Name = "Notification"
-    Notif.BackgroundColor3 = Config.BgColor
+    Notif.Name = "NotificationCard"
+    Notif.BackgroundColor3 = Color3.fromRGB(18, 17, 23)
+    Notif.BackgroundTransparency = 1
+    Notif.BorderSizePixel = 0
+    Notif.ClipsDescendants = true
     Notif.Size = UDim2.new(1, 0, 1, 0)
-    Notif.Position = UDim2.new(1, Config.Width, 0, 0)
-    Notif.BackgroundTransparency = 0.05
     Notif.Parent = Wrapper
-    
-    local Accent = Instance.new("Frame")
-    Accent.Name = "Accent"
-    Accent.BackgroundColor3 = mainColor
-    Accent.BorderSizePixel = 0
-    Accent.Size = UDim2.new(0, 3, 1, 0)
-    Accent.Parent = Notif
-    Instance.new("UICorner", Accent).CornerRadius = UDim.new(0, 6)
 
     local Corner = Instance.new("UICorner")
-    Corner.CornerRadius = UDim.new(0, 6)
+    Corner.CornerRadius = UDim.new(0, 8)
     Corner.Parent = Notif
 
     local Stroke = Instance.new("UIStroke")
-    Stroke.Color = Config.StrokeColor
+    Stroke.Color = Color3.fromRGB(48, 45, 58)
+    Stroke.Thickness = 1
+    Stroke.Transparency = 1
     Stroke.Parent = Notif
 
-    local IconBg = Instance.new("Frame")
-    IconBg.BackgroundTransparency = 1
-    IconBg.Size = UDim2.new(0, 30, 0, 30)
-    IconBg.Position = UDim2.new(0, Config.Padding, 0.5, -15)
-    IconBg.Parent = Notif
+    local Shadow = Instance.new("Frame")
+    Shadow.Name = "Shadow"
+    Shadow.AnchorPoint = Vector2.new(0.5, 0.5)
+    Shadow.Position = UDim2.new(0.5, 0, 0.5, 2)
+    Shadow.Size = UDim2.new(1, 6, 1, 6)
+    Shadow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    Shadow.BackgroundTransparency = 1
+    Shadow.BorderSizePixel = 0
+    Shadow.ZIndex = Notif.ZIndex - 1
+    Shadow.Parent = Wrapper
+    local ShadowCorner = Instance.new("UICorner")
+    ShadowCorner.CornerRadius = UDim.new(0, 10)
+    ShadowCorner.Parent = Shadow
+
+    local HeaderFrame = Instance.new("Frame")
+    HeaderFrame.Name = "Header"
+    HeaderFrame.BackgroundTransparency = 1
+    HeaderFrame.Size = UDim2.new(1, 0, 0, 24)
+    HeaderFrame.Position = UDim2.new(0, 0, 0, 8)
+    HeaderFrame.Parent = Notif
+
+    local HeaderPad = Instance.new("UIPadding")
+    HeaderPad.PaddingLeft = UDim.new(0, 12)
+    HeaderPad.PaddingRight = UDim.new(0, 10)
+    HeaderPad.Parent = HeaderFrame
 
     local Icon = Instance.new("ImageLabel")
+    Icon.Name = "Icon"
     Icon.BackgroundTransparency = 1
     Icon.Size = UDim2.new(0, 16, 0, 16)
-    Icon.AnchorPoint = Vector2.new(0.5, 0.5)
-    Icon.Position = UDim2.new(0.5, 0, 0.5, 0)
+    Icon.Position = UDim2.new(0, 0, 0.5, 0)
+    Icon.AnchorPoint = Vector2.new(0, 0.5)
     Icon.Image = iconAsset
-    Icon.ImageColor3 = Color3.new(1, 1, 1)
-    Icon.Parent = IconBg
+    Icon.ImageColor3 = Color3.fromRGB(245, 245, 250)
+    Icon.ImageTransparency = 1
+    Icon.Parent = HeaderFrame
 
     local TitleLbl = Instance.new("TextLabel")
+    TitleLbl.Name = "Title"
     TitleLbl.BackgroundTransparency = 1
-    TitleLbl.Size = UDim2.new(1, -90, 0, 18)
-    TitleLbl.Position = UDim2.new(0, Config.Padding + 40, 0, 14)
+    TitleLbl.Size = UDim2.new(1, -90, 1, 0)
+    TitleLbl.Position = UDim2.new(0, 22, 0, 0)
     TitleLbl.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     TitleLbl.Text = title
-    TitleLbl.TextColor3 = Color3.new(1, 1, 1)
-    TitleLbl.TextSize = 14
+    TitleLbl.TextColor3 = Color3.fromRGB(245, 245, 250)
+    TitleLbl.TextSize = 13
+    TitleLbl.TextTransparency = 1
     TitleLbl.TextXAlignment = Enum.TextXAlignment.Left
-    TitleLbl.Parent = Notif
+    TitleLbl.TextYAlignment = Enum.TextYAlignment.Center
+    TitleLbl.Parent = HeaderFrame
 
-    local ContentLbl = Instance.new("TextLabel")
-    ContentLbl.BackgroundTransparency = 1
-    ContentLbl.Size = UDim2.new(1, -90, 0, 14)
-    ContentLbl.Position = UDim2.new(0, Config.Padding + 40, 0, 34)
-    ContentLbl.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
-    ContentLbl.Text = content
-    ContentLbl.TextColor3 = Color3.new(0.7, 0.7, 0.7)
-    ContentLbl.TextSize = 12
-    ContentLbl.TextXAlignment = Enum.TextXAlignment.Left
-    ContentLbl.TextWrapped = true
-    ContentLbl.Parent = Notif
+    local TimeLbl = Instance.new("TextLabel")
+    TimeLbl.Name = "Time"
+    TimeLbl.BackgroundTransparency = 1
+    TimeLbl.Size = UDim2.new(0, 50, 1, 0)
+    TimeLbl.Position = UDim2.new(1, -22, 0, 0)
+    TimeLbl.AnchorPoint = Vector2.new(1, 0)
+    TimeLbl.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+    TimeLbl.Text = "now"
+    TimeLbl.TextColor3 = Color3.fromRGB(125, 125, 135)
+    TimeLbl.TextSize = 11
+    TimeLbl.TextTransparency = 1
+    TimeLbl.TextXAlignment = Enum.TextXAlignment.Right
+    TimeLbl.TextYAlignment = Enum.TextYAlignment.Center
+    TimeLbl.Parent = HeaderFrame
 
     local CloseBtn = Instance.new("ImageButton")
+    CloseBtn.Name = "Close"
     CloseBtn.BackgroundTransparency = 1
     CloseBtn.Size = UDim2.new(0, 14, 0, 14)
+    CloseBtn.Position = UDim2.new(1, 0, 0.5, 0)
     CloseBtn.AnchorPoint = Vector2.new(1, 0.5)
-    CloseBtn.Position = UDim2.new(1, -Config.Padding, 0.5, 0)
-    CloseBtn.Image = "rbxassetid://121170570745612"
-    CloseBtn.ImageColor3 = Color3.new(0.5, 0.5, 0.5)
-    CloseBtn.Parent = Notif
+    CloseBtn.Image = "rbxassetid://10747384394"
+    CloseBtn.ImageColor3 = Color3.fromRGB(140, 140, 150)
+    CloseBtn.ImageTransparency = 1
+    CloseBtn.Parent = HeaderFrame
+
+    local DescLbl = Instance.new("TextLabel")
+    DescLbl.Name = "Description"
+    DescLbl.BackgroundTransparency = 1
+    DescLbl.Position = UDim2.new(0, 12, 0, 32)
+    DescLbl.Size = UDim2.new(1, -24, 0, contentHeight)
+    DescLbl.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+    DescLbl.Text = content
+    DescLbl.TextColor3 = Color3.fromRGB(175, 175, 185)
+    DescLbl.TextSize = 12
+    DescLbl.TextTransparency = 1
+    DescLbl.TextWrapped = true
+    DescLbl.TextXAlignment = Enum.TextXAlignment.Left
+    DescLbl.TextYAlignment = Enum.TextYAlignment.Top
+    DescLbl.Parent = Notif
+
+    local ProgressBar = Instance.new("Frame")
+    ProgressBar.Name = "ProgressBar"
+    ProgressBar.BackgroundColor3 = accentColor
+    ProgressBar.BorderSizePixel = 0
+    ProgressBar.Position = UDim2.new(0, 0, 1, -2)
+    ProgressBar.Size = UDim2.new(1, 0, 0, 2)
+    ProgressBar.Parent = Notif
+
+    local entranceInfo = TweenInfo.new(0.45, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
+    Tween(Wrapper, entranceInfo, {Size = UDim2.new(1, 0, 0, targetHeight)})
+    Tween(Notif, entranceInfo, {BackgroundTransparency = 0.08})
+    Tween(Stroke, entranceInfo, {Transparency = 0.4})
+    Tween(Shadow, entranceInfo, {BackgroundTransparency = 0.75})
+    Tween(Icon, entranceInfo, {ImageTransparency = 0})
+    Tween(TitleLbl, entranceInfo, {TextTransparency = 0})
+    Tween(TimeLbl, entranceInfo, {TextTransparency = 0})
+    Tween(CloseBtn, entranceInfo, {ImageTransparency = 0})
+    Tween(DescLbl, entranceInfo, {TextTransparency = 0})
+
+    local startTime = tick()
+    local renderConn
+    renderConn = RunService.RenderStepped:Connect(function()
+        if not Wrapper.Parent then
+            if renderConn then renderConn:Disconnect() end
+            return
+        end
+        local elapsed = tick() - startTime
+        if elapsed < 4 then
+            TimeLbl.Text = "now"
+        elseif elapsed < 60 then
+            TimeLbl.Text = math.floor(elapsed) .. "s ago"
+        elseif elapsed < 3600 then
+            TimeLbl.Text = math.floor(elapsed / 60) .. "m ago"
+        else
+            TimeLbl.Text = math.floor(elapsed / 3600) .. "h ago"
+        end
+    end)
+
+    if duration > 0 then
+        Tween(ProgressBar, TweenInfo.new(duration, Enum.EasingStyle.Linear), {Size = UDim2.new(0, 0, 0, 2)})
+    else
+        ProgressBar.Visible = false
+    end
 
     local closed = false
-
-    local function CloseNotif()
+    local function Dismiss()
         if closed then return end
         closed = true
-        Tween(Notif, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.In), {Position = UDim2.new(1, Config.Width, 0, 0)})
-        task.delay(0.3, function()
+        if renderConn then renderConn:Disconnect() end
+
+        local exitInfo = TweenInfo.new(0.35, Enum.EasingStyle.Exponential, Enum.EasingDirection.In)
+        Tween(Notif, exitInfo, {BackgroundTransparency = 1})
+        Tween(Stroke, exitInfo, {Transparency = 1})
+        Tween(Shadow, exitInfo, {BackgroundTransparency = 1})
+        Tween(Icon, exitInfo, {ImageTransparency = 1})
+        Tween(TitleLbl, exitInfo, {TextTransparency = 1})
+        Tween(TimeLbl, exitInfo, {TextTransparency = 1})
+        Tween(CloseBtn, exitInfo, {ImageTransparency = 1})
+        Tween(DescLbl, exitInfo, {TextTransparency = 1})
+        Tween(ProgressBar, exitInfo, {BackgroundTransparency = 1})
+        
+        local tw = Tween(Wrapper, exitInfo, {Size = UDim2.new(1, 0, 0, 0)})
+        tw.Completed:Connect(function()
             Wrapper:Destroy()
         end)
     end
 
-    CloseBtn.MouseButton1Click:Connect(CloseNotif)
+    CloseBtn.MouseEnter:Connect(function()
+        Tween(CloseBtn, TweenInfo.new(0.15), {ImageColor3 = Color3.fromRGB(255, 255, 255)})
+    end)
+    CloseBtn.MouseLeave:Connect(function()
+        Tween(CloseBtn, TweenInfo.new(0.15), {ImageColor3 = Color3.fromRGB(140, 140, 150)})
+    end)
+    CloseBtn.MouseButton1Click:Connect(Dismiss)
 
-    Tween(Notif, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2.new(0, 0, 0, 0)})
+    if duration > 0 then
+        task.delay(duration, Dismiss)
+    end
 
-    task.delay(duration, CloseNotif)
+    return {
+        Dismiss = Dismiss,
+        Wrapper = Wrapper,
+        Notif = Notif,
+    }
 end
 
 return Notifications

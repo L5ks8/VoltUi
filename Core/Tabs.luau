@@ -135,9 +135,16 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
     
     local TabMethods = {}
     
-    function TabMethods:CreateSection(Title, Description)
-        return Sections.CreateSection(TabContent, Maid, Title, Description)
+    function TabMethods:CreateSection(TitleOrConfig, Description)
+        local title = TitleOrConfig
+        local desc = Description
+        if type(TitleOrConfig) == "table" then
+            title = TitleOrConfig.Title or TitleOrConfig.Name or TitleOrConfig.Header
+            desc = TitleOrConfig.Description or Description
+        end
+        return Sections.CreateSection(TabContent, Maid, title, desc)
     end
+    TabMethods.CreateGroupbox = TabMethods.CreateSection
     
     return TabMethods
 end

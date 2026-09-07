@@ -1,4 +1,4 @@
-local ToggleComponent = {}
+local CheckboxComponent = {}
 local TweenService = game:GetService("TweenService")
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -335,43 +335,40 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
     }
 end
 
--- Toggle
-function ToggleComponent.Create(TabContent, Maid, Config, Flag)
+-- Checkbox
+function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
     local config = type(Config) == "string" and {Header = Config} or Config
-    local headerText = config.Header or config.Name or "Toggle"
+    local headerText = config.Header or config.Name or "Checkbox"
     local descText = config.Description or ""
     local hoverText = config.HoverText or config.Tooltip or ""
     local state = config.CurrentValue ~= nil and config.CurrentValue or (config.Default ~= nil and config.Default or false)
     local cb = config.Callback or function() end
 
-    local isCheckbox = (config.Style == 1 or config.Style == "Box" or config.Style == "Checkbox" or config.Box == true)
-
-    local switchOnColor = config.SwitchColor or Color3.fromRGB(185, 175, 235)
-    local switchOffColor = Color3.fromRGB(24, 23, 30)
+    local boxOnColor = config.AccentColor or Color3.fromRGB(180, 175, 230)
     local strokeOffColor = Color3.fromRGB(48, 45, 58)
-    local strokeOnColor = Color3.fromRGB(170, 160, 220)
+    local strokeOnColor = Color3.fromRGB(160, 155, 210)
 
-    local ToggleFrame = Instance.new("TextButton")
-    ToggleFrame.Name = headerText
-    ToggleFrame.AutoButtonColor = false
-    ToggleFrame.Text = ""
-    ToggleFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 36)
-    ToggleFrame.BackgroundTransparency = 1
-    ToggleFrame.BorderSizePixel = 0
-    ToggleFrame.Size = UDim2.new(1, 0, 0, descText == "" and 44 or 54)
-    ToggleFrame.Parent = TabContent
+    local CheckboxFrame = Instance.new("TextButton")
+    CheckboxFrame.Name = headerText
+    CheckboxFrame.AutoButtonColor = false
+    CheckboxFrame.Text = ""
+    CheckboxFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 36)
+    CheckboxFrame.BackgroundTransparency = 1
+    CheckboxFrame.BorderSizePixel = 0
+    CheckboxFrame.Size = UDim2.new(1, 0, 0, descText == "" and 44 or 54)
+    CheckboxFrame.Parent = TabContent
 
     local MainLayout = Instance.new("UIListLayout")
     MainLayout.FillDirection = Enum.FillDirection.Horizontal
     MainLayout.VerticalAlignment = Enum.VerticalAlignment.Center
     MainLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    MainLayout.Parent = ToggleFrame
+    MainLayout.Parent = CheckboxFrame
 
     local TextContainer = Instance.new("Frame")
     TextContainer.Name = "Text"
     TextContainer.BackgroundTransparency = 1
     TextContainer.Size = UDim2.new(1, -200, 1, 0)
-    TextContainer.Parent = ToggleFrame
+    TextContainer.Parent = CheckboxFrame
 
     local TextLayout = Instance.new("UIListLayout")
     TextLayout.SortOrder = Enum.SortOrder.LayoutOrder
@@ -417,7 +414,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
     RightControls.LayoutOrder = 1
     RightControls.Size = UDim2.new(0, 0, 1, 0)
     RightControls.AutomaticSize = Enum.AutomaticSize.X
-    RightControls.Parent = ToggleFrame
+    RightControls.Parent = CheckboxFrame
 
     local RightLayout = Instance.new("UIListLayout")
     RightLayout.FillDirection = Enum.FillDirection.Horizontal
@@ -431,149 +428,97 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
     RightPadding.PaddingRight = UDim.new(0, 14)
     RightPadding.Parent = RightControls
 
-    local ToggleControl
-    local UpdateToggleVisuals
+    local BoxBg = Instance.new("TextButton")
+    BoxBg.Name = "CheckboxBg"
+    BoxBg.AutoButtonColor = false
+    BoxBg.Text = ""
+    BoxBg.BackgroundColor3 = state and boxOnColor or Color3.fromRGB(24, 23, 30)
+    BoxBg.BackgroundTransparency = state and 0 or 0.2
+    BoxBg.Size = UDim2.new(0, 22, 0, 22)
+    BoxBg.LayoutOrder = 100
+    BoxBg.Parent = RightControls
 
-    if isCheckbox then
-        local BoxBg = Instance.new("TextButton")
-        BoxBg.Name = "CheckboxBg"
-        BoxBg.AutoButtonColor = false
-        BoxBg.Text = ""
-        BoxBg.BackgroundColor3 = state and switchOnColor or Color3.fromRGB(24, 23, 30)
-        BoxBg.BackgroundTransparency = state and 0 or 0.2
-        BoxBg.Size = UDim2.new(0, 22, 0, 22)
-        BoxBg.LayoutOrder = 100
-        BoxBg.Parent = RightControls
+    local BoxCorner = Instance.new("UICorner")
+    BoxCorner.CornerRadius = UDim.new(0, 6)
+    BoxCorner.Parent = BoxBg
 
-        local BoxCorner = Instance.new("UICorner")
-        BoxCorner.CornerRadius = UDim.new(0, 6)
-        BoxCorner.Parent = BoxBg
+    local BoxStroke = Instance.new("UIStroke")
+    BoxStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    BoxStroke.Color = state and strokeOnColor or strokeOffColor
+    BoxStroke.Thickness = 1
+    BoxStroke.Parent = BoxBg
 
-        local BoxStroke = Instance.new("UIStroke")
-        BoxStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-        BoxStroke.Color = state and strokeOnColor or strokeOffColor
-        BoxStroke.Thickness = 1
-        BoxStroke.Parent = BoxBg
+    local CheckIcon = Instance.new("ImageLabel")
+    CheckIcon.Name = "CheckIcon"
+    CheckIcon.BackgroundTransparency = 1
+    CheckIcon.Size = state and UDim2.new(0, 14, 0, 14) or UDim2.new(0, 6, 0, 6)
+    CheckIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
+    CheckIcon.AnchorPoint = Vector2.new(0.5, 0.5)
+    CheckIcon.Image = "rbxassetid://10709790387"
+    CheckIcon.ImageColor3 = Color3.fromRGB(255, 255, 255)
+    CheckIcon.ImageTransparency = state and 0 or 1
+    CheckIcon.Parent = BoxBg
 
-        local CheckIcon = Instance.new("ImageLabel")
-        CheckIcon.Name = "CheckIcon"
-        CheckIcon.BackgroundTransparency = 1
-        CheckIcon.Size = state and UDim2.new(0, 14, 0, 14) or UDim2.new(0, 6, 0, 6)
-        CheckIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
-        CheckIcon.AnchorPoint = Vector2.new(0.5, 0.5)
-        CheckIcon.Image = "rbxassetid://10709790387"
-        CheckIcon.ImageColor3 = Color3.fromRGB(255, 255, 255)
-        CheckIcon.ImageTransparency = state and 0 or 1
-        CheckIcon.Parent = BoxBg
-
-        ToggleControl = BoxBg
-
-        UpdateToggleVisuals = function()
-            if state then
-                Tween(BoxBg, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-                    BackgroundColor3 = switchOnColor,
-                    BackgroundTransparency = 0,
-                })
-                Tween(BoxStroke, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-                    Color = strokeOnColor,
-                })
-                Tween(CheckIcon, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-                    ImageTransparency = 0,
-                    Size = UDim2.new(0, 14, 0, 14),
-                })
-            else
-                Tween(BoxBg, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-                    BackgroundColor3 = Color3.fromRGB(24, 23, 30),
-                    BackgroundTransparency = 0.2,
-                })
-                Tween(BoxStroke, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-                    Color = strokeOffColor,
-                })
-                Tween(CheckIcon, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-                    ImageTransparency = 1,
-                    Size = UDim2.new(0, 6, 0, 6),
-                })
-            end
-        end
-    else
-        local SwitchBg = Instance.new("TextButton")
-        SwitchBg.Name = "SwitchBg"
-        SwitchBg.AutoButtonColor = false
-        SwitchBg.Text = ""
-        SwitchBg.BackgroundColor3 = state and switchOnColor or switchOffColor
-        SwitchBg.Size = UDim2.new(0, 38, 0, 20)
-        SwitchBg.LayoutOrder = 100
-        SwitchBg.Parent = RightControls
-
-        local SwitchCorner = Instance.new("UICorner")
-        SwitchCorner.CornerRadius = UDim.new(1, 0)
-        SwitchCorner.Parent = SwitchBg
-
-        local SwitchStroke = Instance.new("UIStroke")
-        SwitchStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-        SwitchStroke.Color = state and strokeOnColor or strokeOffColor
-        SwitchStroke.Thickness = 1
-        SwitchStroke.Parent = SwitchBg
-
-        local SwitchDot = Instance.new("Frame")
-        SwitchDot.Name = "Dot"
-        SwitchDot.BackgroundColor3 = state and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(130, 128, 145)
-        SwitchDot.Position = state and UDim2.new(1, -18, 0.5, 0) or UDim2.new(0, 2, 0.5, 0)
-        SwitchDot.AnchorPoint = Vector2.new(0, 0.5)
-        SwitchDot.Size = UDim2.new(0, 16, 0, 16)
-        SwitchDot.Parent = SwitchBg
-
-        local DotCorner = Instance.new("UICorner")
-        DotCorner.CornerRadius = UDim.new(1, 0)
-        DotCorner.Parent = SwitchDot
-
-        ToggleControl = SwitchBg
-
-        UpdateToggleVisuals = function()
-            if state then
-                Tween(SwitchBg, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = switchOnColor})
-                Tween(SwitchStroke, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Color = strokeOnColor})
-                Tween(SwitchDot, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(1, -18, 0.5, 0), BackgroundColor3 = Color3.fromRGB(255, 255, 255)})
-            else
-                Tween(SwitchBg, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = switchOffColor})
-                Tween(SwitchStroke, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Color = strokeOffColor})
-                Tween(SwitchDot, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(0, 2, 0.5, 0), BackgroundColor3 = Color3.fromRGB(130, 128, 145)})
-            end
+    local function updateVisuals()
+        if state then
+            Tween(BoxBg, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                BackgroundColor3 = boxOnColor,
+                BackgroundTransparency = 0,
+            })
+            Tween(BoxStroke, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                Color = strokeOnColor,
+            })
+            Tween(CheckIcon, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                ImageTransparency = 0,
+                Size = UDim2.new(0, 14, 0, 14),
+            })
+        else
+            Tween(BoxBg, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                BackgroundColor3 = Color3.fromRGB(24, 23, 30),
+                BackgroundTransparency = 0.2,
+            })
+            Tween(BoxStroke, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                Color = strokeOffColor,
+            })
+            Tween(CheckIcon, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                ImageTransparency = 1,
+                Size = UDim2.new(0, 6, 0, 6),
+            })
         end
     end
 
     local function ToggleState()
         state = not state
-        UpdateToggleVisuals()
+        updateVisuals()
         cb(state)
     end
 
-    ToggleFrame.MouseButton1Click:Connect(ToggleState)
-    ToggleControl.MouseButton1Click:Connect(ToggleState)
+    CheckboxFrame.MouseButton1Click:Connect(ToggleState)
+    BoxBg.MouseButton1Click:Connect(ToggleState)
 
-    ToggleFrame.MouseEnter:Connect(function()
-        Tween(ToggleFrame, TweenInfo.new(0.2), {BackgroundTransparency = 0.85})
+    CheckboxFrame.MouseEnter:Connect(function()
+        Tween(CheckboxFrame, TweenInfo.new(0.2), {BackgroundTransparency = 0.85})
     end)
-    ToggleFrame.MouseLeave:Connect(function()
-        Tween(ToggleFrame, TweenInfo.new(0.2), {BackgroundTransparency = 1})
+    CheckboxFrame.MouseLeave:Connect(function()
+        Tween(CheckboxFrame, TweenInfo.new(0.2), {BackgroundTransparency = 1})
     end)
 
-    local ToggleObject = {}
-    ToggleObject.Instance = ToggleFrame
-    ToggleObject.State = state
+    local CheckboxObject = {}
+    CheckboxObject.Instance = CheckboxFrame
+    CheckboxObject.State = state
 
-    function ToggleObject:Set(newState)
+    function CheckboxObject:Set(newState)
         state = not not newState
-        UpdateToggleVisuals()
+        updateVisuals()
         cb(state)
     end
 
-    function ToggleObject:Get()
+    function CheckboxObject:Get()
         return state
     end
 
     -- AddColorPicker
-    function ToggleObject:AddColorPicker(cpConfig, cpFlag)
+    function CheckboxObject:AddColorPicker(cpConfig, cpFlag)
         cpConfig = cpConfig or {}
         local currentColor = cpConfig.CurrentValue or cpConfig.Default or Color3.fromRGB(196, 36, 104)
         local currentAlpha = cpConfig.Transparency or cpConfig.Alpha or 0
@@ -597,15 +542,8 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
         SwatchStroke.Thickness = 1
         SwatchStroke.Parent = SwatchBtn
 
-        SwatchBtn.MouseEnter:Connect(function()
-            Tween(SwatchStroke, TweenInfo.new(0.15), {Color = Color3.fromRGB(120, 115, 140)})
-        end)
-        SwatchBtn.MouseLeave:Connect(function()
-            Tween(SwatchStroke, TweenInfo.new(0.15), {Color = Color3.fromRGB(55, 52, 65)})
-        end)
-
         SwatchBtn.MouseButton1Click:Connect(function()
-            local overlay = getRootOverlay(ToggleFrame)
+            local overlay = getRootOverlay(CheckboxFrame)
             if not overlay then return end
             createColorPickerPopup(overlay, currentColor, currentAlpha, function(newCol, newAlpha)
                 currentColor = newCol
@@ -629,7 +567,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
     end
 
     -- AddKeybind
-    function ToggleObject:AddKeybind(kbConfig, kbFlag)
+    function CheckboxObject:AddKeybind(kbConfig, kbFlag)
         kbConfig = kbConfig or {}
         local currentKey = kbConfig.CurrentValue or kbConfig.Default or "None"
         if typeof(currentKey) == "EnumItem" then
@@ -679,7 +617,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
             if listening then return end
             listening = true
             KbLabel.Text = "[ ... ]"
-            Tween(KbStroke, TweenInfo.new(0.2), {Color = switchOnColor})
+            Tween(KbStroke, TweenInfo.new(0.2), {Color = boxOnColor})
 
             listenConn = UserInputService.InputBegan:Connect(function(input)
                 local capturedKey = nil
@@ -747,144 +685,14 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
         end
         return KBObject
     end
-    ToggleObject.AddBind = ToggleObject.AddKeybind
+    CheckboxObject.AddBind = CheckboxObject.AddKeybind
 
-    -- AddDropdown
-    function ToggleObject:AddDropdown(ddConfig, ddFlag)
-        ddConfig = ddConfig or {}
-        local options = ddConfig.Options or {}
-        local currentOption = ddConfig.CurrentValue or ddConfig.Default or (options[1] or "None")
-        local ddCallback = ddConfig.Callback or function() end
-
-        local DropBtn = Instance.new("TextButton")
-        DropBtn.Name = "MiniDropdown"
-        DropBtn.AutoButtonColor = false
-        DropBtn.BackgroundColor3 = Color3.fromRGB(22, 21, 28)
-        DropBtn.Size = UDim2.new(0, 0, 0, 22)
-        DropBtn.AutomaticSize = Enum.AutomaticSize.X
-        DropBtn.LayoutOrder = 5
-        DropBtn.Text = ""
-        DropBtn.Parent = RightControls
-
-        local Dc = Instance.new("UICorner")
-        Dc.CornerRadius = UDim.new(0, 5)
-        Dc.Parent = DropBtn
-
-        local Ds = Instance.new("UIStroke")
-        Ds.Color = Color3.fromRGB(48, 45, 58)
-        Ds.Thickness = 1
-        Ds.Parent = DropBtn
-
-        local Dp = Instance.new("UIPadding")
-        Dp.PaddingLeft = UDim.new(0, 8)
-        Dp.PaddingRight = UDim.new(0, 8)
-        Dp.Parent = DropBtn
-
-        local Dl = Instance.new("TextLabel")
-        Dl.BackgroundTransparency = 1
-        Dl.Size = UDim2.new(1, 0, 1, 0)
-        Dl.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
-        Dl.Text = tostring(currentOption) .. "  ▾"
-        Dl.TextColor3 = Color3.fromRGB(200, 200, 215)
-        Dl.TextSize = 12
-        Dl.Parent = DropBtn
-
-        local ddMenuOpen = false
-        local menuFrame = nil
-
-        local function closeDropdownMenu()
-            if not ddMenuOpen then return end
-            ddMenuOpen = false
-            if menuFrame then
-                menuFrame:Destroy()
-                menuFrame = nil
-            end
-        end
-
-        DropBtn.MouseButton1Click:Connect(function()
-            if ddMenuOpen then
-                closeDropdownMenu()
-                return
-            end
-            local overlay = getRootOverlay(ToggleFrame)
-            if not overlay then return end
-            ddMenuOpen = true
-
-            menuFrame = Instance.new("Frame")
-            menuFrame.Name = "MiniDropdownMenu"
-            menuFrame.BackgroundColor3 = Color3.fromRGB(22, 21, 28)
-            menuFrame.BorderSizePixel = 0
-            menuFrame.ZIndex = 50010
-            menuFrame.Parent = overlay
-
-            local mc = Instance.new("UICorner")
-            mc.CornerRadius = UDim.new(0, 6)
-            mc.Parent = menuFrame
-
-            local ms = Instance.new("UIStroke")
-            ms.Color = Color3.fromRGB(48, 45, 58)
-            ms.Parent = menuFrame
-
-            local ml = Instance.new("UIListLayout")
-            ml.SortOrder = Enum.SortOrder.LayoutOrder
-            ml.Parent = menuFrame
-
-            local screenGui = overlay.Parent
-            local startX = DropBtn.AbsolutePosition.X - screenGui.AbsolutePosition.X
-            local startY = (DropBtn.AbsolutePosition.Y - screenGui.AbsolutePosition.Y) + DropBtn.AbsoluteSize.Y + 4
-            menuFrame.Position = UDim2.new(0, startX, 0, startY)
-            menuFrame.Size = UDim2.new(0, math.max(DropBtn.AbsoluteSize.X, 90), 0, #options * 24 + 8)
-
-            local mp = Instance.new("UIPadding")
-            mp.PaddingTop = UDim.new(0, 4)
-            mp.PaddingBottom = UDim.new(0, 4)
-            mp.PaddingLeft = UDim.new(0, 4)
-            mp.PaddingRight = UDim.new(0, 4)
-            mp.Parent = menuFrame
-
-            for _, opt in ipairs(options) do
-                local OptBtn = Instance.new("TextButton")
-                OptBtn.BackgroundColor3 = Color3.fromRGB(35, 33, 44)
-                OptBtn.BackgroundTransparency = (opt == currentOption) and 0 or 1
-                OptBtn.Size = UDim2.new(1, 0, 0, 22)
-                OptBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
-                OptBtn.Text = opt
-                OptBtn.TextColor3 = (opt == currentOption) and Color3.fromRGB(240, 240, 245) or Color3.fromRGB(160, 160, 170)
-                OptBtn.TextSize = 11
-                OptBtn.ZIndex = 50011
-                OptBtn.Parent = menuFrame
-
-                local oc = Instance.new("UICorner")
-                oc.CornerRadius = UDim.new(0, 4)
-                oc.Parent = OptBtn
-
-                OptBtn.MouseButton1Click:Connect(function()
-                    currentOption = opt
-                    Dl.Text = tostring(currentOption) .. "  ▾"
-                    closeDropdownMenu()
-                    ddCallback(currentOption)
-                end)
-            end
-        end)
-
-        local DDObject = {}
-        function DDObject:Set(newOpt)
-            currentOption = newOpt
-            Dl.Text = tostring(currentOption) .. "  ▾"
-            ddCallback(currentOption)
-        end
-        function DDObject:Get()
-            return currentOption
-        end
-        return DDObject
-    end
-
-    setmetatable(ToggleObject, {
-        __index = function(_, key) return ToggleFrame[key] end,
-        __newindex = function(_, key, value) ToggleFrame[key] = value end
+    setmetatable(CheckboxObject, {
+        __index = function(_, key) return CheckboxFrame[key] end,
+        __newindex = function(_, key, value) CheckboxFrame[key] = value end
     })
 
-    return ToggleObject
+    return CheckboxObject
 end
 
-return ToggleComponent
+return CheckboxComponent

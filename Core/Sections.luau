@@ -1,15 +1,23 @@
-local Utils = script.Parent.Parent.Utils
 local Components = script.Parent.Parent.Components
 local ButtonComponent = require(Components.Button)
 local ToggleComponent = require(Components.Toggle)
+local CheckboxComponent = require(Components.Checkbox)
 local DropdownComponent = require(Components.Dropdown)
+local SliderComponent = require(Components.Slider)
+local InputComponent = require(Components.Input)
+local LabelComponent = require(Components.Label)
+local ParagraphComponent = require(Components.Paragraph)
+local DividerComponent = require(Components.Divider)
+local ColorPickerComponent = require(Components.ColorPicker)
+local KeybindComponent = require(Components.Keybind)
 
 local Sections = {}
 
+-- Sections
 function Sections.CreateSection(TabContent, Maid, Title, Description)
     local SectionFrame = Instance.new("Frame")
     SectionFrame.Name = Title or "Section"
-    SectionFrame.BackgroundColor3 = Color3.new(0.11, 0.11, 0.11)
+    SectionFrame.BackgroundColor3 = Color3.fromRGB(18, 17, 23)
     SectionFrame.BorderColor3 = Color3.new(0, 0, 0)
     SectionFrame.BorderSizePixel = 0
     SectionFrame.Size = UDim2.new(1, 0, 0, 0)
@@ -23,7 +31,7 @@ function Sections.CreateSection(TabContent, Maid, Title, Description)
     
     local SectionStroke = Instance.new("UIStroke")
     SectionStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
-    SectionStroke.Color = Color3.new(0.216, 0.216, 0.216)
+    SectionStroke.Color = Color3.fromRGB(48, 45, 58)
     SectionStroke.Parent = SectionFrame
     
     local SectionLayout = Instance.new("UIListLayout")
@@ -37,7 +45,7 @@ function Sections.CreateSection(TabContent, Maid, Title, Description)
         if ElementCount > 0 then
             local Separator = Instance.new("Frame")
             Separator.Name = "Separator"
-            Separator.BackgroundColor3 = Color3.new(0.216, 0.216, 0.216)
+            Separator.BackgroundColor3 = Color3.fromRGB(38, 36, 46)
             Separator.BorderSizePixel = 0
             Separator.Size = UDim2.new(1, 0, 0, 1)
             Separator.Parent = SectionFrame
@@ -67,7 +75,7 @@ function Sections.CreateSection(TabContent, Maid, Title, Description)
         TitleLabel.Size = UDim2.new(1, -20, 0, 16)
         TitleLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
         TitleLabel.Text = Title
-        TitleLabel.TextColor3 = Color3.new(0.9, 0.9, 0.9)
+        TitleLabel.TextColor3 = Color3.fromRGB(240, 240, 245)
         TitleLabel.TextSize = 14
         TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
         TitleLabel.TextYAlignment = Enum.TextYAlignment.Center
@@ -80,7 +88,7 @@ function Sections.CreateSection(TabContent, Maid, Title, Description)
             DescLabel.Size = UDim2.new(1, -20, 0, 14)
             DescLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
             DescLabel.Text = Description
-            DescLabel.TextColor3 = Color3.new(0.6, 0.6, 0.6)
+            DescLabel.TextColor3 = Color3.fromRGB(150, 150, 160)
             DescLabel.TextSize = 12
             DescLabel.TextXAlignment = Enum.TextXAlignment.Left
             DescLabel.TextYAlignment = Enum.TextYAlignment.Center
@@ -99,16 +107,74 @@ function Sections.CreateSection(TabContent, Maid, Title, Description)
         return Element
     end
     
-    function SectionMethods:CreateToggle(Config)
+    function SectionMethods:CreateToggle(Config, Flag)
         AddSeparator()
-        local Element = ToggleComponent.Create(SectionFrame, Maid, Config)
+        local Element = ToggleComponent.Create(SectionFrame, Maid, Config, Flag)
         ElementCount = ElementCount + 1
         return Element
     end
-    
-    function SectionMethods:CreateDropdown(Config)
+
+    function SectionMethods:CreateCheckbox(Config, Flag)
         AddSeparator()
-        local Element = DropdownComponent.Create(SectionFrame, Maid, Config)
+        local Element = CheckboxComponent.Create(SectionFrame, Maid, Config, Flag)
+        ElementCount = ElementCount + 1
+        return Element
+    end
+
+    function SectionMethods:CreateSlider(Config, Flag)
+        AddSeparator()
+        local Element = SliderComponent.Create(SectionFrame, Maid, Config, Flag)
+        ElementCount = ElementCount + 1
+        return Element
+    end
+
+    function SectionMethods:CreateInput(Config, Flag)
+        AddSeparator()
+        local Element = InputComponent.Create(SectionFrame, Maid, Config, Flag)
+        ElementCount = ElementCount + 1
+        return Element
+    end
+    SectionMethods.CreateTextBox = SectionMethods.CreateInput
+    
+    function SectionMethods:CreateDropdown(Config, Flag)
+        AddSeparator()
+        local Element = DropdownComponent.Create(SectionFrame, Maid, Config, Flag)
+        ElementCount = ElementCount + 1
+        return Element
+    end
+
+    function SectionMethods:CreateColorPicker(Config, Flag)
+        AddSeparator()
+        local Element = ColorPickerComponent.Create(SectionFrame, Maid, Config, Flag)
+        ElementCount = ElementCount + 1
+        return Element
+    end
+
+    function SectionMethods:CreateKeybind(Config, Flag)
+        AddSeparator()
+        local Element = KeybindComponent.Create(SectionFrame, Maid, Config, Flag)
+        ElementCount = ElementCount + 1
+        return Element
+    end
+    SectionMethods.CreateBind = SectionMethods.CreateKeybind
+
+    function SectionMethods:CreateLabel(Config)
+        AddSeparator()
+        local Element = LabelComponent.Create(SectionFrame, Maid, Config)
+        ElementCount = ElementCount + 1
+        return Element
+    end
+
+    function SectionMethods:CreateParagraph(Config)
+        AddSeparator()
+        local Element = ParagraphComponent.Create(SectionFrame, Maid, Config)
+        ElementCount = ElementCount + 1
+        return Element
+    end
+
+    function SectionMethods:CreateDivider(Config)
+        AddSeparator()
+        local Element = DividerComponent.Create(SectionFrame, Maid, Config)
         ElementCount = ElementCount + 1
         return Element
     end
