@@ -192,11 +192,14 @@ function Window:CreateWindow(Config)
     
     local SettingsPage = require(script.Parent.SettingsPage)
     local SettingsPageElements
-    pcall(function()
+    local success, err = pcall(function()
         SettingsPageElements = SettingsPage.Create(PagesContainer, maid, function()
             WindowObject:OpenHome()
         end, Config)
     end)
+    if not success then
+        warn("[VoltUi] Failed to create Settings Page: " .. tostring(err))
+    end
     
     -- Connect Sidebar clicks
     maid:GiveTask(SidebarElements.Home.MouseButton1Click:Connect(function()
