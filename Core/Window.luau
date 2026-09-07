@@ -151,9 +151,11 @@ function Window:CreateWindow(Config)
         })
     end))
 
-    local requireAuth = (Config.KeySystem == true) or (Config.Login == true) or (Config.EnableAuth == true)
+    local isKeySystem = (Config.KeySystem == true) or (Config.KeySettings ~= nil)
+    local isBackendAuth = (Config.Login == true) or (Config.EnableAuth == true)
+
     local Api = nil
-    if requireAuth then
+    if isBackendAuth then
         pcall(function()
             Api = require(Utils.Api)
         end)
@@ -189,7 +191,283 @@ function Window:CreateWindow(Config)
         end
     end
 
-    if requireAuth and Api then
+    local function ShowKeySystem(onSuccess)
+        local ks = Config.KeySettings or {}
+        local validKeys = {}
+        if type(ks.Key) == "table" then
+            for _, k in ipairs(ks.Key) do validKeys[tostring(k)] = true end
+        elseif type(ks.Key) == "string" then
+            validKeys[ks.Key] = true
+        end
+        if type(ks.Keys) == "table" then
+            for _, k in ipairs(ks.Keys) do validKeys[tostring(k)] = true end
+        elseif type(ks.Keys) == "string" then
+            validKeys[ks.Keys] = true
+        end
+        if type(Config.Key) == "string" then
+            validKeys[Config.Key] = true
+        elseif type(Config.Key) == "table" then
+            for _, k in ipairs(Config.Key) do validKeys[tostring(k)] = true end
+        end
+
+        local fileName = (ks.FileName or "VoltKey") .. ".txt"
+        if ks.SaveKey and isfile and isfile(fileName) then
+            local saved = readfile(fileName)
+            if saved and validKeys[saved] then
+                Notifications.Notify({
+                    Title = "Key System",
+                    Content = "Saved key loaded successfully!",
+                    Duration = 2.5
+                })
+                onSuccess()
+                return
+            end
+        end
+
+        local KeyBackdrop = Instance.new("Frame")
+        KeyBackdrop.Name = "VoltKeyBackdrop"
+        KeyBackdrop.BackgroundColor3 = Color3.fromRGB(8, 8, 10)
+        KeyBackdrop.BackgroundTransparency = 0.35
+        KeyBackdrop.BorderSizePixel = 0
+        KeyBackdrop.Size = UDim2.new(1, 0, 1, 0)
+        KeyBackdrop.ZIndex = 80000
+        KeyBackdrop.Parent = VoltUi
+
+        local KeyCard = Instance.new("Frame")
+        KeyCard.Name = "KeyCard"
+        KeyCard.AnchorPoint = Vector2.new(0.5, 0.5)
+        KeyCard.Position = UDim2.new(0.5, 0, 0.5, 0)
+        KeyCard.Size = UDim2.new(0, 420, 0, 0)
+        KeyCard.AutomaticSize = Enum.AutomaticSize.Y
+        KeyCard.BackgroundColor3 = Color3.fromRGB(18, 17, 23)
+        KeyCard.BorderSizePixel = 0
+        KeyCard.ZIndex = 80001
+        KeyCard.Parent = KeyBackdrop
+
+        local Corner = Instance.new("UICorner")
+        Corner.CornerRadius = UDim.new(0, 10)
+        Corner.Parent = KeyCard
+
+        local Stroke = Instance.new("UIStroke")
+        Stroke.Color = Color3.fromRGB(50, 47, 62)
+        Stroke.Thickness = 1.2
+        Stroke.Parent = KeyCard
+
+        local Padding = Instance.new("UIPadding")
+        Padding.PaddingTop = UDim.new(0, 20)
+        Padding.PaddingBottom = UDim.new(0, 20)
+        Padding.PaddingLeft = UDim.new(0, 22)
+        Padding.PaddingRight = UDim.new(0, 22)
+        Padding.Parent = KeyCard
+
+        local Layout = Instance.new("UIListLayout")
+        Layout.SortOrder = Enum.SortOrder.LayoutOrder
+        Layout.Padding = UDim.new(0, 12)
+        Layout.Parent = KeyCard
+
+        -- Header Row
+        local HeaderRow = Instance.new("Frame")
+        HeaderRow.BackgroundTransparency = 1
+        HeaderRow.Size = UDim2.new(1, 0, 0, 34)
+        HeaderRow.LayoutOrder = 1
+        HeaderRow.Parent = KeyCard
+
+        local TitleLbl = Instance.new("TextLabel")
+        TitleLbl.BackgroundTransparency = 1
+        TitleLbl.Size = UDim2.new(1, -30, 0, 18)
+        TitleLbl.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+        TitleLbl.Text = ks.Title or Config.Name or Config.Title or "Volt UI"
+        TitleLbl.TextColor3 = Color3.fromRGB(240, 240, 245)
+        TitleLbl.TextSize = 16
+        TitleLbl.TextXAlignment = Enum.TextXAlignment.Left
+        TitleLbl.Parent = HeaderRow
+
+        local SubtitleLbl = Instance.new("TextLabel")
+        SubtitleLbl.BackgroundTransparency = 1
+        SubtitleLbl.Position = UDim2.new(0, 0, 0, 18)
+        SubtitleLbl.Size = UDim2.new(1, -30, 0, 14)
+        SubtitleLbl.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+        SubtitleLbl.Text = ks.Subtitle or "Key System"
+        SubtitleLbl.TextColor3 = Color3.fromRGB(140, 140, 155)
+        SubtitleLbl.TextSize = 12
+        SubtitleLbl.TextXAlignment = Enum.TextXAlignment.Left
+        SubtitleLbl.Parent = HeaderRow
+
+        local CloseBtn = Instance.new("ImageButton")
+        CloseBtn.BackgroundTransparency = 1
+        CloseBtn.AnchorPoint = Vector2.new(1, 0)
+        CloseBtn.Position = UDim2.new(1, 0, 0, 0)
+        CloseBtn.Size = UDim2.new(0, 20, 0, 20)
+        CloseBtn.Image = "rbxassetid://121170570745612"
+        CloseBtn.ImageColor3 = Color3.fromRGB(150, 150, 160)
+        CloseBtn.Parent = HeaderRow
+        CloseBtn.MouseButton1Click:Connect(function()
+            KeyBackdrop:Destroy()
+            VoltUi:Destroy()
+        end)
+
+        -- Note
+        if ks.Note and ks.Note ~= "" then
+            local NoteLbl = Instance.new("TextLabel")
+            NoteLbl.BackgroundTransparency = 1
+            NoteLbl.Size = UDim2.new(1, 0, 0, 0)
+            NoteLbl.AutomaticSize = Enum.AutomaticSize.Y
+            NoteLbl.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Normal, Enum.FontStyle.Normal)
+            NoteLbl.Text = ks.Note
+            NoteLbl.TextColor3 = Color3.fromRGB(170, 170, 180)
+            NoteLbl.TextSize = 12
+            NoteLbl.TextWrapped = true
+            NoteLbl.TextXAlignment = Enum.TextXAlignment.Left
+            NoteLbl.LayoutOrder = 2
+            NoteLbl.Parent = KeyCard
+        end
+
+        -- Key Input
+        local InputFrame = Instance.new("Frame")
+        InputFrame.BackgroundColor3 = Color3.fromRGB(24, 23, 30)
+        InputFrame.Size = UDim2.new(1, 0, 0, 36)
+        InputFrame.LayoutOrder = 3
+        InputFrame.Parent = KeyCard
+
+        local InputCorner = Instance.new("UICorner")
+        InputCorner.CornerRadius = UDim.new(0, 6)
+        InputCorner.Parent = InputFrame
+
+        local InputStroke = Instance.new("UIStroke")
+        InputStroke.Color = Color3.fromRGB(48, 45, 58)
+        InputStroke.Thickness = 1
+        InputStroke.Parent = InputFrame
+
+        local InputBox = Instance.new("TextBox")
+        InputBox.BackgroundTransparency = 1
+        InputBox.Position = UDim2.new(0, 12, 0, 0)
+        InputBox.Size = UDim2.new(1, -24, 1, 0)
+        InputBox.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+        InputBox.PlaceholderText = "Enter key here..."
+        InputBox.PlaceholderColor3 = Color3.fromRGB(100, 100, 110)
+        InputBox.Text = ""
+        InputBox.TextColor3 = Color3.fromRGB(240, 240, 245)
+        InputBox.TextSize = 13
+        InputBox.ClearTextOnFocus = false
+        InputBox.Parent = InputFrame
+
+        -- Buttons Row
+        local ButtonsRow = Instance.new("Frame")
+        ButtonsRow.BackgroundTransparency = 1
+        ButtonsRow.Size = UDim2.new(1, 0, 0, 34)
+        ButtonsRow.LayoutOrder = 4
+        ButtonsRow.Parent = KeyCard
+
+        local BtnLayout = Instance.new("UIListLayout")
+        BtnLayout.FillDirection = Enum.FillDirection.Horizontal
+        BtnLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
+        BtnLayout.Padding = UDim.new(0, 10)
+        BtnLayout.Parent = ButtonsRow
+
+        local keyLink = ks.KeyLink or ks.URL or ks.Link or (Config.Discord and Config.Discord.Invite and ("https://discord.gg/" .. Config.Discord.Invite))
+        if keyLink and keyLink ~= "" then
+            local GetBtn = Instance.new("TextButton")
+            GetBtn.BackgroundColor3 = Color3.fromRGB(30, 28, 38)
+            GetBtn.Size = UDim2.new(0, 100, 1, 0)
+            GetBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+            GetBtn.Text = "Get Key"
+            GetBtn.TextColor3 = Color3.fromRGB(180, 180, 190)
+            GetBtn.TextSize = 12
+            GetBtn.Parent = ButtonsRow
+
+            local GetCorner = Instance.new("UICorner")
+            GetCorner.CornerRadius = UDim.new(0, 6)
+            GetCorner.Parent = GetBtn
+
+            local GetStroke = Instance.new("UIStroke")
+            GetStroke.Color = Color3.fromRGB(48, 45, 58)
+            GetStroke.Thickness = 1
+            GetStroke.Parent = GetBtn
+
+            GetBtn.MouseButton1Click:Connect(function()
+                if setclipboard then
+                    setclipboard(keyLink)
+                    Notifications.Notify({
+                        Title = "Key System",
+                        Content = "Key link copied to clipboard!",
+                        Duration = 3
+                    })
+                else
+                    Notifications.Notify({
+                        Title = "Key Link",
+                        Content = keyLink,
+                        Duration = 5
+                    })
+                end
+            end)
+        end
+
+        local SubmitBtn = Instance.new("TextButton")
+        SubmitBtn.BackgroundColor3 = Color3.fromRGB(180, 175, 230)
+        SubmitBtn.Size = UDim2.new(0, 110, 1, 0)
+        SubmitBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+        SubmitBtn.Text = "Submit Key"
+        SubmitBtn.TextColor3 = Color3.fromRGB(18, 17, 23)
+        SubmitBtn.TextSize = 12
+        SubmitBtn.Parent = ButtonsRow
+
+        local SubCorner = Instance.new("UICorner")
+        SubCorner.CornerRadius = UDim.new(0, 6)
+        SubCorner.Parent = SubmitBtn
+
+        local function checkKey()
+            local entered = InputBox.Text
+            if validKeys[entered] or next(validKeys) == nil then
+                if ks.SaveKey and writefile then
+                    pcall(function()
+                        writefile(fileName, entered)
+                    end)
+                end
+                Notifications.Notify({
+                    Title = "Success",
+                    Content = "Key accepted! Welcome.",
+                    Duration = 2.5
+                })
+                Tween(KeyBackdrop, TweenInfo.new(0.3), {BackgroundTransparency = 1})
+                task.wait(0.3)
+                KeyBackdrop:Destroy()
+                onSuccess()
+            else
+                InputStroke.Color = Color3.fromRGB(240, 70, 70)
+                Notifications.Notify({
+                    Title = "Invalid Key",
+                    Content = "The key you entered is incorrect.",
+                    Duration = 3
+                })
+                task.delay(1.5, function()
+                    if InputStroke and InputStroke.Parent then
+                        InputStroke.Color = Color3.fromRGB(48, 45, 58)
+                    end
+                end)
+            end
+        end
+
+        SubmitBtn.MouseButton1Click:Connect(checkKey)
+        InputBox.FocusLost:Connect(function(enterPressed)
+            if enterPressed then checkKey() end
+        end)
+    end
+
+    local showLoading = Config.Loading or Config.LoadingScreen or Config.LoadingTitle
+
+    if isKeySystem then
+        if showLoading then
+            local loadingScreen
+            pcall(function() loadingScreen = Loading.Create(VoltUi) end)
+            task.spawn(function()
+                if loadingScreen then loadingScreen:WaitForReady() end
+                ShowKeySystem(function() OnLoginSuccess() end)
+                if loadingScreen then loadingScreen:FadeOut() end
+            end)
+        else
+            ShowKeySystem(function() OnLoginSuccess() end)
+        end
+    elseif isBackendAuth and Api then
         local loadingScreen
         pcall(function()
             loadingScreen = Loading.Create(VoltUi)
@@ -221,7 +499,7 @@ function Window:CreateWindow(Config)
             end)
             if loadingScreen then loadingScreen:FadeOut() end
         end
-    elseif Config.Loading or Config.LoadingScreen then
+    elseif showLoading then
         local loadingScreen
         pcall(function()
             loadingScreen = Loading.Create(VoltUi)
