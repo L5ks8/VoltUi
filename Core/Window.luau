@@ -202,17 +202,17 @@ function Window:CreateWindow(Config)
     end
     
     -- Connect Sidebar clicks
-    maid:GiveTask(SidebarElements.Home.MouseButton1Click:Connect(function()
+    maid:GiveTask(SidebarElements.HomeBtn.MouseButton1Click:Connect(function()
         if WindowObject and WindowObject.OpenHome then
             WindowObject:OpenHome()
         end
     end))
-    maid:GiveTask(SidebarElements.Account.MouseButton1Click:Connect(function()
+    maid:GiveTask(SidebarElements.AccountBtn.MouseButton1Click:Connect(function()
         if WindowObject and WindowObject.OpenAccount then
             WindowObject:OpenAccount()
         end
     end))
-    maid:GiveTask(SidebarElements.Settings.MouseButton1Click:Connect(function()
+    maid:GiveTask(SidebarElements.SettingsBtn.MouseButton1Click:Connect(function()
         if SettingsPageElements and SettingsPageElements.Instance then
             PageLayout:JumpTo(SettingsPageElements.Instance)
             BottombarElements.Instance.Visible = false

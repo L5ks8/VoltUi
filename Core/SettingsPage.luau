@@ -302,7 +302,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
         
         table.insert(TabContentRefs, {Btn = TabBtn, Title = TabTitle, Content = TabContent})
         
-        Maid:GiveTask(TabBtn.MouseButton1Click:Connect(function()
+        local function SelectTab()
             if ActiveTab == TabBtn then return end
             ActiveTab = TabBtn
             
@@ -314,12 +314,16 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
             Tween(TabBtn, TweenInfo.new(0.2), {BackgroundTransparency = 0.95})
             Tween(TabTitle, TweenInfo.new(0.2), {TextColor3 = Color3.new(1, 1, 1)})
             SettingsWindowObject.PageLayout:JumpTo(TabContent)
-        end))
+        end
+        Maid:GiveTask(TabBtn.MouseButton1Click:Connect(SelectTab))
         
         local TabMethods = {}
         function TabMethods:AddSection(...)
             local Sections = require(script.Parent.Sections)
             return Sections.CreateSection(TabContent, Maid, ...)
+        end
+        function TabMethods:Select()
+            SelectTab()
         end
         
         return TabMethods, TabBtn
@@ -339,11 +343,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     CreateSettingsTab("Workbench", "rbxassetid://1234567890")
 
     -- Activate Appearance tab by default for now
-    task.spawn(function()
-        for _, obj in ipairs(AppearanceBtn:GetConnections("MouseButton1Click")) do
-            obj:Fire()
-        end
-    end)
+    AppearanceTab:Select()
     
     -- Appearance Tab Content: Theme Editor
     local ThemeSection = AppearanceTab:AddSection("Theme", "Choose, manage, and customize the full UI + Monaco theme from one place.\nUse the editor for background media, logo colors, app colors, and Monaco editor colors.")
