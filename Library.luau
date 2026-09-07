@@ -8,7 +8,7 @@ if isStudio then
     Notifications = require(script.Core.Notifications)
 else
     -- Virtual loader
-    local baseUrl = "https://raw.githubusercontent.com/L5ks8/AvantaUi/main/"
+    local baseUrl = "https://raw.githubusercontent.com/L5ks8/VoltUi/main/"
     local cache = {}
 
     local Root = { Name = "VoltUi", __path = "" }
