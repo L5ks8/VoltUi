@@ -145,6 +145,44 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
         return Sections.CreateSection(TabContent, Maid, title, desc)
     end
     TabMethods.CreateGroupbox = TabMethods.CreateSection
+    TabMethods.AddSection = TabMethods.CreateSection
+    TabMethods.AddGroupbox = TabMethods.CreateSection
+
+    local defaultSection = nil
+    local function getDefaultSection()
+        if not defaultSection then
+            defaultSection = Sections.CreateSection(TabContent, Maid, "", "")
+        end
+        return defaultSection
+    end
+
+    function TabMethods:CreateButton(...) return getDefaultSection():CreateButton(...) end
+    function TabMethods:CreateToggle(...) return getDefaultSection():CreateToggle(...) end
+    function TabMethods:CreateCheckbox(...) return getDefaultSection():CreateCheckbox(...) end
+    function TabMethods:CreateSlider(...) return getDefaultSection():CreateSlider(...) end
+    function TabMethods:CreateInput(...) return getDefaultSection():CreateInput(...) end
+    TabMethods.CreateTextBox = TabMethods.CreateInput
+    function TabMethods:CreateDropdown(...) return getDefaultSection():CreateDropdown(...) end
+    function TabMethods:CreateColorPicker(...) return getDefaultSection():CreateColorPicker(...) end
+    function TabMethods:CreateKeybind(...) return getDefaultSection():CreateKeybind(...) end
+    TabMethods.CreateBind = TabMethods.CreateKeybind
+    function TabMethods:CreateLabel(...) return getDefaultSection():CreateLabel(...) end
+    function TabMethods:CreateParagraph(...) return getDefaultSection():CreateParagraph(...) end
+    function TabMethods:CreateDivider(...) return getDefaultSection():CreateDivider(...) end
+
+    TabMethods.AddButton = TabMethods.CreateButton
+    TabMethods.AddToggle = TabMethods.CreateToggle
+    TabMethods.AddCheckbox = TabMethods.CreateCheckbox
+    TabMethods.AddSlider = TabMethods.CreateSlider
+    TabMethods.AddInput = TabMethods.CreateInput
+    TabMethods.AddTextBox = TabMethods.CreateInput
+    TabMethods.AddDropdown = TabMethods.CreateDropdown
+    TabMethods.AddColorPicker = TabMethods.CreateColorPicker
+    TabMethods.AddKeybind = TabMethods.CreateKeybind
+    TabMethods.AddBind = TabMethods.CreateKeybind
+    TabMethods.AddLabel = TabMethods.CreateLabel
+    TabMethods.AddParagraph = TabMethods.CreateParagraph
+    TabMethods.AddDivider = TabMethods.CreateDivider
     
     return TabMethods
 end

@@ -1,6 +1,10 @@
 local Library = {}
 
-local isStudio = (typeof(script) == "Instance")
+local isStudio = false
+pcall(function()
+    isStudio = (typeof(script) == "Instance" and script:FindFirstChild("Core") ~= nil and script.Core:FindFirstChild("Window") ~= nil)
+end)
+
 local Window, Notifications
 
 if isStudio then
@@ -11,12 +15,31 @@ else
     local baseUrl = "https://raw.githubusercontent.com/L5ks8/VoltUi/main/"
     local cache = {}
 
+    local function httpGet(url)
+        if game and game.HttpGet then
+            return game:HttpGet(url)
+        elseif http and http.request then
+            return http.request({Url = url, Method = "GET"}).Body
+        elseif request then
+            return request({Url = url, Method = "GET"}).Body
+        end
+        error("[VoltUi] No HTTP GET method available")
+    end
+
     local Root = { Name = "VoltUi", __path = "" }
     Root.Parent = nil
 
     local function makeFolder(name, parent, path)
         local folder = { Name = name, Parent = parent, __path = path }
         parent[name] = folder
+
+        function folder:FindFirstChild(key)
+            return self[key]
+        end
+        function folder:WaitForChild(key)
+            return self[key]
+        end
+
         setmetatable(folder, {
             __index = function(self, key)
                 local mod = {
@@ -24,6 +47,12 @@ else
                     Parent = self,
                     __path = self.__path .. "/" .. key .. ".luau"
                 }
+                function mod:FindFirstChild(k)
+                    return self[k]
+                end
+                function mod:WaitForChild(k)
+                    return self[k]
+                end
                 rawset(self, key, mod)
                 return mod
             end
@@ -47,6 +76,12 @@ else
                 Parent = self,
                 __path = key .. ".luau"
             }
+            function mod:FindFirstChild(k)
+                return self[k]
+            end
+            function mod:WaitForChild(k)
+                return self[k]
+            end
             rawset(self, key, mod)
             return mod
         end
@@ -62,16 +97,30 @@ else
         elseif isfile and isfile(path) then
             code = readfile(path)
         else
-            code = game:HttpGet(baseUrl .. path)
+            code = httpGet(baseUrl .. path)
         end
 
-        local fn, err = loadstring(code, path)
-        if not fn then error("Failed to compile " .. path .. ": " .. tostring(err)) end
+        local fn, err
+        local ok, res = pcall(loadstring, code, "@VoltUi/" .. path)
+        if ok and type(res) == "function" then
+            fn = res
+        else
+            fn, err = loadstring(code)
+        end
+
+        if not fn then
+            error("[VoltUi] Failed to compile " .. tostring(path) .. ": " .. tostring(err or res))
+        end
 
         local env
         env = setmetatable({
             script = mod,
             require = virtualRequire,
+            Core = Core,
+            Utils = Utils,
+            Components = Components,
+            Themes = Themes,
+            Root = Root,
         }, { __index = getfenv() })
 
         setfenv(fn, env)

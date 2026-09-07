@@ -179,6 +179,20 @@ function Sections.CreateSection(TabContent, Maid, Title, Description)
         return Element
     end
     
+    SectionMethods.AddButton = SectionMethods.CreateButton
+    SectionMethods.AddToggle = SectionMethods.CreateToggle
+    SectionMethods.AddCheckbox = SectionMethods.CreateCheckbox
+    SectionMethods.AddSlider = SectionMethods.CreateSlider
+    SectionMethods.AddInput = SectionMethods.CreateInput
+    SectionMethods.AddTextBox = SectionMethods.CreateInput
+    SectionMethods.AddDropdown = SectionMethods.CreateDropdown
+    SectionMethods.AddColorPicker = SectionMethods.CreateColorPicker
+    SectionMethods.AddKeybind = SectionMethods.CreateKeybind
+    SectionMethods.AddBind = SectionMethods.CreateKeybind
+    SectionMethods.AddLabel = SectionMethods.CreateLabel
+    SectionMethods.AddParagraph = SectionMethods.CreateParagraph
+    SectionMethods.AddDivider = SectionMethods.CreateDivider
+    
     return SectionMethods
 end
 

@@ -294,6 +294,7 @@ function Window:CreateWindow(Config)
         return Tabs.CreateTab(WindowObject, tabName, tabIcon)
     end
     WindowObject.CreateTabSection = WindowObject.CreateTab
+    WindowObject.AddTab = WindowObject.CreateTab
     
     function WindowObject:Notify(Config)
         return Notifications.Notify(Config)
