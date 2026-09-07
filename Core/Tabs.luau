@@ -65,9 +65,13 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
     TabContent.Name = Name .. "Content"
     TabContent.BackgroundTransparency = 1
     TabContent.Size = UDim2.new(1, 0, 1, 0)
-    TabContent.ScrollBarThickness = 2
+    TabContent.ScrollBarThickness = 0
     TabContent.ScrollBarImageColor3 = Color3.new(0.2, 0.2, 0.2)
     TabContent.Visible = isFirstTab
+    TabContent.CanvasSize = UDim2.new(0, 0, 0, 0)
+    TabContent.AutomaticCanvasSize = Enum.AutomaticSize.None
+    TabContent.ScrollingEnabled = false
+    TabContent.ElasticBehavior = Enum.ElasticBehavior.WhenScrollable
     TabContent.Parent = ContentContainer
     
     local ContentLayout = Instance.new("UIListLayout")
@@ -81,6 +85,34 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
     ContentPadding.PaddingLeft = UDim.new(0, 15)
     ContentPadding.PaddingRight = UDim.new(0, 15)
     ContentPadding.Parent = TabContent
+
+    local function UpdateContentScroll()
+        local contentHeight = ContentLayout.AbsoluteContentSize.Y + ContentPadding.PaddingTop.Offset + ContentPadding.PaddingBottom.Offset + 10
+        local frameHeight = TabContent.AbsoluteSize.Y
+        if frameHeight > 0 and contentHeight > frameHeight then
+            TabContent.ScrollingEnabled = true
+            TabContent.ScrollBarThickness = 2
+            TabContent.CanvasSize = UDim2.new(0, 0, 0, contentHeight)
+        else
+            TabContent.ScrollingEnabled = false
+            TabContent.ScrollBarThickness = 0
+            TabContent.CanvasSize = UDim2.new(0, 0, 0, 0)
+            TabContent.CanvasPosition = Vector2.new(0, 0)
+        end
+    end
+
+    Maid:GiveTask(ContentLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(UpdateContentScroll))
+    Maid:GiveTask(TabContent:GetPropertyChangedSignal("AbsoluteSize"):Connect(UpdateContentScroll))
+    Maid:GiveTask(TabContent.ChildAdded:Connect(function(child)
+        if child:IsA("GuiObject") then
+            Maid:GiveTask(child:GetPropertyChangedSignal("AbsoluteSize"):Connect(UpdateContentScroll))
+        end
+        task.defer(UpdateContentScroll)
+    end))
+    Maid:GiveTask(TabContent.ChildRemoved:Connect(function()
+        task.defer(UpdateContentScroll)
+    end))
+    task.defer(UpdateContentScroll)
     
     local TabObj = {
         Button = TabBtn,
@@ -111,6 +143,7 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
         
         Tabs.ActiveTab = TabObj
         TabContent.Visible = true
+        task.defer(UpdateContentScroll)
         
         Tween(TabBtn, TweenInfo.new(0.2), {BackgroundTransparency = 0.95})
         Tween(TabTitle, TweenInfo.new(0.2), {TextColor3 = Color3.new(1, 1, 1)})

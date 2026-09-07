@@ -345,6 +345,10 @@ function Sidebar.Create(Content, maid, OnCollapse)
     TabsScrolling.ScrollBarImageColor3 = Color3.new(0.137, 0.137, 0.137)
     TabsScrolling.ScrollBarImageTransparency = 1
     TabsScrolling.Size = UDim2.new(1, 0, 1, 0)
+    TabsScrolling.CanvasSize = UDim2.new(0, 0, 0, 0)
+    TabsScrolling.AutomaticCanvasSize = Enum.AutomaticSize.None
+    TabsScrolling.ScrollingEnabled = false
+    TabsScrolling.ElasticBehavior = Enum.ElasticBehavior.WhenScrollable
     TabsScrolling.Parent = TabsContainer
     
     local TabsScrollingLayout = Instance.new("UIListLayout")
@@ -355,7 +359,38 @@ function Sidebar.Create(Content, maid, OnCollapse)
     
     local TabsScrollingPadding = Instance.new("UIPadding")
     TabsScrollingPadding.PaddingTop = UDim.new(0, 9)
+    TabsScrollingPadding.PaddingBottom = UDim.new(0, 9)
     TabsScrollingPadding.Parent = TabsScrolling
+
+    local function UpdateTabsScroll()
+        local contentHeight = TabsScrollingLayout.AbsoluteContentSize.Y + TabsScrollingPadding.PaddingTop.Offset + TabsScrollingPadding.PaddingBottom.Offset + 10
+        local frameHeight = TabsScrolling.AbsoluteSize.Y
+        if frameHeight > 0 and contentHeight > frameHeight then
+            TabsScrolling.ScrollingEnabled = true
+            TabsScrolling.ScrollBarThickness = 2
+            TabsScrolling.ScrollBarImageTransparency = 0.5
+            TabsScrolling.CanvasSize = UDim2.new(0, 0, 0, contentHeight)
+        else
+            TabsScrolling.ScrollingEnabled = false
+            TabsScrolling.ScrollBarThickness = 0
+            TabsScrolling.ScrollBarImageTransparency = 1
+            TabsScrolling.CanvasSize = UDim2.new(0, 0, 0, 0)
+            TabsScrolling.CanvasPosition = Vector2.new(0, 0)
+        end
+    end
+
+    maid:GiveTask(TabsScrollingLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(UpdateTabsScroll))
+    maid:GiveTask(TabsScrolling:GetPropertyChangedSignal("AbsoluteSize"):Connect(UpdateTabsScroll))
+    maid:GiveTask(TabsScrolling.ChildAdded:Connect(function(child)
+        if child:IsA("GuiObject") then
+            maid:GiveTask(child:GetPropertyChangedSignal("AbsoluteSize"):Connect(UpdateTabsScroll))
+        end
+        task.defer(UpdateTabsScroll)
+    end))
+    maid:GiveTask(TabsScrolling.ChildRemoved:Connect(function()
+        task.defer(UpdateTabsScroll)
+    end))
+    task.defer(UpdateTabsScroll)
     
     local isCollapsed = false
     local SidebarTweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)

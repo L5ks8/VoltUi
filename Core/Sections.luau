@@ -191,6 +191,7 @@ function Sections.CreateSection(TabContent, Maid, Title, Description)
     SectionMethods.AddLabel = SectionMethods.CreateLabel
     SectionMethods.AddParagraph = SectionMethods.CreateParagraph
     SectionMethods.AddDivider = SectionMethods.CreateDivider
+    SectionMethods.Instance = SectionFrame
     
     return SectionMethods
 end
