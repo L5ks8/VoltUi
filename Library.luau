@@ -51,6 +51,11 @@ if not Window then
 
     local mfCorner = Instance.new("UICorner")
     mfCorner.Parent = mf
+    
+    local mfStroke = Instance.new("UIStroke")
+    mfStroke.Color = Color3.new(0.353, 0.353, 0.353)
+    mfStroke.Transparency = 1
+    mfStroke.Parent = mf
 
     local introBox = Instance.new("Frame")
     introBox.BackgroundTransparency = 1
@@ -89,52 +94,132 @@ if not Window then
     tx.MaxVisibleGraphemes = 0
     tx.ZIndex = 100000
     tx.Parent = introBox
+    
+    local LoadingContainer = Instance.new("Frame")
+    LoadingContainer.BackgroundTransparency = 1
+    LoadingContainer.Size = UDim2.new(1, 0, 1, 0)
+    LoadingContainer.Visible = false
+    LoadingContainer.ZIndex = 100000
+    LoadingContainer.Parent = mf
 
+    local MainLayout = Instance.new("UIListLayout")
+    MainLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    MainLayout.Padding = UDim.new(0, 100)
+    MainLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    MainLayout.Parent = LoadingContainer
+    
+    local MainPadding = Instance.new("UIPadding")
+    MainPadding.PaddingTop = UDim.new(0, 160)
+    MainPadding.Parent = LoadingContainer
+
+    local Icon = Instance.new("Frame")
+    Icon.Name = "Icon"
+    Icon.BackgroundTransparency = 1
+    Icon.Size = UDim2.new(0, 200, 0, 200)
+    Icon.ZIndex = 100000
+    Icon.Parent = LoadingContainer
+    
+    local IconCorner = Instance.new("UICorner")
+    IconCorner.CornerRadius = UDim.new(1, 0)
+    IconCorner.Parent = Icon
+    
+    local IconStroke = Instance.new("UIStroke")
+    IconStroke.Thickness = 8
+    IconStroke.Color = Color3.fromRGB(255, 255, 255)
+    IconStroke.Parent = Icon
+    
+    local IconGrad = Instance.new("UIGradient")
+    IconGrad.Transparency = NumberSequence.new({
+        NumberSequenceKeypoint.new(0, 0),
+        NumberSequenceKeypoint.new(1, 1)
+    })
+    IconGrad.Parent = IconStroke
+
+    local BarContainer = Instance.new("Frame")
+    BarContainer.BackgroundTransparency = 1
+    BarContainer.LayoutOrder = 1
+    BarContainer.Size = UDim2.new(0, 730, 0, 100)
+    BarContainer.ZIndex = 100000
+    BarContainer.Parent = LoadingContainer
+    
+    local BarLayout = Instance.new("UIListLayout")
+    BarLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    BarLayout.Parent = BarContainer
+    
+    local BarBg = Instance.new("Frame")
+    BarBg.BackgroundTransparency = 1
+    BarBg.LayoutOrder = 1
+    BarBg.Size = UDim2.new(0, 730, 0, 50)
+    BarBg.ZIndex = 100000
+    BarBg.Parent = BarContainer
+    
+    local BarFillBg = Instance.new("Frame")
+    BarFillBg.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    BarFillBg.Size = UDim2.new(1, 0, 0.4, 0)
+    BarFillBg.AnchorPoint = Vector2.new(0, 0.5)
+    BarFillBg.Position = UDim2.new(0, 0, 0.5, 0)
+    BarFillBg.ZIndex = 100000
+    BarFillBg.Parent = BarBg
+    
+    local BarFillBgCorner = Instance.new("UICorner")
+    BarFillBgCorner.CornerRadius = UDim.new(1, 0)
+    BarFillBgCorner.Parent = BarFillBg
+    
+    local BarFill = Instance.new("Frame")
+    BarFill.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    BarFill.Size = UDim2.new(0, 0, 1, 0)
+    BarFill.ZIndex = 100001
+    BarFill.Parent = BarFillBg
+    
+    local BarFillCorner = Instance.new("UICorner")
+    BarFillCorner.CornerRadius = UDim.new(1, 0)
+    BarFillCorner.Parent = BarFill
+    
+    local TextContainer = Instance.new("Frame")
+    TextContainer.BackgroundTransparency = 1
+    TextContainer.Size = UDim2.new(0, 730, 0, 50)
+    TextContainer.ZIndex = 100000
+    TextContainer.Parent = BarContainer
+    
+    local TextLayout = Instance.new("UIListLayout")
+    TextLayout.FillDirection = Enum.FillDirection.Horizontal
+    TextLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    TextLayout.Parent = TextContainer
+    
     local statusLbl = Instance.new("TextLabel")
     statusLbl.BackgroundTransparency = 1
     statusLbl.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    statusLbl.AnchorPoint = Vector2.new(0, 1)
-    statusLbl.Position = UDim2.new(0, 35, 1, -50)
-    statusLbl.Size = UDim2.new(1, -70, 0, 25)
+    statusLbl.Size = UDim2.new(0, 600, 0, 50)
     statusLbl.Text = ""
     statusLbl.TextColor3 = Color3.new(1, 1, 1)
-    statusLbl.TextSize = 20
-    statusLbl.TextTransparency = 1
+    statusLbl.TextSize = 25
     statusLbl.TextXAlignment = Enum.TextXAlignment.Left
+    statusLbl.TextYAlignment = Enum.TextYAlignment.Bottom
     statusLbl.ZIndex = 100000
-    statusLbl.Parent = mf
-
-    local barBg = Instance.new("Frame")
-    barBg.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-    barBg.AnchorPoint = Vector2.new(0, 1)
-    barBg.Position = UDim2.new(0, 35, 1, -30)
-    barBg.Size = UDim2.new(1, -70, 0, 6)
-    barBg.BackgroundTransparency = 1
-    barBg.ZIndex = 100000
-    barBg.Parent = mf
-
-    local barBgCorner = Instance.new("UICorner")
-    barBgCorner.CornerRadius = UDim.new(1, 0)
-    barBgCorner.Parent = barBg
-
-    local barFill = Instance.new("Frame")
-    barFill.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    barFill.Size = UDim2.new(0, 0, 1, 0)
-    barFill.BackgroundTransparency = 1
-    barFill.ZIndex = 100001
-    barFill.Parent = barBg
-
-    local barFillCorner = Instance.new("UICorner")
-    barFillCorner.CornerRadius = UDim.new(1, 0)
-    barFillCorner.Parent = barFill
-
-    local mfStroke = Instance.new("UIStroke")
-    mfStroke.Color = Color3.new(0.353, 0.353, 0.353)
-    mfStroke.Transparency = 1
-    mfStroke.Parent = mf
+    statusLbl.Parent = TextContainer
+    
+    local PctContainer = Instance.new("Frame")
+    PctContainer.BackgroundTransparency = 1
+    PctContainer.Size = UDim2.new(0, 130, 0, 50)
+    PctContainer.ZIndex = 100000
+    PctContainer.Parent = TextContainer
+    
+    local PctText = Instance.new("TextLabel")
+    PctText.BackgroundTransparency = 1
+    PctText.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    PctText.Size = UDim2.new(1, 0, 1, 0)
+    PctText.Text = "0%"
+    PctText.TextColor3 = Color3.new(1, 1, 1)
+    PctText.TextSize = 25
+    PctText.TextXAlignment = Enum.TextXAlignment.Right
+    PctText.TextYAlignment = Enum.TextYAlignment.Bottom
+    PctText.ZIndex = 100000
+    PctText.Parent = PctContainer
 
     local loadingShown = false
     local downloadCount = 0
+    local RunService = game:GetService("RunService")
+    local renderConn
 
     task.spawn(function()
         task.wait(0.2)
@@ -155,14 +240,17 @@ if not Window then
         introBox.Visible = false
 
         _tw(mfStroke, TweenInfo.new(0.3), {Transparency = 0})
-        _tw(statusLbl, TweenInfo.new(0.3), {TextTransparency = 0})
-        _tw(barBg, TweenInfo.new(0.3), {BackgroundTransparency = 0})
-        _tw(barFill, TweenInfo.new(0.3), {BackgroundTransparency = 0})
-        task.wait(0.3)
+        LoadingContainer.Visible = true
         loadingShown = true
+        
+        renderConn = RunService.RenderStepped:Connect(function(dt)
+            if not LoadingContainer.Visible then
+                if renderConn then renderConn:Disconnect() end
+                return
+            end
+            Icon.Rotation = Icon.Rotation + (120 * dt)
+        end)
     end)
-
-    local baseUrl = "https://raw.githubusercontent.com/L5ks8/VoltUi/main/"
     local cache = {}
 
     local function httpGet(url)
@@ -180,7 +268,9 @@ if not Window then
             error("[VoltUi] No HTTP GET method available")
         end
         downloadCount = downloadCount + 1
-        _tw(barFill, TweenInfo.new(0.15, Enum.EasingStyle.Linear), {Size = UDim2.new(math.min(downloadCount / 35, 0.95), 0, 1, 0)})
+        local pct = math.min(downloadCount / 35, 0.95)
+        _tw(BarFill, TweenInfo.new(0.15, Enum.EasingStyle.Linear), {Size = UDim2.new(pct, 0, 1, 0)})
+        PctText.Text = tostring(math.floor(pct * 100)) .. "%"
         return result
     end
 
@@ -275,7 +365,8 @@ if not Window then
     function loadingObj:SetProgress(pct)
         if self.Faded then return end
         pct = math.clamp(pct, 0, 1)
-        _tw(barFill, TweenInfo.new(0.2, Enum.EasingStyle.Linear), {Size = UDim2.new(pct, 0, 1, 0)})
+        _tw(BarFill, TweenInfo.new(0.2, Enum.EasingStyle.Linear), {Size = UDim2.new(pct, 0, 1, 0)})
+        PctText.Text = tostring(math.floor(pct * 100)) .. "%"
     end
     function loadingObj:FadeOut()
         if self.Faded then return end
@@ -284,9 +375,14 @@ if not Window then
             _tw(mf, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1})
             _tw(mfStroke, TweenInfo.new(0.5), {Transparency = 1})
             _tw(statusLbl, TweenInfo.new(0.5), {TextTransparency = 1})
-            _tw(barBg, TweenInfo.new(0.5), {BackgroundTransparency = 1})
-            _tw(barFill, TweenInfo.new(0.5), {BackgroundTransparency = 1})
+            _tw(PctText, TweenInfo.new(0.5), {TextTransparency = 1})
+            _tw(BarBg, TweenInfo.new(0.5), {BackgroundTransparency = 1})
+            _tw(BarFillBg, TweenInfo.new(0.5), {BackgroundTransparency = 1})
+            _tw(BarFill, TweenInfo.new(0.5), {BackgroundTransparency = 1})
+            _tw(Icon, TweenInfo.new(0.5), {BackgroundTransparency = 1})
+            _tw(IconStroke, TweenInfo.new(0.5), {Transparency = 1})
             task.wait(0.5)
+            LoadingContainer.Visible = false
             gui:Destroy()
         end)
     end
