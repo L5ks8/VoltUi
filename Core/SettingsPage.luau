@@ -144,7 +144,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     
     local SearchBox = Instance.new("TextBox")
     SearchBox.Name = "SearchBox"
-    SearchBox.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
+    SearchBox.BackgroundTransparency = 1
     SearchBox.Size = UDim2.new(1, -20, 0, 26)
     SearchBox.Position = UDim2.new(0, 10, 0, 10)
     SearchBox.PlaceholderText = "Search settings"
@@ -174,6 +174,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     
     local SearchStroke = Instance.new("UIStroke")
     SearchStroke.Color = Color3.fromRGB(48, 48, 48)
+    SearchStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     SearchStroke.Parent = SearchBox
     
     --TabsContainer
@@ -352,17 +353,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     end
 
     --Tabs
-    CreateSettingsTab("Editor", "rbxassetid://134267746401089")
-    local AppearanceTab, AppearanceBtn = CreateSettingsTab("Appearance", "rbxassetid://1234567890")
-    CreateSettingsTab("Client", "rbxassetid://1234567890")
-    
-    --SubTabs
-    CreateSettingsTab("General", nil, 14)
-    CreateSettingsTab("Multi-Instance", nil, 14)
-    CreateSettingsTab("Decompiler", nil, 14)
-    CreateSettingsTab("Save Instance", nil, 14)
-    
-    CreateSettingsTab("Workbench", "rbxassetid://1234567890")
+    local AppearanceTab, AppearanceBtn = CreateSettingsTab("Appearance", "rbxassetid://113398745327842")
 
     --Select
     AppearanceTab:Select()
@@ -429,6 +420,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
         
         local Stroke = Instance.new("UIStroke")
         Stroke.Color = isRed and Color3.fromRGB(180, 50, 50) or Color3.fromRGB(48, 48, 48)
+        Stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
         Stroke.Parent = Btn
         
         local Layout = Instance.new("UIListLayout")
@@ -459,6 +451,14 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
         TextLabel.TextColor3 = isRed and Color3.fromRGB(240, 100, 100) or Color3.fromRGB(180, 180, 190)
         TextLabel.TextSize = 12
         TextLabel.Parent = Btn
+        
+        local hoverColor = isRed and Color3.fromRGB(40, 20, 20) or Color3.fromRGB(36, 36, 36)
+        Maid:GiveTask(Btn.MouseEnter:Connect(function()
+            Tween(Btn, TweenInfo.new(0.15), {BackgroundTransparency = 0, BackgroundColor3 = hoverColor})
+        end))
+        Maid:GiveTask(Btn.MouseLeave:Connect(function()
+            Tween(Btn, TweenInfo.new(0.15), {BackgroundTransparency = 1})
+        end))
         
         return Btn
     end
