@@ -1,3 +1,4 @@
+local ThemeManager = require(script.Parent.Theme)
 local Utils = script.Parent.Parent.Utils
 local Utility = require(Utils.Utility)
 
@@ -8,7 +9,7 @@ function Minimized.Create(ParentGui, maid, RestoreCallback)
     Frame.Name = "Minimized"
     Frame.Active = true
     Frame.AnchorPoint = Vector2.new(0.1, 0.3)
-    Frame.BackgroundColor3 = Color3.new(0.11, 0.11, 0.11)
+    ThemeManager:Register(Frame, "BackgroundColor3", "TertiaryBackground")
     Frame.BorderColor3 = Color3.new(0, 0, 0)
     Frame.BorderSizePixel = 0
     Frame.Position = UDim2.new(0.064, 0, 0.083, 0)
@@ -20,6 +21,10 @@ function Minimized.Create(ParentGui, maid, RestoreCallback)
     
     local UICorner = Instance.new("UICorner")
     UICorner.Parent = Frame
+    
+    local FrameStroke = Instance.new("UIStroke")
+    ThemeManager:Register(FrameStroke, "Color", "StrokeColor")
+    FrameStroke.Parent = Frame
     
     local UIListLayout = Instance.new("UIListLayout")
     UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center

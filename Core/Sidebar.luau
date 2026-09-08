@@ -147,7 +147,7 @@ function Sidebar.Create(Content, maid, OnCollapse)
     SidebarFiller2.Size = UDim2.new(0, 200, 0, 5)
     SidebarFiller2.Parent = SidebarFrame
     
-    local HoverColor = Color3.fromRGB(45, 45, 45)
+    local HoverColor = ThemeManager:GetColor("StrokeColor")
     local TweenInfoObj = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
     
     local function ApplyHover(button, text)
@@ -171,7 +171,7 @@ function Sidebar.Create(Content, maid, OnCollapse)
         
         local Tooltip = Instance.new("TextLabel")
         Tooltip.Name = "Tooltip"
-        Tooltip.BackgroundColor3 = Color3.new(0.075, 0.075, 0.075)
+        Tooltip.BackgroundColor3 = ThemeManager:GetColor("MainBackground")
         Tooltip.BackgroundTransparency = 1
         Tooltip.AnchorPoint = Vector2.new(0.5, 0)
         Tooltip.Position = UDim2.new(0.5, 0, 1, 4)
@@ -179,7 +179,7 @@ function Sidebar.Create(Content, maid, OnCollapse)
         Tooltip.AutomaticSize = Enum.AutomaticSize.X
         Tooltip.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
         Tooltip.Text = text
-        Tooltip.TextColor3 = Color3.new(0.7, 0.7, 0.7)
+        Tooltip.TextColor3 = ThemeManager:GetColor("TextSecondary")
         Tooltip.TextSize = 12
         Tooltip.TextTransparency = 1
         Tooltip.ZIndex = 10
@@ -196,7 +196,7 @@ function Sidebar.Create(Content, maid, OnCollapse)
         TooltipPadding.Parent = Tooltip
         
         local TooltipStroke = Instance.new("UIStroke")
-        TooltipStroke.Color = Color3.new(0.216, 0.216, 0.216)
+        TooltipStroke.Color = ThemeManager:GetColor("StrokeColor")
         TooltipStroke.Transparency = 1
         TooltipStroke.Parent = Tooltip
         

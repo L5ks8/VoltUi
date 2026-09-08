@@ -237,7 +237,7 @@ function Topbar.Create(Main, Config, maid)
         
         local Tooltip = Instance.new("TextLabel")
         Tooltip.Name = "Tooltip"
-        Tooltip.BackgroundColor3 = Color3.new(0.075, 0.075, 0.075)
+        Tooltip.BackgroundColor3 = ThemeManager:GetColor("MainBackground")
         Tooltip.BackgroundTransparency = 1
         Tooltip.AnchorPoint = Vector2.new(0.5, 0)
         Tooltip.Position = UDim2.new(0.5, 0, 1, 4)
@@ -245,7 +245,7 @@ function Topbar.Create(Main, Config, maid)
         Tooltip.AutomaticSize = Enum.AutomaticSize.X
         Tooltip.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
         Tooltip.Text = text
-        Tooltip.TextColor3 = Color3.new(0.7, 0.7, 0.7)
+        Tooltip.TextColor3 = ThemeManager:GetColor("TextSecondary")
         Tooltip.TextSize = 12
         Tooltip.TextTransparency = 1
         Tooltip.ZIndex = 10
@@ -262,7 +262,7 @@ function Topbar.Create(Main, Config, maid)
         TooltipPadding.Parent = Tooltip
         
         local TooltipStroke = Instance.new("UIStroke")
-        TooltipStroke.Color = Color3.new(0.216, 0.216, 0.216)
+        TooltipStroke.Color = ThemeManager:GetColor("StrokeColor")
         TooltipStroke.Transparency = 1
         TooltipStroke.Parent = Tooltip
         
@@ -294,8 +294,8 @@ function Topbar.Create(Main, Config, maid)
         end))
     end
     
-    ApplyHover(Minimize, "Minimize", Color3.fromRGB(45, 45, 45))
-    ApplyHover(Fullscreen, "Fullscreen", Color3.fromRGB(45, 45, 45))
+    ApplyHover(Minimize, "Minimize", ThemeManager:GetColor("StrokeColor"))
+    ApplyHover(Fullscreen, "Fullscreen", ThemeManager:GetColor("StrokeColor"))
     ApplyHover(Close, "Close", Color3.fromRGB(235, 70, 70))
     
     Utility.MakeDraggable(TopbarFrame, Main, maid)
