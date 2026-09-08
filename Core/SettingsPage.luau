@@ -368,7 +368,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     AppearanceTab:Select()
     
     -- Appearance Tab Content: Theme Editor
-    local ThemeSection = AppearanceTab:AddSection("Theme", "Choose, manage, and customize the full UI + Monaco theme from one place.\nUse the editor for background media, logo colors, app colors, and Monaco editor colors.")
+    local ThemeSection = AppearanceTab:AddSection("Theme", "Choose, manage, and customize the full UI.")
     
     -- Fetch themes from folder
     local themesList = {"My Volt Dark", "Volt Light", "Midnight Blue"}
@@ -387,7 +387,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
 
     local ThemeDropdown = ThemeSection:CreateDropdown({
         Name = "Active Theme",
-        Description = "Choose the active theme. Editing a packaged theme automatically creates a custom copy.",
+        Description = "Choose the active theme.",
         Options = themesList,
         CurrentValue = SettingsManager.GetSetting("ActiveTheme") or themesList[1] or "My Volt Dark",
         Callback = function(Option)
@@ -468,7 +468,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     CreateActionButton("Import", "rbxassetid://131957981720349", false)
     CreateActionButton("Delete", "rbxassetid://93603266402801", true)
     
-    local ThemeDetailsSection = AppearanceTab:AddSection("Theme Details", "Rename custom copies and choose the light/dark base.")
+    local ThemeDetailsSection = AppearanceTab:AddSection("Theme Details", "Choose the light/dark base.")
     
     local currentName = SettingsManager.GetSetting("ActiveTheme") or "My Volt Dark"
     local NameInput = ThemeDetailsSection:CreateInput({
