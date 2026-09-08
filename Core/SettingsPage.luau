@@ -157,15 +157,24 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     SearchBox.Parent = SearchContainer
     
     local SearchPadding = Instance.new("UIPadding")
-    SearchPadding.PaddingLeft = UDim.new(0, 28)
+    SearchPadding.PaddingLeft = UDim.new(0, 32)
     SearchPadding.Parent = SearchBox
+    
+    local SearchDivider = Instance.new("Frame")
+    SearchDivider.Name = "SearchDivider"
+    SearchDivider.BackgroundColor3 = Color3.fromRGB(36, 36, 36)
+    SearchDivider.BorderSizePixel = 0
+    SearchDivider.Size = UDim2.new(1, 0, 0, 1)
+    SearchDivider.Position = UDim2.new(0, 0, 1, -1)
+    SearchDivider.Parent = SearchContainer
     
     local SearchIcon = Instance.new("ImageLabel")
     SearchIcon.BackgroundTransparency = 1
     SearchIcon.Image = "rbxassetid://88107177696245"
     SearchIcon.ImageColor3 = Color3.fromRGB(150, 150, 160)
     SearchIcon.Size = UDim2.new(0, 14, 0, 14)
-    SearchIcon.Position = UDim2.new(0, 8, 0.5, -7)
+    SearchIcon.AnchorPoint = Vector2.new(0, 0.5)
+    SearchIcon.Position = UDim2.new(0, 10, 0.5, 0)
     SearchIcon.Parent = SearchBox
     
     local SearchCorner = Instance.new("UICorner")
@@ -185,6 +194,8 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     SettingsTabsContainer.Size = UDim2.new(1, 0, 1, -95)
     SettingsTabsContainer.Position = UDim2.new(0, 0, 0, 45)
     SettingsTabsContainer.ScrollBarThickness = 0
+    SettingsTabsContainer.CanvasSize = UDim2.new(0, 0, 0, 0)
+    SettingsTabsContainer.AutomaticCanvasSize = Enum.AutomaticSize.Y
     SettingsTabsContainer.Parent = SettingsSidebar
     
     local TabsLayout = Instance.new("UIListLayout")
@@ -207,8 +218,17 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     ResetCorner.Parent = ResetBtn
     
     local ResetStroke = Instance.new("UIStroke")
-    ResetStroke.Color = Color3.fromRGB(80, 30, 30)
+    ResetStroke.Color = Color3.fromRGB(180, 50, 50)
+    ResetStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     ResetStroke.Parent = ResetBtn
+    
+    local ResetDivider = Instance.new("Frame")
+    ResetDivider.Name = "ResetDivider"
+    ResetDivider.BackgroundColor3 = Color3.fromRGB(36, 36, 36)
+    ResetDivider.BorderSizePixel = 0
+    ResetDivider.Size = UDim2.new(1, 0, 0, 1)
+    ResetDivider.Position = UDim2.new(0, 0, 1, -50)
+    ResetDivider.Parent = SettingsSidebar
     
     local ResetLayout = Instance.new("UIListLayout")
     ResetLayout.FillDirection = Enum.FillDirection.Horizontal
@@ -233,6 +253,13 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     ResetTextLabel.TextColor3 = Color3.fromRGB(240, 120, 120)
     ResetTextLabel.TextSize = 13
     ResetTextLabel.Parent = ResetBtn
+    
+    Maid:GiveTask(ResetBtn.MouseEnter:Connect(function()
+        Tween(ResetBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(48, 28, 28)})
+    end))
+    Maid:GiveTask(ResetBtn.MouseLeave:Connect(function()
+        Tween(ResetBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(36, 24, 24)})
+    end))
     
     local SidebarSeparator = Instance.new("Frame")
     SidebarSeparator.Name = "SidebarSeparator"
@@ -309,6 +336,8 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
         TabContent.Size = UDim2.new(1, 0, 1, 0)
         TabContent.ScrollBarThickness = 2
         TabContent.ScrollBarImageColor3 = Color3.new(0.2, 0.2, 0.2)
+        TabContent.CanvasSize = UDim2.new(0, 0, 0, 0)
+        TabContent.AutomaticCanvasSize = Enum.AutomaticSize.Y
         TabContent.Parent = MainSettingsContent
         
         local ContentLayout = Instance.new("UIListLayout")
@@ -468,15 +497,6 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     CreateActionButton("Delete", "rbxassetid://93603266402801", true)
     
     local ThemeDetailsSection = AppearanceTab:AddSection("Theme Details", "Choose the light/dark base.")
-    
-    local currentName = SettingsManager.GetSetting("ActiveTheme") or "My Volt Dark"
-    local NameInput = ThemeDetailsSection:CreateInput({
-        Name = "Name",
-        PlaceholderText = "Theme Name...",
-        CurrentValue = currentName,
-        Callback = function(Text)
-        end
-    })
     
     --ModeToggle
     local ModeRow = Instance.new("Frame")
