@@ -150,7 +150,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
 
     local DropdownBtn = Instance.new("TextButton")
     DropdownBtn.Name = "DropdownBtn"
-    DropdownBtn.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
+    ThemeManager:Register(DropdownBtn, "BackgroundColor3", "MainBackground")
     DropdownBtn.Size = isLarge and UDim2.new(1, -28, 0, 28) or UDim2.new(0, 136, 0, 26)
     DropdownBtn.Text = ""
     DropdownBtn.AutoButtonColor = false
@@ -192,7 +192,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
     if hoverText ~= "" then
         Tooltip = Instance.new("TextLabel")
         Tooltip.Name = "Tooltip"
-        Tooltip.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+        ThemeManager:Register(Tooltip, "BackgroundColor3", "MainBackground")
         Tooltip.BackgroundTransparency = 1
         Tooltip.Size = UDim2.new(0, 0, 0, 22)
         Tooltip.AutomaticSize = Enum.AutomaticSize.X
@@ -235,7 +235,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
         end
 
         Tween(ChevronIcon, TweenInfo.new(0.2), {Rotation = 0})
-        Tween(DropdownStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(48, 48, 48)})
+        Tween(DropdownStroke, TweenInfo.new(0.2), {Color = ThemeManager:GetColor("StrokeColor")})
 
         if DropdownMenu then
             Tween(DropdownMenu, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0, DropdownBtn.AbsoluteSize.X, 0, 0)})
@@ -306,7 +306,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
         ScrollFrame.BorderSizePixel = 0
         ScrollFrame.Size = UDim2.new(1, 0, 1, 0)
         ScrollFrame.ScrollBarThickness = 2
-        ScrollFrame.ScrollBarImageColor3 = Color3.fromRGB(60, 60, 60)
+        ThemeManager:Register(ScrollFrame, "ScrollBarImageColor3", "StrokeColor")
         ScrollFrame.ZIndex = 10002
         ScrollFrame.Parent = DropdownMenu
 

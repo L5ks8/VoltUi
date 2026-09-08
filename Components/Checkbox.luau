@@ -342,7 +342,7 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
     local state = config.CurrentValue ~= nil and config.CurrentValue or (config.Default ~= nil and config.Default or false)
     local cb = config.Callback or function() end
     local boxOnColor = config.AccentColor or Color3.fromRGB(245, 245, 245)
-    local strokeOffColor = Color3.fromRGB(48, 48, 48)
+    local strokeOffColor = ThemeManager:GetColor("StrokeColor")
     local strokeOnColor = config.AccentColor or Color3.fromRGB(245, 245, 245)
     local isLightOn = (boxOnColor.R * 0.299 + boxOnColor.G * 0.587 + boxOnColor.B * 0.114) > 0.5
     local checkOnColor = isLightOn and Color3.fromRGB(24, 24, 24) or Color3.fromRGB(255, 255, 255)
@@ -424,7 +424,7 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
     BoxBg.Name = "CheckboxBg"
     BoxBg.AutoButtonColor = false
     BoxBg.Text = ""
-    BoxBg.BackgroundColor3 = state and boxOnColor or Color3.fromRGB(28, 28, 28)
+    BoxBg.BackgroundColor3 = state and boxOnColor or ThemeManager:GetColor("MainBackground")
     BoxBg.BackgroundTransparency = state and 0 or 0.2
     BoxBg.Size = UDim2.new(0, 22, 0, 22)
     BoxBg.LayoutOrder = 100
@@ -467,7 +467,7 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
             })
         else
             Tween(BoxBg, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-                BackgroundColor3 = Color3.fromRGB(28, 28, 28),
+                BackgroundColor3 = ThemeManager:GetColor("MainBackground"),
                 BackgroundTransparency = 0.2,
             })
             Tween(BoxStroke, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
@@ -570,7 +570,7 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
         local KeybindBtn = Instance.new("TextButton")
         KeybindBtn.Name = "KeybindBadge"
         KeybindBtn.AutoButtonColor = false
-        KeybindBtn.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
+        ThemeManager:Register(KeybindBtn, "BackgroundColor3", "MainBackground")
         KeybindBtn.Size = UDim2.new(0, 0, 0, 22)
         KeybindBtn.AutomaticSize = Enum.AutomaticSize.X
         KeybindBtn.LayoutOrder = 20
@@ -630,7 +630,7 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
                 if capturedKey then
                     currentKey = capturedKey
                     KbLabel.Text = currentKey
-                    Tween(KbStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(48, 48, 48)})
+                    Tween(KbStroke, TweenInfo.new(0.2), {Color = ThemeManager:GetColor("StrokeColor")})
                     listening = false
                     if listenConn then
                         listenConn:Disconnect()

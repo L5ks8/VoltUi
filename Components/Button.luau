@@ -109,11 +109,11 @@ function ButtonComponent.Create(TabContent, Maid, Config)
     
 
     Maid:GiveTask(ClickBtn.MouseButton1Down:Connect(function()
-        Tween(ClickBtn, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.new(0.22, 0.22, 0.22)})
+        Tween(ClickBtn, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = ThemeManager:GetColor("StrokeColor")})
     end))
     
     Maid:GiveTask(ClickBtn.MouseButton1Up:Connect(function()
-        Tween(ClickBtn, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.new(0.18, 0.18, 0.18)})
+        Tween(ClickBtn, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = ThemeManager:GetColor("SecondaryBackground")})
     end))
     
     Maid:GiveTask(BtnFrame.MouseEnter:Connect(function()

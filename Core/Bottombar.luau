@@ -109,7 +109,7 @@ function Bottombar.Create(Main, maid)
     StatusIcon.BorderColor3 = Color3.new(0, 0, 0)
     StatusIcon.BorderSizePixel = 0
     StatusIcon.Image = "rbxassetid://102114288213902"
-    ThemeManager:Register(StatusIcon, "ImageColor3", "IconColor")
+    StatusIcon.ImageColor3 = Color3.fromRGB(46, 204, 113)
     StatusIcon.Size = UDim2.new(0, 20, 0, 20)
     StatusIcon.Parent = Status
     

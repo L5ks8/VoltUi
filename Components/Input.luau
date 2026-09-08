@@ -84,7 +84,7 @@ function InputComponent.Create(TabContent, Maid, Config)
 
     local BoxWrapper = Instance.new("Frame")
     BoxWrapper.Name = "BoxWrapper"
-    BoxWrapper.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
+    ThemeManager:Register(BoxWrapper, "BackgroundColor3", "MainBackground")
     BoxWrapper.BorderSizePixel = 0
     BoxWrapper.AnchorPoint = Vector2.new(1, 0.5)
     BoxWrapper.Position = UDim2.new(1, -14, 0.5, 0)
@@ -132,7 +132,7 @@ function InputComponent.Create(TabContent, Maid, Config)
     end)
 
     TextBox.FocusLost:Connect(function(enterPressed)
-        Tween(BoxStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(48, 48, 48)})
+        Tween(BoxStroke, TweenInfo.new(0.2), {Color = ThemeManager:GetColor("StrokeColor")})
         currentValue = TextBox.Text
         if config.RemoveTextAfterFocusLost then
             TextBox.Text = ""

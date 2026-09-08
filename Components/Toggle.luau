@@ -345,8 +345,8 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
     local isCheckbox = (config.Style == 1 or config.Style == "Box" or config.Style == "Checkbox" or config.Box == true)
 
     local switchOnColor = config.SwitchColor or config.AccentColor or Color3.fromRGB(245, 245, 245)
-    local switchOffColor = Color3.fromRGB(28, 28, 28)
-    local strokeOffColor = Color3.fromRGB(48, 48, 48)
+    local switchOffColor = ThemeManager:GetColor("MainBackground")
+    local strokeOffColor = ThemeManager:GetColor("StrokeColor")
     local strokeOnColor = config.SwitchColor or config.AccentColor or Color3.fromRGB(245, 245, 245)
     local isLightOn = (switchOnColor.R * 0.299 + switchOnColor.G * 0.587 + switchOnColor.B * 0.114) > 0.5
     local dotOnColor = isLightOn and Color3.fromRGB(24, 24, 24) or Color3.fromRGB(255, 255, 255)
@@ -432,7 +432,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
         BoxBg.Name = "CheckboxBg"
         BoxBg.AutoButtonColor = false
         BoxBg.Text = ""
-        BoxBg.BackgroundColor3 = state and switchOnColor or Color3.fromRGB(28, 28, 28)
+        BoxBg.BackgroundColor3 = state and switchOnColor or ThemeManager:GetColor("MainBackground")
         BoxBg.BackgroundTransparency = state and 0 or 0.2
         BoxBg.Size = UDim2.new(0, 22, 0, 22)
         BoxBg.LayoutOrder = 100
@@ -477,7 +477,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
                 })
             else
                 Tween(BoxBg, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-                    BackgroundColor3 = Color3.fromRGB(28, 28, 28),
+                    BackgroundColor3 = ThemeManager:GetColor("MainBackground"),
                     BackgroundTransparency = 0.2,
                 })
                 Tween(BoxStroke, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {

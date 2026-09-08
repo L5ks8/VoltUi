@@ -419,7 +419,7 @@ function ColorPickerComponent.Create(TabContent, Maid, Config)
     HexPreview.Size = UDim2.new(0, 56, 0, 20)
     HexPreview.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     HexPreview.Text = "#" .. currentColor:ToHex():upper()
-    HexPreview.TextColor3 = Color3.fromRGB(140, 140, 150)
+    ThemeManager:Register(HexPreview, "TextColor3", "TextTertiary")
     HexPreview.TextSize = 11
     HexPreview.TextXAlignment = Enum.TextXAlignment.Right
     HexPreview.Parent = SwatchContainer
