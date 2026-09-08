@@ -16,7 +16,6 @@ if isStudio then
 end
 
 if not Window then
-    -- === INSTANT INTRO (no downloads needed, shows immediately) ===
     local TweenService = game:GetService("TweenService")
     local Players = game:GetService("Players")
     local RunService = game:GetService("RunService")
@@ -27,7 +26,6 @@ if not Window then
         return t
     end
 
-    -- Create Intro ScreenGui INSTANTLY before any HTTP downloads
     local IntroGui = Instance.new("ScreenGui")
     IntroGui.Name = "VoltIntro"
     IntroGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
@@ -87,7 +85,6 @@ if not Window then
     IText.ZIndex = 100000
     IText.Parent = IntroMain
 
-    -- Start intro animation immediately
     local introReady = false
     task.spawn(function()
         task.wait(0.2)
@@ -104,7 +101,6 @@ if not Window then
         introReady = true
     end)
 
-    -- === NOW download all modules while intro plays ===
     local baseUrl = "https://raw.githubusercontent.com/L5ks8/VoltUi/main/"
     local cache = {}
 
@@ -225,12 +221,10 @@ if not Window then
     Window = virtualRequire(Core.Window)
     Notifications = virtualRequire(Core.Notifications)
 
-    -- Wait for intro animation to finish (modules are already loaded by now)
     while not introReady do
         task.wait(0.05)
     end
 
-    -- Fade out the inline intro
     _tween(IIcon, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 1})
     _tween(IText, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 1})
     task.wait(0.3)
@@ -238,7 +232,6 @@ if not Window then
     task.wait(0.4)
     IntroGui:Destroy()
 
-    -- Flag so Window:CreateWindow knows to skip the built-in intro
     Library._introAlreadyShown = true
 end
 
