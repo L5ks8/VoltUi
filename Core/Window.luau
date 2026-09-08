@@ -20,6 +20,7 @@ local LoginPage = require(script.Parent.LoginPage)
 local Notifications = require(script.Parent.Notifications)
 local Tabs = require(script.Parent.Tabs)
 local Loading = require(script.Parent.Loading)
+local Intro = require(script.Parent.Intro)
 
 local Window = {}
 
@@ -39,10 +40,15 @@ function Window:CreateWindow(Config)
     local loadingScreen
     local loadProgress = 0
     if showLoading then
-        loadingScreen = Loading.Create(VoltUi)
+        local introScreen = Intro.Create(VoltUi)
         
-        -- Start 5-second mock loading in background
         task.spawn(function()
+            introScreen:WaitForReady()
+            introScreen:FadeOut()
+            task.wait(0.5)
+            
+            loadingScreen = Loading.Create(VoltUi)
+            
             local steps = 50
             local delay = 5.0 / steps
             for i = 1, steps do
@@ -54,7 +60,7 @@ function Window:CreateWindow(Config)
             end
         end)
         
-        -- Ensure small wait so the UI actually renders the loading screen immediately
+        -- Ensure small wait so the UI actually renders the intro immediately
         task.wait(0.05)
     end
     
