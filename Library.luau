@@ -223,12 +223,18 @@ if not Window then
         fname = fname:gsub("%?.+", "")
         statusLbl.Text = "Downloading " .. fname
         local result
-        if game and game.HttpGet then
+        local req = (type(http) == "table" and http.request) or request or http_request
+        if req then
+            result = req({
+                Url = url,
+                Method = "GET",
+                Headers = {
+                    ["Cache-Control"] = "no-cache",
+                    ["Pragma"] = "no-cache"
+                }
+            }).Body
+        elseif game and game.HttpGet then
             result = game:HttpGet(url)
-        elseif http and http.request then
-            result = http.request({Url = url, Method = "GET"}).Body
-        elseif request then
-            result = request({Url = url, Method = "GET"}).Body
         else
             error("[VoltUi] No HTTP GET method available")
         end
@@ -281,14 +287,9 @@ if not Window then
     local function virtualRequire(mod)
         local path = (type(mod) == "table" and mod.__path) and mod.__path or tostring(mod)
         if cache[path] then return cache[path] end
-        local code
-        if isfile and isfile("VoltUi/" .. path) then
-            code = readfile("VoltUi/" .. path)
-        elseif isfile and isfile(path) then
-            code = readfile(path)
-        else
-            code = httpGet(baseUrl .. path .. "?v=" .. tostring(tick()) .. "_" .. tostring(math.random(100000, 999999)))
-        end
+        
+        local code = httpGet(baseUrl .. path .. "?v=" .. tostring(tick()) .. "_" .. tostring(math.random(100000, 999999)))
+        
         local fn, err
         local ok, res = pcall(loadstring, code, "@VoltUi/" .. path)
         if ok and type(res) == "function" then
