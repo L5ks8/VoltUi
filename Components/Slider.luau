@@ -1,5 +1,6 @@
 local SliderComponent = {}
 local TweenService = game:GetService("TweenService")
+local ThemeManager = require(script.Parent.Parent.Core.Theme)
 local UserInputService = game:GetService("UserInputService")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
@@ -26,7 +27,7 @@ function SliderComponent.Create(TabContent, Maid, Config)
 
     local SliderFrame = Instance.new("Frame")
     SliderFrame.Name = headerText
-    SliderFrame.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
+    ThemeManager:Register(SliderFrame, "BackgroundColor3", "SecondaryBackground")
     SliderFrame.BackgroundTransparency = 1
     SliderFrame.BorderSizePixel = 0
     SliderFrame.Size = UDim2.new(1, 0, 0, descText == "" and 48 or 58)
@@ -45,7 +46,7 @@ function SliderComponent.Create(TabContent, Maid, Config)
     Header.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     Header.Size = UDim2.new(1, -80, 1, 0)
     Header.Text = headerText
-    Header.TextColor3 = Color3.fromRGB(240, 240, 245)
+    ThemeManager:Register(Header, "TextColor3", "TextPrimary")
     Header.TextSize = 14
     Header.TextXAlignment = Enum.TextXAlignment.Left
     Header.TextYAlignment = Enum.TextYAlignment.Center
@@ -72,7 +73,7 @@ function SliderComponent.Create(TabContent, Maid, Config)
         Description.Position = UDim2.new(0, 14, 0, 26)
         Description.Size = UDim2.new(1, -28, 0, 14)
         Description.Text = descText
-        Description.TextColor3 = Color3.fromRGB(150, 150, 160)
+        ThemeManager:Register(Description, "TextColor3", "TextSecondary")
         Description.TextSize = 12
         Description.TextXAlignment = Enum.TextXAlignment.Left
         Description.TextYAlignment = Enum.TextYAlignment.Center
@@ -83,7 +84,7 @@ function SliderComponent.Create(TabContent, Maid, Config)
     SliderBar.Name = "SliderBar"
     SliderBar.AutoButtonColor = false
     SliderBar.Text = ""
-    SliderBar.BackgroundColor3 = Color3.fromRGB(36, 36, 36)
+    ThemeManager:Register(SliderBar, "BackgroundColor3", "TertiaryBackground")
     SliderBar.BorderSizePixel = 0
     SliderBar.Position = UDim2.new(0, 14, 1, -12)
     SliderBar.Size = UDim2.new(1, -28, 0, 6)

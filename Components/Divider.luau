@@ -1,3 +1,4 @@
+local ThemeManager = require(script.Parent.Parent.Core.Theme)
 local DividerComponent = {}
 
 function DividerComponent.Create(TabContent, Maid, Config)
@@ -20,7 +21,7 @@ function DividerComponent.Create(TabContent, Maid, Config)
         Layout.Parent = DividerFrame
 
         local LeftLine = Instance.new("Frame")
-        LeftLine.BackgroundColor3 = Color3.fromRGB(48, 48, 48)
+        ThemeManager:Register(LeftLine, "BackgroundColor3", "StrokeColor")
         LeftLine.BorderSizePixel = 0
         LeftLine.Size = UDim2.new(0.35, 0, 0, 1)
         LeftLine.Parent = DividerFrame
@@ -29,21 +30,21 @@ function DividerComponent.Create(TabContent, Maid, Config)
         Text.BackgroundTransparency = 1
         Text.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
         Text.Text = dividerText
-        Text.TextColor3 = Color3.fromRGB(120, 120, 130)
+        ThemeManager:Register(Text, "TextColor3", "TextTertiary")
         Text.TextSize = 11
         Text.AutomaticSize = Enum.AutomaticSize.X
         Text.Size = UDim2.new(0, 0, 1, 0)
         Text.Parent = DividerFrame
 
         local RightLine = Instance.new("Frame")
-        RightLine.BackgroundColor3 = Color3.fromRGB(48, 48, 48)
+        ThemeManager:Register(RightLine, "BackgroundColor3", "StrokeColor")
         RightLine.BorderSizePixel = 0
         RightLine.Size = UDim2.new(0.35, 0, 0, 1)
         RightLine.Parent = DividerFrame
     else
         local Line = Instance.new("Frame")
         Line.Name = "Line"
-        Line.BackgroundColor3 = Color3.fromRGB(48, 48, 48)
+        ThemeManager:Register(Line, "BackgroundColor3", "StrokeColor")
         Line.BorderSizePixel = 0
         Line.AnchorPoint = Vector2.new(0.5, 0.5)
         Line.Position = UDim2.new(0.5, 0, 0.5, 0)

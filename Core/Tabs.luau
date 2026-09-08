@@ -3,6 +3,7 @@ local Components = script.Parent.Parent.Components
 local Core = script.Parent
 local Tween = require(Utils.Tween)
 local Sections = require(Core.Sections)
+local ThemeManager = require(Core.Theme)
 
 local Tabs = {}
 Tabs.ActiveTab = nil
@@ -50,7 +51,7 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
     TabIcon.AnchorPoint = Vector2.new(0.5, 0.5)
     TabIcon.Position = UDim2.new(0, 20, 0.5, 0)
     TabIcon.Image = iconStr
-    TabIcon.ImageColor3 = Color3.new(0.6, 0.6, 0.6)
+    ThemeManager:Register(TabIcon, "ImageColor3", "TextSecondary")
     TabIcon.Visible = hasIcon
     TabIcon.Parent = TabBtn
     
@@ -60,7 +61,7 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
     TabTitle.Position = hasIcon and UDim2.new(0, 38, 0, 0) or UDim2.new(0, 14, 0, 0)
     TabTitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     TabTitle.Text = Name
-    TabTitle.TextColor3 = Color3.new(0.6, 0.6, 0.6)
+    ThemeManager:Register(TabTitle, "TextColor3", "TextSecondary")
     TabTitle.TextSize = 13
     TabTitle.TextXAlignment = Enum.TextXAlignment.Left
     TabTitle.Parent = TabBtn
@@ -141,8 +142,8 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
         for _, otherTab in ipairs(Tabs.Instances) do
             otherTab.Content.Visible = false
             Tween(otherTab.Button, TweenInfo.new(0.2), {BackgroundTransparency = 1})
-            Tween(otherTab.Button:FindFirstChildOfClass("TextLabel"), TweenInfo.new(0.2), {TextColor3 = Color3.new(0.6, 0.6, 0.6)})
-            Tween(otherTab.Button:FindFirstChildOfClass("ImageLabel"), TweenInfo.new(0.2), {ImageColor3 = Color3.new(0.6, 0.6, 0.6)})
+            Tween(otherTab.Button:FindFirstChildOfClass("TextLabel"), TweenInfo.new(0.2), {TextColor3 = ThemeManager:GetColor("TextSecondary")})
+            Tween(otherTab.Button:FindFirstChildOfClass("ImageLabel"), TweenInfo.new(0.2), {ImageColor3 = ThemeManager:GetColor("TextSecondary")})
         end
         
         Tabs.ActiveTab = TabObj
@@ -150,8 +151,8 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
         task.defer(UpdateContentScroll)
         
         Tween(TabBtn, TweenInfo.new(0.2), {BackgroundTransparency = 0.95})
-        Tween(TabTitle, TweenInfo.new(0.2), {TextColor3 = Color3.new(1, 1, 1)})
-        Tween(TabIcon, TweenInfo.new(0.2), {ImageColor3 = Color3.new(1, 1, 1)})
+        Tween(TabTitle, TweenInfo.new(0.2), {TextColor3 = ThemeManager:GetColor("TextPrimary")})
+        Tween(TabIcon, TweenInfo.new(0.2), {ImageColor3 = ThemeManager:GetColor("TextPrimary")})
         
         if WindowObject.Bottombar and WindowObject.Bottombar.TabdisplayName then
             WindowObject.Bottombar.TabdisplayName.Text = Name
@@ -163,13 +164,13 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
     Maid:GiveTask(TabBtn.MouseEnter:Connect(function()
         if Tabs.ActiveTab ~= TabObj then
             Tween(TabBtn, TweenInfo.new(0.2), {BackgroundTransparency = 0.98})
-            Tween(TabTitle, TweenInfo.new(0.2), {TextColor3 = Color3.new(0.8, 0.8, 0.8)})
+            Tween(TabTitle, TweenInfo.new(0.2), {TextColor3 = ThemeManager:GetColor("TextPrimary")})
         end
     end))
     Maid:GiveTask(TabBtn.MouseLeave:Connect(function()
         if Tabs.ActiveTab ~= TabObj then
             Tween(TabBtn, TweenInfo.new(0.2), {BackgroundTransparency = 1})
-            Tween(TabTitle, TweenInfo.new(0.2), {TextColor3 = Color3.new(0.6, 0.6, 0.6)})
+            Tween(TabTitle, TweenInfo.new(0.2), {TextColor3 = ThemeManager:GetColor("TextSecondary")})
         end
     end))
     

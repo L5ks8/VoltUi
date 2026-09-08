@@ -50,6 +50,7 @@ function Sidebar.Create(Content, maid, OnCollapse)
     HomeIcon.BorderColor3 = Color3.new(0, 0, 0)
     HomeIcon.BorderSizePixel = 0
     HomeIcon.Image = "rbxassetid://94685968948870"
+    ThemeManager:Register(HomeIcon, "ImageColor3", "IconColor")
     HomeIcon.ImageTransparency = 0.2
     HomeIcon.Size = UDim2.new(0, 20, 0, 20)
     HomeIcon.Parent = Home
@@ -72,6 +73,7 @@ function Sidebar.Create(Content, maid, OnCollapse)
     AccountIcon.BorderColor3 = Color3.new(0, 0, 0)
     AccountIcon.BorderSizePixel = 0
     AccountIcon.Image = "rbxassetid://134568818132029"
+    ThemeManager:Register(AccountIcon, "ImageColor3", "IconColor")
     AccountIcon.ImageTransparency = 0.1
     AccountIcon.Size = UDim2.new(0, 15, 0, 15)
     AccountIcon.Parent = Account
@@ -94,6 +96,7 @@ function Sidebar.Create(Content, maid, OnCollapse)
     SettingsIcon.BorderColor3 = Color3.new(0, 0, 0)
     SettingsIcon.BorderSizePixel = 0
     SettingsIcon.Image = "rbxassetid://95898765113869"
+    ThemeManager:Register(SettingsIcon, "ImageColor3", "IconColor")
     SettingsIcon.Size = UDim2.new(0, 15, 0, 15)
     SettingsIcon.Parent = Settings
     
@@ -127,6 +130,7 @@ function Sidebar.Create(Content, maid, OnCollapse)
     CollapseIcon.BorderColor3 = Color3.new(0, 0, 0)
     CollapseIcon.BorderSizePixel = 0
     CollapseIcon.Image = "rbxassetid://93526157530558"
+    ThemeManager:Register(CollapseIcon, "ImageColor3", "IconColor")
     CollapseIcon.ImageTransparency = 0.3
     CollapseIcon.Rotation = -180
     CollapseIcon.Size = UDim2.new(0, 20, 0, 20)
@@ -307,6 +311,7 @@ function Sidebar.Create(Content, maid, OnCollapse)
     SearchIconLabel.BorderColor3 = Color3.new(0, 0, 0)
     SearchIconLabel.BorderSizePixel = 0
     SearchIconLabel.Image = "rbxassetid://88107177696245"
+    ThemeManager:Register(SearchIconLabel, "ImageColor3", "IconColor")
     SearchIconLabel.ImageTransparency = 0.3
     SearchIconLabel.Size = UDim2.new(0, 16, 0, 16)
     SearchIconLabel.Parent = SearchIconFrame

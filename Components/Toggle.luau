@@ -1,5 +1,6 @@
 local ToggleComponent = {}
 local TweenService = game:GetService("TweenService")
+local ThemeManager = require(script.Parent.Parent.Core.Theme)
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
@@ -43,7 +44,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
 
     local Card = Instance.new("Frame")
     Card.Name = "ColorPickerCard"
-    Card.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
+    ThemeManager:Register(Card, "BackgroundColor3", "SecondaryBackground")
     Card.BorderSizePixel = 0
     Card.Size = UDim2.new(0, 230, 0, 260)
     Card.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -56,7 +57,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
     CardCorner.Parent = Card
 
     local CardStroke = Instance.new("UIStroke")
-    CardStroke.Color = Color3.fromRGB(48, 48, 48)
+    ThemeManager:Register(CardStroke, "Color", "StrokeColor")
     CardStroke.Thickness = 1
     CardStroke.Parent = Card
 
@@ -73,7 +74,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
     Title.Size = UDim2.new(0, 100, 1, 0)
     Title.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     Title.Text = "Color Picker"
-    Title.TextColor3 = Color3.fromRGB(240, 240, 245)
+    ThemeManager:Register(Title, "TextColor3", "TextPrimary")
     Title.TextSize = 13
     Title.TextXAlignment = Enum.TextXAlignment.Left
     Title.ZIndex = 50002
@@ -86,7 +87,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
     HexLabel.Size = UDim2.new(0, 45, 1, 0)
     HexLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     HexLabel.Text = "#" .. currentColor:ToHex():upper()
-    HexLabel.TextColor3 = Color3.fromRGB(150, 150, 160)
+    ThemeManager:Register(HexLabel, "TextColor3", "TextSecondary")
     HexLabel.TextSize = 11
     HexLabel.TextXAlignment = Enum.TextXAlignment.Right
     HexLabel.ZIndex = 50002
@@ -98,7 +99,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
     CloseBtn.Position = UDim2.new(1, -24, 0, 4)
     CloseBtn.Size = UDim2.new(0, 20, 0, 20)
     CloseBtn.Text = "✕"
-    CloseBtn.TextColor3 = Color3.fromRGB(150, 150, 160)
+    ThemeManager:Register(CloseBtn, "TextColor3", "TextSecondary")
     CloseBtn.TextSize = 12
     CloseBtn.ZIndex = 50002
     CloseBtn.Parent = Header
@@ -128,7 +129,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
 
     local ValOverlay = Instance.new("Frame")
     ValOverlay.Name = "ValOverlay"
-    ValOverlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    ThemeManager:Register(ValOverlay, "BackgroundColor3", "MainBackground")
     ValOverlay.BorderSizePixel = 0
     ValOverlay.Size = UDim2.new(1, 0, 1, 0)
     ValOverlay.ZIndex = 50003
@@ -161,7 +162,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
     SVCursorCorner.Parent = SVCursor
 
     local SVCursorStroke = Instance.new("UIStroke")
-    SVCursorStroke.Color = Color3.fromRGB(0, 0, 0)
+    ThemeManager:Register(SVCursorStroke, "Color", "MainBackground")
     SVCursorStroke.Thickness = 1.5
     SVCursorStroke.Parent = SVCursor
 
@@ -207,7 +208,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
     HueKnobCorner.Parent = HueKnob
 
     local HueKnobStroke = Instance.new("UIStroke")
-    HueKnobStroke.Color = Color3.fromRGB(0, 0, 0)
+    ThemeManager:Register(HueKnobStroke, "Color", "MainBackground")
     HueKnobStroke.Thickness = 1.5
     HueKnobStroke.Parent = HueKnob
 
@@ -354,7 +355,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
     ToggleFrame.Name = headerText
     ToggleFrame.AutoButtonColor = false
     ToggleFrame.Text = ""
-    ToggleFrame.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
+    ThemeManager:Register(ToggleFrame, "BackgroundColor3", "SecondaryBackground")
     ToggleFrame.BackgroundTransparency = 1
     ToggleFrame.BorderSizePixel = 0
     ToggleFrame.Size = UDim2.new(1, 0, 0, descText == "" and 44 or 54)
@@ -384,7 +385,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
     Header.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     Header.Size = UDim2.new(1, 0, 0, 16)
     Header.Text = headerText
-    Header.TextColor3 = Color3.fromRGB(240, 240, 245)
+    ThemeManager:Register(Header, "TextColor3", "TextPrimary")
     Header.TextSize = 14
     Header.TextXAlignment = Enum.TextXAlignment.Left
     Header.TextYAlignment = Enum.TextYAlignment.Center
@@ -398,7 +399,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
         Description.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
         Description.Size = UDim2.new(1, 0, 0, 14)
         Description.Text = descText
-        Description.TextColor3 = Color3.fromRGB(150, 150, 160)
+        ThemeManager:Register(Description, "TextColor3", "TextSecondary")
         Description.TextSize = 12
         Description.TextXAlignment = Enum.TextXAlignment.Left
         Description.TextYAlignment = Enum.TextYAlignment.Center
@@ -585,7 +586,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
         SwatchCorner.Parent = SwatchBtn
 
         local SwatchStroke = Instance.new("UIStroke")
-        SwatchStroke.Color = Color3.fromRGB(48, 48, 48)
+        ThemeManager:Register(SwatchStroke, "Color", "StrokeColor")
         SwatchStroke.Thickness = 1
         SwatchStroke.Parent = SwatchBtn
 
@@ -644,7 +645,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
         KbCorner.Parent = KeybindBtn
 
         local KbStroke = Instance.new("UIStroke")
-        KbStroke.Color = Color3.fromRGB(48, 48, 48)
+        ThemeManager:Register(KbStroke, "Color", "StrokeColor")
         KbStroke.Thickness = 1
         KbStroke.Parent = KeybindBtn
 
@@ -659,7 +660,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
         KbLabel.Size = UDim2.new(1, 0, 1, 0)
         KbLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
         KbLabel.Text = tostring(currentKey)
-        KbLabel.TextColor3 = Color3.fromRGB(240, 240, 245)
+        ThemeManager:Register(KbLabel, "TextColor3", "TextPrimary")
         KbLabel.TextSize = 12
         KbLabel.Parent = KeybindBtn
 
@@ -761,7 +762,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
         Dc.Parent = DropBtn
 
         local Ds = Instance.new("UIStroke")
-        Ds.Color = Color3.fromRGB(48, 48, 48)
+        ThemeManager:Register(Ds, "Color", "StrokeColor")
         Ds.Thickness = 1
         Ds.Parent = DropBtn
 
@@ -775,7 +776,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
         Dl.Size = UDim2.new(1, 0, 1, 0)
         Dl.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
         Dl.Text = tostring(currentOption) .. "  ▾"
-        Dl.TextColor3 = Color3.fromRGB(240, 240, 245)
+        ThemeManager:Register(Dl, "TextColor3", "TextPrimary")
         Dl.TextSize = 12
         Dl.Parent = DropBtn
 
@@ -812,7 +813,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
             mc.Parent = menuFrame
 
             local ms = Instance.new("UIStroke")
-            ms.Color = Color3.fromRGB(48, 48, 48)
+            ThemeManager:Register(ms, "Color", "StrokeColor")
             ms.Parent = menuFrame
 
             local ml = Instance.new("UIListLayout")
@@ -834,7 +835,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
 
             for _, opt in ipairs(options) do
                 local OptBtn = Instance.new("TextButton")
-                OptBtn.BackgroundColor3 = Color3.fromRGB(36, 36, 36)
+                ThemeManager:Register(OptBtn, "BackgroundColor3", "TertiaryBackground")
                 OptBtn.BackgroundTransparency = (opt == currentOption) and 0 or 1
                 OptBtn.Size = UDim2.new(1, 0, 0, 22)
                 OptBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)

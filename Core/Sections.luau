@@ -10,13 +10,14 @@ local ParagraphComponent = require(Components.Paragraph)
 local DividerComponent = require(Components.Divider)
 local ColorPickerComponent = require(Components.ColorPicker)
 local KeybindComponent = require(Components.Keybind)
+local ThemeManager = require(script.Parent.Theme)
 
 local Sections = {}
 
 function Sections.CreateSection(TabContent, Maid, Title, Description)
     local SectionFrame = Instance.new("Frame")
     SectionFrame.Name = Title or "Section"
-    SectionFrame.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
+    ThemeManager:Register(SectionFrame, "BackgroundColor3", "SecondaryBackground")
     SectionFrame.BorderColor3 = Color3.new(0, 0, 0)
     SectionFrame.BorderSizePixel = 0
     SectionFrame.Size = UDim2.new(1, 0, 0, 0)
@@ -30,7 +31,7 @@ function Sections.CreateSection(TabContent, Maid, Title, Description)
     
     local SectionStroke = Instance.new("UIStroke")
     SectionStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
-    SectionStroke.Color = Color3.fromRGB(48, 48, 48)
+    ThemeManager:Register(SectionStroke, "Color", "StrokeColor")
     SectionStroke.Parent = SectionFrame
     
     local SectionLayout = Instance.new("UIListLayout")
@@ -44,7 +45,7 @@ function Sections.CreateSection(TabContent, Maid, Title, Description)
         if ElementCount > 0 then
             local Separator = Instance.new("Frame")
             Separator.Name = "Separator"
-            Separator.BackgroundColor3 = Color3.fromRGB(36, 36, 36)
+            ThemeManager:Register(Separator, "BackgroundColor3", "StrokeColor")
             Separator.BorderSizePixel = 0
             Separator.Size = UDim2.new(1, 0, 0, 1)
             Separator.Parent = SectionFrame
@@ -74,7 +75,7 @@ function Sections.CreateSection(TabContent, Maid, Title, Description)
         TitleLabel.Size = UDim2.new(1, -20, 0, 16)
         TitleLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
         TitleLabel.Text = Title
-        TitleLabel.TextColor3 = Color3.fromRGB(240, 240, 245)
+        ThemeManager:Register(TitleLabel, "TextColor3", "TextPrimary")
         TitleLabel.TextSize = 14
         TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
         TitleLabel.TextYAlignment = Enum.TextYAlignment.Center
@@ -87,7 +88,7 @@ function Sections.CreateSection(TabContent, Maid, Title, Description)
             DescLabel.Size = UDim2.new(1, -20, 0, 14)
             DescLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
             DescLabel.Text = Description
-            DescLabel.TextColor3 = Color3.fromRGB(150, 150, 160)
+            ThemeManager:Register(DescLabel, "TextColor3", "TextSecondary")
             DescLabel.TextSize = 12
             DescLabel.TextXAlignment = Enum.TextXAlignment.Left
             DescLabel.TextYAlignment = Enum.TextYAlignment.Center

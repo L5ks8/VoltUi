@@ -182,6 +182,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     SearchIconLabel.BorderColor3 = Color3.new(0, 0, 0)
     SearchIconLabel.BorderSizePixel = 0
     SearchIconLabel.Image = "rbxassetid://88107177696245"
+    ThemeManager:Register(SearchIconLabel, "ImageColor3", "IconColor")
     SearchIconLabel.ImageTransparency = 0.3
     SearchIconLabel.Size = UDim2.new(0, 16, 0, 16)
     SearchIconLabel.Parent = SearchIconFrame

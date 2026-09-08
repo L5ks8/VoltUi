@@ -1,5 +1,6 @@
 local KeybindComponent = {}
 local TweenService = game:GetService("TweenService")
+local ThemeManager = require(script.Parent.Parent.Core.Theme)
 local UserInputService = game:GetService("UserInputService")
 
 local function Tween(instance, tweenInfo, properties)
@@ -21,7 +22,7 @@ function KeybindComponent.Create(TabContent, Maid, Config)
 
     local RowFrame = Instance.new("Frame")
     RowFrame.Name = headerText
-    RowFrame.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
+    ThemeManager:Register(RowFrame, "BackgroundColor3", "SecondaryBackground")
     RowFrame.BackgroundTransparency = 1
     RowFrame.BorderSizePixel = 0
     RowFrame.Size = UDim2.new(1, 0, 0, descText == "" and 42 or 52)
@@ -55,7 +56,7 @@ function KeybindComponent.Create(TabContent, Maid, Config)
     Header.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     Header.Size = UDim2.new(1, 0, 0, 16)
     Header.Text = headerText
-    Header.TextColor3 = Color3.fromRGB(240, 240, 245)
+    ThemeManager:Register(Header, "TextColor3", "TextPrimary")
     Header.TextSize = 14
     Header.TextXAlignment = Enum.TextXAlignment.Left
     Header.TextYAlignment = Enum.TextYAlignment.Center
@@ -68,7 +69,7 @@ function KeybindComponent.Create(TabContent, Maid, Config)
         Description.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
         Description.Size = UDim2.new(1, 0, 0, 14)
         Description.Text = descText
-        Description.TextColor3 = Color3.fromRGB(150, 150, 160)
+        ThemeManager:Register(Description, "TextColor3", "TextSecondary")
         Description.TextSize = 12
         Description.TextXAlignment = Enum.TextXAlignment.Left
         Description.TextYAlignment = Enum.TextYAlignment.Center
@@ -106,7 +107,7 @@ function KeybindComponent.Create(TabContent, Maid, Config)
     KeyCorner.Parent = KeyBtn
 
     local KeyStroke = Instance.new("UIStroke")
-    KeyStroke.Color = Color3.fromRGB(48, 48, 48)
+    ThemeManager:Register(KeyStroke, "Color", "StrokeColor")
     KeyStroke.Thickness = 1
     KeyStroke.Parent = KeyBtn
 
@@ -122,7 +123,7 @@ function KeybindComponent.Create(TabContent, Maid, Config)
     KeyLabel.AutomaticSize = Enum.AutomaticSize.X
     KeyLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     KeyLabel.Text = tostring(currentKey)
-    KeyLabel.TextColor3 = Color3.fromRGB(240, 240, 245)
+    ThemeManager:Register(KeyLabel, "TextColor3", "TextPrimary")
     KeyLabel.TextSize = 12
     KeyLabel.Parent = KeyBtn
 

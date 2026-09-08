@@ -9,43 +9,49 @@ local Themes = {
     ["Void"] = require(script.Parent.Parent.Themes.Void)
 }
 
-local ThemeManager = {
-    CurrentThemeName = "My Volt Dark",
-    RegisteredElements = {}
-}
+local SharedState = shared.VoltUiThemeState
+if type(SharedState) ~= "table" then
+    SharedState = {
+        CurrentThemeName = "My Volt Dark",
+        RegisteredElements = {}
+    }
+    shared.VoltUiThemeState = SharedState
+end
 
--- Returns the color for a specific key in the current theme
+local ThemeManager = {}
+
 function ThemeManager:GetColor(colorKey)
-    local theme = Themes[self.CurrentThemeName]
+    local theme = Themes[SharedState.CurrentThemeName]
     return theme and theme[colorKey] or Color3.new(1, 1, 1)
 end
 
--- Registers a UI element to automatically update when the theme changes
 function ThemeManager:Register(instance, property, colorKey)
-    table.insert(self.RegisteredElements, {
+    if not instance or typeof(property) ~= "string" or typeof(colorKey) ~= "string" then return end
+    
+    table.insert(SharedState.RegisteredElements, {
         Instance = instance,
         Property = property,
         ColorKey = colorKey
     })
     
-    -- Apply immediately
     pcall(function()
         instance[property] = self:GetColor(colorKey)
     end)
 end
 
--- Updates all registered elements to match the selected theme
 function ThemeManager:SetTheme(themeName)
     if not Themes[themeName] then return end
-    self.CurrentThemeName = themeName
+    SharedState.CurrentThemeName = themeName
     
-    for _, ref in ipairs(self.RegisteredElements) do
-        if ref.Instance and ref.Instance.Parent then
-            local targetColor = self:GetColor(ref.ColorKey)
-            local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-            local tween = TweenService:Create(ref.Instance, tweenInfo, {[ref.Property] = targetColor})
-            tween:Play()
-        end
+    for _, ref in ipairs(SharedState.RegisteredElements) do
+        pcall(function()
+            if ref.Instance and ref.Instance.Parent then
+                local targetColor = self:GetColor(ref.ColorKey)
+                local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+                local tween = TweenService:Create(ref.Instance, tweenInfo, {[ref.Property] = targetColor})
+                tween:Play()
+            end
+        end)
     end
 end
 

@@ -1,5 +1,6 @@
 local InputComponent = {}
 local TweenService = game:GetService("TweenService")
+local ThemeManager = require(script.Parent.Parent.Core.Theme)
 
 local function Tween(instance, tweenInfo, properties)
     local tw = TweenService:Create(instance, tweenInfo, properties)
@@ -20,7 +21,7 @@ function InputComponent.Create(TabContent, Maid, Config)
 
     local InputFrame = Instance.new("Frame")
     InputFrame.Name = headerText
-    InputFrame.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
+    ThemeManager:Register(InputFrame, "BackgroundColor3", "SecondaryBackground")
     InputFrame.BackgroundTransparency = 1
     InputFrame.BorderSizePixel = 0
     InputFrame.Size = UDim2.new(1, 0, 0, descText == "" and 42 or 52)
@@ -54,7 +55,7 @@ function InputComponent.Create(TabContent, Maid, Config)
     Header.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     Header.Size = UDim2.new(1, 0, 0, 16)
     Header.Text = headerText
-    Header.TextColor3 = Color3.fromRGB(240, 240, 245)
+    ThemeManager:Register(Header, "TextColor3", "TextPrimary")
     Header.TextSize = 14
     Header.TextXAlignment = Enum.TextXAlignment.Left
     Header.TextYAlignment = Enum.TextYAlignment.Center
@@ -67,7 +68,7 @@ function InputComponent.Create(TabContent, Maid, Config)
         Description.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
         Description.Size = UDim2.new(1, 0, 0, 14)
         Description.Text = descText
-        Description.TextColor3 = Color3.fromRGB(150, 150, 160)
+        ThemeManager:Register(Description, "TextColor3", "TextSecondary")
         Description.TextSize = 12
         Description.TextXAlignment = Enum.TextXAlignment.Left
         Description.TextYAlignment = Enum.TextYAlignment.Center
@@ -95,7 +96,7 @@ function InputComponent.Create(TabContent, Maid, Config)
     BoxCorner.Parent = BoxWrapper
 
     local BoxStroke = Instance.new("UIStroke")
-    BoxStroke.Color = Color3.fromRGB(48, 48, 48)
+    ThemeManager:Register(BoxStroke, "Color", "StrokeColor")
     BoxStroke.Thickness = 1
     BoxStroke.Parent = BoxWrapper
 
@@ -109,7 +110,7 @@ function InputComponent.Create(TabContent, Maid, Config)
     TextBox.Size = UDim2.new(1, -16, 1, 0)
     TextBox.Position = UDim2.new(0, 8, 0, 0)
     TextBox.Text = tostring(currentValue)
-    TextBox.TextColor3 = Color3.fromRGB(240, 240, 245)
+    ThemeManager:Register(TextBox, "TextColor3", "TextPrimary")
     TextBox.TextSize = 12
     TextBox.TextXAlignment = Enum.TextXAlignment.Left
     TextBox.Parent = BoxWrapper

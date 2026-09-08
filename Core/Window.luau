@@ -3,6 +3,7 @@ local Maid = require(Utils.Maid)
 local Signal = require(Utils.Signal)
 local Tween = require(Utils.Tween)
 local Utility = require(Utils.Utility)
+local ThemeManager = require(script.Parent.Theme)
 
 local Api = nil
 pcall(function()
@@ -39,7 +40,7 @@ function Window:CreateWindow(Config)
     local Main = Instance.new("Frame")
     Main.Name = "Main"
     Main.AnchorPoint = Vector2.new(0.5, 0.5)
-    Main.BackgroundColor3 = Color3.new(0.075, 0.075, 0.075)
+    ThemeManager:Register(Main, "BackgroundColor3", "MainBackground")
     Main.BorderColor3 = Color3.new(0, 0, 0)
     Main.BorderSizePixel = 0
     Main.ClipsDescendants = false
@@ -52,7 +53,7 @@ function Window:CreateWindow(Config)
     UICorner.Parent = Main
     
     local UIStroke = Instance.new("UIStroke")
-    UIStroke.Color = Color3.new(0.216, 0.216, 0.216)
+    ThemeManager:Register(UIStroke, "Color", "StrokeColor")
     UIStroke.Parent = Main
     
     local MainScale = Instance.new("UIScale")
