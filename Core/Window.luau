@@ -35,6 +35,29 @@ function Window:CreateWindow(Config)
     
     Utility.ProtectGui(VoltUi)
     
+    local showLoading = true
+    local loadingScreen
+    local loadProgress = 0
+    if showLoading then
+        loadingScreen = Loading.Create(VoltUi)
+        
+        -- Start 5-second mock loading in background
+        task.spawn(function()
+            local steps = 50
+            local delay = 5.0 / steps
+            for i = 1, steps do
+                task.wait(delay)
+                loadProgress = i / steps
+                if loadingScreen then
+                    loadingScreen:SetProgress(loadProgress)
+                end
+            end
+        end)
+        
+        -- Ensure small wait so the UI actually renders the loading screen immediately
+        task.wait(0.05)
+    end
+    
     Notifications.Init(VoltUi)
     
     local Main = Instance.new("Frame")
@@ -565,18 +588,15 @@ function Window:CreateWindow(Config)
         end)
     end
 
-    local showLoading = true
+    local function WaitForLoading()
+        if showLoading and loadingScreen then
+            while loadProgress < 1 do task.wait(0.05) end
+        end
+    end
 
     if isAuthSystem then
         if not Api then
             pcall(function() Api = require(Utils.Api) end)
-        end
-
-        local loadingScreen
-        if showLoading then
-            pcall(function()
-                loadingScreen = Loading.Create(VoltUi)
-            end)
         end
 
         local token = nil
@@ -589,11 +609,11 @@ function Window:CreateWindow(Config)
                 local data = nil
                 pcall(function() data = Api.FetchMe() end)
                 if data then
-                    if loadingScreen then loadingScreen:WaitForReady() end
+                    WaitForLoading()
                     OnLoginSuccess()
                     if loadingScreen then loadingScreen:FadeOut() end
                 else
-                    if loadingScreen then loadingScreen:WaitForReady() end
+                    WaitForLoading()
                     LoginPage.Create(VoltUi, function()
                         OnLoginSuccess()
                     end)
@@ -601,46 +621,26 @@ function Window:CreateWindow(Config)
                 end
             end)
         else
-            if loadingScreen then
-                task.spawn(function()
-                    loadingScreen:WaitForReady()
-                    LoginPage.Create(VoltUi, function()
-                        OnLoginSuccess()
-                    end)
-                    loadingScreen:FadeOut()
-                end)
-            else
+            task.spawn(function()
+                WaitForLoading()
                 LoginPage.Create(VoltUi, function()
                     OnLoginSuccess()
                 end)
-            end
+                if loadingScreen then loadingScreen:FadeOut() end
+            end)
         end
     elseif isStandaloneKey then
-        if showLoading then
-            local loadingScreen
-            pcall(function() loadingScreen = Loading.Create(VoltUi) end)
-            task.spawn(function()
-                if loadingScreen then loadingScreen:WaitForReady() end
-                ShowKeySystem(function() OnLoginSuccess() end)
-                if loadingScreen then loadingScreen:FadeOut() end
-            end)
-        else
+        task.spawn(function()
+            WaitForLoading()
             ShowKeySystem(function() OnLoginSuccess() end)
-        end
+            if loadingScreen then loadingScreen:FadeOut() end
+        end)
     else
-        if showLoading then
-            local loadingScreen
-            pcall(function()
-                loadingScreen = Loading.Create(VoltUi)
-            end)
-            task.spawn(function()
-                if loadingScreen then loadingScreen:WaitForReady() end
-                Main.Visible = true
-                if loadingScreen then loadingScreen:FadeOut() end
-            end)
-        else
+        task.spawn(function()
+            WaitForLoading()
             Main.Visible = true
-        end
+            if loadingScreen then loadingScreen:FadeOut() end
+        end)
     end
     
     maid:GiveTask(SidebarElements.AccountBtn.MouseButton1Click:Connect(function()
