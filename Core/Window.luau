@@ -47,7 +47,7 @@ function Window:CreateWindow(Config)
         loadingScreen = Loading.Create(VoltUi)
         loadingScreen:SetStatus("Initializing Volt...")
         loadingScreen:SetProgress(0.1)
-        task.wait(0)
+        task.wait(0.3)
     end
     
     Notifications.Init(VoltUi)
@@ -74,7 +74,7 @@ function Window:CreateWindow(Config)
     local MainScale = Instance.new("UIScale")
     MainScale.Parent = Main
     
-    if loadingScreen then loadingScreen:SetStatus("Loading Topbar...") loadingScreen:SetProgress(0.25) task.wait(0) end
+    if loadingScreen then loadingScreen:SetStatus("Loading Topbar...") loadingScreen:SetProgress(0.25) task.wait(0.3) end
     local TopbarElements = Topbar.Create(Main, Config, maid)
     
     local PagesContainer = Instance.new("Frame")
@@ -113,7 +113,7 @@ function Window:CreateWindow(Config)
     local OnCollapse = Signal.new()
     maid:GiveTask(OnCollapse)
     
-    if loadingScreen then loadingScreen:SetStatus("Loading Sidebar...") loadingScreen:SetProgress(0.40) task.wait(0) end
+    if loadingScreen then loadingScreen:SetStatus("Loading Sidebar...") loadingScreen:SetProgress(0.40) task.wait(0.3) end
     local SidebarElements = Sidebar.Create(Content, maid, OnCollapse)
     
 
@@ -193,13 +193,13 @@ function Window:CreateWindow(Config)
         isAuthSystem = true
     end
 
-    if loadingScreen then loadingScreen:SetStatus("Loading Bottombar...") loadingScreen:SetProgress(0.55) task.wait(0) end
+    if loadingScreen then loadingScreen:SetStatus("Loading Bottombar...") loadingScreen:SetProgress(0.55) task.wait(0.3) end
     local BottombarElements = Bottombar.Create(Main, maid)
     
     local OnLoginSuccess
     local WindowObject = {}
 
-    if loadingScreen then loadingScreen:SetStatus("Loading Core Components...") loadingScreen:SetProgress(0.70) task.wait(0) end
+    if loadingScreen then loadingScreen:SetStatus("Loading Core Components...") loadingScreen:SetProgress(0.70) task.wait(0.3) end
     local AccountPageElements
     pcall(function()
         AccountPageElements = AccountPage.Create(PagesContainer, maid, function()
@@ -211,7 +211,7 @@ function Window:CreateWindow(Config)
         end)
     end)
     
-    if loadingScreen then loadingScreen:SetStatus("Loading Settings...") loadingScreen:SetProgress(0.80) task.wait(0) end
+    if loadingScreen then loadingScreen:SetStatus("Loading Settings...") loadingScreen:SetProgress(0.80) task.wait(0.3) end
     local SettingsPage = require(script.Parent.SettingsPage)
     local SettingsPageElements
     local success, err = pcall(function()
@@ -586,11 +586,11 @@ function Window:CreateWindow(Config)
     end
 
     if isAuthSystem then
-        if loadingScreen then loadingScreen:SetStatus("Checking OS & Version...") loadingScreen:SetProgress(0.85) task.wait(0) end
+        if loadingScreen then loadingScreen:SetStatus("Checking OS & Version...") loadingScreen:SetProgress(0.85) task.wait(0.3) end
         if not Api then
             pcall(function() Api = require(Utils.Api) end)
         end
-        if loadingScreen then loadingScreen:SetStatus("Connecting API...") loadingScreen:SetProgress(0.90) task.wait(0) end
+        if loadingScreen then loadingScreen:SetStatus("Connecting API...") loadingScreen:SetProgress(0.90) task.wait(0.3) end
 
         local token = nil
         if Api then

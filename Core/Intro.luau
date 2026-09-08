@@ -58,11 +58,6 @@ function Intro.Create(ParentGui)
     local obj = {IsReady = false, Faded = false, ReadyEvent = ReadyEvent}
     
     task.spawn(function()
-        local ContentProvider = game:GetService("ContentProvider")
-        pcall(function()
-            ContentProvider:PreloadAsync({Icon})
-        end)
-        
         task.wait(0.2)
         
         Tween(Icon, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0})
