@@ -511,7 +511,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
 
         local SwitchDot = Instance.new("Frame")
         SwitchDot.Name = "Dot"
-        SwitchDot.BackgroundColor3 = state and dotOnColor or Color3.fromRGB(150, 150, 150)
+        SwitchDot.BackgroundColor3 = state and dotOnColor or ThemeManager:GetColor("TextTertiary")
         SwitchDot.Position = state and UDim2.new(1, -18, 0.5, 0) or UDim2.new(0, 2, 0.5, 0)
         SwitchDot.AnchorPoint = Vector2.new(0, 0.5)
         SwitchDot.Size = UDim2.new(0, 16, 0, 16)
@@ -531,7 +531,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
             else
                 Tween(SwitchBg, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = switchOffColor})
                 Tween(SwitchStroke, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Color = strokeOffColor})
-                Tween(SwitchDot, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(0, 2, 0.5, 0), BackgroundColor3 = Color3.fromRGB(150, 150, 150)})
+                Tween(SwitchDot, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(0, 2, 0.5, 0), BackgroundColor3 = ThemeManager:GetColor("TextTertiary")})
             end
         end
     end
@@ -591,10 +591,10 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
         SwatchStroke.Parent = SwatchBtn
 
         SwatchBtn.MouseEnter:Connect(function()
-            Tween(SwatchStroke, TweenInfo.new(0.15), {Color = Color3.fromRGB(80, 80, 80)})
+            Tween(SwatchStroke, TweenInfo.new(0.15), {Color = ThemeManager:GetColor("ActiveStrokeColor")})
         end)
         SwatchBtn.MouseLeave:Connect(function()
-            Tween(SwatchStroke, TweenInfo.new(0.15), {Color = Color3.fromRGB(48, 48, 48)})
+            Tween(SwatchStroke, TweenInfo.new(0.15), {Color = ThemeManager:GetColor("StrokeColor")})
         end)
 
         SwatchBtn.MouseButton1Click:Connect(function()
@@ -633,7 +633,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
         local KeybindBtn = Instance.new("TextButton")
         KeybindBtn.Name = "KeybindBadge"
         KeybindBtn.AutoButtonColor = false
-        KeybindBtn.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
+        ThemeManager:Register(KeybindBtn, "BackgroundColor3", "MainBackground")
         KeybindBtn.Size = UDim2.new(0, 0, 0, 22)
         KeybindBtn.AutomaticSize = Enum.AutomaticSize.X
         KeybindBtn.LayoutOrder = 20
@@ -693,7 +693,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
                 if capturedKey then
                     currentKey = capturedKey
                     KbLabel.Text = currentKey
-                    Tween(KbStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(48, 48, 48)})
+                    Tween(KbStroke, TweenInfo.new(0.2), {Color = ThemeManager:GetColor("StrokeColor")})
                     listening = false
                     if listenConn then
                         listenConn:Disconnect()

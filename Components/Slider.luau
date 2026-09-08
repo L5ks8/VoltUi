@@ -95,7 +95,7 @@ function SliderComponent.Create(TabContent, Maid, Config)
     BarCorner.Parent = SliderBar
 
     local BarStroke = Instance.new("UIStroke")
-    BarStroke.Color = Color3.fromRGB(55, 55, 55)
+    ThemeManager:Register(BarStroke, "Color", "StrokeColor")
     BarStroke.Thickness = 1
     BarStroke.Parent = SliderBar
 
@@ -116,7 +116,7 @@ function SliderComponent.Create(TabContent, Maid, Config)
     Knob.AnchorPoint = Vector2.new(0.5, 0.5)
     Knob.Position = UDim2.new(pct, 0, 0.5, 0)
     Knob.Size = UDim2.new(0, 14, 0, 14)
-    Knob.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    ThemeManager:Register(Knob, "BackgroundColor3", "TextPrimary")
     Knob.BorderSizePixel = 0
     Knob.Parent = SliderBar
 
@@ -125,7 +125,7 @@ function SliderComponent.Create(TabContent, Maid, Config)
     KnobCorner.Parent = Knob
 
     local KnobStroke = Instance.new("UIStroke")
-    KnobStroke.Color = Color3.fromRGB(55, 55, 55)
+    ThemeManager:Register(KnobStroke, "Color", "StrokeColor")
     KnobStroke.Thickness = 1.5
     KnobStroke.Parent = Knob
 

@@ -105,7 +105,7 @@ function InputComponent.Create(TabContent, Maid, Config)
     TextBox.BackgroundTransparency = 1
     TextBox.ClearTextOnFocus = config.ClearOnFocus or false
     TextBox.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
-    TextBox.PlaceholderColor3 = Color3.fromRGB(100, 100, 110)
+    ThemeManager:Register(TextBox, "PlaceholderColor3", "TextTertiary")
     TextBox.PlaceholderText = placeholder
     TextBox.Size = UDim2.new(1, -16, 1, 0)
     TextBox.Position = UDim2.new(0, 8, 0, 0)

@@ -437,7 +437,7 @@ function ColorPickerComponent.Create(TabContent, Maid, Config)
     SwatchCorner.Parent = SwatchBtn
 
     local SwatchStroke = Instance.new("UIStroke")
-    SwatchStroke.Color = Color3.fromRGB(55, 52, 65)
+    ThemeManager:Register(SwatchStroke, "Color", "StrokeColor")
     SwatchStroke.Thickness = 1
     SwatchStroke.Parent = SwatchBtn
 

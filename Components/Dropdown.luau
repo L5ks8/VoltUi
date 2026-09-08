@@ -266,7 +266,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
         end
 
         Tween(ChevronIcon, TweenInfo.new(0.2), {Rotation = 180})
-        Tween(DropdownStroke, TweenInfo.new(0.2), {Color = config.AccentColor or Color3.fromRGB(245, 245, 245)})
+        Tween(DropdownStroke, TweenInfo.new(0.2), {Color = config.AccentColor or ThemeManager:GetColor("ActiveStrokeColor")})
 
         DropdownOverlay = Instance.new("TextButton")
         DropdownOverlay.Name = "DropdownOverlay"
@@ -343,7 +343,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
 
             local OptStroke = Instance.new("UIStroke")
             OptStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-            OptStroke.Color = Color3.fromRGB(55, 55, 55)
+            OptStroke.Color = ThemeManager:GetColor("StrokeColor")
             OptStroke.Transparency = isSelected and 0 or 1
             OptStroke.Parent = OptBtn
 
@@ -353,7 +353,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
             OptText.Position = UDim2.new(0, 8, 0, 0)
             OptText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
             OptText.Text = option
-            OptText.TextColor3 = isSelected and Color3.fromRGB(240, 240, 245) or Color3.fromRGB(150, 150, 160)
+            OptText.TextColor3 = isSelected and ThemeManager:GetColor("TextPrimary") or ThemeManager:GetColor("TextSecondary")
             OptText.TextSize = 12
             OptText.TextXAlignment = Enum.TextXAlignment.Left
             OptText.TextTruncate = Enum.TextTruncate.AtEnd
@@ -366,7 +366,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
             Checkmark.Position = UDim2.new(1, -22, 0.5, -7)
             Checkmark.Size = UDim2.new(0, 14, 0, 14)
             Checkmark.Image = "rbxassetid://118922551501473"
-            Checkmark.ImageColor3 = config.AccentColor or Color3.fromRGB(245, 245, 245)
+            Checkmark.ImageColor3 = config.AccentColor or ThemeManager:GetColor("TextPrimary")
             Checkmark.ZIndex = 10004
             Checkmark.Visible = isSelected
             Checkmark.Parent = OptBtn
@@ -375,7 +375,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
                 local active = isMulti and selectedMulti[option] or (selectedSingle == option)
                 if not active then
                     Tween(OptBtn, TweenInfo.new(0.15), {BackgroundTransparency = 0.6})
-                    Tween(OptText, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(240, 240, 245)})
+                    Tween(OptText, TweenInfo.new(0.15), {TextColor3 = ThemeManager:GetColor("TextPrimary")})
                 end
             end)
 
@@ -383,7 +383,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
                 local active = isMulti and selectedMulti[option] or (selectedSingle == option)
                 if not active then
                     Tween(OptBtn, TweenInfo.new(0.15), {BackgroundTransparency = 1})
-                    Tween(OptText, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(150, 150, 160)})
+                    Tween(OptText, TweenInfo.new(0.15), {TextColor3 = ThemeManager:GetColor("TextSecondary")})
                 end
             end)
 
@@ -394,7 +394,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
                     Checkmark.Visible = currentActive
                     Tween(OptBtn, TweenInfo.new(0.15), {BackgroundTransparency = currentActive and 0 or 1})
                     Tween(OptStroke, TweenInfo.new(0.15), {Transparency = currentActive and 0 or 1})
-                    Tween(OptText, TweenInfo.new(0.15), {TextColor3 = currentActive and Color3.fromRGB(240, 240, 245) or Color3.fromRGB(150, 150, 160)})
+                    Tween(OptText, TweenInfo.new(0.15), {TextColor3 = currentActive and ThemeManager:GetColor("TextPrimary") or ThemeManager:GetColor("TextSecondary")})
 
                     DropdownText.Text = getDisplayText()
                     cb(getMultiList())
