@@ -236,6 +236,12 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     TabsLayout.Padding = UDim.new(0, 4)
     TabsLayout.Parent = SettingsTabsContainer
     
+    local TabsContainerPadding = Instance.new("UIPadding")
+    TabsContainerPadding.PaddingTop = UDim.new(0, 10)
+    TabsContainerPadding.PaddingLeft = UDim.new(0, 10)
+    TabsContainerPadding.PaddingRight = UDim.new(0, 10)
+    TabsContainerPadding.Parent = SettingsTabsContainer
+    
     --ResetBtn
     local ResetBtn = Instance.new("TextButton")
     ResetBtn.Name = "ResetSettings"
@@ -331,8 +337,8 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
         TabBtn.Name = name
         TabBtn.BackgroundColor3 = Color3.new(1, 1, 1)
         TabBtn.BackgroundTransparency = 1
-        TabBtn.Size = UDim2.new(1, -20 - (indent or 0), 0, 30)
-        TabBtn.Position = UDim2.new(0, 10 + (indent or 0), 0, 0)
+        TabBtn.Size = UDim2.new(1, -(indent or 0), 0, 30)
+        TabBtn.Position = UDim2.new(0, (indent or 0), 0, 0)
         TabBtn.Text = ""
         TabBtn.Parent = SettingsTabsContainer
         
@@ -402,7 +408,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
                 Tween(ref.Title, TweenInfo.new(0.2), {TextColor3 = Color3.new(0.6, 0.6, 0.6)})
             end
             
-            Tween(TabStroke, TweenInfo.new(0.2), {Transparency = 0.9})
+            Tween(TabStroke, TweenInfo.new(0.2), {Transparency = 0.65})
             Tween(TabTitle, TweenInfo.new(0.2), {TextColor3 = Color3.new(1, 1, 1)})
             SettingsWindowObject.PageLayout:JumpTo(TabContent)
         end
