@@ -331,14 +331,20 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
         TabBtn.Name = name
         TabBtn.BackgroundColor3 = Color3.new(1, 1, 1)
         TabBtn.BackgroundTransparency = 1
-        TabBtn.Size = UDim2.new(1, -6 - (indent or 0), 0, 30)
-        TabBtn.Position = UDim2.new(0, 6 + (indent or 0), 0, 0)
+        TabBtn.Size = UDim2.new(1, -20 - (indent or 0), 0, 30)
+        TabBtn.Position = UDim2.new(0, 10 + (indent or 0), 0, 0)
         TabBtn.Text = ""
         TabBtn.Parent = SettingsTabsContainer
         
         local TabCorner = Instance.new("UICorner")
         TabCorner.CornerRadius = UDim.new(0, 6)
         TabCorner.Parent = TabBtn
+        
+        local TabStroke = Instance.new("UIStroke")
+        TabStroke.Color = Color3.new(1, 1, 1)
+        TabStroke.Transparency = 1
+        TabStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+        TabStroke.Parent = TabBtn
         
         local TabTitle = Instance.new("TextLabel")
         TabTitle.BackgroundTransparency = 1
@@ -385,18 +391,18 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
         ContentPadding.PaddingRight = UDim.new(0, 10)
         ContentPadding.Parent = TabContent
         
-        table.insert(TabContentRefs, {Btn = TabBtn, Title = TabTitle, Content = TabContent})
+        table.insert(TabContentRefs, {Btn = TabBtn, Title = TabTitle, Content = TabContent, Stroke = TabStroke})
         
         local function SelectTab()
             if ActiveTab == TabBtn then return end
             ActiveTab = TabBtn
             
             for _, ref in ipairs(TabContentRefs) do
-                Tween(ref.Btn, TweenInfo.new(0.2), {BackgroundTransparency = 1})
+                Tween(ref.Stroke, TweenInfo.new(0.2), {Transparency = 1})
                 Tween(ref.Title, TweenInfo.new(0.2), {TextColor3 = Color3.new(0.6, 0.6, 0.6)})
             end
             
-            Tween(TabBtn, TweenInfo.new(0.2), {BackgroundTransparency = 0.95})
+            Tween(TabStroke, TweenInfo.new(0.2), {Transparency = 0.9})
             Tween(TabTitle, TweenInfo.new(0.2), {TextColor3 = Color3.new(1, 1, 1)})
             SettingsWindowObject.PageLayout:JumpTo(TabContent)
         end
