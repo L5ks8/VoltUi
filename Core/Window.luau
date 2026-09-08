@@ -28,7 +28,9 @@ function Window:CreateWindow(Config)
     Utility.ProtectGui(VoltUi)
     
     local loadingScreen
-    if not Config._skipLoadingSequence then
+    if Config._externalLoadingScreen then
+        loadingScreen = Config._externalLoadingScreen
+    elseif not Config._skipLoadingSequence then
         local introScreen = Intro.Create(VoltUi)
         task.wait(0)
         introScreen:WaitForReady()

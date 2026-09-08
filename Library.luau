@@ -134,7 +134,6 @@ if not Window then
     mfStroke.Parent = mf
 
     local loadingShown = false
-    local allDownloaded = false
     local downloadCount = 0
 
     task.spawn(function()
@@ -161,19 +160,6 @@ if not Window then
         _tw(barFill, TweenInfo.new(0.3), {BackgroundTransparency = 0})
         task.wait(0.3)
         loadingShown = true
-
-        if allDownloaded then
-            statusLbl.Text = "Ready!"
-            _tw(barFill, TweenInfo.new(0.2, Enum.EasingStyle.Linear), {Size = UDim2.new(1, 0, 1, 0)})
-            task.wait(0.4)
-            _tw(mf, TweenInfo.new(0.4, Enum.EasingStyle.Quad), {BackgroundTransparency = 1})
-            _tw(mfStroke, TweenInfo.new(0.4), {Transparency = 1})
-            _tw(statusLbl, TweenInfo.new(0.4), {TextTransparency = 1})
-            _tw(barBg, TweenInfo.new(0.4), {BackgroundTransparency = 1})
-            _tw(barFill, TweenInfo.new(0.4), {BackgroundTransparency = 1})
-            task.wait(0.4)
-            gui:Destroy()
-        end
     end)
 
     local baseUrl = "https://raw.githubusercontent.com/L5ks8/VoltUi/main/"
@@ -194,7 +180,7 @@ if not Window then
             error("[VoltUi] No HTTP GET method available")
         end
         downloadCount = downloadCount + 1
-        _tw(barFill, TweenInfo.new(0.15, Enum.EasingStyle.Linear), {Size = UDim2.new(math.min(downloadCount / 15, 0.95), 0, 1, 0)})
+        _tw(barFill, TweenInfo.new(0.15, Enum.EasingStyle.Linear), {Size = UDim2.new(math.min(downloadCount / 35, 0.95), 0, 1, 0)})
         return result
     end
 
@@ -277,22 +263,35 @@ if not Window then
     Window = virtualRequire(Core.Window)
     statusLbl.Text = "Loading Notifications..."
     Notifications = virtualRequire(Core.Notifications)
-    allDownloaded = true
 
     while not loadingShown do task.wait(0.05) end
 
-    statusLbl.Text = "Ready!"
-    _tw(barFill, TweenInfo.new(0.2, Enum.EasingStyle.Linear), {Size = UDim2.new(1, 0, 1, 0)})
-    task.wait(0.4)
+    local loadingObj = {}
+    loadingObj.Faded = false
+    function loadingObj:SetStatus(text)
+        if self.Faded then return end
+        statusLbl.Text = text
+    end
+    function loadingObj:SetProgress(pct)
+        if self.Faded then return end
+        pct = math.clamp(pct, 0, 1)
+        _tw(barFill, TweenInfo.new(0.2, Enum.EasingStyle.Linear), {Size = UDim2.new(pct, 0, 1, 0)})
+    end
+    function loadingObj:FadeOut()
+        if self.Faded then return end
+        self.Faded = true
+        task.spawn(function()
+            _tw(mf, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1})
+            _tw(mfStroke, TweenInfo.new(0.5), {Transparency = 1})
+            _tw(statusLbl, TweenInfo.new(0.5), {TextTransparency = 1})
+            _tw(barBg, TweenInfo.new(0.5), {BackgroundTransparency = 1})
+            _tw(barFill, TweenInfo.new(0.5), {BackgroundTransparency = 1})
+            task.wait(0.5)
+            gui:Destroy()
+        end)
+    end
 
-    _tw(mf, TweenInfo.new(0.4, Enum.EasingStyle.Quad), {BackgroundTransparency = 1})
-    _tw(mfStroke, TweenInfo.new(0.4), {Transparency = 1})
-    _tw(statusLbl, TweenInfo.new(0.4), {TextTransparency = 1})
-    _tw(barBg, TweenInfo.new(0.4), {BackgroundTransparency = 1})
-    _tw(barFill, TweenInfo.new(0.4), {BackgroundTransparency = 1})
-    task.wait(0.4)
-    gui:Destroy()
-
+    Library._loadingObj = loadingObj
     Library._skipLoadingSequence = true
 end
 
@@ -316,6 +315,7 @@ function Library:CreateWindow(Config)
     end)
     if Library._skipLoadingSequence then
         Config._skipLoadingSequence = true
+        Config._externalLoadingScreen = Library._loadingObj
     end
     return Window:CreateWindow(Config)
 end
