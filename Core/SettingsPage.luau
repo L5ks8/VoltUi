@@ -142,49 +142,74 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     SearchContainer.Size = UDim2.new(1, 0, 0, 45)
     SearchContainer.Parent = SettingsSidebar
     
-    local SearchBox = Instance.new("TextBox")
+    local SearchBox = Instance.new("Frame")
     SearchBox.Name = "SearchBox"
-    SearchBox.BackgroundTransparency = 1
-    SearchBox.Size = UDim2.new(1, -20, 0, 26)
-    SearchBox.Position = UDim2.new(0, 10, 0, 10)
-    SearchBox.PlaceholderText = "Search settings"
-    SearchBox.Text = ""
-    SearchBox.TextColor3 = Color3.fromRGB(240, 240, 245)
-    SearchBox.PlaceholderColor3 = Color3.fromRGB(150, 150, 160)
-    SearchBox.TextSize = 12
-    SearchBox.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
-    SearchBox.TextXAlignment = Enum.TextXAlignment.Left
+    SearchBox.BackgroundColor3 = Color3.new(0.094, 0.094, 0.094)
+    SearchBox.BorderColor3 = Color3.new(0, 0, 0)
+    SearchBox.BorderSizePixel = 0
+    SearchBox.Position = UDim2.new(0, 10, 0, 8)
+    SearchBox.Size = UDim2.new(1, -20, 0, 30)
     SearchBox.Parent = SearchContainer
     
-    local SearchPadding = Instance.new("UIPadding")
-    SearchPadding.PaddingLeft = UDim.new(0, 32)
-    SearchPadding.Parent = SearchBox
-    
-    local SearchDivider = Instance.new("Frame")
-    SearchDivider.Name = "SearchDivider"
-    SearchDivider.BackgroundColor3 = Color3.fromRGB(36, 36, 36)
-    SearchDivider.BorderSizePixel = 0
-    SearchDivider.Size = UDim2.new(1, 0, 0, 1)
-    SearchDivider.Position = UDim2.new(0, 0, 1, -1)
-    SearchDivider.Parent = SearchContainer
-    
-    local SearchIcon = Instance.new("ImageLabel")
-    SearchIcon.BackgroundTransparency = 1
-    SearchIcon.Image = "rbxassetid://88107177696245"
-    SearchIcon.ImageColor3 = Color3.fromRGB(150, 150, 160)
-    SearchIcon.Size = UDim2.new(0, 14, 0, 14)
-    SearchIcon.AnchorPoint = Vector2.new(0, 0.5)
-    SearchIcon.Position = UDim2.new(0, 10, 0.5, 0)
-    SearchIcon.Parent = SearchBox
+    local SearchStroke = Instance.new("UIStroke")
+    SearchStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
+    SearchStroke.Color = Color3.new(0.216, 0.216, 0.216)
+    SearchStroke.Parent = SearchBox
     
     local SearchCorner = Instance.new("UICorner")
-    SearchCorner.CornerRadius = UDim.new(0, 4)
+    SearchCorner.CornerRadius = UDim.new(0, 5)
     SearchCorner.Parent = SearchBox
     
-    local SearchStroke = Instance.new("UIStroke")
-    SearchStroke.Color = Color3.fromRGB(48, 48, 48)
-    SearchStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-    SearchStroke.Parent = SearchBox
+    local SearchInnerLayout = Instance.new("UIListLayout")
+    SearchInnerLayout.FillDirection = Enum.FillDirection.Horizontal
+    SearchInnerLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    SearchInnerLayout.Parent = SearchBox
+    
+    local SearchIconFrame = Instance.new("Frame")
+    SearchIconFrame.Name = "Icon"
+    SearchIconFrame.BackgroundColor3 = Color3.new(1, 1, 1)
+    SearchIconFrame.BackgroundTransparency = 1
+    SearchIconFrame.BorderColor3 = Color3.new(0, 0, 0)
+    SearchIconFrame.BorderSizePixel = 0
+    SearchIconFrame.Size = UDim2.new(0, 30, 0, 30)
+    SearchIconFrame.Parent = SearchBox
+    
+    local SearchIconLabel = Instance.new("ImageLabel")
+    SearchIconLabel.BackgroundColor3 = Color3.new(1, 1, 1)
+    SearchIconLabel.BackgroundTransparency = 1
+    SearchIconLabel.BorderColor3 = Color3.new(0, 0, 0)
+    SearchIconLabel.BorderSizePixel = 0
+    SearchIconLabel.Image = "rbxassetid://88107177696245"
+    SearchIconLabel.ImageTransparency = 0.3
+    SearchIconLabel.Size = UDim2.new(0, 16, 0, 16)
+    SearchIconLabel.Parent = SearchIconFrame
+    
+    local SearchIconFrameLayout = Instance.new("UIListLayout")
+    SearchIconFrameLayout.FillDirection = Enum.FillDirection.Horizontal
+    SearchIconFrameLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    SearchIconFrameLayout.HorizontalFlex = Enum.UIFlexAlignment.SpaceAround
+    SearchIconFrameLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    SearchIconFrameLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    SearchIconFrameLayout.Parent = SearchIconFrame
+
+    local SearchInput = Instance.new("TextBox")
+    SearchInput.BackgroundColor3 = Color3.new(1, 1, 1)
+    SearchInput.BackgroundTransparency = 1
+    SearchInput.BorderColor3 = Color3.new(0, 0, 0)
+    SearchInput.BorderSizePixel = 0
+    SearchInput.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    SearchInput.LayoutOrder = 1
+    SearchInput.Size = UDim2.new(1, -30, 1, 0)
+    SearchInput.PlaceholderText = "Search settings"
+    SearchInput.Text = ""
+    SearchInput.TextColor3 = Color3.new(0.478, 0.478, 0.478)
+    SearchInput.TextSize = 12
+    SearchInput.TextXAlignment = Enum.TextXAlignment.Left
+    SearchInput.Parent = SearchBox
+    
+    local SearchInputPadding = Instance.new("UIPadding")
+    SearchInputPadding.PaddingLeft = UDim.new(0, 4)
+    SearchInputPadding.Parent = SearchInput
     
     --TabsContainer
     local SettingsTabsContainer = Instance.new("ScrollingFrame")
