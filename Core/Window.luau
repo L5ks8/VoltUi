@@ -41,6 +41,7 @@ function Window:CreateWindow(Config)
     local loadProgress = 0
     if showLoading then
         local introScreen = Intro.Create(VoltUi)
+        task.wait(0) -- Yield to ensure intro renders instantly
         
         task.spawn(function()
             introScreen:WaitForReady()
@@ -49,19 +50,30 @@ function Window:CreateWindow(Config)
             
             loadingScreen = Loading.Create(VoltUi)
             
-            local steps = 50
-            local delay = 5.0 / steps
-            for i = 1, steps do
-                task.wait(delay)
-                loadProgress = i / steps
-                if loadingScreen then
-                    loadingScreen:SetProgress(loadProgress)
+            local sequences = {
+                { text = "Initializing Core...", time = 1 },
+                { text = "Loading Scripts...", time = 1.5 },
+                { text = "Connecting to Server...", time = 1.5 },
+                { text = "Finalizing...", time = 1 }
+            }
+            local totalSteps = 0
+            for _, seq in ipairs(sequences) do totalSteps = totalSteps + (seq.time / 0.05) end
+            local currentStep = 0
+            
+            for _, seq in ipairs(sequences) do
+                if loadingScreen then loadingScreen:SetStatus(seq.text) end
+                local seqSteps = seq.time / 0.05
+                for i = 1, seqSteps do
+                    task.wait(0.05)
+                    currentStep = currentStep + 1
+                    loadProgress = currentStep / totalSteps
+                    if loadingScreen then
+                        loadingScreen:SetProgress(loadProgress)
+                    end
                 end
             end
+            loadProgress = 1
         end)
-        
-        -- Ensure small wait so the UI actually renders the intro immediately
-        task.wait(0.05)
     end
     
     Notifications.Init(VoltUi)
@@ -595,7 +607,7 @@ function Window:CreateWindow(Config)
     end
 
     local function WaitForLoading()
-        if showLoading and loadingScreen then
+        if showLoading then
             while loadProgress < 1 do task.wait(0.05) end
         end
     end

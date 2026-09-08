@@ -151,6 +151,11 @@ function Loading.Create(ParentGui)
         PctText.Text = tostring(math.floor(pct * 100)) .. "%"
     end
     
+    function obj:SetStatus(text)
+        if self.Faded then return end
+        LoadingText.Text = text
+    end
+    
     function obj:FadeOut()
         if self.Faded then return end
         self.Faded = true
