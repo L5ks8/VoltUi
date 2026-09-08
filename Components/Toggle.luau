@@ -462,6 +462,8 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
         ToggleControl = BoxBg
 
         UpdateToggleVisuals = function()
+            local currentBoxOff = ThemeManager:GetColor("MainBackground")
+            local currentStrokeOff = ThemeManager:GetColor("StrokeColor")
             if state then
                 Tween(BoxBg, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
                     BackgroundColor3 = switchOnColor,
@@ -477,11 +479,11 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
                 })
             else
                 Tween(BoxBg, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-                    BackgroundColor3 = ThemeManager:GetColor("MainBackground"),
+                    BackgroundColor3 = currentBoxOff,
                     BackgroundTransparency = 0.2,
                 })
                 Tween(BoxStroke, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-                    Color = strokeOffColor,
+                    Color = currentStrokeOff,
                 })
                 Tween(CheckIcon, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
                     ImageTransparency = 1,
@@ -524,14 +526,17 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
         ToggleControl = SwitchBg
 
         UpdateToggleVisuals = function()
+            local currentSwitchOff = ThemeManager:GetColor("MainBackground")
+            local currentStrokeOff = ThemeManager:GetColor("StrokeColor")
+            local currentDotOff = ThemeManager:GetColor("TextTertiary")
             if state then
                 Tween(SwitchBg, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = switchOnColor})
                 Tween(SwitchStroke, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Color = strokeOnColor})
                 Tween(SwitchDot, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(1, -18, 0.5, 0), BackgroundColor3 = dotOnColor})
             else
-                Tween(SwitchBg, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = switchOffColor})
-                Tween(SwitchStroke, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Color = strokeOffColor})
-                Tween(SwitchDot, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(0, 2, 0.5, 0), BackgroundColor3 = ThemeManager:GetColor("TextTertiary")})
+                Tween(SwitchBg, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = currentSwitchOff})
+                Tween(SwitchStroke, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Color = currentStrokeOff})
+                Tween(SwitchDot, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(0, 2, 0.5, 0), BackgroundColor3 = currentDotOff})
             end
         end
     end
@@ -750,7 +755,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
         local DropBtn = Instance.new("TextButton")
         DropBtn.Name = "MiniDropdown"
         DropBtn.AutoButtonColor = false
-        DropBtn.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
+        ThemeManager:Register(DropBtn, "BackgroundColor3", "MainBackground")
         DropBtn.Size = UDim2.new(0, 0, 0, 22)
         DropBtn.AutomaticSize = Enum.AutomaticSize.X
         DropBtn.LayoutOrder = 5
@@ -803,7 +808,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
 
             menuFrame = Instance.new("Frame")
             menuFrame.Name = "MiniDropdownMenu"
-            menuFrame.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
+            ThemeManager:Register(menuFrame, "BackgroundColor3", "SecondaryBackground")
             menuFrame.BorderSizePixel = 0
             menuFrame.ZIndex = 50010
             menuFrame.Parent = overlay
@@ -840,7 +845,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
                 OptBtn.Size = UDim2.new(1, 0, 0, 22)
                 OptBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
                 OptBtn.Text = opt
-                OptBtn.TextColor3 = (opt == currentOption) and Color3.fromRGB(240, 240, 245) or Color3.fromRGB(160, 160, 170)
+                OptBtn.TextColor3 = (opt == currentOption) and ThemeManager:GetColor("TextPrimary") or ThemeManager:GetColor("TextSecondary")
                 OptBtn.TextSize = 11
                 OptBtn.ZIndex = 50011
                 OptBtn.Parent = menuFrame

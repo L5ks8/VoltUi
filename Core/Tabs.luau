@@ -71,7 +71,7 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
     TabContent.BackgroundTransparency = 1
     TabContent.Size = UDim2.new(1, 0, 1, 0)
     TabContent.ScrollBarThickness = 0
-    TabContent.ScrollBarImageColor3 = Color3.new(0.2, 0.2, 0.2)
+    ThemeManager:Register(TabContent, "ScrollBarImageColor3", "StrokeColor")
     TabContent.Visible = isFirstTab
     TabContent.CanvasSize = UDim2.new(0, 0, 0, 0)
     TabContent.AutomaticCanvasSize = Enum.AutomaticSize.None

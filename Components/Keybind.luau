@@ -96,7 +96,7 @@ function KeybindComponent.Create(TabContent, Maid, Config)
     local KeyBtn = Instance.new("TextButton")
     KeyBtn.Name = "KeyBtn"
     KeyBtn.AutoButtonColor = false
-    KeyBtn.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
+    ThemeManager:Register(KeyBtn, "BackgroundColor3", "MainBackground")
     KeyBtn.Size = UDim2.new(0, 0, 0, 26)
     KeyBtn.AutomaticSize = Enum.AutomaticSize.X
     KeyBtn.Text = ""
@@ -134,7 +134,7 @@ function KeybindComponent.Create(TabContent, Maid, Config)
         if not listening then return end
         listening = false
         KeyLabel.Text = tostring(currentKey)
-        Tween(KeyStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(48, 48, 48)})
+        Tween(KeyStroke, TweenInfo.new(0.2), {Color = ThemeManager:GetColor("StrokeColor")})
         if listenConn then
             listenConn:Disconnect()
             listenConn = nil
@@ -171,7 +171,7 @@ function KeybindComponent.Create(TabContent, Maid, Config)
             if capturedKey then
                 currentKey = capturedKey
                 KeyLabel.Text = currentKey
-                Tween(KeyStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(48, 48, 48)})
+                Tween(KeyStroke, TweenInfo.new(0.2), {Color = ThemeManager:GetColor("StrokeColor")})
                 listening = false
                 if listenConn then
                     listenConn:Disconnect()

@@ -149,7 +149,7 @@ function LabelComponent.Create(TabContent, Maid, Config)
         local KeybindBtn = Instance.new("TextButton")
         KeybindBtn.Name = "KeybindBadge"
         KeybindBtn.AutoButtonColor = false
-        KeybindBtn.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
+        ThemeManager:Register(KeybindBtn, "BackgroundColor3", "MainBackground")
         KeybindBtn.Size = UDim2.new(0, 0, 0, 22)
         KeybindBtn.AutomaticSize = Enum.AutomaticSize.X
         KeybindBtn.Text = ""
@@ -206,7 +206,7 @@ function LabelComponent.Create(TabContent, Maid, Config)
                 if capturedKey then
                     currentKey = capturedKey
                     KbLabel.Text = currentKey
-                    Tween(KbStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(48, 48, 48)})
+                    Tween(KbStroke, TweenInfo.new(0.2), {Color = ThemeManager:GetColor("StrokeColor")})
                     listening = false
                     listenConn:Disconnect()
                     kbCallback(currentKey)

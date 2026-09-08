@@ -502,7 +502,11 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
         Corner.Parent = Btn
         
         local Stroke = Instance.new("UIStroke")
-        Stroke.Color = isRed and Color3.fromRGB(180, 50, 50) or Color3.fromRGB(48, 48, 48)
+        if isRed then
+            Stroke.Color = Color3.fromRGB(180, 50, 50)
+        else
+            ThemeManager:Register(Stroke, "Color", "StrokeColor")
+        end
         Stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
         Stroke.Parent = Btn
         
@@ -522,7 +526,11 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
         IconLabel.BackgroundTransparency = 1
         IconLabel.Size = UDim2.new(0, 12, 0, 12)
         IconLabel.Image = icon
-        IconLabel.ImageColor3 = isRed and Color3.fromRGB(240, 100, 100) or Color3.fromRGB(180, 180, 190)
+        if isRed then
+            IconLabel.ImageColor3 = Color3.fromRGB(240, 100, 100)
+        else
+            ThemeManager:Register(IconLabel, "ImageColor3", "TextSecondary")
+        end
         IconLabel.Parent = Btn
         
         local TextLabel = Instance.new("TextLabel")
@@ -531,13 +539,17 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
         TextLabel.AutomaticSize = Enum.AutomaticSize.X
         TextLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
         TextLabel.Text = name
-        TextLabel.TextColor3 = isRed and Color3.fromRGB(240, 100, 100) or Color3.fromRGB(180, 180, 190)
+        if isRed then
+            TextLabel.TextColor3 = Color3.fromRGB(240, 100, 100)
+        else
+            ThemeManager:Register(TextLabel, "TextColor3", "TextSecondary")
+        end
         TextLabel.TextSize = 12
         TextLabel.Parent = Btn
         
-        local hoverColor = isRed and Color3.fromRGB(40, 20, 20) or Color3.fromRGB(36, 36, 36)
         Maid:GiveTask(Btn.MouseEnter:Connect(function()
-            Tween(Btn, TweenInfo.new(0.15), {BackgroundTransparency = 0, BackgroundColor3 = hoverColor})
+            local currentHover = isRed and Color3.fromRGB(40, 20, 20) or ThemeManager:GetColor("StrokeColor")
+            Tween(Btn, TweenInfo.new(0.15), {BackgroundTransparency = 0, BackgroundColor3 = currentHover})
         end))
         Maid:GiveTask(Btn.MouseLeave:Connect(function()
             Tween(Btn, TweenInfo.new(0.15), {BackgroundTransparency = 1})
@@ -576,7 +588,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     ModeTitle.Parent = ModeRow
     
     local ModeContainer = Instance.new("Frame")
-    ModeContainer.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
+    ThemeManager:Register(ModeContainer, "BackgroundColor3", "MainBackground")
     ModeContainer.Size = UDim2.new(1, 0, 0, 24)
     ModeContainer.Position = UDim2.new(0, 0, 0, 24)
     ModeContainer.Parent = ModeRow
@@ -586,14 +598,14 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     ModeCorner.Parent = ModeContainer
     
     local ModeStroke = Instance.new("UIStroke")
-    ModeStroke.Color = Color3.fromRGB(48, 48, 48)
+    ThemeManager:Register(ModeStroke, "Color", "StrokeColor")
     ModeStroke.Parent = ModeContainer
     
     local DarkBtn = Instance.new("TextButton")
-    DarkBtn.BackgroundColor3 = Color3.fromRGB(36, 36, 36)
+    ThemeManager:Register(DarkBtn, "BackgroundColor3", "SecondaryBackground")
     DarkBtn.Size = UDim2.new(0.5, 0, 1, 0)
     DarkBtn.Text = "Dark"
-    DarkBtn.TextColor3 = Color3.fromRGB(240, 240, 245)
+    ThemeManager:Register(DarkBtn, "TextColor3", "TextPrimary")
     DarkBtn.TextSize = 12
     DarkBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     DarkBtn.Parent = ModeContainer
@@ -607,7 +619,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     LightBtn.Position = UDim2.new(0.5, 0, 0, 0)
     LightBtn.Size = UDim2.new(0.5, 0, 1, 0)
     LightBtn.Text = "Light"
-    LightBtn.TextColor3 = Color3.fromRGB(150, 150, 160)
+    ThemeManager:Register(LightBtn, "TextColor3", "TextSecondary")
     LightBtn.TextSize = 12
     LightBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     LightBtn.Parent = ModeContainer
@@ -621,25 +633,25 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     
     if currentMode == "Light" then
         LightBtn.BackgroundTransparency = 0
-        LightBtn.TextColor3 = Color3.fromRGB(240, 240, 245)
+        LightBtn.TextColor3 = ThemeManager:GetColor("TextPrimary")
         DarkBtn.BackgroundTransparency = 1
-        DarkBtn.TextColor3 = Color3.fromRGB(150, 150, 160)
+        DarkBtn.TextColor3 = ThemeManager:GetColor("TextSecondary")
     end
     
     Maid:GiveTask(DarkBtn.MouseButton1Click:Connect(function()
         if currentMode == "Dark" then return end
         currentMode = "Dark"
         SettingsManager.SaveSettings({ Mode = "Dark" })
-        Tween(DarkBtn, TweenInfo.new(0.2), {BackgroundTransparency = 0, TextColor3 = Color3.fromRGB(240, 240, 245)})
-        Tween(LightBtn, TweenInfo.new(0.2), {BackgroundTransparency = 1, TextColor3 = Color3.fromRGB(150, 150, 160)})
+        Tween(DarkBtn, TweenInfo.new(0.2), {BackgroundTransparency = 0, TextColor3 = ThemeManager:GetColor("TextPrimary")})
+        Tween(LightBtn, TweenInfo.new(0.2), {BackgroundTransparency = 1, TextColor3 = ThemeManager:GetColor("TextSecondary")})
         ThemeDropdown:Set("My Volt Dark")
     end))
     Maid:GiveTask(LightBtn.MouseButton1Click:Connect(function()
         if currentMode == "Light" then return end
         currentMode = "Light"
         SettingsManager.SaveSettings({ Mode = "Light" })
-        Tween(LightBtn, TweenInfo.new(0.2), {BackgroundTransparency = 0, TextColor3 = Color3.fromRGB(240, 240, 245)})
-        Tween(DarkBtn, TweenInfo.new(0.2), {BackgroundTransparency = 1, TextColor3 = Color3.fromRGB(150, 150, 160)})
+        Tween(LightBtn, TweenInfo.new(0.2), {BackgroundTransparency = 0, TextColor3 = ThemeManager:GetColor("TextPrimary")})
+        Tween(DarkBtn, TweenInfo.new(0.2), {BackgroundTransparency = 1, TextColor3 = ThemeManager:GetColor("TextSecondary")})
         ThemeDropdown:Set("Volt Light")
     end))
 

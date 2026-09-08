@@ -59,7 +59,7 @@ function SliderComponent.Create(TabContent, Maid, Config)
     ValueLabel.Size = UDim2.new(0, 80, 1, 0)
     ValueLabel.Position = UDim2.new(1, -80, 0, 0)
     ValueLabel.Text = tostring(currentValue) .. suffix
-    ValueLabel.TextColor3 = accentColor
+    ThemeManager:Register(ValueLabel, "TextColor3", "TextPrimary")
     ValueLabel.TextSize = 13
     ValueLabel.TextXAlignment = Enum.TextXAlignment.Right
     ValueLabel.TextYAlignment = Enum.TextYAlignment.Center
@@ -84,7 +84,7 @@ function SliderComponent.Create(TabContent, Maid, Config)
     SliderBar.Name = "SliderBar"
     SliderBar.AutoButtonColor = false
     SliderBar.Text = ""
-    ThemeManager:Register(SliderBar, "BackgroundColor3", "TertiaryBackground")
+    ThemeManager:Register(SliderBar, "BackgroundColor3", "SecondaryBackground")
     SliderBar.BorderSizePixel = 0
     SliderBar.Position = UDim2.new(0, 14, 1, -12)
     SliderBar.Size = UDim2.new(1, -28, 0, 6)
