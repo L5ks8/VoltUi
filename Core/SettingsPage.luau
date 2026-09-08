@@ -162,7 +162,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     
     local SearchIcon = Instance.new("ImageLabel")
     SearchIcon.BackgroundTransparency = 1
-    SearchIcon.Image = "rbxassetid://134267746401089" -- Search icon
+    SearchIcon.Image = "rbxassetid://88107177696245" -- Search icon
     SearchIcon.ImageColor3 = Color3.fromRGB(150, 150, 160)
     SearchIcon.Size = UDim2.new(0, 14, 0, 14)
     SearchIcon.Position = UDim2.new(0, 8, 0.5, -7)
@@ -348,36 +348,6 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     -- Appearance Tab Content: Theme Editor
     local ThemeSection = AppearanceTab:AddSection("Theme", "Choose, manage, and customize the full UI + Monaco theme from one place.\nUse the editor for background media, logo colors, app colors, and Monaco editor colors.")
     
-    local ThemeLabel = Instance.new("TextLabel")
-    ThemeLabel.BackgroundTransparency = 1
-    ThemeLabel.Size = UDim2.new(1, 0, 0, 20)
-    ThemeLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
-    ThemeLabel.Text = "Active Theme"
-    ThemeLabel.TextColor3 = Color3.fromRGB(240, 240, 245)
-    ThemeLabel.TextSize = 13
-    ThemeLabel.TextXAlignment = Enum.TextXAlignment.Left
-    ThemeLabel.Parent = ThemeSection.Instance
-    
-    local ThemeDesc = Instance.new("TextLabel")
-    ThemeDesc.BackgroundTransparency = 1
-    ThemeDesc.Size = UDim2.new(1, 0, 0, 14)
-    ThemeDesc.Position = UDim2.new(0, 0, 0, 20)
-    ThemeDesc.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
-    ThemeDesc.Text = "Choose the active theme. Editing a packaged theme automatically creates a custom copy."
-    ThemeDesc.TextColor3 = Color3.fromRGB(150, 150, 160)
-    ThemeDesc.TextSize = 12
-    ThemeDesc.TextXAlignment = Enum.TextXAlignment.Left
-    ThemeDesc.Parent = ThemeSection.Instance
-    
-    local ThemePadding = Instance.new("UIPadding")
-    ThemePadding.PaddingLeft = UDim.new(0, 14)
-    ThemePadding.PaddingTop = UDim.new(0, 10)
-    ThemePadding.Parent = ThemeLabel
-    
-    local ThemeDescPadding = Instance.new("UIPadding")
-    ThemeDescPadding.PaddingLeft = UDim.new(0, 14)
-    ThemeDescPadding.Parent = ThemeDesc
-
     -- Fetch themes from folder
     local themesList = {"My Volt Dark", "Volt Light", "Midnight Blue"}
     if listfiles then
@@ -394,7 +364,8 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     end
 
     local ThemeDropdown = ThemeSection:CreateDropdown({
-        Name = "",
+        Name = "Active Theme",
+        Description = "Choose the active theme. Editing a packaged theme automatically creates a custom copy.",
         Options = themesList,
         CurrentValue = SettingsManager.GetSetting("ActiveTheme") or themesList[1] or "My Volt Dark",
         Callback = function(Option)
@@ -463,9 +434,9 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
         return Btn
     end
     
-    CreateActionButton("Export", "rbxassetid://134267746401089", false) -- Placeholder icons
-    CreateActionButton("Import", "rbxassetid://134267746401089", false)
-    CreateActionButton("Delete", "rbxassetid://134267746401089", true)
+    CreateActionButton("Export", "rbxassetid://72679188953780", false)
+    CreateActionButton("Import", "rbxassetid://131957981720349", false)
+    CreateActionButton("Delete", "rbxassetid://93603266402801", true)
     
     local ThemeDetailsSection = AppearanceTab:AddSection("Theme Details", "Rename custom copies and choose the light/dark base.")
     
