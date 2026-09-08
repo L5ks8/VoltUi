@@ -43,8 +43,8 @@ function Window:CreateWindow(Config)
         task.wait(0)
     end
     
-    if loadingScreen then loadingScreen:SetStatus("Loading Ui Modules...") loadingScreen:SetProgress(0.15) task.wait(0) end
-    if loadingScreen then loadingScreen:SetStatus("Loading Notifications...") loadingScreen:SetProgress(0.2) task.wait(0) end
+    if loadingScreen then loadingScreen:SetStatus("Loading Ui Modules...") loadingScreen:SetProgress(0.55) task.wait(0) end
+    if loadingScreen then loadingScreen:SetStatus("Loading Notifications...") loadingScreen:SetProgress(0.60) task.wait(0) end
     local Notifications = require(script.Parent.Notifications)
     Notifications.Init(VoltUi)
     
@@ -70,7 +70,7 @@ function Window:CreateWindow(Config)
     local MainScale = Instance.new("UIScale")
     MainScale.Parent = Main
     
-    if loadingScreen then loadingScreen:SetStatus("Loading Topbar...") loadingScreen:SetProgress(0.25) task.wait(0) end
+    if loadingScreen then loadingScreen:SetStatus("Loading Topbar...") loadingScreen:SetProgress(0.65) task.wait(0) end
     local Topbar = require(script.Parent.Topbar)
     local TopbarElements = Topbar.Create(Main, Config, maid)
     
@@ -110,7 +110,7 @@ function Window:CreateWindow(Config)
     local OnCollapse = Signal.new()
     maid:GiveTask(OnCollapse)
     
-    if loadingScreen then loadingScreen:SetStatus("Loading Sidebar...") loadingScreen:SetProgress(0.40) task.wait(0) end
+    if loadingScreen then loadingScreen:SetStatus("Loading Sidebar...") loadingScreen:SetProgress(0.70) task.wait(0) end
     local Sidebar = require(script.Parent.Sidebar)
     local SidebarElements = Sidebar.Create(Content, maid, OnCollapse)
     
@@ -191,14 +191,14 @@ function Window:CreateWindow(Config)
         isAuthSystem = true
     end
 
-    if loadingScreen then loadingScreen:SetStatus("Loading Bottombar...") loadingScreen:SetProgress(0.55) task.wait(0) end
+    if loadingScreen then loadingScreen:SetStatus("Loading Bottombar...") loadingScreen:SetProgress(0.75) task.wait(0) end
     local Bottombar = require(script.Parent.Bottombar)
     local BottombarElements = Bottombar.Create(Main, maid)
     
     local OnLoginSuccess
     local WindowObject = {}
 
-    if loadingScreen then loadingScreen:SetStatus("Loading Core Components...") loadingScreen:SetProgress(0.70) task.wait(0) end
+    if loadingScreen then loadingScreen:SetStatus("Loading Core Components...") loadingScreen:SetProgress(0.85) task.wait(0) end
     local AccountPage = require(script.Parent.AccountPage)
     local LoginPage = require(script.Parent.LoginPage)
     local AccountPageElements
@@ -212,7 +212,7 @@ function Window:CreateWindow(Config)
         end)
     end)
     
-    if loadingScreen then loadingScreen:SetStatus("Loading Settings...") loadingScreen:SetProgress(0.80) task.wait(0) end
+    if loadingScreen then loadingScreen:SetStatus("Loading Settings...") loadingScreen:SetProgress(0.90) task.wait(0) end
     local SettingsPage = require(script.Parent.SettingsPage)
     local Tabs = require(script.Parent.Tabs)
     local Minimized = require(script.Parent.Minimized)
@@ -590,11 +590,11 @@ function Window:CreateWindow(Config)
     end
 
     if isAuthSystem then
-        if loadingScreen then loadingScreen:SetStatus("Checking OS & Version...") loadingScreen:SetProgress(0.85) task.wait(0) end
+        if loadingScreen then loadingScreen:SetStatus("Checking OS & Version...") loadingScreen:SetProgress(0.95) task.wait(0) end
         if not Api then
             pcall(function() Api = require(Utils.Api) end)
         end
-        if loadingScreen then loadingScreen:SetStatus("Connecting API...") loadingScreen:SetProgress(0.90) task.wait(0) end
+        if loadingScreen then loadingScreen:SetStatus("Connecting API...") loadingScreen:SetProgress(0.98) task.wait(0) end
 
         local token = nil
         if Api then

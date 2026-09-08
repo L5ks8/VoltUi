@@ -270,7 +270,7 @@ if not Window then
             error("[VoltUi] No HTTP GET method available")
         end
         downloadCount = downloadCount + 1
-        local pct = math.min(downloadCount / 35, 0.95)
+        local pct = math.min((downloadCount / 35) * 0.50, 0.50)
         _tw(BarFill, TweenInfo.new(0.15, Enum.EasingStyle.Linear), {Size = UDim2.new(pct, 0, 1, 0)})
         PctText.Text = tostring(math.floor(pct * 100)) .. "%"
         return result
