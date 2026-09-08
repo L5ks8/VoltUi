@@ -344,10 +344,9 @@ if not Window then
             _tw(BarBg, TweenInfo.new(0.5), {BackgroundTransparency = 1})
             _tw(BarFillBg, TweenInfo.new(0.5), {BackgroundTransparency = 1})
             _tw(BarFill, TweenInfo.new(0.5), {BackgroundTransparency = 1})
-            _tw(Icon, TweenInfo.new(0.5), {BackgroundTransparency = 1})
-            _tw(IconStroke, TweenInfo.new(0.5), {Transparency = 1})
+            _tw(ic, TweenInfo.new(0.5), {ImageTransparency = 1})
+            _tw(tx, TweenInfo.new(0.5), {TextTransparency = 1})
             task.wait(0.5)
-            LoadingContainer.Visible = false
             gui:Destroy()
         end)
     end

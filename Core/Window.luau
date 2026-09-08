@@ -11,7 +11,6 @@ pcall(function()
 end)
 
 local Loading = require(script.Parent.Loading)
-local Intro = require(script.Parent.Intro)
 
 local Window = {}
 
@@ -31,12 +30,6 @@ function Window:CreateWindow(Config)
     if Config._externalLoadingScreen then
         loadingScreen = Config._externalLoadingScreen
     elseif not Config._skipLoadingSequence then
-        local introScreen = Intro.Create(VoltUi)
-        task.wait(0)
-        introScreen:WaitForReady()
-        introScreen:FadeOut()
-        task.wait(0.5)
-        
         loadingScreen = Loading.Create(VoltUi)
         loadingScreen:SetStatus("Initializing Volt...")
         loadingScreen:SetProgress(0.1)

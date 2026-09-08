@@ -88,6 +88,7 @@ function Loading.Create(ParentGui)
     
     local BarFillBg = Instance.new("Frame")
     BarFillBg.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    BarFillBg.BackgroundTransparency = 1
     BarFillBg.Size = UDim2.new(1, 0, 0.4, 0)
     BarFillBg.AnchorPoint = Vector2.new(0, 0.5)
     BarFillBg.Position = UDim2.new(0, 0, 0.5, 0)
@@ -99,6 +100,7 @@ function Loading.Create(ParentGui)
     
     local BarFill = Instance.new("Frame")
     BarFill.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    BarFill.BackgroundTransparency = 1
     BarFill.Size = UDim2.new(0, 0, 1, 0)
     BarFill.Parent = BarFillBg
     
@@ -126,6 +128,7 @@ function Loading.Create(ParentGui)
     LoadingText.TextSize = 25
     LoadingText.TextXAlignment = Enum.TextXAlignment.Left
     LoadingText.TextYAlignment = Enum.TextYAlignment.Bottom
+    LoadingText.TextTransparency = 1
     LoadingText.Parent = TextContainer
     
     local PctContainer = Instance.new("Frame")
@@ -143,11 +146,40 @@ function Loading.Create(ParentGui)
     PctText.TextSize = 25
     PctText.TextXAlignment = Enum.TextXAlignment.Right
     PctText.TextYAlignment = Enum.TextYAlignment.Bottom
+    PctText.TextTransparency = 1
     PctText.Parent = PctContainer
 
     local obj = {Faded = false}
     
     task.spawn(function()
+        -- Initial state for animation
+        ic.ImageTransparency = 1
+        tx.Size = UDim2.new(0, 0, 0, 100)
+        tx.MaxVisibleGraphemes = 0
+        
+        -- Start intro animation
+        task.wait(0.2)
+        Tween(ic, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0})
+        task.wait(1)
+        task.wait(0.2)
+        Tween(tx, TweenInfo.new(0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {Size = UDim2.new(0, 150, 0, 100)})
+        task.wait(0.8)
+        for i = 1, 3 do
+            tx.MaxVisibleGraphemes = i
+            task.wait(0.15)
+        end
+        task.wait(0.8)
+        
+        -- Fade in the bar
+        Tween(introBox, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(0.5, 0, 0.45, 0)})
+        
+        Tween(BarBg, TweenInfo.new(0.3), {BackgroundTransparency = 0})
+        Tween(BarFillBg, TweenInfo.new(0.3), {BackgroundTransparency = 0})
+        Tween(BarFill, TweenInfo.new(0.3), {BackgroundTransparency = 0})
+        Tween(LoadingText, TweenInfo.new(0.3), {TextTransparency = 0})
+        Tween(PctText, TweenInfo.new(0.3), {TextTransparency = 0})
+        task.wait(0.3)
+        
         while not obj.Faded and Main and Main.Parent do
             Tween(ic, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {ImageTransparency = 0.4})
             task.wait(1)
