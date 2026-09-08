@@ -173,7 +173,6 @@ function Loading.Create(ParentGui)
         -- Fade in the bar
         Tween(introBox, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(0.5, 0, 0.45, 0)})
         
-        Tween(BarBg, TweenInfo.new(0.3), {BackgroundTransparency = 0})
         Tween(BarFillBg, TweenInfo.new(0.3), {BackgroundTransparency = 0})
         Tween(BarFill, TweenInfo.new(0.3), {BackgroundTransparency = 0})
         Tween(LoadingText, TweenInfo.new(0.3), {TextTransparency = 0})

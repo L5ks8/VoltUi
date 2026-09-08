@@ -200,7 +200,6 @@ if not Window then
         _tw(mfStroke, TweenInfo.new(0.3), {Transparency = 0})
         _tw(statusLbl, TweenInfo.new(0.3), {TextTransparency = 0})
         _tw(PctText, TweenInfo.new(0.3), {TextTransparency = 0})
-        _tw(BarBg, TweenInfo.new(0.3), {BackgroundTransparency = 0})
         _tw(BarFillBg, TweenInfo.new(0.3), {BackgroundTransparency = 0})
         _tw(BarFill, TweenInfo.new(0.3), {BackgroundTransparency = 0})
         task.wait(0.3)
