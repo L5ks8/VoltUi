@@ -237,10 +237,12 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     TabsLayout.Padding = UDim.new(0, 4)
     TabsLayout.Parent = SettingsTabsContainer
     
-    local TabsPadding = Instance.new("UIPadding")
-    TabsPadding.PaddingTop = UDim.new(0, 10)
-    TabsPadding.PaddingBottom = UDim.new(0, 10)
-    TabsPadding.Parent = SettingsTabsContainer
+    local TopSpacer = Instance.new("Frame")
+    TopSpacer.Name = "TopSpacer"
+    TopSpacer.BackgroundTransparency = 1
+    TopSpacer.Size = UDim2.new(1, 0, 0, 6)
+    TopSpacer.LayoutOrder = -1
+    TopSpacer.Parent = SettingsTabsContainer
     
     --ResetBtn
     local ResetBtn = Instance.new("TextButton")
@@ -337,9 +339,11 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
         TabBtn.Name = name
         TabBtn.BackgroundColor3 = Color3.new(1, 1, 1)
         TabBtn.BackgroundTransparency = 1
+        TabBtn.BorderSizePixel = 0
         TabBtn.Size = UDim2.new(1, -20 - (indent or 0), 0, 30)
         TabBtn.Position = UDim2.new(0, 0, 0, 0)
         TabBtn.Text = ""
+        TabBtn.LayoutOrder = #TabContentRefs
         TabBtn.Parent = SettingsTabsContainer
         
         local TabCorner = Instance.new("UICorner")
