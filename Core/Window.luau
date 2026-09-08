@@ -29,12 +29,15 @@ function Window:CreateWindow(Config)
     
     local showLoading = true
     local loadingScreen
+    local introAlreadyShown = Config._introAlreadyShown or false
     if showLoading then
-        local introScreen = Intro.Create(VoltUi)
-        task.wait(0)
-        introScreen:WaitForReady()
-        introScreen:FadeOut()
-        task.wait(0.5)
+        if not introAlreadyShown then
+            local introScreen = Intro.Create(VoltUi)
+            task.wait(0)
+            introScreen:WaitForReady()
+            introScreen:FadeOut()
+            task.wait(0.5)
+        end
         
         loadingScreen = Loading.Create(VoltUi)
         loadingScreen:SetStatus("Initializing Volt...")
