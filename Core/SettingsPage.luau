@@ -1,7 +1,7 @@
 local Utils = script.Parent.Parent.Utils
 local Tween = require(Utils.Tween)
 local SettingsManager = require(Utils.SettingsManager)
-local ThemeManager = require(script.Parent.Parent.Theme)
+local ThemeManager = require(script.Parent.Theme)
 local Tabs = require(script.Parent.Tabs)
 
 local SettingsPage = {}
