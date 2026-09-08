@@ -224,8 +224,8 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     SettingsTabsContainer.Name = "TabsContainer"
     SettingsTabsContainer.BackgroundTransparency = 1
     SettingsTabsContainer.BorderSizePixel = 0
-    SettingsTabsContainer.Size = UDim2.new(1, 0, 1, -95)
-    SettingsTabsContainer.Position = UDim2.new(0, 0, 0, 45)
+    SettingsTabsContainer.Size = UDim2.new(1, 0, 1, -105)
+    SettingsTabsContainer.Position = UDim2.new(0, 0, 0, 55)
     SettingsTabsContainer.ScrollBarThickness = 0
     SettingsTabsContainer.CanvasSize = UDim2.new(0, 0, 0, 0)
     SettingsTabsContainer.AutomaticCanvasSize = Enum.AutomaticSize.Y
@@ -233,14 +233,9 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     
     local TabsLayout = Instance.new("UIListLayout")
     TabsLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    TabsLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
     TabsLayout.Padding = UDim.new(0, 4)
     TabsLayout.Parent = SettingsTabsContainer
-    
-    local TabsContainerPadding = Instance.new("UIPadding")
-    TabsContainerPadding.PaddingTop = UDim.new(0, 10)
-    TabsContainerPadding.PaddingLeft = UDim.new(0, 10)
-    TabsContainerPadding.PaddingRight = UDim.new(0, 10)
-    TabsContainerPadding.Parent = SettingsTabsContainer
     
     --ResetBtn
     local ResetBtn = Instance.new("TextButton")
@@ -337,8 +332,8 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
         TabBtn.Name = name
         TabBtn.BackgroundColor3 = Color3.new(1, 1, 1)
         TabBtn.BackgroundTransparency = 1
-        TabBtn.Size = UDim2.new(1, -(indent or 0), 0, 30)
-        TabBtn.Position = UDim2.new(0, (indent or 0), 0, 0)
+        TabBtn.Size = UDim2.new(1, -20 - (indent or 0), 0, 30)
+        TabBtn.Position = UDim2.new(0, 0, 0, 0)
         TabBtn.Text = ""
         TabBtn.Parent = SettingsTabsContainer
         
