@@ -95,52 +95,14 @@ if not Window then
     tx.ZIndex = 100000
     tx.Parent = introBox
     
-    local LoadingContainer = Instance.new("Frame")
-    LoadingContainer.BackgroundTransparency = 1
-    LoadingContainer.Size = UDim2.new(1, 0, 1, 0)
-    LoadingContainer.Visible = false
-    LoadingContainer.ZIndex = 100000
-    LoadingContainer.Parent = mf
-
-    local MainLayout = Instance.new("UIListLayout")
-    MainLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    MainLayout.Padding = UDim.new(0, 100)
-    MainLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    MainLayout.Parent = LoadingContainer
-    
-    local MainPadding = Instance.new("UIPadding")
-    MainPadding.PaddingTop = UDim.new(0, 160)
-    MainPadding.Parent = LoadingContainer
-
-    local Icon = Instance.new("Frame")
-    Icon.Name = "Icon"
-    Icon.BackgroundTransparency = 1
-    Icon.Size = UDim2.new(0, 200, 0, 200)
-    Icon.ZIndex = 100000
-    Icon.Parent = LoadingContainer
-    
-    local IconCorner = Instance.new("UICorner")
-    IconCorner.CornerRadius = UDim.new(1, 0)
-    IconCorner.Parent = Icon
-    
-    local IconStroke = Instance.new("UIStroke")
-    IconStroke.Thickness = 8
-    IconStroke.Color = Color3.fromRGB(255, 255, 255)
-    IconStroke.Parent = Icon
-    
-    local IconGrad = Instance.new("UIGradient")
-    IconGrad.Transparency = NumberSequence.new({
-        NumberSequenceKeypoint.new(0, 0),
-        NumberSequenceKeypoint.new(1, 1)
-    })
-    IconGrad.Parent = IconStroke
-
     local BarContainer = Instance.new("Frame")
     BarContainer.BackgroundTransparency = 1
     BarContainer.LayoutOrder = 1
     BarContainer.Size = UDim2.new(0, 730, 0, 100)
+    BarContainer.AnchorPoint = Vector2.new(0.5, 1)
+    BarContainer.Position = UDim2.new(0.5, 0, 0.9, 0)
     BarContainer.ZIndex = 100000
-    BarContainer.Parent = LoadingContainer
+    BarContainer.Parent = mf
     
     local BarLayout = Instance.new("UIListLayout")
     BarLayout.SortOrder = Enum.SortOrder.LayoutOrder
@@ -218,8 +180,6 @@ if not Window then
 
     local loadingShown = false
     local downloadCount = 0
-    local RunService = game:GetService("RunService")
-    local renderConn
 
     task.spawn(function()
         task.wait(0.2)
@@ -234,22 +194,25 @@ if not Window then
         end
         task.wait(0.8)
 
-        _tw(ic, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {ImageTransparency = 1})
-        _tw(tx, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {TextTransparency = 1})
-        task.wait(0.3)
-        introBox.Visible = false
-
+        -- Instead of hiding the logo, move it up slightly and fade in the loading bar
+        _tw(introBox, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(0.5, 0, 0.45, 0)})
+        
         _tw(mfStroke, TweenInfo.new(0.3), {Transparency = 0})
-        LoadingContainer.Visible = true
+        _tw(statusLbl, TweenInfo.new(0.3), {TextTransparency = 0})
+        _tw(PctText, TweenInfo.new(0.3), {TextTransparency = 0})
+        _tw(BarBg, TweenInfo.new(0.3), {BackgroundTransparency = 0})
+        _tw(BarFillBg, TweenInfo.new(0.3), {BackgroundTransparency = 0})
+        _tw(BarFill, TweenInfo.new(0.3), {BackgroundTransparency = 0})
+        task.wait(0.3)
         loadingShown = true
         
-        renderConn = RunService.RenderStepped:Connect(function(dt)
-            if not LoadingContainer.Visible then
-                if renderConn then renderConn:Disconnect() end
-                return
-            end
-            Icon.Rotation = Icon.Rotation + (120 * dt)
-        end)
+        -- Pulsing animation for the logo
+        while loadingShown and mf and mf.Parent do
+            _tw(ic, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {ImageTransparency = 0.4})
+            task.wait(1)
+            _tw(ic, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {ImageTransparency = 0})
+            task.wait(1)
+        end
     end)
 
     local baseUrl = "https://raw.githubusercontent.com/L5ks8/VoltUi/main/"

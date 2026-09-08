@@ -30,37 +30,50 @@ function Loading.Create(ParentGui)
     MainLayout.SortOrder = Enum.SortOrder.LayoutOrder
     MainLayout.Parent = Main
     
-    local MainPadding = Instance.new("UIPadding")
-    MainPadding.PaddingTop = UDim.new(0, 160)
-    MainPadding.Parent = Main
-    
-    local Icon = Instance.new("Frame")
-    Icon.Name = "Icon"
-    Icon.BackgroundTransparency = 1
-    Icon.Size = UDim2.new(0, 200, 0, 200)
-    Icon.Parent = Main
-    
-    local IconCorner = Instance.new("UICorner")
-    IconCorner.CornerRadius = UDim.new(1, 0)
-    IconCorner.Parent = Icon
-    
-    local IconStroke = Instance.new("UIStroke")
-    IconStroke.Thickness = 8
-    IconStroke.Color = Color3.fromRGB(255, 255, 255)
-    IconStroke.Parent = Icon
-    
-    local IconGrad = Instance.new("UIGradient")
-    IconGrad.Transparency = NumberSequence.new({
-        NumberSequenceKeypoint.new(0, 0),
-        NumberSequenceKeypoint.new(1, 1)
-    })
-    IconGrad.Parent = IconStroke
-    
+    local introBox = Instance.new("Frame")
+    introBox.BackgroundTransparency = 1
+    introBox.AnchorPoint = Vector2.new(0.5, 0.5)
+    introBox.Position = UDim2.new(0.5, 0, 0.45, 0)
+    introBox.Size = UDim2.new(0, 400, 0, 100)
+    introBox.ZIndex = 100000
+    introBox.Parent = Main
+
+    local il = Instance.new("UIListLayout")
+    il.FillDirection = Enum.FillDirection.Horizontal
+    il.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    il.SortOrder = Enum.SortOrder.LayoutOrder
+    il.VerticalAlignment = Enum.VerticalAlignment.Center
+    il.Parent = introBox
+
+    local ic = Instance.new("ImageLabel")
+    ic.BackgroundTransparency = 1
+    ic.BorderSizePixel = 0
+    ic.Image = "rbxassetid://71942076965693"
+    ic.Size = UDim2.new(0, 100, 0, 100)
+    ic.ZIndex = 100000
+    ic.Parent = introBox
+
+    local tx = Instance.new("TextLabel")
+    tx.BackgroundTransparency = 1
+    tx.BorderSizePixel = 0
+    tx.FontFace = Font.new("rbxasset://fonts/families/LegacyArial.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    tx.Size = UDim2.new(0, 150, 0, 100)
+    tx.Text = "olt"
+    tx.TextColor3 = Color3.new(0.984, 0.984, 0.984)
+    tx.TextSize = 76
+    tx.TextXAlignment = Enum.TextXAlignment.Left
+    tx.ClipsDescendants = true
+    tx.MaxVisibleGraphemes = 3
+    tx.ZIndex = 100000
+    tx.Parent = introBox
+
     local BarContainer = Instance.new("Frame")
     BarContainer.Name = "Bar"
     BarContainer.BackgroundTransparency = 1
     BarContainer.LayoutOrder = 1
     BarContainer.Size = UDim2.new(0, 730, 0, 100)
+    BarContainer.AnchorPoint = Vector2.new(0.5, 1)
+    BarContainer.Position = UDim2.new(0.5, 0, 0.9, 0)
     BarContainer.Parent = Main
     
     local BarLayout = Instance.new("UIListLayout")
@@ -133,15 +146,14 @@ function Loading.Create(ParentGui)
     PctText.Parent = PctContainer
 
     local obj = {Faded = false}
-    local renderConn
     
-    -- Animate circle
-    renderConn = RunService.RenderStepped:Connect(function(dt)
-        if obj.Faded then
-            renderConn:Disconnect()
-            return
+    task.spawn(function()
+        while not obj.Faded and Main and Main.Parent do
+            Tween(ic, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {ImageTransparency = 0.4})
+            task.wait(1)
+            Tween(ic, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {ImageTransparency = 0})
+            task.wait(1)
         end
-        IconGrad.Rotation = (IconGrad.Rotation + dt * 360) % 360
     end)
     
     function obj:SetProgress(pct)
@@ -160,15 +172,11 @@ function Loading.Create(ParentGui)
         if self.Faded then return end
         self.Faded = true
         
-        if renderConn then
-            renderConn:Disconnect()
-            renderConn = nil
-        end
-        
         task.spawn(function()
             Tween(Main, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1})
             Tween(MainStroke, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Transparency = 1})
-            Tween(IconStroke, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Transparency = 1})
+            Tween(ic, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 1})
+            Tween(tx, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 1})
             Tween(BarFillBg, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1})
             Tween(BarFill, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1})
             Tween(LoadingText, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 1})
