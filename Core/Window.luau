@@ -178,6 +178,7 @@ function Window:CreateWindow(Config)
     local BottombarElements = Bottombar.Create(Main, maid)
     
     local OnLoginSuccess
+    local WindowObject = {}
 
     local AccountPageElements
     pcall(function()
@@ -724,7 +725,7 @@ function Window:CreateWindow(Config)
     local OnClose = Signal.new()
     maid:GiveTask(OnClose)
     
-    local WindowObject = {
+    WindowObject = {
         Instance = VoltUi,
         Main = Main,
         Topbar = TopbarElements,
