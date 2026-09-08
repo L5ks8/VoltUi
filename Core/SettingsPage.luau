@@ -26,7 +26,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     PageStroke.Color = Color3.new(0.353, 0.353, 0.353)
     PageStroke.Parent = Page
 
-    -- Topbar for Settings
+    --Topbar
     local Actions = Instance.new("Frame")
     Actions.Name = "Actions"
     Actions.BackgroundColor3 = Color3.new(1, 1, 1)
@@ -107,7 +107,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     SettingsTextPadding.PaddingLeft = UDim.new(0, 5)
     SettingsTextPadding.Parent = SettingsText
 
-    -- Main Content Area of Settings Page
+    --Content
     local ContentFrame = Instance.new("Frame")
     ContentFrame.Name = "Content"
     ContentFrame.BackgroundColor3 = Color3.new(1, 1, 1)
@@ -125,7 +125,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     ContentLayout.VerticalAlignment = Enum.VerticalAlignment.Center
     ContentLayout.Parent = ContentFrame
     
-    -- Sidebar for Settings
+    --Sidebar
     local SettingsSidebar = Instance.new("Frame")
     SettingsSidebar.Name = "Sidebar"
     SettingsSidebar.BackgroundColor3 = Color3.new(0.08, 0.08, 0.08)
@@ -135,7 +135,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     SettingsSidebar.LayoutOrder = 0
     SettingsSidebar.Parent = ContentFrame
     
-    -- Search bar in sidebar
+    --Search
     local SearchContainer = Instance.new("Frame")
     SearchContainer.Name = "SearchContainer"
     SearchContainer.BackgroundTransparency = 1
@@ -162,7 +162,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     
     local SearchIcon = Instance.new("ImageLabel")
     SearchIcon.BackgroundTransparency = 1
-    SearchIcon.Image = "rbxassetid://88107177696245" -- Search icon
+    SearchIcon.Image = "rbxassetid://88107177696245"
     SearchIcon.ImageColor3 = Color3.fromRGB(150, 150, 160)
     SearchIcon.Size = UDim2.new(0, 14, 0, 14)
     SearchIcon.Position = UDim2.new(0, 8, 0.5, -7)
@@ -176,12 +176,12 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     SearchStroke.Color = Color3.fromRGB(48, 48, 48)
     SearchStroke.Parent = SearchBox
     
-    -- Tabs Container in sidebar
+    --TabsContainer
     local SettingsTabsContainer = Instance.new("ScrollingFrame")
     SettingsTabsContainer.Name = "TabsContainer"
     SettingsTabsContainer.BackgroundTransparency = 1
     SettingsTabsContainer.BorderSizePixel = 0
-    SettingsTabsContainer.Size = UDim2.new(1, 0, 1, -95) -- 45 (Search) + 50 (Reset button)
+    SettingsTabsContainer.Size = UDim2.new(1, 0, 1, -95)
     SettingsTabsContainer.Position = UDim2.new(0, 0, 0, 45)
     SettingsTabsContainer.ScrollBarThickness = 0
     SettingsTabsContainer.Parent = SettingsSidebar
@@ -191,7 +191,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     TabsLayout.Padding = UDim.new(0, 4)
     TabsLayout.Parent = SettingsTabsContainer
     
-    -- Reset Settings Button
+    --ResetBtn
     local ResetBtn = Instance.new("TextButton")
     ResetBtn.Name = "ResetSettings"
     ResetBtn.BackgroundColor3 = Color3.fromRGB(36, 24, 24)
@@ -262,7 +262,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     SettingsWindowObject.PageLayout.TouchInputEnabled = false
     SettingsWindowObject.PageLayout.GamepadInputEnabled = false
 
-    -- Custom CreateTab function for settings
+    --CreateTab
     local ActiveTab = nil
     local TabContentRefs = {}
     local function CreateSettingsTab(name, icon, indent)
@@ -351,12 +351,12 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
         return TabMethods, TabBtn
     end
 
-    -- Create Tabs
-    CreateSettingsTab("Editor", "rbxassetid://134267746401089") -- Replace with correct icon
-    local AppearanceTab, AppearanceBtn = CreateSettingsTab("Appearance", "rbxassetid://1234567890") -- Replace with correct icon
+    --Tabs
+    CreateSettingsTab("Editor", "rbxassetid://134267746401089")
+    local AppearanceTab, AppearanceBtn = CreateSettingsTab("Appearance", "rbxassetid://1234567890")
     CreateSettingsTab("Client", "rbxassetid://1234567890")
     
-    -- Sub-tabs for Client
+    --SubTabs
     CreateSettingsTab("General", nil, 14)
     CreateSettingsTab("Multi-Instance", nil, 14)
     CreateSettingsTab("Decompiler", nil, 14)
@@ -364,13 +364,13 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     
     CreateSettingsTab("Workbench", "rbxassetid://1234567890")
 
-    -- Activate Appearance tab by default for now
+    --Select
     AppearanceTab:Select()
     
-    -- Appearance Tab Content: Theme Editor
+    --Theme
     local ThemeSection = AppearanceTab:AddSection("Theme", "Choose, manage, and customize the full UI.")
     
-    -- Fetch themes from folder
+    --FetchThemes
     local themesList = {"My Volt Dark", "Volt Light", "Midnight Blue"}
     if listfiles then
         pcall(function()
@@ -392,7 +392,6 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
         CurrentValue = SettingsManager.GetSetting("ActiveTheme") or themesList[1] or "My Volt Dark",
         Callback = function(Option)
             SettingsManager.SaveSettings({ ActiveTheme = Option })
-            -- Apply theme later when ThemeManager is implemented
         end
     })
     
@@ -479,7 +478,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
         end
     })
     
-    -- Mode segmented control (Dark/Light)
+    --ModeToggle
     local ModeRow = Instance.new("Frame")
     ModeRow.Name = "ModeRow"
     ModeRow.BackgroundTransparency = 1
@@ -543,7 +542,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     LightCorner.CornerRadius = UDim.new(0, 6)
     LightCorner.Parent = LightBtn
     
-    -- Mode Toggle Logic
+    --Logic
     local currentMode = SettingsManager.GetSetting("Mode") or "Dark"
     
     if currentMode == "Light" then
