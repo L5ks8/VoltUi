@@ -444,7 +444,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     local ThemeSection = AppearanceTab:AddSection("Theme", "Choose, manage, and customize the full UI.")
     
     --FetchThemes
-    local themesList = {"My Volt Dark", "Volt Light", "Ocean", "Forest", "Sunset", "Midnight", "Void"}
+    local themesList = {"My Volt Dark", "Volt Light", "Ocean", "Forest", "Sunset", "Midnight", "Void", "Sakura", "Ruby", "Emerald", "Cyberpunk", "Dracula", "Solarized"}
     if listfiles then
         pcall(function()
             local files = listfiles("VoltHub/Themes")

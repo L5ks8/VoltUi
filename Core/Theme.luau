@@ -6,7 +6,13 @@ local Themes = {
     ["Forest"] = require(script.Parent.Parent.Themes.Forest),
     ["Sunset"] = require(script.Parent.Parent.Themes.Sunset),
     ["Midnight"] = require(script.Parent.Parent.Themes.Midnight),
-    ["Void"] = require(script.Parent.Parent.Themes.Void)
+    ["Void"] = require(script.Parent.Parent.Themes.Void),
+    ["Sakura"] = require(script.Parent.Parent.Themes.Sakura),
+    ["Ruby"] = require(script.Parent.Parent.Themes.Ruby),
+    ["Emerald"] = require(script.Parent.Parent.Themes.Emerald),
+    ["Cyberpunk"] = require(script.Parent.Parent.Themes.Cyberpunk),
+    ["Dracula"] = require(script.Parent.Parent.Themes.Dracula),
+    ["Solarized"] = require(script.Parent.Parent.Themes.Solarized)
 }
 
 local SharedState = shared.VoltUiThemeState
