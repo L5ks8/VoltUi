@@ -10,7 +10,6 @@ pcall(function()
     Api = require(Utils.Api)
 end)
 
--- Lazy loaded modules inside CreateWindow to prevent blocking Intro
 local Loading = require(script.Parent.Loading)
 local Intro = require(script.Parent.Intro)
 
@@ -43,6 +42,7 @@ function Window:CreateWindow(Config)
         task.wait(0)
     end
     
+    if loadingScreen then loadingScreen:SetStatus("Loading Ui Modules...") loadingScreen:SetProgress(0.15) task.wait(0) end
     if loadingScreen then loadingScreen:SetStatus("Loading Notifications...") loadingScreen:SetProgress(0.2) task.wait(0) end
     local Notifications = require(script.Parent.Notifications)
     Notifications.Init(VoltUi)
