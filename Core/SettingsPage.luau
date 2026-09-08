@@ -224,8 +224,8 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     SettingsTabsContainer.Name = "TabsContainer"
     SettingsTabsContainer.BackgroundTransparency = 1
     SettingsTabsContainer.BorderSizePixel = 0
-    SettingsTabsContainer.Size = UDim2.new(1, 0, 1, -105)
-    SettingsTabsContainer.Position = UDim2.new(0, 0, 0, 55)
+    SettingsTabsContainer.Size = UDim2.new(1, 0, 1, -95)
+    SettingsTabsContainer.Position = UDim2.new(0, 0, 0, 45)
     SettingsTabsContainer.ScrollBarThickness = 0
     SettingsTabsContainer.CanvasSize = UDim2.new(0, 0, 0, 0)
     SettingsTabsContainer.AutomaticCanvasSize = Enum.AutomaticSize.Y
@@ -236,6 +236,11 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     TabsLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
     TabsLayout.Padding = UDim.new(0, 4)
     TabsLayout.Parent = SettingsTabsContainer
+    
+    local TabsPadding = Instance.new("UIPadding")
+    TabsPadding.PaddingTop = UDim.new(0, 10)
+    TabsPadding.PaddingBottom = UDim.new(0, 10)
+    TabsPadding.Parent = SettingsTabsContainer
     
     --ResetBtn
     local ResetBtn = Instance.new("TextButton")
@@ -403,7 +408,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
                 Tween(ref.Title, TweenInfo.new(0.2), {TextColor3 = Color3.new(0.6, 0.6, 0.6)})
             end
             
-            Tween(TabStroke, TweenInfo.new(0.2), {Transparency = 0.65})
+            Tween(TabStroke, TweenInfo.new(0.2), {Transparency = 0.55})
             Tween(TabTitle, TweenInfo.new(0.2), {TextColor3 = Color3.new(1, 1, 1)})
             SettingsWindowObject.PageLayout:JumpTo(TabContent)
         end
