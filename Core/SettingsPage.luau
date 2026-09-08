@@ -197,10 +197,8 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     ResetBtn.BackgroundColor3 = Color3.fromRGB(36, 24, 24)
     ResetBtn.Size = UDim2.new(1, -20, 0, 30)
     ResetBtn.Position = UDim2.new(0, 10, 1, -40)
-    ResetBtn.Text = "Reset Settings"
-    ResetBtn.TextColor3 = Color3.fromRGB(240, 120, 120)
-    ResetBtn.TextSize = 13
-    ResetBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+    ResetBtn.Text = ""
+    ResetBtn.AutoButtonColor = false
     ResetBtn.Parent = SettingsSidebar
     
     local ResetCorner = Instance.new("UICorner")
@@ -210,6 +208,30 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     local ResetStroke = Instance.new("UIStroke")
     ResetStroke.Color = Color3.fromRGB(80, 30, 30)
     ResetStroke.Parent = ResetBtn
+    
+    local ResetLayout = Instance.new("UIListLayout")
+    ResetLayout.FillDirection = Enum.FillDirection.Horizontal
+    ResetLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    ResetLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    ResetLayout.Padding = UDim.new(0, 6)
+    ResetLayout.Parent = ResetBtn
+    
+    local ResetIcon = Instance.new("ImageLabel")
+    ResetIcon.BackgroundTransparency = 1
+    ResetIcon.Size = UDim2.new(0, 14, 0, 14)
+    ResetIcon.Image = "rbxassetid://140708438269602"
+    ResetIcon.ImageColor3 = Color3.fromRGB(240, 120, 120)
+    ResetIcon.Parent = ResetBtn
+    
+    local ResetTextLabel = Instance.new("TextLabel")
+    ResetTextLabel.BackgroundTransparency = 1
+    ResetTextLabel.Size = UDim2.new(0, 0, 1, 0)
+    ResetTextLabel.AutomaticSize = Enum.AutomaticSize.X
+    ResetTextLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+    ResetTextLabel.Text = "Reset Settings"
+    ResetTextLabel.TextColor3 = Color3.fromRGB(240, 120, 120)
+    ResetTextLabel.TextSize = 13
+    ResetTextLabel.Parent = ResetBtn
     
     local SidebarSeparator = Instance.new("Frame")
     SidebarSeparator.Name = "SidebarSeparator"
