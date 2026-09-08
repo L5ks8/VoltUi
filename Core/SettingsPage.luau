@@ -443,7 +443,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     local ThemeSection = AppearanceTab:AddSection("Theme", "Choose, manage, and customize the full UI.")
     
     --FetchThemes
-    local themesList = {"My Volt Dark", "Volt Light", "Midnight Blue"}
+    local themesList = {"My Volt Dark", "Volt Light", "Ocean", "Forest", "Sunset", "Midnight", "Void"}
     if listfiles then
         pcall(function()
             local files = listfiles("VoltHub/Themes")
@@ -631,6 +631,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
         SettingsManager.SaveSettings({ Mode = "Dark" })
         Tween(DarkBtn, TweenInfo.new(0.2), {BackgroundTransparency = 0, TextColor3 = Color3.fromRGB(240, 240, 245)})
         Tween(LightBtn, TweenInfo.new(0.2), {BackgroundTransparency = 1, TextColor3 = Color3.fromRGB(150, 150, 160)})
+        ThemeDropdown:Set("My Volt Dark")
     end))
     Maid:GiveTask(LightBtn.MouseButton1Click:Connect(function()
         if currentMode == "Light" then return end
@@ -638,6 +639,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
         SettingsManager.SaveSettings({ Mode = "Light" })
         Tween(LightBtn, TweenInfo.new(0.2), {BackgroundTransparency = 0, TextColor3 = Color3.fromRGB(240, 240, 245)})
         Tween(DarkBtn, TweenInfo.new(0.2), {BackgroundTransparency = 1, TextColor3 = Color3.fromRGB(150, 150, 160)})
+        ThemeDropdown:Set("Volt Light")
     end))
 
     return {

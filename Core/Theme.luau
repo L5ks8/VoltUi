@@ -2,7 +2,11 @@ local TweenService = game:GetService("TweenService")
 local Themes = {
     ["Volt Light"] = require(script.Parent.Parent.Themes.Light),
     ["My Volt Dark"] = require(script.Parent.Parent.Themes.Dark),
-    ["Midnight Blue"] = require(script.Parent.Parent.Themes.Dark) -- Placeholder for Midnight Blue
+    ["Ocean"] = require(script.Parent.Parent.Themes.Ocean),
+    ["Forest"] = require(script.Parent.Parent.Themes.Forest),
+    ["Sunset"] = require(script.Parent.Parent.Themes.Sunset),
+    ["Midnight"] = require(script.Parent.Parent.Themes.Midnight),
+    ["Void"] = require(script.Parent.Parent.Themes.Void)
 }
 
 local ThemeManager = {
