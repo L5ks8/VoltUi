@@ -556,6 +556,12 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
     ToggleFrame.MouseLeave:Connect(function()
         Tween(ToggleFrame, TweenInfo.new(0.2), {BackgroundTransparency = 1})
     end)
+    
+    if ThemeManager.OnThemeChanged then
+        Maid:GiveTask(ThemeManager.OnThemeChanged.Event:Connect(function()
+            UpdateToggleVisuals()
+        end))
+    end
 
     local ToggleObject = {}
     ToggleObject.Instance = ToggleFrame

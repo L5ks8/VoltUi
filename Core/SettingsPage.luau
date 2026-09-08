@@ -605,7 +605,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     ThemeManager:Register(DarkBtn, "BackgroundColor3", "SecondaryBackground")
     DarkBtn.Size = UDim2.new(0.5, 0, 1, 0)
     DarkBtn.Text = "Dark"
-    ThemeManager:Register(DarkBtn, "TextColor3", "TextPrimary")
+    DarkBtn.TextColor3 = ThemeManager:GetColor("TextPrimary")
     DarkBtn.TextSize = 12
     DarkBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     DarkBtn.Parent = ModeContainer
@@ -615,11 +615,12 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     DarkCorner.Parent = DarkBtn
     
     local LightBtn = Instance.new("TextButton")
+    ThemeManager:Register(LightBtn, "BackgroundColor3", "SecondaryBackground")
     LightBtn.BackgroundTransparency = 1
     LightBtn.Position = UDim2.new(0.5, 0, 0, 0)
     LightBtn.Size = UDim2.new(0.5, 0, 1, 0)
     LightBtn.Text = "Light"
-    ThemeManager:Register(LightBtn, "TextColor3", "TextSecondary")
+    LightBtn.TextColor3 = ThemeManager:GetColor("TextSecondary")
     LightBtn.TextSize = 12
     LightBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     LightBtn.Parent = ModeContainer
@@ -636,6 +637,18 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
         LightBtn.TextColor3 = ThemeManager:GetColor("TextPrimary")
         DarkBtn.BackgroundTransparency = 1
         DarkBtn.TextColor3 = ThemeManager:GetColor("TextSecondary")
+    end
+
+    if ThemeManager.OnThemeChanged then
+        Maid:GiveTask(ThemeManager.OnThemeChanged.Event:Connect(function()
+            if currentMode == "Light" then
+                LightBtn.TextColor3 = ThemeManager:GetColor("TextPrimary")
+                DarkBtn.TextColor3 = ThemeManager:GetColor("TextSecondary")
+            else
+                DarkBtn.TextColor3 = ThemeManager:GetColor("TextPrimary")
+                LightBtn.TextColor3 = ThemeManager:GetColor("TextSecondary")
+            end
+        end))
     end
     
     Maid:GiveTask(DarkBtn.MouseButton1Click:Connect(function()

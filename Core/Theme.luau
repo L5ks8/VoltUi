@@ -19,12 +19,14 @@ local SharedState = shared.VoltUiThemeState
 if type(SharedState) ~= "table" then
     SharedState = {
         CurrentThemeName = "My Volt Dark",
-        RegisteredElements = {}
+        RegisteredElements = {},
+        OnThemeChanged = Instance.new("BindableEvent")
     }
     shared.VoltUiThemeState = SharedState
 end
 
 local ThemeManager = {}
+ThemeManager.OnThemeChanged = SharedState.OnThemeChanged
 
 function ThemeManager:GetColor(colorKey)
     local theme = Themes[SharedState.CurrentThemeName]
@@ -59,6 +61,8 @@ function ThemeManager:SetTheme(themeName)
             end
         end)
     end
+    
+    SharedState.OnThemeChanged:Fire(themeName)
 end
 
 return ThemeManager

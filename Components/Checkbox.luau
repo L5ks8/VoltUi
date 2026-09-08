@@ -452,6 +452,7 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
     CheckIcon.Parent = BoxBg
 
     local function updateVisuals()
+        local currentStrokeOff = ThemeManager:GetColor("StrokeColor")
         if state then
             Tween(BoxBg, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
                 BackgroundColor3 = boxOnColor,
@@ -471,7 +472,7 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
                 BackgroundTransparency = 0.2,
             })
             Tween(BoxStroke, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-                Color = strokeOffColor,
+                Color = currentStrokeOff,
             })
             Tween(CheckIcon, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
                 ImageTransparency = 1,
@@ -495,6 +496,12 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
     CheckboxFrame.MouseLeave:Connect(function()
         Tween(CheckboxFrame, TweenInfo.new(0.2), {BackgroundTransparency = 1})
     end)
+    
+    if ThemeManager.OnThemeChanged then
+        Maid:GiveTask(ThemeManager.OnThemeChanged.Event:Connect(function()
+            updateVisuals()
+        end))
+    end
 
     local CheckboxObject = {}
     CheckboxObject.Instance = CheckboxFrame
