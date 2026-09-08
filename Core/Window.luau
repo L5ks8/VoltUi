@@ -10,15 +10,7 @@ pcall(function()
     Api = require(Utils.Api)
 end)
 
-local Topbar = require(script.Parent.Topbar)
-local Sidebar = require(script.Parent.Sidebar)
-local Bottombar = require(script.Parent.Bottombar)
-local Minimized = require(script.Parent.Minimized)
-local CloseWarn = require(script.Parent.CloseWarn)
-local AccountPage = require(script.Parent.AccountPage)
-local LoginPage = require(script.Parent.LoginPage)
-local Notifications = require(script.Parent.Notifications)
-local Tabs = require(script.Parent.Tabs)
+-- Lazy loaded modules inside CreateWindow to prevent blocking Intro
 local Loading = require(script.Parent.Loading)
 local Intro = require(script.Parent.Intro)
 
@@ -51,6 +43,8 @@ function Window:CreateWindow(Config)
         task.wait(0)
     end
     
+    if loadingScreen then loadingScreen:SetStatus("Loading Notifications...") loadingScreen:SetProgress(0.2) task.wait(0) end
+    local Notifications = require(script.Parent.Notifications)
     Notifications.Init(VoltUi)
     
     local Main = Instance.new("Frame")
@@ -76,6 +70,7 @@ function Window:CreateWindow(Config)
     MainScale.Parent = Main
     
     if loadingScreen then loadingScreen:SetStatus("Loading Topbar...") loadingScreen:SetProgress(0.25) task.wait(0) end
+    local Topbar = require(script.Parent.Topbar)
     local TopbarElements = Topbar.Create(Main, Config, maid)
     
     local PagesContainer = Instance.new("Frame")
@@ -115,6 +110,7 @@ function Window:CreateWindow(Config)
     maid:GiveTask(OnCollapse)
     
     if loadingScreen then loadingScreen:SetStatus("Loading Sidebar...") loadingScreen:SetProgress(0.40) task.wait(0) end
+    local Sidebar = require(script.Parent.Sidebar)
     local SidebarElements = Sidebar.Create(Content, maid, OnCollapse)
     
 
@@ -195,12 +191,15 @@ function Window:CreateWindow(Config)
     end
 
     if loadingScreen then loadingScreen:SetStatus("Loading Bottombar...") loadingScreen:SetProgress(0.55) task.wait(0) end
+    local Bottombar = require(script.Parent.Bottombar)
     local BottombarElements = Bottombar.Create(Main, maid)
     
     local OnLoginSuccess
     local WindowObject = {}
 
     if loadingScreen then loadingScreen:SetStatus("Loading Core Components...") loadingScreen:SetProgress(0.70) task.wait(0) end
+    local AccountPage = require(script.Parent.AccountPage)
+    local LoginPage = require(script.Parent.LoginPage)
     local AccountPageElements
     pcall(function()
         AccountPageElements = AccountPage.Create(PagesContainer, maid, function()
@@ -214,6 +213,9 @@ function Window:CreateWindow(Config)
     
     if loadingScreen then loadingScreen:SetStatus("Loading Settings...") loadingScreen:SetProgress(0.80) task.wait(0) end
     local SettingsPage = require(script.Parent.SettingsPage)
+    local Tabs = require(script.Parent.Tabs)
+    local Minimized = require(script.Parent.Minimized)
+    local CloseWarn = require(script.Parent.CloseWarn)
     local SettingsPageElements
     local success, err = pcall(function()
         SettingsPageElements = SettingsPage.Create(PagesContainer, maid, function()
