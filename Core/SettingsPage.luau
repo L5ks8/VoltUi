@@ -211,6 +211,14 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     SearchInputPadding.PaddingLeft = UDim.new(0, 4)
     SearchInputPadding.Parent = SearchInput
     
+    local SearchDivider = Instance.new("Frame")
+    SearchDivider.Name = "SearchDivider"
+    SearchDivider.BackgroundColor3 = Color3.new(0.216, 0.216, 0.216)
+    SearchDivider.BorderSizePixel = 0
+    SearchDivider.Position = UDim2.new(0, 0, 0, 45)
+    SearchDivider.Size = UDim2.new(1, 0, 0, 1)
+    SearchDivider.Parent = SettingsSidebar
+    
     --TabsContainer
     local SettingsTabsContainer = Instance.new("ScrollingFrame")
     SettingsTabsContainer.Name = "TabsContainer"
@@ -249,7 +257,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     
     local ResetDivider = Instance.new("Frame")
     ResetDivider.Name = "ResetDivider"
-    ResetDivider.BackgroundColor3 = Color3.fromRGB(36, 36, 36)
+    ResetDivider.BackgroundColor3 = Color3.new(0.216, 0.216, 0.216)
     ResetDivider.BorderSizePixel = 0
     ResetDivider.Size = UDim2.new(1, 0, 0, 1)
     ResetDivider.Position = UDim2.new(0, 0, 1, -50)
