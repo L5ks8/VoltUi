@@ -399,24 +399,27 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     local ActionRow = Instance.new("Frame")
     ActionRow.Name = "ActionRow"
     ActionRow.BackgroundTransparency = 1
-    ActionRow.Size = UDim2.new(1, 0, 0, 44)
+    ActionRow.Size = UDim2.new(1, 0, 0, 48)
     ActionRow.Parent = ThemeSection.Instance
     
     local ActionLayout = Instance.new("UIListLayout")
     ActionLayout.FillDirection = Enum.FillDirection.Horizontal
-    ActionLayout.Padding = UDim.new(0, 10)
+    ActionLayout.Padding = UDim.new(0, 16)
     ActionLayout.VerticalAlignment = Enum.VerticalAlignment.Center
     ActionLayout.SortOrder = Enum.SortOrder.LayoutOrder
     ActionLayout.Parent = ActionRow
     
     local ActionPadding = Instance.new("UIPadding")
     ActionPadding.PaddingLeft = UDim.new(0, 14)
+    ActionPadding.PaddingTop = UDim.new(0, 10)
+    ActionPadding.PaddingBottom = UDim.new(0, 10)
     ActionPadding.Parent = ActionRow
     
     local function CreateActionButton(name, icon, isRed)
         local Btn = Instance.new("TextButton")
-        Btn.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
-        Btn.Size = UDim2.new(0, 90, 0, 26)
+        Btn.BackgroundTransparency = 1
+        Btn.Size = UDim2.new(0, 0, 0, 26)
+        Btn.AutomaticSize = Enum.AutomaticSize.X
         Btn.Text = ""
         Btn.AutoButtonColor = false
         Btn.Parent = ActionRow
@@ -435,6 +438,11 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
         Layout.VerticalAlignment = Enum.VerticalAlignment.Center
         Layout.Padding = UDim.new(0, 6)
         Layout.Parent = Btn
+        
+        local BtnPadding = Instance.new("UIPadding")
+        BtnPadding.PaddingLeft = UDim.new(0, 12)
+        BtnPadding.PaddingRight = UDim.new(0, 12)
+        BtnPadding.Parent = Btn
         
         local IconLabel = Instance.new("ImageLabel")
         IconLabel.BackgroundTransparency = 1
@@ -475,12 +483,13 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     local ModeRow = Instance.new("Frame")
     ModeRow.Name = "ModeRow"
     ModeRow.BackgroundTransparency = 1
-    ModeRow.Size = UDim2.new(1, 0, 0, 48)
+    ModeRow.Size = UDim2.new(1, 0, 0, 56)
     ModeRow.Parent = ThemeDetailsSection.Instance
     
     local ModePadding = Instance.new("UIPadding")
     ModePadding.PaddingLeft = UDim.new(0, 14)
     ModePadding.PaddingRight = UDim.new(0, 14)
+    ModePadding.PaddingBottom = UDim.new(0, 12)
     ModePadding.Parent = ModeRow
     
     local ModeTitle = Instance.new("TextLabel")
