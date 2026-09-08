@@ -1,6 +1,8 @@
-local Tween = require(script.Parent.Parent.Utils.Tween)
+local Utils = script.Parent.Parent.Utils
+local Tween = require(Utils.Tween)
+local SettingsManager = require(Utils.SettingsManager)
+local ThemeManager = require(script.Parent.Parent.Theme)
 local Tabs = require(script.Parent.Tabs)
-local SettingsManager = require(script.Parent.Parent.Utils.SettingsManager)
 
 local SettingsPage = {}
 
@@ -8,7 +10,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     local Page = Instance.new("Frame")
     Page.Name = "SettingsPage"
     Page.AnchorPoint = Vector2.new(0.5, 0.5)
-    Page.BackgroundColor3 = Color3.new(0.067, 0.067, 0.067)
+    ThemeManager:Register(Page, "BackgroundColor3", "MainBackground")
     Page.BorderColor3 = Color3.new(0, 0, 0)
     Page.BorderSizePixel = 0
     Page.Position = UDim2.new(0.5, 0, 0.518, 0)
@@ -23,7 +25,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     PageCorner.Parent = Page
 
     local PageStroke = Instance.new("UIStroke")
-    PageStroke.Color = Color3.new(0.353, 0.353, 0.353)
+    ThemeManager:Register(PageStroke, "Color", "StrokeColor")
     PageStroke.Parent = Page
 
     --Topbar
@@ -45,7 +47,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
 
     local ActionsStroke = Instance.new("UIStroke")
     ActionsStroke.BorderStrokePosition = Enum.BorderStrokePosition.Center
-    ActionsStroke.Color = Color3.new(0.149, 0.149, 0.149)
+    ThemeManager:Register(ActionsStroke, "Color", "StrokeColor")
     ActionsStroke.Parent = Actions
 
     local ReturnButton = Instance.new("ImageButton")
@@ -98,7 +100,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     SettingsText.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     SettingsText.Size = UDim2.new(0, 200, 0, 35)
     SettingsText.Text = "Settings"
-    SettingsText.TextColor3 = Color3.new(0.71, 0.71, 0.71)
+    ThemeManager:Register(SettingsText, "TextColor3", "TextPrimary")
     SettingsText.TextSize = 14
     SettingsText.TextXAlignment = Enum.TextXAlignment.Left
     SettingsText.Parent = Actions
@@ -120,15 +122,15 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
 
     local ContentLayout = Instance.new("UIListLayout")
     ContentLayout.FillDirection = Enum.FillDirection.Horizontal
-    ContentLayout.Padding = UDim.new(0, 3)
+    ContentLayout.Padding = UDim.new(0, 0)
     ContentLayout.SortOrder = Enum.SortOrder.LayoutOrder
     ContentLayout.VerticalAlignment = Enum.VerticalAlignment.Center
     ContentLayout.Parent = ContentFrame
     
     --Sidebar
     local SettingsSidebar = Instance.new("Frame")
-    SettingsSidebar.Name = "Sidebar"
-    SettingsSidebar.BackgroundColor3 = Color3.new(0.08, 0.08, 0.08)
+    SettingsSidebar.Name = "SettingsSidebar"
+    ThemeManager:Register(SettingsSidebar, "BackgroundColor3", "TertiaryBackground")
     SettingsSidebar.BorderColor3 = Color3.new(0, 0, 0)
     SettingsSidebar.BorderSizePixel = 0
     SettingsSidebar.Size = UDim2.new(0, 200, 1, 0)
@@ -144,7 +146,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     
     local SearchBox = Instance.new("Frame")
     SearchBox.Name = "SearchBox"
-    SearchBox.BackgroundColor3 = Color3.new(0.094, 0.094, 0.094)
+    ThemeManager:Register(SearchBox, "BackgroundColor3", "SecondaryBackground")
     SearchBox.BorderColor3 = Color3.new(0, 0, 0)
     SearchBox.BorderSizePixel = 0
     SearchBox.Position = UDim2.new(0, 10, 0, 8)
@@ -153,7 +155,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     
     local SearchStroke = Instance.new("UIStroke")
     SearchStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
-    SearchStroke.Color = Color3.new(0.216, 0.216, 0.216)
+    ThemeManager:Register(SearchStroke, "Color", "StrokeColor")
     SearchStroke.Parent = SearchBox
     
     local SearchCorner = Instance.new("UICorner")
@@ -202,7 +204,8 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     SearchInput.Size = UDim2.new(1, -30, 1, 0)
     SearchInput.PlaceholderText = "Search settings"
     SearchInput.Text = ""
-    SearchInput.TextColor3 = Color3.new(0.478, 0.478, 0.478)
+    ThemeManager:Register(SearchInput, "PlaceholderColor3", "TextTertiary")
+    ThemeManager:Register(SearchInput, "TextColor3", "TextPrimary")
     SearchInput.TextSize = 12
     SearchInput.TextXAlignment = Enum.TextXAlignment.Left
     SearchInput.Parent = SearchBox
@@ -213,7 +216,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     
     local SearchDivider = Instance.new("Frame")
     SearchDivider.Name = "SearchDivider"
-    SearchDivider.BackgroundColor3 = Color3.new(0.216, 0.216, 0.216)
+    ThemeManager:Register(SearchDivider, "BackgroundColor3", "StrokeColor")
     SearchDivider.BorderSizePixel = 0
     SearchDivider.Position = UDim2.new(0, 0, 0, 45)
     SearchDivider.Size = UDim2.new(1, 0, 0, 1)
@@ -247,7 +250,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     --ResetBtn
     local ResetBtn = Instance.new("TextButton")
     ResetBtn.Name = "ResetSettings"
-    ResetBtn.BackgroundColor3 = Color3.fromRGB(36, 24, 24)
+    ThemeManager:Register(ResetBtn, "BackgroundColor3", "DangerBackground")
     ResetBtn.Size = UDim2.new(1, -20, 0, 30)
     ResetBtn.Position = UDim2.new(0, 10, 1, -40)
     ResetBtn.Text = ""
@@ -259,13 +262,13 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     ResetCorner.Parent = ResetBtn
     
     local ResetStroke = Instance.new("UIStroke")
-    ResetStroke.Color = Color3.fromRGB(180, 50, 50)
+    ThemeManager:Register(ResetStroke, "Color", "DangerStroke")
     ResetStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     ResetStroke.Parent = ResetBtn
     
     local ResetDivider = Instance.new("Frame")
     ResetDivider.Name = "ResetDivider"
-    ResetDivider.BackgroundColor3 = Color3.new(0.216, 0.216, 0.216)
+    ThemeManager:Register(ResetDivider, "BackgroundColor3", "StrokeColor")
     ResetDivider.BorderSizePixel = 0
     ResetDivider.Size = UDim2.new(1, 0, 0, 1)
     ResetDivider.Position = UDim2.new(0, 0, 1, -50)
@@ -282,7 +285,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     ResetIcon.BackgroundTransparency = 1
     ResetIcon.Size = UDim2.new(0, 14, 0, 14)
     ResetIcon.Image = "rbxassetid://140708438269602"
-    ResetIcon.ImageColor3 = Color3.fromRGB(240, 120, 120)
+    ThemeManager:Register(ResetIcon, "ImageColor3", "DangerText")
     ResetIcon.Parent = ResetBtn
     
     local ResetTextLabel = Instance.new("TextLabel")
@@ -291,20 +294,20 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     ResetTextLabel.AutomaticSize = Enum.AutomaticSize.X
     ResetTextLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     ResetTextLabel.Text = "Reset Settings"
-    ResetTextLabel.TextColor3 = Color3.fromRGB(240, 120, 120)
+    ThemeManager:Register(ResetTextLabel, "TextColor3", "DangerText")
     ResetTextLabel.TextSize = 13
     ResetTextLabel.Parent = ResetBtn
     
     Maid:GiveTask(ResetBtn.MouseEnter:Connect(function()
-        Tween(ResetBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(48, 28, 28)})
+        Tween(ResetBtn, TweenInfo.new(0.15), {BackgroundColor3 = ThemeManager:GetColor("DangerHover")})
     end))
     Maid:GiveTask(ResetBtn.MouseLeave:Connect(function()
-        Tween(ResetBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(36, 24, 24)})
+        Tween(ResetBtn, TweenInfo.new(0.15), {BackgroundColor3 = ThemeManager:GetColor("DangerBackground")})
     end))
     
     local SidebarSeparator = Instance.new("Frame")
     SidebarSeparator.Name = "SidebarSeparator"
-    SidebarSeparator.BackgroundColor3 = Color3.new(0.216, 0.216, 0.216)
+    ThemeManager:Register(SidebarSeparator, "BackgroundColor3", "StrokeColor")
     SidebarSeparator.BorderSizePixel = 0
     SidebarSeparator.Size = UDim2.new(0, 1, 1, 0)
     SidebarSeparator.LayoutOrder = 1
@@ -351,7 +354,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
         TabCorner.Parent = TabBtn
         
         local TabStroke = Instance.new("UIStroke")
-        TabStroke.Color = Color3.new(1, 1, 1)
+        ThemeManager:Register(TabStroke, "Color", "ActiveStrokeColor")
         TabStroke.Transparency = 1
         TabStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
         TabStroke.Parent = TabBtn
@@ -362,7 +365,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
         TabTitle.Position = UDim2.new(0, icon and 32 or 14, 0, 0)
         TabTitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
         TabTitle.Text = name
-        TabTitle.TextColor3 = Color3.new(0.6, 0.6, 0.6)
+        ThemeManager:Register(TabTitle, "TextColor3", "TextSecondary")
         TabTitle.TextSize = 13
         TabTitle.TextXAlignment = Enum.TextXAlignment.Left
         TabTitle.Parent = TabBtn
@@ -374,7 +377,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
             TabIcon.AnchorPoint = Vector2.new(0.5, 0.5)
             TabIcon.Position = UDim2.new(0, 16, 0.5, 0)
             TabIcon.Image = icon
-            TabIcon.ImageColor3 = Color3.new(0.6, 0.6, 0.6)
+            ThemeManager:Register(TabIcon, "ImageColor3", "TextSecondary")
             TabIcon.Parent = TabBtn
         end
         
@@ -409,11 +412,11 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
             
             for _, ref in ipairs(TabContentRefs) do
                 Tween(ref.Stroke, TweenInfo.new(0.2), {Transparency = 1})
-                Tween(ref.Title, TweenInfo.new(0.2), {TextColor3 = Color3.new(0.6, 0.6, 0.6)})
+                Tween(ref.Title, TweenInfo.new(0.2), {TextColor3 = ThemeManager:GetColor("TextSecondary")})
             end
             
             Tween(TabStroke, TweenInfo.new(0.2), {Transparency = 0.55})
-            Tween(TabTitle, TweenInfo.new(0.2), {TextColor3 = Color3.new(1, 1, 1)})
+            Tween(TabTitle, TweenInfo.new(0.2), {TextColor3 = ThemeManager:GetColor("TextPrimary")})
             SettingsWindowObject.PageLayout:JumpTo(TabContent)
         end
         Maid:GiveTask(TabBtn.MouseButton1Click:Connect(SelectTab))
@@ -461,6 +464,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
         CurrentValue = SettingsManager.GetSetting("ActiveTheme") or themesList[1] or "My Volt Dark",
         Callback = function(Option)
             SettingsManager.SaveSettings({ ActiveTheme = Option })
+            ThemeManager:SetTheme(Option)
         end
     })
     
@@ -565,7 +569,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     ModeTitle.Size = UDim2.new(1, 0, 0, 20)
     ModeTitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     ModeTitle.Text = "Mode"
-    ModeTitle.TextColor3 = Color3.fromRGB(240, 240, 245)
+    ThemeManager:Register(ModeTitle, "TextColor3", "TextPrimary")
     ModeTitle.TextSize = 13
     ModeTitle.TextXAlignment = Enum.TextXAlignment.Left
     ModeTitle.Parent = ModeRow

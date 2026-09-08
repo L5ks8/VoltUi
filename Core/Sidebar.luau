@@ -1,12 +1,13 @@
 local Utils = script.Parent.Parent.Utils
 local Tween = require(Utils.Tween)
+local ThemeManager = require(script.Parent.Theme)
 
 local Sidebar = {}
 
 function Sidebar.Create(Content, maid, OnCollapse)
     local SidebarFrame = Instance.new("Frame")
     SidebarFrame.Name = "Sidebar"
-    SidebarFrame.BackgroundColor3 = Color3.new(0.11, 0.11, 0.11)
+    ThemeManager:Register(SidebarFrame, "BackgroundColor3", "TertiaryBackground")
     SidebarFrame.BorderColor3 = Color3.new(0, 0, 0)
     SidebarFrame.BorderSizePixel = 0
     SidebarFrame.Size = UDim2.new(0, 200, 1, 0)
@@ -251,7 +252,7 @@ function Sidebar.Create(Content, maid, OnCollapse)
     
     local Search = Instance.new("Frame")
     Search.Name = "Search"
-    Search.BackgroundColor3 = Color3.new(0.094, 0.094, 0.094)
+    ThemeManager:Register(Search, "BackgroundColor3", "SecondaryBackground")
     Search.BorderColor3 = Color3.new(0, 0, 0)
     Search.BorderSizePixel = 0
     Search.Size = UDim2.new(0, 180, 0, 30)
@@ -259,7 +260,7 @@ function Sidebar.Create(Content, maid, OnCollapse)
     
     local SearchStroke = Instance.new("UIStroke")
     SearchStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
-    SearchStroke.Color = Color3.new(0.216, 0.216, 0.216)
+    ThemeManager:Register(SearchStroke, "Color", "StrokeColor")
     SearchStroke.Parent = Search
     
     local SearchCorner = Instance.new("UICorner")
@@ -281,7 +282,8 @@ function Sidebar.Create(Content, maid, OnCollapse)
     SearchInput.Position = UDim2.new(0.167, 0, 0, 0)
     SearchInput.Size = UDim2.new(0.833, 0, 1, 0)
     SearchInput.Text = "Search..."
-    SearchInput.TextColor3 = Color3.new(0.478, 0.478, 0.478)
+    ThemeManager:Register(SearchInput, "TextColor3", "TextPrimary")
+    ThemeManager:Register(SearchInput, "PlaceholderColor3", "TextTertiary")
     SearchInput.TextSize = 12
     SearchInput.TextXAlignment = Enum.TextXAlignment.Left
     SearchInput.Parent = Search
@@ -330,7 +332,7 @@ function Sidebar.Create(Content, maid, OnCollapse)
     
     local TabsTopBorder = Instance.new("Frame")
     TabsTopBorder.Name = "TopBorder"
-    TabsTopBorder.BackgroundColor3 = Color3.new(0.216, 0.216, 0.216)
+    ThemeManager:Register(TabsTopBorder, "BackgroundColor3", "StrokeColor")
     TabsTopBorder.BorderSizePixel = 0
     TabsTopBorder.Size = UDim2.new(1, 0, 0, 1)
     TabsTopBorder.Parent = TabsContainer
