@@ -51,10 +51,12 @@ function Window:CreateWindow(Config)
             loadingScreen = Loading.Create(VoltUi)
             
             local sequences = {
-                { text = "Initializing Core...", time = 1 },
-                { text = "Loading Scripts...", time = 1.5 },
-                { text = "Connecting to Server...", time = 1.5 },
-                { text = "Finalizing...", time = 1 }
+                { text = "Initializing Volt...", time = 0.5 },
+                { text = "Checking Version...", time = 0.8 },
+                { text = "Connecting Api...", time = 1.2 },
+                { text = "Loading Components...", time = 1.5 },
+                { text = "Loading Scripts...", time = 0.5 },
+                { text = "Finalizing UI...", time = 0.5 }
             }
             local totalSteps = 0
             for _, seq in ipairs(sequences) do totalSteps = totalSteps + (seq.time / 0.05) end
