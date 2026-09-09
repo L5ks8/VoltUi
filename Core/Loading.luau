@@ -25,7 +25,7 @@ function Loading.Create(ParentGui)
     BgPercent.BackgroundTransparency = 1
     BgPercent.Size = UDim2.new(1, 0, 1, 0)
     BgPercent.Position = UDim2.new(0, 0, 0, 0)
-    BgPercent.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Black, Enum.FontStyle.Normal)
+    BgPercent.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Heavy, Enum.FontStyle.Normal)
     BgPercent.Text = "0"
     BgPercent.TextColor3 = Color3.new(1, 1, 1)
     BgPercent.TextTransparency = 1
