@@ -98,28 +98,60 @@ if not Window then
     local BarContainer = Instance.new("Frame")
     BarContainer.BackgroundTransparency = 1
     BarContainer.LayoutOrder = 1
-    BarContainer.Size = UDim2.new(0, 730, 0, 100)
+    BarContainer.Size = UDim2.new(0, 730, 0, 50)
     BarContainer.AnchorPoint = Vector2.new(0.5, 1)
-    BarContainer.Position = UDim2.new(0.5, 0, 0.9, 0)
+    BarContainer.Position = UDim2.new(0.5, 0, 0.95, 0)
     BarContainer.ZIndex = 100000
     BarContainer.Parent = mf
     
     local BarLayout = Instance.new("UIListLayout")
     BarLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    BarLayout.Padding = UDim.new(0, 10)
     BarLayout.Parent = BarContainer
+    
+    local TextContainer = Instance.new("Frame")
+    TextContainer.BackgroundTransparency = 1
+    TextContainer.Size = UDim2.new(1, 0, 0, 20)
+    TextContainer.ZIndex = 100000
+    TextContainer.Parent = BarContainer
+    
+    local statusLbl = Instance.new("TextLabel")
+    statusLbl.BackgroundTransparency = 1
+    statusLbl.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+    statusLbl.Size = UDim2.new(1, -50, 1, 0)
+    statusLbl.Text = ""
+    statusLbl.TextColor3 = Color3.fromRGB(160, 160, 160)
+    statusLbl.TextSize = 13
+    statusLbl.TextXAlignment = Enum.TextXAlignment.Left
+    statusLbl.TextYAlignment = Enum.TextYAlignment.Bottom
+    statusLbl.ZIndex = 100000
+    statusLbl.Parent = TextContainer
+    
+    local PctText = Instance.new("TextLabel")
+    PctText.BackgroundTransparency = 1
+    PctText.AnchorPoint = Vector2.new(1, 0)
+    PctText.Position = UDim2.new(1, 0, 0, 0)
+    PctText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    PctText.Size = UDim2.new(0, 50, 1, 0)
+    PctText.Text = "0%"
+    PctText.TextColor3 = Color3.fromRGB(255, 255, 255)
+    PctText.TextSize = 13
+    PctText.TextXAlignment = Enum.TextXAlignment.Right
+    PctText.TextYAlignment = Enum.TextYAlignment.Bottom
+    PctText.ZIndex = 100000
+    PctText.Parent = TextContainer
     
     local BarBg = Instance.new("Frame")
     BarBg.BackgroundTransparency = 1
     BarBg.LayoutOrder = 1
-    BarBg.Size = UDim2.new(0, 730, 0, 50)
+    BarBg.Size = UDim2.new(1, 0, 0, 4)
     BarBg.ZIndex = 100000
     BarBg.Parent = BarContainer
     
     local BarFillBg = Instance.new("Frame")
-    BarFillBg.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-    BarFillBg.Size = UDim2.new(1, 0, 0.4, 0)
-    BarFillBg.AnchorPoint = Vector2.new(0, 0.5)
-    BarFillBg.Position = UDim2.new(0, 0, 0.5, 0)
+    BarFillBg.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    BarFillBg.BorderSizePixel = 0
+    BarFillBg.Size = UDim2.new(1, 0, 1, 0)
     BarFillBg.ZIndex = 100000
     BarFillBg.Parent = BarBg
     
@@ -129,6 +161,7 @@ if not Window then
     
     local BarFill = Instance.new("Frame")
     BarFill.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    BarFill.BorderSizePixel = 0
     BarFill.Size = UDim2.new(0, 0, 1, 0)
     BarFill.ZIndex = 100001
     BarFill.Parent = BarFillBg
@@ -137,46 +170,12 @@ if not Window then
     BarFillCorner.CornerRadius = UDim.new(1, 0)
     BarFillCorner.Parent = BarFill
     
-    local TextContainer = Instance.new("Frame")
-    TextContainer.BackgroundTransparency = 1
-    TextContainer.Size = UDim2.new(0, 730, 0, 50)
-    TextContainer.ZIndex = 100000
-    TextContainer.Parent = BarContainer
-    
-    local TextLayout = Instance.new("UIListLayout")
-    TextLayout.FillDirection = Enum.FillDirection.Horizontal
-    TextLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    TextLayout.Parent = TextContainer
-    
-    local statusLbl = Instance.new("TextLabel")
-    statusLbl.BackgroundTransparency = 1
-    statusLbl.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    statusLbl.Size = UDim2.new(0, 600, 0, 50)
-    statusLbl.Text = ""
-    statusLbl.TextColor3 = Color3.new(1, 1, 1)
-    statusLbl.TextSize = 25
-    statusLbl.TextXAlignment = Enum.TextXAlignment.Left
-    statusLbl.TextYAlignment = Enum.TextYAlignment.Bottom
-    statusLbl.ZIndex = 100000
-    statusLbl.Parent = TextContainer
-    
-    local PctContainer = Instance.new("Frame")
-    PctContainer.BackgroundTransparency = 1
-    PctContainer.Size = UDim2.new(0, 130, 0, 50)
-    PctContainer.ZIndex = 100000
-    PctContainer.Parent = TextContainer
-    
-    local PctText = Instance.new("TextLabel")
-    PctText.BackgroundTransparency = 1
-    PctText.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    PctText.Size = UDim2.new(1, 0, 1, 0)
-    PctText.Text = "0%"
-    PctText.TextColor3 = Color3.new(1, 1, 1)
-    PctText.TextSize = 25
-    PctText.TextXAlignment = Enum.TextXAlignment.Right
-    PctText.TextYAlignment = Enum.TextYAlignment.Bottom
-    PctText.ZIndex = 100000
-    PctText.Parent = PctContainer
+    local UIGradient = Instance.new("UIGradient")
+    UIGradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(200, 200, 200)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 255, 255))
+    })
+    UIGradient.Parent = BarFill
 
     local loadingShown = false
     local downloadCount = 0

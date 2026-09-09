@@ -71,27 +71,59 @@ function Loading.Create(ParentGui)
     BarContainer.Name = "Bar"
     BarContainer.BackgroundTransparency = 1
     BarContainer.LayoutOrder = 1
-    BarContainer.Size = UDim2.new(0, 730, 0, 100)
+    BarContainer.Size = UDim2.new(0, 730, 0, 50)
     BarContainer.AnchorPoint = Vector2.new(0.5, 1)
-    BarContainer.Position = UDim2.new(0.5, 0, 0.9, 0)
+    BarContainer.Position = UDim2.new(0.5, 0, 0.95, 0)
     BarContainer.Parent = Main
     
     local BarLayout = Instance.new("UIListLayout")
     BarLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    BarLayout.Padding = UDim.new(0, 10)
     BarLayout.Parent = BarContainer
     
+    local TextContainer = Instance.new("Frame")
+    TextContainer.Name = "Text"
+    TextContainer.BackgroundTransparency = 1
+    TextContainer.Size = UDim2.new(1, 0, 0, 20)
+    TextContainer.Parent = BarContainer
+    
+    local LoadingText = Instance.new("TextLabel")
+    LoadingText.BackgroundTransparency = 1
+    LoadingText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+    LoadingText.Size = UDim2.new(1, -50, 1, 0)
+    LoadingText.Text = "Loading Ui ..."
+    LoadingText.TextColor3 = Color3.fromRGB(160, 160, 160)
+    LoadingText.TextSize = 13
+    LoadingText.TextXAlignment = Enum.TextXAlignment.Left
+    LoadingText.TextYAlignment = Enum.TextYAlignment.Bottom
+    LoadingText.TextTransparency = 1
+    LoadingText.Parent = TextContainer
+    
+    local PctText = Instance.new("TextLabel")
+    PctText.BackgroundTransparency = 1
+    PctText.AnchorPoint = Vector2.new(1, 0)
+    PctText.Position = UDim2.new(1, 0, 0, 0)
+    PctText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    PctText.Size = UDim2.new(0, 50, 1, 0)
+    PctText.Text = "0%"
+    PctText.TextColor3 = Color3.fromRGB(255, 255, 255)
+    PctText.TextSize = 13
+    PctText.TextXAlignment = Enum.TextXAlignment.Right
+    PctText.TextYAlignment = Enum.TextYAlignment.Bottom
+    PctText.TextTransparency = 1
+    PctText.Parent = TextContainer
+
     local BarBg = Instance.new("Frame")
     BarBg.BackgroundTransparency = 1
     BarBg.LayoutOrder = 1
-    BarBg.Size = UDim2.new(0, 730, 0, 50)
+    BarBg.Size = UDim2.new(1, 0, 0, 4)
     BarBg.Parent = BarContainer
     
     local BarFillBg = Instance.new("Frame")
-    BarFillBg.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    BarFillBg.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
     BarFillBg.BackgroundTransparency = 1
-    BarFillBg.Size = UDim2.new(1, 0, 0.4, 0)
-    BarFillBg.AnchorPoint = Vector2.new(0, 0.5)
-    BarFillBg.Position = UDim2.new(0, 0, 0.5, 0)
+    BarFillBg.BorderSizePixel = 0
+    BarFillBg.Size = UDim2.new(1, 0, 1, 0)
     BarFillBg.Parent = BarBg
     
     local BarFillBgCorner = Instance.new("UICorner")
@@ -101,6 +133,7 @@ function Loading.Create(ParentGui)
     local BarFill = Instance.new("Frame")
     BarFill.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     BarFill.BackgroundTransparency = 1
+    BarFill.BorderSizePixel = 0
     BarFill.Size = UDim2.new(0, 0, 1, 0)
     BarFill.Parent = BarFillBg
     
@@ -108,46 +141,12 @@ function Loading.Create(ParentGui)
     BarFillCorner.CornerRadius = UDim.new(1, 0)
     BarFillCorner.Parent = BarFill
     
-    local TextContainer = Instance.new("Frame")
-    TextContainer.Name = "Text"
-    TextContainer.BackgroundTransparency = 1
-    TextContainer.Size = UDim2.new(0, 730, 0, 50)
-    TextContainer.Parent = BarContainer
-    
-    local TextLayout = Instance.new("UIListLayout")
-    TextLayout.FillDirection = Enum.FillDirection.Horizontal
-    TextLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    TextLayout.Parent = TextContainer
-    
-    local LoadingText = Instance.new("TextLabel")
-    LoadingText.BackgroundTransparency = 1
-    LoadingText.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    LoadingText.Size = UDim2.new(0, 600, 0, 50)
-    LoadingText.Text = "Loading Ui ..."
-    LoadingText.TextColor3 = Color3.new(1, 1, 1)
-    LoadingText.TextSize = 25
-    LoadingText.TextXAlignment = Enum.TextXAlignment.Left
-    LoadingText.TextYAlignment = Enum.TextYAlignment.Bottom
-    LoadingText.TextTransparency = 1
-    LoadingText.Parent = TextContainer
-    
-    local PctContainer = Instance.new("Frame")
-    PctContainer.Name = "Percentage"
-    PctContainer.BackgroundTransparency = 1
-    PctContainer.Size = UDim2.new(0, 130, 0, 50)
-    PctContainer.Parent = TextContainer
-    
-    local PctText = Instance.new("TextLabel")
-    PctText.BackgroundTransparency = 1
-    PctText.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    PctText.Size = UDim2.new(1, 0, 1, 0)
-    PctText.Text = "0%"
-    PctText.TextColor3 = Color3.new(1, 1, 1)
-    PctText.TextSize = 25
-    PctText.TextXAlignment = Enum.TextXAlignment.Right
-    PctText.TextYAlignment = Enum.TextYAlignment.Bottom
-    PctText.TextTransparency = 1
-    PctText.Parent = PctContainer
+    local UIGradient = Instance.new("UIGradient")
+    UIGradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(200, 200, 200)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 255, 255))
+    })
+    UIGradient.Parent = BarFill
 
     local obj = {Faded = false}
     
