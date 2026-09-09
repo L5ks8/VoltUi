@@ -11,185 +11,172 @@ local Loading = {}
 
 function Loading.Create(ParentGui)
     local Main = Instance.new("Frame")
-    Main.Name = "LoadingScreen"
+    Main.Name = "VoltLoading_Absolute"
     Main.AnchorPoint = Vector2.new(0.5, 0.5)
-    Main.BackgroundColor3 = Color3.fromRGB(15, 15, 17)
-    Main.BorderColor3 = Color3.new(0, 0, 0)
+    Main.BackgroundColor3 = Color3.new(0, 0, 0)
     Main.BorderSizePixel = 0
     Main.Position = UDim2.new(0.5, 0, 0.5, 0)
-    Main.Size = UDim2.new(0, 800, 0, 600)
+    Main.Size = UDim2.new(1, 0, 1, 0)
     Main.ZIndex = 99999
     Main.Parent = ParentGui
-    
-    local MainStroke = Instance.new("UIStroke")
-    MainStroke.Color = Color3.fromRGB(40, 40, 45)
-    MainStroke.Thickness = 1
-    MainStroke.Parent = Main
-    
-    local MainCorner = Instance.new("UICorner")
-    MainCorner.CornerRadius = UDim.new(0, 8)
-    MainCorner.Parent = Main
-    
-    local introBox = Instance.new("Frame")
-    introBox.BackgroundTransparency = 1
-    introBox.AnchorPoint = Vector2.new(0.5, 0.5)
-    introBox.Position = UDim2.new(0.5, 0, 0.5, 0)
-    introBox.Size = UDim2.new(0, 400, 0, 100)
-    introBox.ZIndex = 100000
-    introBox.Parent = Main
+    Main.ClipsDescendants = true
 
-    local il = Instance.new("UIListLayout")
-    il.FillDirection = Enum.FillDirection.Horizontal
-    il.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    il.SortOrder = Enum.SortOrder.LayoutOrder
-    il.VerticalAlignment = Enum.VerticalAlignment.Center
-    il.Parent = introBox
+    local BgPercent = Instance.new("TextLabel")
+    BgPercent.BackgroundTransparency = 1
+    BgPercent.Size = UDim2.new(1, 0, 1, 0)
+    BgPercent.Position = UDim2.new(0, 0, 0, 0)
+    BgPercent.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Black, Enum.FontStyle.Normal)
+    BgPercent.Text = "0"
+    BgPercent.TextColor3 = Color3.new(1, 1, 1)
+    BgPercent.TextTransparency = 1
+    BgPercent.TextSize = 500
+    BgPercent.ZIndex = 100000
+    BgPercent.Parent = Main
 
-    local ic = Instance.new("ImageLabel")
-    ic.BackgroundTransparency = 1
-    ic.BorderSizePixel = 0
-    ic.Image = "rbxassetid://71942076965693"
-    ic.Size = UDim2.new(0, 90, 0, 90)
-    ic.ImageTransparency = 1
-    ic.ZIndex = 100000
-    ic.Parent = introBox
+    local CenterBox = Instance.new("Frame")
+    CenterBox.BackgroundTransparency = 1
+    CenterBox.AnchorPoint = Vector2.new(0.5, 0.5)
+    CenterBox.Position = UDim2.new(0.5, 0, 0.5, -20)
+    CenterBox.Size = UDim2.new(0, 400, 0, 150)
+    CenterBox.ZIndex = 100001
+    CenterBox.Parent = Main
 
-    local tx = Instance.new("TextLabel")
-    tx.BackgroundTransparency = 1
-    tx.BorderSizePixel = 0
-    tx.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    tx.Size = UDim2.new(0, 0, 0, 90)
-    tx.Text = "olt"
-    tx.TextColor3 = Color3.new(0.984, 0.984, 0.984)
-    tx.TextSize = 68
-    tx.TextXAlignment = Enum.TextXAlignment.Left
-    tx.ClipsDescendants = true
-    tx.MaxVisibleGraphemes = 0
-    tx.ZIndex = 100000
-    tx.Parent = introBox
+    local Layout = Instance.new("UIListLayout")
+    Layout.FillDirection = Enum.FillDirection.Horizontal
+    Layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    Layout.VerticalAlignment = Enum.VerticalAlignment.Center
+    Layout.Padding = UDim.new(0, 12)
+    Layout.Parent = CenterBox
 
-    local BarContainer = Instance.new("Frame")
-    BarContainer.Name = "Bar"
-    BarContainer.BackgroundTransparency = 1
-    BarContainer.LayoutOrder = 1
-    BarContainer.Size = UDim2.new(0, 360, 0, 40)
-    BarContainer.AnchorPoint = Vector2.new(0.5, 0)
-    BarContainer.Position = UDim2.new(0.5, 0, 0.55, 0)
-    BarContainer.Parent = Main
-    
-    local BarLayout = Instance.new("UIListLayout")
-    BarLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    BarLayout.Padding = UDim.new(0, 8)
-    BarLayout.Parent = BarContainer
-    
-    local TextContainer = Instance.new("Frame")
-    TextContainer.Name = "Text"
-    TextContainer.BackgroundTransparency = 1
-    TextContainer.Size = UDim2.new(1, 0, 0, 16)
-    TextContainer.Parent = BarContainer
-    
-    local LoadingText = Instance.new("TextLabel")
-    LoadingText.BackgroundTransparency = 1
-    LoadingText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
-    LoadingText.Size = UDim2.new(1, -50, 1, 0)
-    LoadingText.Text = "Loading Ui ..."
-    LoadingText.TextColor3 = Color3.fromRGB(180, 180, 180)
-    LoadingText.TextSize = 13
-    LoadingText.TextXAlignment = Enum.TextXAlignment.Left
-    LoadingText.TextYAlignment = Enum.TextYAlignment.Bottom
-    LoadingText.TextTransparency = 1
-    LoadingText.Parent = TextContainer
-    
-    local PctText = Instance.new("TextLabel")
-    PctText.BackgroundTransparency = 1
-    PctText.AnchorPoint = Vector2.new(1, 0)
-    PctText.Position = UDim2.new(1, 0, 0, 0)
-    PctText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    PctText.Size = UDim2.new(0, 50, 1, 0)
-    PctText.Text = "0%"
-    PctText.TextColor3 = Color3.fromRGB(245, 245, 245)
-    PctText.TextSize = 13
-    PctText.TextXAlignment = Enum.TextXAlignment.Right
-    PctText.TextYAlignment = Enum.TextYAlignment.Bottom
-    PctText.TextTransparency = 1
-    PctText.Parent = TextContainer
+    local Icon = Instance.new("ImageLabel")
+    Icon.BackgroundTransparency = 1
+    Icon.Image = "rbxassetid://71942076965693"
+    Icon.Size = UDim2.new(0, 70, 0, 70)
+    Icon.ImageColor3 = Color3.new(1, 1, 1)
+    Icon.ImageTransparency = 1
+    Icon.Parent = CenterBox
 
-    local BarBg = Instance.new("Frame")
-    BarBg.BackgroundTransparency = 1
-    BarBg.LayoutOrder = 1
-    BarBg.Size = UDim2.new(1, 0, 0, 4)
-    BarBg.Parent = BarContainer
-    
-    local BarFillBg = Instance.new("Frame")
-    BarFillBg.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
-    BarFillBg.BackgroundTransparency = 1
-    BarFillBg.BorderSizePixel = 0
-    BarFillBg.Size = UDim2.new(1, 0, 1, 0)
-    BarFillBg.Parent = BarBg
-    
-    local BarFillBgCorner = Instance.new("UICorner")
-    BarFillBgCorner.CornerRadius = UDim.new(1, 0)
-    BarFillBgCorner.Parent = BarFillBg
-    
-    local BarFill = Instance.new("Frame")
-    BarFill.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    BarFill.BackgroundTransparency = 1
-    BarFill.BorderSizePixel = 0
-    BarFill.Size = UDim2.new(0, 0, 1, 0)
-    BarFill.Parent = BarFillBg
-    
-    local BarFillCorner = Instance.new("UICorner")
-    BarFillCorner.CornerRadius = UDim.new(1, 0)
-    BarFillCorner.Parent = BarFill
-    
-    local UIGradient = Instance.new("UIGradient")
-    UIGradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(150, 150, 150)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 255, 255))
-    })
-    UIGradient.Parent = BarFill
+    local TextVolt = Instance.new("TextLabel")
+    TextVolt.BackgroundTransparency = 1
+    TextVolt.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    TextVolt.Text = "olt"
+    TextVolt.TextColor3 = Color3.new(1, 1, 1)
+    TextVolt.TextSize = 65
+    TextVolt.Size = UDim2.new(0, 0, 0, 70)
+    TextVolt.TextXAlignment = Enum.TextXAlignment.Left
+    TextVolt.ClipsDescendants = true
+    TextVolt.TextTransparency = 1
+    TextVolt.Parent = CenterBox
+
+    local BottomSection = Instance.new("Frame")
+    BottomSection.BackgroundTransparency = 1
+    BottomSection.AnchorPoint = Vector2.new(0.5, 1)
+    BottomSection.Position = UDim2.new(0.5, 0, 1, -80)
+    BottomSection.Size = UDim2.new(0.4, 0, 0, 40)
+    BottomSection.ZIndex = 100001
+    BottomSection.Parent = Main
+
+    local StatusText = Instance.new("TextLabel")
+    StatusText.BackgroundTransparency = 1
+    StatusText.Size = UDim2.new(1, 0, 0, 20)
+    StatusText.Position = UDim2.new(0, 0, 0, 0)
+    StatusText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+    StatusText.Text = "WAITING FOR INITIALIZATION"
+    StatusText.TextColor3 = Color3.fromRGB(150, 150, 150)
+    StatusText.TextSize = 12
+    StatusText.TextXAlignment = Enum.TextXAlignment.Center
+    StatusText.TextTransparency = 1
+    StatusText.Parent = BottomSection
+
+    local LineTrack = Instance.new("Frame")
+    LineTrack.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    LineTrack.BorderSizePixel = 0
+    LineTrack.AnchorPoint = Vector2.new(0.5, 1)
+    LineTrack.Position = UDim2.new(0.5, 0, 1, 0)
+    LineTrack.Size = UDim2.new(1, 0, 0, 1)
+    LineTrack.BackgroundTransparency = 1
+    LineTrack.Parent = BottomSection
+
+    local LineFill = Instance.new("Frame")
+    LineFill.BackgroundColor3 = Color3.new(1, 1, 1)
+    LineFill.BorderSizePixel = 0
+    LineFill.AnchorPoint = Vector2.new(0.5, 0)
+    LineFill.Position = UDim2.new(0.5, 0, 0, 0)
+    LineFill.Size = UDim2.new(0, 0, 1, 0)
+    LineFill.BackgroundTransparency = 1
+    LineFill.Parent = LineTrack
+
+    local ExactPercent = Instance.new("TextLabel")
+    ExactPercent.BackgroundTransparency = 1
+    ExactPercent.AnchorPoint = Vector2.new(0.5, 0)
+    ExactPercent.Position = UDim2.new(0.5, 0, 1, 10)
+    ExactPercent.Size = UDim2.new(1, 0, 0, 15)
+    ExactPercent.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    ExactPercent.Text = "0%"
+    ExactPercent.TextColor3 = Color3.new(1, 1, 1)
+    ExactPercent.TextSize = 10
+    ExactPercent.TextXAlignment = Enum.TextXAlignment.Center
+    ExactPercent.TextTransparency = 1
+    ExactPercent.Parent = BottomSection
 
     local obj = {Faded = false}
     
     task.spawn(function()
-        task.wait(0.2)
-        Tween(ic, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0})
-        task.wait(1)
-        task.wait(0.2)
-        Tween(tx, TweenInfo.new(0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {Size = UDim2.new(0, 150, 0, 100)})
+        Main.BackgroundTransparency = 1
+        Tween(Main, TweenInfo.new(1.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {BackgroundTransparency = 0})
+        
+        task.wait(0.5)
+
+        Icon.Position = UDim2.new(0, 0, 0, -20)
+        Tween(Icon, TweenInfo.new(1.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {ImageTransparency = 0, Position = UDim2.new(0, 0, 0, 0)})
+        task.wait(0.7)
+
+        TextVolt.TextTransparency = 0
+        Tween(TextVolt, TweenInfo.new(1.2, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Size = UDim2.new(0, 100, 0, 70)})
         task.wait(0.8)
-        for i = 1, 3 do
-            tx.MaxVisibleGraphemes = i
-            task.wait(0.15)
-        end
-        task.wait(0.8)
-        
-        Tween(introBox, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(0.5, 0, 0.45, 0)})
-        
-        Tween(BarFillBg, TweenInfo.new(0.3), {BackgroundTransparency = 0})
-        Tween(BarFill, TweenInfo.new(0.3), {BackgroundTransparency = 0})
-        Tween(LoadingText, TweenInfo.new(0.3), {TextTransparency = 0})
-        Tween(PctText, TweenInfo.new(0.3), {TextTransparency = 0})
-        task.wait(0.3)
-        
+
+        Tween(BgPercent, TweenInfo.new(2, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {TextTransparency = 0.96})
+        Tween(LineTrack, TweenInfo.new(1), {BackgroundTransparency = 0})
+        Tween(LineFill, TweenInfo.new(1), {BackgroundTransparency = 0})
+        Tween(StatusText, TweenInfo.new(1), {TextTransparency = 0})
+        Tween(ExactPercent, TweenInfo.new(1), {TextTransparency = 0.4})
+
         while not obj.Faded and Main and Main.Parent do
-            Tween(ic, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {ImageTransparency = 0.4})
-            task.wait(1)
-            Tween(ic, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {ImageTransparency = 0})
-            task.wait(1)
+            Tween(LineTrack, TweenInfo.new(1.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {BackgroundColor3 = Color3.fromRGB(45, 45, 45)})
+            task.wait(1.5)
+            if obj.Faded then break end
+            Tween(LineTrack, TweenInfo.new(1.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {BackgroundColor3 = Color3.fromRGB(20, 20, 20)})
+            task.wait(1.5)
         end
     end)
     
     function obj:SetProgress(pct)
         if self.Faded then return end
         pct = math.clamp(pct, 0, 1)
-        Tween(BarFill, TweenInfo.new(0.2, Enum.EasingStyle.Linear), {Size = UDim2.new(pct, 0, 1, 0)})
-        PctText.Text = tostring(math.floor(pct * 100)) .. "%"
+        
+        Tween(LineFill, TweenInfo.new(0.4, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Size = UDim2.new(pct, 0, 1, 0)})
+        
+        local displayPct = math.floor(pct * 100)
+        ExactPercent.Text = tostring(displayPct) .. "%"
+        
+        BgPercent.Text = tostring(displayPct)
+        
+        Tween(Icon, TweenInfo.new(0.1, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {Size = UDim2.new(0, 74, 0, 74)})
+        task.delay(0.1, function()
+            if not self.Faded then
+                Tween(Icon, TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Size = UDim2.new(0, 70, 0, 70)})
+            end
+        end)
     end
     
     function obj:SetStatus(text)
         if self.Faded then return end
-        LoadingText.Text = text
+        Tween(StatusText, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {TextTransparency = 1, Position = UDim2.new(0, 0, 0, -8)})
+        task.wait(0.25)
+        if self.Faded then return end
+        StatusText.Text = string.upper(text)
+        StatusText.Position = UDim2.new(0, 0, 0, 8)
+        Tween(StatusText, TweenInfo.new(0.4, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {TextTransparency = 0, Position = UDim2.new(0, 0, 0, 0)})
     end
     
     function obj:FadeOut()
@@ -197,16 +184,21 @@ function Loading.Create(ParentGui)
         self.Faded = true
         
         task.spawn(function()
-            Tween(Main, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1})
-            Tween(MainStroke, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Transparency = 1})
-            Tween(ic, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 1})
-            Tween(tx, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 1})
-            Tween(BarFillBg, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1})
-            Tween(BarFill, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1})
-            Tween(LoadingText, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 1})
-            Tween(PctText, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 1})
+            Tween(CenterBox, TweenInfo.new(0.8, Enum.EasingStyle.Exponential, Enum.EasingDirection.In), {Size = UDim2.new(0, 500, 0, 150)})
+            Tween(Icon, TweenInfo.new(0.6, Enum.EasingStyle.Exponential, Enum.EasingDirection.In), {ImageTransparency = 1})
+            Tween(TextVolt, TweenInfo.new(0.6, Enum.EasingStyle.Exponential, Enum.EasingDirection.In), {TextTransparency = 1})
+            
+            Tween(BgPercent, TweenInfo.new(0.8, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {TextTransparency = 1, TextSize = 600})
+            
+            Tween(LineTrack, TweenInfo.new(0.4), {BackgroundTransparency = 1})
+            Tween(LineFill, TweenInfo.new(0.4), {BackgroundTransparency = 1})
+            Tween(StatusText, TweenInfo.new(0.4), {TextTransparency = 1})
+            Tween(ExactPercent, TweenInfo.new(0.4), {TextTransparency = 1})
             
             task.wait(0.5)
+            Tween(Main, TweenInfo.new(0.8, Enum.EasingStyle.Exponential, Enum.EasingDirection.InOut), {BackgroundTransparency = 1})
+            
+            task.wait(0.8)
             Main:Destroy()
         end)
     end
