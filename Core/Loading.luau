@@ -1,7 +1,11 @@
-local Utils = script.Parent.Parent.Utils
-local Tween = require(Utils.Tween)
+local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
-local ThemeManager = require(script.Parent.Theme)
+
+local function Tween(instance, tweenInfo, properties)
+    local tw = TweenService:Create(instance, tweenInfo, properties)
+    tw:Play()
+    return tw
+end
 
 local Loading = {}
 

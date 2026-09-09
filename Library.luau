@@ -39,205 +39,43 @@ if not Window then
         gui.Parent = Players.LocalPlayer:WaitForChild("PlayerGui")
     end
 
-    local mf = Instance.new("Frame")
-    mf.AnchorPoint = Vector2.new(0.5, 0.5)
-    mf.BackgroundColor3 = Color3.new(0.09, 0.09, 0.09)
-    mf.BorderSizePixel = 0
-    mf.Position = UDim2.new(0.5, 0, 0.5, 0)
-    mf.Size = UDim2.new(0, 800, 0, 600)
-    mf.ZIndex = 99999
-    mf.ClipsDescendants = true
-    mf.Parent = gui
-
-    local mfCorner = Instance.new("UICorner")
-    mfCorner.Parent = mf
-    
-    local mfStroke = Instance.new("UIStroke")
-    mfStroke.Color = Color3.new(0.353, 0.353, 0.353)
-    mfStroke.Transparency = 1
-    mfStroke.Parent = mf
-
-    local introBox = Instance.new("Frame")
-    introBox.BackgroundTransparency = 1
-    introBox.AnchorPoint = Vector2.new(0.5, 0.5)
-    introBox.Position = UDim2.new(0.5, 0, 0.5, 0)
-    introBox.Size = UDim2.new(0, 400, 0, 100)
-    introBox.ZIndex = 100000
-    introBox.Parent = mf
-
-    local il = Instance.new("UIListLayout")
-    il.FillDirection = Enum.FillDirection.Horizontal
-    il.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    il.SortOrder = Enum.SortOrder.LayoutOrder
-    il.VerticalAlignment = Enum.VerticalAlignment.Center
-    il.Parent = introBox
-
-    local ic = Instance.new("ImageLabel")
-    ic.BackgroundTransparency = 1
-    ic.BorderSizePixel = 0
-    ic.Image = "rbxassetid://71942076965693"
-    ic.Size = UDim2.new(0, 100, 0, 100)
-    ic.ImageTransparency = 1
-    ic.ZIndex = 100000
-    ic.Parent = introBox
-
-    local tx = Instance.new("TextLabel")
-    tx.BackgroundTransparency = 1
-    tx.BorderSizePixel = 0
-    tx.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    tx.Size = UDim2.new(0, 0, 0, 100)
-    tx.Text = "olt"
-    tx.TextColor3 = Color3.new(0.984, 0.984, 0.984)
-    tx.TextSize = 76
-    tx.TextXAlignment = Enum.TextXAlignment.Left
-    tx.ClipsDescendants = true
-    tx.MaxVisibleGraphemes = 0
-    tx.ZIndex = 100000
-    tx.Parent = introBox
-    
-    local BarContainer = Instance.new("Frame")
-    BarContainer.BackgroundTransparency = 1
-    BarContainer.LayoutOrder = 1
-    BarContainer.Size = UDim2.new(0, 730, 0, 50)
-    BarContainer.AnchorPoint = Vector2.new(0.5, 1)
-    BarContainer.Position = UDim2.new(0.5, 0, 0.95, 0)
-    BarContainer.ZIndex = 100000
-    BarContainer.Parent = mf
-    
-    local BarLayout = Instance.new("UIListLayout")
-    BarLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    BarLayout.Padding = UDim.new(0, 10)
-    BarLayout.Parent = BarContainer
-    
-    local TextContainer = Instance.new("Frame")
-    TextContainer.BackgroundTransparency = 1
-    TextContainer.Size = UDim2.new(1, 0, 0, 20)
-    TextContainer.ZIndex = 100000
-    TextContainer.Parent = BarContainer
-    
-    local statusLbl = Instance.new("TextLabel")
-    statusLbl.BackgroundTransparency = 1
-    statusLbl.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    statusLbl.Size = UDim2.new(1, -50, 1, 0)
-    statusLbl.Text = ""
-    statusLbl.TextColor3 = Color3.fromRGB(245, 245, 245)
-    statusLbl.TextSize = 14
-    statusLbl.TextXAlignment = Enum.TextXAlignment.Left
-    statusLbl.TextYAlignment = Enum.TextYAlignment.Bottom
-    statusLbl.ZIndex = 100000
-    statusLbl.Parent = TextContainer
-    
-    local PctText = Instance.new("TextLabel")
-    PctText.BackgroundTransparency = 1
-    PctText.AnchorPoint = Vector2.new(1, 0)
-    PctText.Position = UDim2.new(1, 0, 0, 0)
-    PctText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    PctText.Size = UDim2.new(0, 50, 1, 0)
-    PctText.Text = "0%"
-    PctText.TextColor3 = Color3.fromRGB(245, 245, 245)
-    PctText.TextSize = 14
-    PctText.TextXAlignment = Enum.TextXAlignment.Right
-    PctText.TextYAlignment = Enum.TextYAlignment.Bottom
-    PctText.ZIndex = 100000
-    PctText.Parent = TextContainer
-    
-    local BarBg = Instance.new("Frame")
-    BarBg.BackgroundTransparency = 1
-    BarBg.LayoutOrder = 1
-    BarBg.Size = UDim2.new(1, 0, 0, 4)
-    BarBg.ZIndex = 100000
-    BarBg.Parent = BarContainer
-    
-    local BarFillBg = Instance.new("Frame")
-    BarFillBg.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-    BarFillBg.BorderSizePixel = 0
-    BarFillBg.Size = UDim2.new(1, 0, 1, 0)
-    BarFillBg.ZIndex = 100000
-    BarFillBg.Parent = BarBg
-    
-    local BarFillBgCorner = Instance.new("UICorner")
-    BarFillBgCorner.CornerRadius = UDim.new(1, 0)
-    BarFillBgCorner.Parent = BarFillBg
-    
-    local BarFill = Instance.new("Frame")
-    BarFill.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    BarFill.BorderSizePixel = 0
-    BarFill.Size = UDim2.new(0, 0, 1, 0)
-    BarFill.ZIndex = 100001
-    BarFill.Parent = BarFillBg
-    
-    local BarFillCorner = Instance.new("UICorner")
-    BarFillCorner.CornerRadius = UDim.new(1, 0)
-    BarFillCorner.Parent = BarFill
-    
-    local UIGradient = Instance.new("UIGradient")
-    UIGradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(200, 200, 200)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 255, 255))
-    })
-    UIGradient.Parent = BarFill
-
-    local loadingShown = false
-    local downloadCount = 0
-
-    task.spawn(function()
-        task.wait(0.2)
-        _tw(ic, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0})
-        task.wait(1)
-        task.wait(0.2)
-        _tw(tx, TweenInfo.new(0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {Size = UDim2.new(0, 150, 0, 100)})
-        task.wait(0.8)
-        for i = 1, 3 do
-            tx.MaxVisibleGraphemes = i
-            task.wait(0.15)
-        end
-        task.wait(0.8)
-
-        _tw(introBox, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(0.5, 0, 0.45, 0)})
-        
-        _tw(mfStroke, TweenInfo.new(0.3), {Transparency = 0})
-        _tw(statusLbl, TweenInfo.new(0.3), {TextTransparency = 0})
-        _tw(PctText, TweenInfo.new(0.3), {TextTransparency = 0})
-        _tw(BarFillBg, TweenInfo.new(0.3), {BackgroundTransparency = 0})
-        _tw(BarFill, TweenInfo.new(0.3), {BackgroundTransparency = 0})
-        task.wait(0.3)
-        loadingShown = true
-        
-        while loadingShown and mf and mf.Parent do
-            _tw(ic, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {ImageTransparency = 0.4})
-            task.wait(1)
-            _tw(ic, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {ImageTransparency = 0})
-            task.wait(1)
-        end
-    end)
-
     local baseUrl = "https://raw.githubusercontent.com/L5ks8/VoltUi/main/"
     local cache = {}
+    
+    local function rawHttpGet(url)
+        local req = (type(http) == "table" and http.request) or request or http_request
+        if req then
+            return req({
+                Url = url,
+                Method = "GET",
+                Headers = { ["Cache-Control"] = "no-cache", ["Pragma"] = "no-cache" }
+            }).Body
+        elseif game and game.HttpGet then
+            return game:HttpGet(url)
+        else
+            error("[VoltUi] No HTTP GET method available")
+        end
+    end
+
+    -- Dynamically download and construct the standalone loading screen
+    local loadingSource = rawHttpGet(baseUrl .. "Core/Loading.luau?v=" .. tostring(tick()) .. "_" .. tostring(math.random(100000, 999999)))
+    local loadingFn, err = loadstring(loadingSource, "@VoltUi/Core/Loading.luau")
+    if not loadingFn then error("[VoltUi] Failed to compile loader: " .. tostring(err)) end
+    local LoadingClass = loadingFn()
+    
+    local loadingObj = LoadingClass.Create(gui)
+    local downloadCount = 0
 
     local function httpGet(url)
         local fname = url:match("main/(.+)$") or "module"
         fname = fname:gsub("%?.+", "")
-        statusLbl.Text = "Downloading " .. fname
-        local result
-        local req = (type(http) == "table" and http.request) or request or http_request
-        if req then
-            result = req({
-                Url = url,
-                Method = "GET",
-                Headers = {
-                    ["Cache-Control"] = "no-cache",
-                    ["Pragma"] = "no-cache"
-                }
-            }).Body
-        elseif game and game.HttpGet then
-            result = game:HttpGet(url)
-        else
-            error("[VoltUi] No HTTP GET method available")
-        end
+        loadingObj:SetStatus("Downloading " .. fname)
+        
+        local result = rawHttpGet(url)
+        
         downloadCount = downloadCount + 1
         local pct = math.min((downloadCount / 35) * 0.50, 0.50)
-        _tw(BarFill, TweenInfo.new(0.15, Enum.EasingStyle.Linear), {Size = UDim2.new(pct, 0, 1, 0)})
-        PctText.Text = tostring(math.floor(pct * 100)) .. "%"
+        loadingObj:SetProgress(pct)
         return result
     end
 
@@ -311,42 +149,10 @@ if not Window then
         return result
     end
 
-    statusLbl.Text = "Loading Core..."
+    loadingObj:SetStatus("Loading Core...")
     Window = virtualRequire(Core.Window)
-    statusLbl.Text = "Loading Notifications..."
+    loadingObj:SetStatus("Loading Notifications...")
     Notifications = virtualRequire(Core.Notifications)
-
-    while not loadingShown do task.wait(0.05) end
-
-    local loadingObj = {}
-    loadingObj.Faded = false
-    function loadingObj:SetStatus(text)
-        if self.Faded then return end
-        statusLbl.Text = text
-    end
-    function loadingObj:SetProgress(pct)
-        if self.Faded then return end
-        pct = math.clamp(pct, 0, 1)
-        _tw(BarFill, TweenInfo.new(0.2, Enum.EasingStyle.Linear), {Size = UDim2.new(pct, 0, 1, 0)})
-        PctText.Text = tostring(math.floor(pct * 100)) .. "%"
-    end
-    function loadingObj:FadeOut()
-        if self.Faded then return end
-        self.Faded = true
-        task.spawn(function()
-            _tw(mf, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1})
-            _tw(mfStroke, TweenInfo.new(0.5), {Transparency = 1})
-            _tw(statusLbl, TweenInfo.new(0.5), {TextTransparency = 1})
-            _tw(PctText, TweenInfo.new(0.5), {TextTransparency = 1})
-            _tw(BarBg, TweenInfo.new(0.5), {BackgroundTransparency = 1})
-            _tw(BarFillBg, TweenInfo.new(0.5), {BackgroundTransparency = 1})
-            _tw(BarFill, TweenInfo.new(0.5), {BackgroundTransparency = 1})
-            _tw(ic, TweenInfo.new(0.5), {ImageTransparency = 1})
-            _tw(tx, TweenInfo.new(0.5), {TextTransparency = 1})
-            task.wait(0.5)
-            gui:Destroy()
-        end)
-    end
 
     Library._loadingObj = loadingObj
     Library._skipLoadingSequence = true
