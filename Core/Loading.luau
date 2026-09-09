@@ -13,7 +13,7 @@ function Loading.Create(ParentGui)
     local Main = Instance.new("Frame")
     Main.Name = "LoadingScreen"
     Main.AnchorPoint = Vector2.new(0.5, 0.5)
-    Main.BackgroundColor3 = Color3.fromRGB(15, 15, 17) -- Deeper premium dark slate
+    Main.BackgroundColor3 = Color3.fromRGB(15, 15, 17)
     Main.BorderColor3 = Color3.new(0, 0, 0)
     Main.BorderSizePixel = 0
     Main.Position = UDim2.new(0.5, 0, 0.5, 0)
@@ -22,12 +22,12 @@ function Loading.Create(ParentGui)
     Main.Parent = ParentGui
     
     local MainStroke = Instance.new("UIStroke")
-    MainStroke.Color = Color3.fromRGB(40, 40, 45) -- Subtle stroke
+    MainStroke.Color = Color3.fromRGB(40, 40, 45)
     MainStroke.Thickness = 1
     MainStroke.Parent = Main
     
     local MainCorner = Instance.new("UICorner")
-    MainCorner.CornerRadius = UDim.new(0, 8) -- Slightly rounded edges for the loader window
+    MainCorner.CornerRadius = UDim.new(0, 8)
     MainCorner.Parent = Main
     
     local introBox = Instance.new("Frame")
@@ -49,7 +49,7 @@ function Loading.Create(ParentGui)
     ic.BackgroundTransparency = 1
     ic.BorderSizePixel = 0
     ic.Image = "rbxassetid://71942076965693"
-    ic.Size = UDim2.new(0, 90, 0, 90) -- Slightly sleeker logo
+    ic.Size = UDim2.new(0, 90, 0, 90)
     ic.ImageTransparency = 1
     ic.ZIndex = 100000
     ic.Parent = introBox
@@ -61,7 +61,7 @@ function Loading.Create(ParentGui)
     tx.Size = UDim2.new(0, 0, 0, 90)
     tx.Text = "olt"
     tx.TextColor3 = Color3.new(0.984, 0.984, 0.984)
-    tx.TextSize = 68 -- Matched logo scale
+    tx.TextSize = 68
     tx.TextXAlignment = Enum.TextXAlignment.Left
     tx.ClipsDescendants = true
     tx.MaxVisibleGraphemes = 0
@@ -72,9 +72,9 @@ function Loading.Create(ParentGui)
     BarContainer.Name = "Bar"
     BarContainer.BackgroundTransparency = 1
     BarContainer.LayoutOrder = 1
-    BarContainer.Size = UDim2.new(0, 360, 0, 40) -- Narrower, perfectly centered with the logo
+    BarContainer.Size = UDim2.new(0, 360, 0, 40)
     BarContainer.AnchorPoint = Vector2.new(0.5, 0)
-    BarContainer.Position = UDim2.new(0.5, 0, 0.55, 0) -- Just beneath the animated logo
+    BarContainer.Position = UDim2.new(0.5, 0, 0.55, 0)
     BarContainer.Parent = Main
     
     local BarLayout = Instance.new("UIListLayout")
@@ -93,7 +93,7 @@ function Loading.Create(ParentGui)
     LoadingText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
     LoadingText.Size = UDim2.new(1, -50, 1, 0)
     LoadingText.Text = "Loading Ui ..."
-    LoadingText.TextColor3 = Color3.fromRGB(180, 180, 180) -- Softer text color
+    LoadingText.TextColor3 = Color3.fromRGB(180, 180, 180)
     LoadingText.TextSize = 13
     LoadingText.TextXAlignment = Enum.TextXAlignment.Left
     LoadingText.TextYAlignment = Enum.TextYAlignment.Bottom
@@ -117,11 +117,11 @@ function Loading.Create(ParentGui)
     local BarBg = Instance.new("Frame")
     BarBg.BackgroundTransparency = 1
     BarBg.LayoutOrder = 1
-    BarBg.Size = UDim2.new(1, 0, 0, 4) -- Sleek 4px height
+    BarBg.Size = UDim2.new(1, 0, 0, 4)
     BarBg.Parent = BarContainer
     
     local BarFillBg = Instance.new("Frame")
-    BarFillBg.BackgroundColor3 = Color3.fromRGB(30, 30, 35) -- Slightly visible track
+    BarFillBg.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
     BarFillBg.BackgroundTransparency = 1
     BarFillBg.BorderSizePixel = 0
     BarFillBg.Size = UDim2.new(1, 0, 1, 0)
@@ -152,7 +152,6 @@ function Loading.Create(ParentGui)
     local obj = {Faded = false}
     
     task.spawn(function()
-        -- Start intro animation
         task.wait(0.2)
         Tween(ic, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 0})
         task.wait(1)
@@ -165,7 +164,6 @@ function Loading.Create(ParentGui)
         end
         task.wait(0.8)
         
-        -- Fade in the bar
         Tween(introBox, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(0.5, 0, 0.45, 0)})
         
         Tween(BarFillBg, TweenInfo.new(0.3), {BackgroundTransparency = 0})
