@@ -1682,12 +1682,33 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
             if data.licenseObjects and type(data.licenseObjects) == "table" then
                 keyList = data.licenseObjects
             else
-                local keysData = data.keys or data.key or data.claimedKeys or data.claimedkey or data.claimedKey or data.licenses or data.licenseKeys or data.usedKey or data.license
-                if data.subscription and type(data.subscription) == "table" then
-                    keysData = keysData or data.subscription.keys or data.subscription.key or data.subscription.claimedKeys or data.subscription.claimedkey or data.subscription.claimedKey
+                local keysData = data.keys or data.key or data.claimedKeys or data.claimedkey or data.claimedKey or data.licenses or data.licenseKeys or data.usedKey or data.license or data.usedKeys or data.redeemedKeys or data.redeemed_keys or data.claimed_keys or data.license_keys
+                
+                if not keysData and data.subscription and type(data.subscription) == "table" then
+                    keysData = data.subscription.keys or data.subscription.key or data.subscription.claimedKeys or data.subscription.claimedkey or data.subscription.claimedKey or data.subscription.licenseKeys or data.subscription.licenses
                 end
+                
+                if not keysData and data.subscriptions and type(data.subscriptions) == "table" then
+                    keysData = {}
+                    for _, sub in ipairs(data.subscriptions) do
+                        if type(sub) == "table" then
+                            local k = sub.key or sub.license or sub.licenseKey or sub.id
+                            if k then table.insert(keysData, tostring(k)) end
+                        elseif type(sub) == "string" then
+                            table.insert(keysData, sub)
+                        end
+                    end
+                end
+                
                 if type(keysData) == "table" then
-                    for _, k in ipairs(keysData) do table.insert(keyList, { key = tostring(k) }) end
+                    for _, k in ipairs(keysData) do 
+                        if type(k) == "table" then
+                            local actualKey = k.key or k.licenseKey or k.license or k.id or k.name
+                            if actualKey then table.insert(keyList, { key = tostring(actualKey) }) end
+                        else
+                            table.insert(keyList, { key = tostring(k) }) 
+                        end
+                    end
                 elseif type(keysData) == "string" and keysData ~= "" then
                     keyList = {{ key = tostring(keysData) }}
                 end

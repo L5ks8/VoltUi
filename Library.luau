@@ -194,7 +194,6 @@ if not Window then
         end
         task.wait(0.8)
 
-        -- Instead of hiding the logo, move it up slightly and fade in the loading bar
         _tw(introBox, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(0.5, 0, 0.45, 0)})
         
         _tw(mfStroke, TweenInfo.new(0.3), {Transparency = 0})
@@ -205,7 +204,6 @@ if not Window then
         task.wait(0.3)
         loadingShown = true
         
-        -- Pulsing animation for the logo
         while loadingShown and mf and mf.Parent do
             _tw(ic, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {ImageTransparency = 0.4})
             task.wait(1)
