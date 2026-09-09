@@ -84,7 +84,7 @@ if not Window then
     local tx = Instance.new("TextLabel")
     tx.BackgroundTransparency = 1
     tx.BorderSizePixel = 0
-    tx.FontFace = Font.new("rbxasset://fonts/families/LegacyArial.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    tx.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     tx.Size = UDim2.new(0, 0, 0, 100)
     tx.Text = "olt"
     tx.TextColor3 = Color3.new(0.984, 0.984, 0.984)
@@ -117,7 +117,7 @@ if not Window then
     
     local statusLbl = Instance.new("TextLabel")
     statusLbl.BackgroundTransparency = 1
-    statusLbl.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    statusLbl.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     statusLbl.Size = UDim2.new(1, -50, 1, 0)
     statusLbl.Text = ""
     statusLbl.TextColor3 = Color3.fromRGB(245, 245, 245)
@@ -131,7 +131,7 @@ if not Window then
     PctText.BackgroundTransparency = 1
     PctText.AnchorPoint = Vector2.new(1, 0)
     PctText.Position = UDim2.new(1, 0, 0, 0)
-    PctText.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    PctText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     PctText.Size = UDim2.new(0, 50, 1, 0)
     PctText.Text = "0%"
     PctText.TextColor3 = Color3.fromRGB(245, 245, 245)

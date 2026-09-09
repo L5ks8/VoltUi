@@ -40,7 +40,7 @@ function Bottombar.Create(Main, maid)
     TabdisplayIcon.BackgroundTransparency = 1
     TabdisplayIcon.BorderColor3 = Color3.new(0, 0, 0)
     TabdisplayIcon.BorderSizePixel = 0
-    TabdisplayIcon.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    TabdisplayIcon.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     TabdisplayIcon.Size = UDim2.new(0.2, 0, 1, 0)
     TabdisplayIcon.Text = "< ⁄ >"
     ThemeManager:Register(TabdisplayIcon, "TextColor3", "TextTertiary")
@@ -55,7 +55,7 @@ function Bottombar.Create(Main, maid)
     TabdisplayName.BackgroundTransparency = 1
     TabdisplayName.BorderColor3 = Color3.new(0.353, 0.353, 0.353)
     TabdisplayName.BorderSizePixel = 0
-    TabdisplayName.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    TabdisplayName.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     TabdisplayName.LayoutOrder = 1
     TabdisplayName.Size = UDim2.new(1, 0, 1, 0)
     TabdisplayName.Text = "No Tab Selected"
@@ -118,7 +118,7 @@ function Bottombar.Create(Main, maid)
     StatusText.BackgroundTransparency = 1
     StatusText.BorderColor3 = Color3.new(0, 0, 0)
     StatusText.BorderSizePixel = 0
-    StatusText.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    StatusText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     StatusText.LayoutOrder = 1
     StatusText.Size = UDim2.new(0, 0, 1, 0)
     StatusText.AutomaticSize = Enum.AutomaticSize.X
@@ -154,7 +154,7 @@ function Bottombar.Create(Main, maid)
     GamenameText.BackgroundTransparency = 1
     GamenameText.BorderColor3 = Color3.new(0, 0, 0)
     GamenameText.BorderSizePixel = 0
-    GamenameText.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    GamenameText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     GamenameText.Size = UDim2.new(0, 0, 1, 0)
     GamenameText.AutomaticSize = Enum.AutomaticSize.X
     local Success, GameNameResult = pcall(function() return game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name end)

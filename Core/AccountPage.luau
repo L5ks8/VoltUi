@@ -94,7 +94,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     AccountText.BackgroundTransparency = 1
     AccountText.BorderColor3 = Color3.new(0, 0, 0)
     AccountText.BorderSizePixel = 0
-    AccountText.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    AccountText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     AccountText.Size = UDim2.new(0, 200, 0, 35)
     AccountText.Text = "Account"
     ThemeManager:Register(AccountText, "TextColor3", "TextSecondary")
@@ -293,7 +293,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     Username.BackgroundTransparency = 1
     Username.BorderColor3 = Color3.new(0, 0, 0)
     Username.BorderSizePixel = 0
-    Username.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    Username.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     Username.AutomaticSize = Enum.AutomaticSize.XY
     Username.Size = UDim2.new(0, 0, 0, 25)
     Username.Text = "Username"
@@ -309,7 +309,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     HiddenId.BackgroundTransparency = 1
     HiddenId.BorderColor3 = Color3.new(0, 0, 0)
     HiddenId.BorderSizePixel = 0
-    HiddenId.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+    HiddenId.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
     HiddenId.AutomaticSize = Enum.AutomaticSize.XY
     HiddenId.Size = UDim2.new(0, 0, 0, 22)
     HiddenId.Text = ""
@@ -328,7 +328,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     MemberSince.BackgroundTransparency = 1
     MemberSince.BorderColor3 = Color3.new(0, 0, 0)
     MemberSince.BorderSizePixel = 0
-    MemberSince.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+    MemberSince.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
     MemberSince.Size = UDim2.new(0, 150, 0, 25)
     MemberSince.Text = ""
     ThemeManager:Register(MemberSince, "TextColor3", "TextTertiary")
@@ -423,7 +423,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     LicensesLabel.BackgroundTransparency = 1
     LicensesLabel.BorderColor3 = Color3.new(0, 0, 0)
     LicensesLabel.BorderSizePixel = 0
-    LicensesLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    LicensesLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     LicensesLabel.Size = UDim2.new(0, 200, 0, 25)
     LicensesLabel.Text = "Licenses"
     ThemeManager:Register(LicensesLabel, "TextColor3", "TextPrimary")
@@ -437,7 +437,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     LicensesDesc.BackgroundTransparency = 1
     LicensesDesc.BorderColor3 = Color3.new(0, 0, 0)
     LicensesDesc.BorderSizePixel = 0
-    LicensesDesc.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+    LicensesDesc.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
     LicensesDesc.Size = UDim2.new(0, 200, 0, 25)
     LicensesDesc.Text = "Subscription and Claimed keys"
     ThemeManager:Register(LicensesDesc, "TextColor3", "TextPrimary")
@@ -489,7 +489,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     TextBox.BorderColor3 = Color3.new(0, 0, 0)
     TextBox.BorderSizePixel = 0
     TextBox.CursorPosition = -1
-    TextBox.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    TextBox.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     TextBox.Size = UDim2.new(1, 0, 1, 0)
     TextBox.Text = ""
     TextBox.PlaceholderText = "Enter license key"
@@ -542,7 +542,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     ClaimButton.BorderColor3 = Color3.new(0.298, 0.298, 0.298)
     ClaimButton.BorderSizePixel = 0
     ClaimButton.AutoButtonColor = false
-    ClaimButton.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    ClaimButton.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     ClaimButton.Size = UDim2.new(0, 70, 0, 35)
     ClaimButton.Text = "Claim"
     ThemeManager:Register(ClaimButton, "TextColor3", "TextPrimary")
@@ -635,7 +635,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     VoltLabel.BackgroundTransparency = 1
     VoltLabel.BorderColor3 = Color3.new(0, 0, 0)
     VoltLabel.BorderSizePixel = 0
-    VoltLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    VoltLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     VoltLabel.Size = UDim2.new(0, 110, 0, 22)
     VoltLabel.Text = "Volt"
     ThemeManager:Register(VoltLabel, "TextColor3", "TextPrimary")
@@ -653,7 +653,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     VoltSubLabel.BackgroundTransparency = 1
     VoltSubLabel.BorderColor3 = Color3.new(0, 0, 0)
     VoltSubLabel.BorderSizePixel = 0
-    VoltSubLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+    VoltSubLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
     VoltSubLabel.Size = UDim2.new(0, 110, 0, 22)
     VoltSubLabel.Text = "Current subscription"
     ThemeManager:Register(VoltSubLabel, "TextColor3", "TextPrimary")
@@ -706,7 +706,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     StatusBadgeText.BackgroundTransparency = 1
     StatusBadgeText.BorderColor3 = Color3.new(0, 0, 0)
     StatusBadgeText.BorderSizePixel = 0
-    StatusBadgeText.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    StatusBadgeText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     StatusBadgeText.Size = UDim2.new(1, 0, 1, 0)
     StatusBadgeText.Text = "Active"
     ThemeManager:Register(StatusBadgeText, "TextColor3", "TextPrimary")
@@ -757,7 +757,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     RemainingLabel.BackgroundTransparency = 1
     RemainingLabel.BorderColor3 = Color3.new(0, 0, 0)
     RemainingLabel.BorderSizePixel = 0
-    RemainingLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+    RemainingLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
     RemainingLabel.Size = UDim2.new(0, 175, 0, 22)
     RemainingLabel.Text = "Remaining"
     ThemeManager:Register(RemainingLabel, "TextColor3", "TextTertiary")
@@ -775,7 +775,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     RemainingValue.BackgroundTransparency = 1
     RemainingValue.BorderColor3 = Color3.new(0, 0, 0)
     RemainingValue.BorderSizePixel = 0
-    RemainingValue.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    RemainingValue.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     RemainingValue.LayoutOrder = 1
     RemainingValue.Size = UDim2.new(0, 175, 0, 22)
     RemainingValue.Text = "-"
@@ -857,7 +857,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     EndsLabel.BackgroundTransparency = 1
     EndsLabel.BorderColor3 = Color3.new(0, 0, 0)
     EndsLabel.BorderSizePixel = 0
-    EndsLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+    EndsLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
     EndsLabel.Size = UDim2.new(0, 130, 0, 22)
     EndsLabel.Text = "Ends"
     ThemeManager:Register(EndsLabel, "TextColor3", "TextTertiary")
@@ -872,7 +872,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     EndsValue.BackgroundTransparency = 1
     EndsValue.BorderColor3 = Color3.new(0, 0, 0)
     EndsValue.BorderSizePixel = 0
-    EndsValue.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+    EndsValue.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
     EndsValue.LayoutOrder = 1
     EndsValue.Size = UDim2.new(0, 130, 0, 22)
     EndsValue.Text = "-"
@@ -949,7 +949,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     StartedLabel.BackgroundTransparency = 1
     StartedLabel.BorderColor3 = Color3.new(0, 0, 0)
     StartedLabel.BorderSizePixel = 0
-    StartedLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+    StartedLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
     StartedLabel.Size = UDim2.new(0, 130, 0, 22)
     StartedLabel.Text = "Started"
     ThemeManager:Register(StartedLabel, "TextColor3", "TextTertiary")
@@ -964,7 +964,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     StartedValue.BackgroundTransparency = 1
     StartedValue.BorderColor3 = Color3.new(0, 0, 0)
     StartedValue.BorderSizePixel = 0
-    StartedValue.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+    StartedValue.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
     StartedValue.LayoutOrder = 1
     StartedValue.Size = UDim2.new(0, 130, 0, 22)
     StartedValue.Text = "-"
@@ -1057,7 +1057,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     KeysTitle.BackgroundTransparency = 1
     KeysTitle.BorderColor3 = Color3.new(0, 0, 0)
     KeysTitle.BorderSizePixel = 0
-    KeysTitle.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    KeysTitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     KeysTitle.LayoutOrder = 1
     KeysTitle.Size = UDim2.new(0, 100, 0, 30)
     KeysTitle.Text = "Claimed keys"
@@ -1102,7 +1102,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     CountLabel.BackgroundTransparency = 1
     CountLabel.BorderColor3 = Color3.new(0, 0, 0)
     CountLabel.BorderSizePixel = 0
-    CountLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    CountLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     CountLabel.Size = UDim2.new(1, 0, 1, 0)
     CountLabel.Text = "0"
     ThemeManager:Register(CountLabel, "TextColor3", "TextSecondary")
@@ -1214,7 +1214,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     SecurityLabel.BackgroundTransparency = 1
     SecurityLabel.BorderColor3 = Color3.new(0, 0, 0)
     SecurityLabel.BorderSizePixel = 0
-    SecurityLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    SecurityLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     SecurityLabel.Size = UDim2.new(0, 200, 0, 20)
     SecurityLabel.Text = "Security"
     ThemeManager:Register(SecurityLabel, "TextColor3", "TextPrimary")
@@ -1229,7 +1229,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     SecuritySmallText.BackgroundTransparency = 1
     SecuritySmallText.BorderColor3 = Color3.new(0, 0, 0)
     SecuritySmallText.BorderSizePixel = 0
-    SecuritySmallText.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+    SecuritySmallText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
     SecuritySmallText.LayoutOrder = 1
     SecuritySmallText.Size = UDim2.new(0, 200, 0, 20)
     SecuritySmallText.Text = "Session controlls"
@@ -1290,7 +1290,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     LogoutHeader.BackgroundTransparency = 1
     LogoutHeader.BorderColor3 = Color3.new(0, 0, 0)
     LogoutHeader.BorderSizePixel = 0
-    LogoutHeader.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    LogoutHeader.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     LogoutHeader.Size = UDim2.new(0, 195, 0, 25)
     LogoutHeader.Text = "Sign out"
     ThemeManager:Register(LogoutHeader, "TextColor3", "TextPrimary")
@@ -1305,7 +1305,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     LogoutDesc.BackgroundTransparency = 1
     LogoutDesc.BorderColor3 = Color3.new(0, 0, 0)
     LogoutDesc.BorderSizePixel = 0
-    LogoutDesc.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+    LogoutDesc.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
     LogoutDesc.LayoutOrder = 1
     LogoutDesc.Size = UDim2.new(0, 195, 0, 25)
     LogoutDesc.Text = "End the session on this device"
@@ -1404,7 +1404,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     LogoutButtonText.BackgroundTransparency = 1
     LogoutButtonText.BorderColor3 = Color3.new(0, 0, 0)
     LogoutButtonText.BorderSizePixel = 0
-    LogoutButtonText.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    LogoutButtonText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     LogoutButtonText.Size = UDim2.new(0, 50, 0, 30)
     LogoutButtonText.Text = "Sign Out"
     ThemeManager:Register(LogoutButtonText, "TextColor3", "DangerText")
@@ -1722,7 +1722,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
             EmptyLabel.Name = "EmptyLabel"
             EmptyLabel.BackgroundTransparency = 1
             EmptyLabel.Size = UDim2.new(1, 0, 0, 40)
-            EmptyLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Italic)
+            EmptyLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Italic)
             EmptyLabel.TextSize = 14
             ThemeManager:Register(EmptyLabel, "TextColor3", "TextTertiary")
             EmptyLabel.Text = isLoggedIn and "No claimed keys" or "Sign in to view claimed keys"
@@ -1779,7 +1779,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
                 KeyLabel.BackgroundTransparency = 1
                 KeyLabel.Size = UDim2.new(1, -110, 0, 25)
                 KeyLabel.Position = UDim2.new(0, 16, 0, 5)
-                KeyLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+                KeyLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
                 KeyLabel.TextSize = 15
                 ThemeManager:Register(KeyLabel, "TextColor3", "TextPrimary")
                 KeyLabel.TextXAlignment = Enum.TextXAlignment.Left
@@ -1790,7 +1790,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
                 DetailsLabel.BackgroundTransparency = 1
                 DetailsLabel.Size = UDim2.new(1, -110, 0, 15)
                 DetailsLabel.Position = UDim2.new(0, 16, 0, 30)
-                DetailsLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+                DetailsLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
                 DetailsLabel.TextSize = 13
                 ThemeManager:Register(DetailsLabel, "TextColor3", "TextSecondary")
                 DetailsLabel.TextXAlignment = Enum.TextXAlignment.Left
@@ -1815,7 +1815,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
                 local BadgeText = Instance.new("TextLabel")
                 BadgeText.BackgroundTransparency = 1
                 BadgeText.Size = UDim2.new(1, 0, 1, 0)
-                BadgeText.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+                BadgeText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
                 BadgeText.TextSize = 13
                 ThemeManager:Register(BadgeText, "TextColor3", "TextPrimary")
 

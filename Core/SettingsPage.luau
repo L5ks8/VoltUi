@@ -97,7 +97,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     SettingsText.BackgroundTransparency = 1
     SettingsText.BorderColor3 = Color3.new(0, 0, 0)
     SettingsText.BorderSizePixel = 0
-    SettingsText.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    SettingsText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     SettingsText.Size = UDim2.new(0, 200, 0, 35)
     SettingsText.Text = "Settings"
     ThemeManager:Register(SettingsText, "TextColor3", "TextPrimary")

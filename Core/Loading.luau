@@ -56,7 +56,7 @@ function Loading.Create(ParentGui)
     local tx = Instance.new("TextLabel")
     tx.BackgroundTransparency = 1
     tx.BorderSizePixel = 0
-    tx.FontFace = Font.new("rbxasset://fonts/families/LegacyArial.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    tx.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     tx.Size = UDim2.new(0, 150, 0, 100)
     tx.Text = "olt"
     tx.TextColor3 = Color3.new(0.984, 0.984, 0.984)
@@ -89,7 +89,7 @@ function Loading.Create(ParentGui)
     
     local LoadingText = Instance.new("TextLabel")
     LoadingText.BackgroundTransparency = 1
-    LoadingText.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    LoadingText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     LoadingText.Size = UDim2.new(1, -50, 1, 0)
     LoadingText.Text = "Loading Ui ..."
     LoadingText.TextColor3 = Color3.fromRGB(245, 245, 245)
@@ -103,7 +103,7 @@ function Loading.Create(ParentGui)
     PctText.BackgroundTransparency = 1
     PctText.AnchorPoint = Vector2.new(1, 0)
     PctText.Position = UDim2.new(1, 0, 0, 0)
-    PctText.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    PctText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     PctText.Size = UDim2.new(0, 50, 1, 0)
     PctText.Text = "0%"
     PctText.TextColor3 = Color3.fromRGB(245, 245, 245)
