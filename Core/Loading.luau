@@ -13,7 +13,7 @@ function Loading.Create(ParentGui)
     local Main = Instance.new("Frame")
     Main.Name = "LoadingScreen"
     Main.AnchorPoint = Vector2.new(0.5, 0.5)
-    Main.BackgroundColor3 = Color3.new(0.09, 0.09, 0.09)
+    Main.BackgroundColor3 = Color3.fromRGB(15, 15, 17) -- Deeper premium dark slate
     Main.BorderColor3 = Color3.new(0, 0, 0)
     Main.BorderSizePixel = 0
     Main.Position = UDim2.new(0.5, 0, 0.5, 0)
@@ -22,10 +22,12 @@ function Loading.Create(ParentGui)
     Main.Parent = ParentGui
     
     local MainStroke = Instance.new("UIStroke")
-    MainStroke.Color = Color3.new(0.353, 0.353, 0.353)
+    MainStroke.Color = Color3.fromRGB(40, 40, 45) -- Subtle stroke
+    MainStroke.Thickness = 1
     MainStroke.Parent = Main
     
     local MainCorner = Instance.new("UICorner")
+    MainCorner.CornerRadius = UDim.new(0, 8) -- Slightly rounded edges for the loader window
     MainCorner.Parent = Main
     
     local introBox = Instance.new("Frame")
@@ -47,7 +49,7 @@ function Loading.Create(ParentGui)
     ic.BackgroundTransparency = 1
     ic.BorderSizePixel = 0
     ic.Image = "rbxassetid://71942076965693"
-    ic.Size = UDim2.new(0, 100, 0, 100)
+    ic.Size = UDim2.new(0, 90, 0, 90) -- Slightly sleeker logo
     ic.ImageTransparency = 1
     ic.ZIndex = 100000
     ic.Parent = introBox
@@ -56,10 +58,10 @@ function Loading.Create(ParentGui)
     tx.BackgroundTransparency = 1
     tx.BorderSizePixel = 0
     tx.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    tx.Size = UDim2.new(0, 0, 0, 100)
+    tx.Size = UDim2.new(0, 0, 0, 90)
     tx.Text = "olt"
     tx.TextColor3 = Color3.new(0.984, 0.984, 0.984)
-    tx.TextSize = 76
+    tx.TextSize = 68 -- Matched logo scale
     tx.TextXAlignment = Enum.TextXAlignment.Left
     tx.ClipsDescendants = true
     tx.MaxVisibleGraphemes = 0
@@ -70,29 +72,29 @@ function Loading.Create(ParentGui)
     BarContainer.Name = "Bar"
     BarContainer.BackgroundTransparency = 1
     BarContainer.LayoutOrder = 1
-    BarContainer.Size = UDim2.new(0, 730, 0, 50)
-    BarContainer.AnchorPoint = Vector2.new(0.5, 1)
-    BarContainer.Position = UDim2.new(0.5, 0, 0.85, 0)
+    BarContainer.Size = UDim2.new(0, 360, 0, 40) -- Narrower, perfectly centered with the logo
+    BarContainer.AnchorPoint = Vector2.new(0.5, 0)
+    BarContainer.Position = UDim2.new(0.5, 0, 0.55, 0) -- Just beneath the animated logo
     BarContainer.Parent = Main
     
     local BarLayout = Instance.new("UIListLayout")
     BarLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    BarLayout.Padding = UDim.new(0, 10)
+    BarLayout.Padding = UDim.new(0, 8)
     BarLayout.Parent = BarContainer
     
     local TextContainer = Instance.new("Frame")
     TextContainer.Name = "Text"
     TextContainer.BackgroundTransparency = 1
-    TextContainer.Size = UDim2.new(1, 0, 0, 20)
+    TextContainer.Size = UDim2.new(1, 0, 0, 16)
     TextContainer.Parent = BarContainer
     
     local LoadingText = Instance.new("TextLabel")
     LoadingText.BackgroundTransparency = 1
-    LoadingText.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    LoadingText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
     LoadingText.Size = UDim2.new(1, -50, 1, 0)
     LoadingText.Text = "Loading Ui ..."
-    LoadingText.TextColor3 = Color3.fromRGB(245, 245, 245)
-    LoadingText.TextSize = 14
+    LoadingText.TextColor3 = Color3.fromRGB(180, 180, 180) -- Softer text color
+    LoadingText.TextSize = 13
     LoadingText.TextXAlignment = Enum.TextXAlignment.Left
     LoadingText.TextYAlignment = Enum.TextYAlignment.Bottom
     LoadingText.TextTransparency = 1
@@ -102,11 +104,11 @@ function Loading.Create(ParentGui)
     PctText.BackgroundTransparency = 1
     PctText.AnchorPoint = Vector2.new(1, 0)
     PctText.Position = UDim2.new(1, 0, 0, 0)
-    PctText.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    PctText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     PctText.Size = UDim2.new(0, 50, 1, 0)
     PctText.Text = "0%"
     PctText.TextColor3 = Color3.fromRGB(245, 245, 245)
-    PctText.TextSize = 14
+    PctText.TextSize = 13
     PctText.TextXAlignment = Enum.TextXAlignment.Right
     PctText.TextYAlignment = Enum.TextYAlignment.Bottom
     PctText.TextTransparency = 1
@@ -115,11 +117,11 @@ function Loading.Create(ParentGui)
     local BarBg = Instance.new("Frame")
     BarBg.BackgroundTransparency = 1
     BarBg.LayoutOrder = 1
-    BarBg.Size = UDim2.new(1, 0, 0, 6)
+    BarBg.Size = UDim2.new(1, 0, 0, 4) -- Sleek 4px height
     BarBg.Parent = BarContainer
     
     local BarFillBg = Instance.new("Frame")
-    BarFillBg.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    BarFillBg.BackgroundColor3 = Color3.fromRGB(30, 30, 35) -- Slightly visible track
     BarFillBg.BackgroundTransparency = 1
     BarFillBg.BorderSizePixel = 0
     BarFillBg.Size = UDim2.new(1, 0, 1, 0)
@@ -142,7 +144,7 @@ function Loading.Create(ParentGui)
     
     local UIGradient = Instance.new("UIGradient")
     UIGradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(200, 200, 200)),
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(150, 150, 150)),
         ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 255, 255))
     })
     UIGradient.Parent = BarFill
