@@ -89,11 +89,11 @@ function Loading.Create(ParentGui)
     
     local LoadingText = Instance.new("TextLabel")
     LoadingText.BackgroundTransparency = 1
-    LoadingText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+    LoadingText.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     LoadingText.Size = UDim2.new(1, -50, 1, 0)
     LoadingText.Text = "Loading Ui ..."
-    LoadingText.TextColor3 = Color3.fromRGB(160, 160, 160)
-    LoadingText.TextSize = 13
+    LoadingText.TextColor3 = Color3.fromRGB(245, 245, 245)
+    LoadingText.TextSize = 14
     LoadingText.TextXAlignment = Enum.TextXAlignment.Left
     LoadingText.TextYAlignment = Enum.TextYAlignment.Bottom
     LoadingText.TextTransparency = 1
@@ -103,11 +103,11 @@ function Loading.Create(ParentGui)
     PctText.BackgroundTransparency = 1
     PctText.AnchorPoint = Vector2.new(1, 0)
     PctText.Position = UDim2.new(1, 0, 0, 0)
-    PctText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    PctText.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     PctText.Size = UDim2.new(0, 50, 1, 0)
     PctText.Text = "0%"
-    PctText.TextColor3 = Color3.fromRGB(255, 255, 255)
-    PctText.TextSize = 13
+    PctText.TextColor3 = Color3.fromRGB(245, 245, 245)
+    PctText.TextSize = 14
     PctText.TextXAlignment = Enum.TextXAlignment.Right
     PctText.TextYAlignment = Enum.TextYAlignment.Bottom
     PctText.TextTransparency = 1

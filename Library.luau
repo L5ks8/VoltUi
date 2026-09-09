@@ -117,11 +117,11 @@ if not Window then
     
     local statusLbl = Instance.new("TextLabel")
     statusLbl.BackgroundTransparency = 1
-    statusLbl.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+    statusLbl.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     statusLbl.Size = UDim2.new(1, -50, 1, 0)
     statusLbl.Text = ""
-    statusLbl.TextColor3 = Color3.fromRGB(160, 160, 160)
-    statusLbl.TextSize = 13
+    statusLbl.TextColor3 = Color3.fromRGB(245, 245, 245)
+    statusLbl.TextSize = 14
     statusLbl.TextXAlignment = Enum.TextXAlignment.Left
     statusLbl.TextYAlignment = Enum.TextYAlignment.Bottom
     statusLbl.ZIndex = 100000
@@ -131,11 +131,11 @@ if not Window then
     PctText.BackgroundTransparency = 1
     PctText.AnchorPoint = Vector2.new(1, 0)
     PctText.Position = UDim2.new(1, 0, 0, 0)
-    PctText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    PctText.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     PctText.Size = UDim2.new(0, 50, 1, 0)
     PctText.Text = "0%"
-    PctText.TextColor3 = Color3.fromRGB(255, 255, 255)
-    PctText.TextSize = 13
+    PctText.TextColor3 = Color3.fromRGB(245, 245, 245)
+    PctText.TextSize = 14
     PctText.TextXAlignment = Enum.TextXAlignment.Right
     PctText.TextYAlignment = Enum.TextYAlignment.Bottom
     PctText.ZIndex = 100000
