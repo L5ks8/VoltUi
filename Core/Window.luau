@@ -24,6 +24,7 @@ local Window = {}
 
 function Window:CreateWindow(Config)
     local maid = Maid.new()
+    local WindowObject
     
     local VoltUi = Instance.new("ScreenGui")
     VoltUi.Name = "VoltUi"
@@ -169,10 +170,6 @@ function Window:CreateWindow(Config)
     local tokenExists = false
     if Api then
         pcall(function() tokenExists = (Api.GetToken() ~= nil) end)
-    end
-    
-    if not tokenExists then
-        isAuthSystem = true
     end
 
     local BottombarElements = Bottombar.Create(Main, maid)
@@ -724,7 +721,7 @@ function Window:CreateWindow(Config)
     local OnClose = Signal.new()
     maid:GiveTask(OnClose)
     
-    local WindowObject = {
+    WindowObject = {
         Instance = VoltUi,
         Main = Main,
         Topbar = TopbarElements,
