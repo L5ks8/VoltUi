@@ -262,7 +262,7 @@ function LoginPage.Create(ParentGui, OnSuccess)
             ActionBtn.Text = "Send Reset Code"
             userFrame.Visible = true
             SwitchBtn.Visible = true
-            SwitchBtn.Text = "&lt;  <b>Back to Login</b>"
+            SwitchBtn.Text = "←  <b>Back to Login</b>"
             TopbarElements.Instance.Version.Text.Text = "Reset Password"
             
         elseif UIState == "Reset" then
@@ -272,7 +272,7 @@ function LoginPage.Create(ParentGui, OnSuccess)
             codeFrame.Visible = true
             newPassFrame.Visible = true
             SwitchBtn.Visible = true
-            SwitchBtn.Text = "&lt;  <b>Back to Login</b>"
+            SwitchBtn.Text = "←  <b>Back to Login</b>"
             TopbarElements.Instance.Version.Text.Text = "Enter Code"
         end
     end
