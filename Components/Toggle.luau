@@ -1,4 +1,4 @@
-﻿local ToggleComponent = {}
+local ToggleComponent = {}
 local TweenService = game:GetService("TweenService")
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")

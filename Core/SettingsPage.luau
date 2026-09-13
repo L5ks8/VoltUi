@@ -1,4 +1,4 @@
-﻿local Tween = require(script.Parent.Parent.Utils.Tween)
+local Tween = require(script.Parent.Parent.Utils.Tween)
 local Tabs = require(script.Parent.Tabs)
 local SettingsManager = require(script.Parent.Parent.Utils.SettingsManager)
 

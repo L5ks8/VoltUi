@@ -1,4 +1,4 @@
-﻿local Utils = script.Parent.Parent.Utils
+local Utils = script.Parent.Parent.Utils
 local Maid = require(Utils.Maid)
 local Signal = require(Utils.Signal)
 local Tween = require(Utils.Tween)

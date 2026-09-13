@@ -1,4 +1,4 @@
-﻿local DividerComponent = {}
+local DividerComponent = {}
 
 function DividerComponent.Create(TabContent, Maid, Config)
     local config = type(Config) == "string" and {Text = Config} or (Config or {})

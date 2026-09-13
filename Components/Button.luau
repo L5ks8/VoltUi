@@ -1,4 +1,4 @@
-﻿local ButtonComponent = {}
+local ButtonComponent = {}
 local Utils = script.Parent.Parent.Utils
 local Tween = require(Utils.Tween)
 

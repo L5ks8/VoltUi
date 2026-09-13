@@ -1,4 +1,4 @@
-﻿local Bottombar = {}
+local Bottombar = {}
 
 function Bottombar.Create(Main, maid)
     local BottombarFrame = Instance.new("Frame")

@@ -1,4 +1,4 @@
-﻿local CheckboxComponent = {}
+local CheckboxComponent = {}
 local TweenService = game:GetService("TweenService")
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")

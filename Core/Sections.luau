@@ -1,4 +1,4 @@
-﻿local Components = script.Parent.Parent.Components
+local Components = script.Parent.Parent.Components
 local ButtonComponent = require(Components.Button)
 local ToggleComponent = require(Components.Toggle)
 local CheckboxComponent = require(Components.Checkbox)

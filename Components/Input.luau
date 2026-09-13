@@ -1,4 +1,4 @@
-﻿local InputComponent = {}
+local InputComponent = {}
 local TweenService = game:GetService("TweenService")
 
 local function Tween(instance, tweenInfo, properties)

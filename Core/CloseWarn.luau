@@ -1,4 +1,4 @@
-﻿local Utils = script.Parent.Parent.Utils
+local Utils = script.Parent.Parent.Utils
 local Tween = require(Utils.Tween)
 local ContextActionService = game:GetService("ContextActionService")
 

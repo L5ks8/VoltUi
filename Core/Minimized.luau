@@ -1,4 +1,4 @@
-﻿local Utils = script.Parent.Parent.Utils
+local Utils = script.Parent.Parent.Utils
 local Utility = require(Utils.Utility)
 
 local Minimized = {}
