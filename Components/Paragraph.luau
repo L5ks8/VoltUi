@@ -1,4 +1,4 @@
-﻿local ParagraphComponent = {}
+local ParagraphComponent = {}
 local TweenService = game:GetService("TweenService")
 local TextService = game:GetService("TextService")
 
@@ -23,9 +23,7 @@ function ParagraphComponent.Create(TabContent, Maid, Config)
     ParagraphFrame.AutomaticSize = Enum.AutomaticSize.Y
     ParagraphFrame.Parent = TabContent
 
-    local Corner = Instance.new("UICorner")
-    Corner.CornerRadius = UDim.new(0, 6)
-    Corner.Parent = ParagraphFrame
+
 
     local Stroke = Instance.new("UIStroke")
     Stroke.Color = Color3.fromRGB(48, 48, 48)
