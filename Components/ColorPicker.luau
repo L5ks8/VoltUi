@@ -1,4 +1,4 @@
-﻿local ColorPickerComponent = {}
+local ColorPickerComponent = {}
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 
@@ -97,6 +97,13 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
     CloseBtn.ImageColor3 = Color3.fromRGB(150, 150, 160)
     CloseBtn.ZIndex = 50002
     CloseBtn.Parent = Header
+
+    CloseBtn.MouseEnter:Connect(function()
+        Tween(CloseBtn, TweenInfo.new(0.2), {ImageColor3 = Color3.fromRGB(240, 240, 245)})
+    end)
+    CloseBtn.MouseLeave:Connect(function()
+        Tween(CloseBtn, TweenInfo.new(0.2), {ImageColor3 = Color3.fromRGB(150, 150, 160)})
+    end)
 
     local SVCanvas = Instance.new("TextButton")
     SVCanvas.Name = "SVCanvas"
