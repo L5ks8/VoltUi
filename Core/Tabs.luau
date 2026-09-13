@@ -146,8 +146,19 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
         end
         
         Tabs.ActiveTab = TabObj
+        
+        TabContent.Position = UDim2.new(0, 0, 0, 10)
+        local scale = TabContent:FindFirstChildOfClass("UIScale")
+        if not scale then
+            scale = Instance.new("UIScale")
+            scale.Parent = TabContent
+        end
+        scale.Scale = 0.985
         TabContent.Visible = true
         task.defer(UpdateContentScroll)
+
+        Tween(TabContent, TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2.new(0, 0, 0, 0)})
+        Tween(scale, TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Scale = 1})
         
         Tween(TabBtn, TweenInfo.new(0.2), {BackgroundTransparency = 0.95})
         Tween(TabTitle, TweenInfo.new(0.2), {TextColor3 = Color3.new(1, 1, 1)})

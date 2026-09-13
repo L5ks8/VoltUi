@@ -112,6 +112,7 @@ function Window:CreateWindow(Config)
     MainContent.BackgroundTransparency = 1
     MainContent.BorderColor3 = Color3.new(0, 0, 0)
     MainContent.BorderSizePixel = 0
+    MainContent.ClipsDescendants = true
     MainContent.Position = UDim2.new(0, 207, 0, 0)
     MainContent.Size = UDim2.new(1, -207, 1, 0)
     MainContent.LayoutOrder = 2
@@ -739,6 +740,17 @@ function Window:CreateWindow(Config)
             PageLayout:JumpTo(SettingsPageElements.Instance)
             BottombarElements.Instance.Visible = false
             Tween(PagesContainer, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -30)})
+
+            local inst = SettingsPageElements.Instance
+            inst.Position = UDim2.new(0.5, 0, 0.518, 10)
+            local scale = inst:FindFirstChildOfClass("UIScale")
+            if not scale then
+                scale = Instance.new("UIScale")
+                scale.Parent = inst
+            end
+            scale.Scale = 0.985
+            Tween(inst, TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2.new(0.5, 0, 0.518, 0)})
+            Tween(scale, TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Scale = 1})
         end
     end
 
@@ -748,6 +760,17 @@ function Window:CreateWindow(Config)
             BottombarElements.Instance.Visible = false
             Tween(PagesContainer, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -30)})
             RefreshAccountData()
+
+            local inst = AccountPageElements.Instance
+            inst.Position = UDim2.new(0.038, 0, 0.03, 10)
+            local scale = inst:FindFirstChildOfClass("UIScale")
+            if not scale then
+                scale = Instance.new("UIScale")
+                scale.Parent = inst
+            end
+            scale.Scale = 0.985
+            Tween(inst, TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2.new(0.038, 0, 0.03, 0)})
+            Tween(scale, TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Scale = 1})
         end
     end
 
@@ -759,6 +782,20 @@ function Window:CreateWindow(Config)
             ExpiredOverlay.Visible = true
         else
             ExpiredOverlay.Visible = false
+        end
+
+        local activeTab = Tabs.ActiveTab
+        if activeTab and activeTab.Content then
+            local tc = activeTab.Content
+            tc.Position = UDim2.new(0, 0, 0, 10)
+            local scale = tc:FindFirstChildOfClass("UIScale")
+            if not scale then
+                scale = Instance.new("UIScale")
+                scale.Parent = tc
+            end
+            scale.Scale = 0.985
+            Tween(tc, TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2.new(0, 0, 0, 0)})
+            Tween(scale, TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Scale = 1})
         end
     end
     
