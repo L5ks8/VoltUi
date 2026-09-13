@@ -1287,7 +1287,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     LogoutHeader.BorderColor3 = Color3.new(0, 0, 0)
     LogoutHeader.BorderSizePixel = 0
     LogoutHeader.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    LogoutHeader.Size = UDim2.new(0, 195, 0, 25)
+    LogoutHeader.Size = UDim2.new(0, 195, 0, 20)
     LogoutHeader.Text = "Sign out"
     LogoutHeader.TextColor3 = Color3.new(0.8, 0.8, 0.8)
     LogoutHeader.TextSize = 15
@@ -1303,13 +1303,29 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     LogoutDesc.BorderSizePixel = 0
     LogoutDesc.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
     LogoutDesc.LayoutOrder = 1
-    LogoutDesc.Size = UDim2.new(0, 195, 0, 25)
+    LogoutDesc.Size = UDim2.new(0, 195, 0, 15)
     LogoutDesc.Text = "End the session on this device"
     LogoutDesc.TextColor3 = Color3.new(0.8, 0.8, 0.8)
     LogoutDesc.TextSize = 14
     LogoutDesc.TextXAlignment = Enum.TextXAlignment.Left
     LogoutDesc.TextYAlignment = Enum.TextYAlignment.Top
     LogoutDesc.Parent = LogoutTextFrame
+
+    local LogoutWarning = Instance.new("TextLabel")
+    LogoutWarning.Name = "Warning"
+    LogoutWarning.BackgroundColor3 = Color3.new(1, 1, 1)
+    LogoutWarning.BackgroundTransparency = 1
+    LogoutWarning.BorderColor3 = Color3.new(0, 0, 0)
+    LogoutWarning.BorderSizePixel = 0
+    LogoutWarning.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+    LogoutWarning.LayoutOrder = 2
+    LogoutWarning.Size = UDim2.new(0, 195, 0, 15)
+    LogoutWarning.Text = "You will be kicked out of this experience"
+    LogoutWarning.TextColor3 = Color3.fromRGB(150, 150, 150)
+    LogoutWarning.TextSize = 12
+    LogoutWarning.TextXAlignment = Enum.TextXAlignment.Left
+    LogoutWarning.TextYAlignment = Enum.TextYAlignment.Top
+    LogoutWarning.Parent = LogoutTextFrame
 
     local LogoutTextPadding = Instance.new("UIPadding")
     LogoutTextPadding.PaddingLeft = UDim.new(0, 8)
@@ -1442,7 +1458,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
             end)
             local Players = game:GetService("Players")
             if Players.LocalPlayer then
-                Players.LocalPlayer:Kick("You will be kicked out of this experience.")
+                Players.LocalPlayer:Kick("You have been signed out. Please rejoin to sign in again.")
             end
         end
     end))
