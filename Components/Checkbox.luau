@@ -74,6 +74,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
     Title.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     Title.Text = "Color Picker"
     Title.TextColor3 = Color3.fromRGB(210, 210, 215)
+    Title.TextTransparency = 0.15
     Title.TextSize = 13
     Title.TextXAlignment = Enum.TextXAlignment.Left
     Title.ZIndex = 50002
@@ -381,6 +382,7 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
     Header.Size = UDim2.new(1, 0, 0, 16)
     Header.Text = headerText
     Header.TextColor3 = Color3.fromRGB(210, 210, 215)
+    Header.TextTransparency = 0.15
     Header.TextSize = 14
     Header.TextXAlignment = Enum.TextXAlignment.Left
     Header.TextYAlignment = Enum.TextYAlignment.Center
@@ -597,6 +599,7 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
         KbLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
         KbLabel.Text = tostring(currentKey)
         KbLabel.TextColor3 = Color3.fromRGB(210, 210, 215)
+        KbLabel.TextTransparency = 0.15
         KbLabel.TextSize = 12
         KbLabel.Parent = KeybindBtn
 

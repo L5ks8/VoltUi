@@ -45,6 +45,7 @@ function ButtonComponent.Create(TabContent, Maid, Config)
     Header.Size = UDim2.new(1, 0, 0, 16)
     Header.Text = headerText
     Header.TextColor3 = Color3.new(0.9, 0.9, 0.9)
+    Header.TextTransparency = 0.15
     Header.TextSize = 14
     Header.TextXAlignment = Enum.TextXAlignment.Left
     Header.TextYAlignment = Enum.TextYAlignment.Center

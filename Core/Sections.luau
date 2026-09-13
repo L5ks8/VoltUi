@@ -75,6 +75,7 @@ function Sections.CreateSection(TabContent, Maid, Title, Description)
         TitleLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
         TitleLabel.Text = Title
         TitleLabel.TextColor3 = Color3.fromRGB(210, 210, 215)
+        TitleLabel.TextTransparency = 0.15
         TitleLabel.TextSize = 14
         TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
         TitleLabel.TextYAlignment = Enum.TextYAlignment.Center

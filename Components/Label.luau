@@ -89,6 +89,7 @@ function LabelComponent.Create(TabContent, Maid, Config)
     Header.Size = UDim2.new(1, -30, 1, 0)
     Header.Text = headerText
     Header.TextColor3 = Color3.fromRGB(210, 210, 215)
+    Header.TextTransparency = 0.15
     Header.TextSize = 14
     Header.TextXAlignment = Enum.TextXAlignment.Left
     Header.TextYAlignment = Enum.TextYAlignment.Center
@@ -175,6 +176,7 @@ function LabelComponent.Create(TabContent, Maid, Config)
         KbLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
         KbLabel.Text = tostring(currentKey)
         KbLabel.TextColor3 = Color3.fromRGB(210, 210, 215)
+        KbLabel.TextTransparency = 0.15
         KbLabel.TextSize = 12
         KbLabel.Parent = KeybindBtn
 

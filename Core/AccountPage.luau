@@ -1791,8 +1791,8 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
                 KeyLabel.Position = UDim2.new(0, 16, 0, 5)
                 KeyLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
                 KeyLabel.TextSize = 15
-                KeyLabel.TextColor3 = Color3.fromRGB(200, 200, 205)
-                KeyLabel.TextTransparency = 0.25
+                KeyLabel.TextColor3 = Color3.fromRGB(220, 220, 225)
+                KeyLabel.TextTransparency = 0.15
                 KeyLabel.TextXAlignment = Enum.TextXAlignment.Left
                 KeyLabel.Text = tostring(keyStr)
                 KeyLabel.Parent = KeyItem
@@ -1832,7 +1832,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
                 BadgeText.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
                 BadgeText.TextSize = 13
                 BadgeText.TextColor3 = Color3.fromRGB(190, 190, 195)
-                BadgeText.TextTransparency = 0.25
+                BadgeText.TextTransparency = 0.15
 
                 local badgeName = "unknown"
                 if type(licenseObj) == "table" then
