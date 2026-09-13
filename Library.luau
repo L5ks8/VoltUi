@@ -104,6 +104,13 @@ if not Window then
             code = httpGet(baseUrl .. path .. "?v=" .. tostring(tick()) .. "_" .. tostring(math.random(100000, 999999)))
         end
 
+        if type(code) == "string" then
+            if code:sub(1, 3) == string.char(0xEF, 0xBB, 0xBF) then
+                code = code:sub(4)
+            end
+            code = code:gsub("^\239\187\191", "")
+        end
+
         local fn, err
         local ok, res = pcall(loadstring, code, "@VoltUi/" .. path)
         if ok and type(res) == "function" then
