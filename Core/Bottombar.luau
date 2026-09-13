@@ -30,7 +30,9 @@ function Bottombar.Create(Main, maid)
     Tabdisplay.BackgroundTransparency = 1
     Tabdisplay.BorderColor3 = Color3.new(0, 0, 0)
     Tabdisplay.BorderSizePixel = 0
-    Tabdisplay.Size = UDim2.new(0, 100, 0, 20)
+    Tabdisplay.Position = UDim2.new(0, 12, 0, 0)
+    Tabdisplay.Size = UDim2.new(0, 0, 0, 20)
+    Tabdisplay.AutomaticSize = Enum.AutomaticSize.X
     Tabdisplay.Parent = BottombarFrame
     
     local TabdisplayIcon = Instance.new("TextLabel")
@@ -40,12 +42,13 @@ function Bottombar.Create(Main, maid)
     TabdisplayIcon.BorderColor3 = Color3.new(0, 0, 0)
     TabdisplayIcon.BorderSizePixel = 0
     TabdisplayIcon.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    TabdisplayIcon.Size = UDim2.new(0.2, 0, 1, 0)
-    TabdisplayIcon.Text = "< â„ >"
+    TabdisplayIcon.Size = UDim2.new(0, 0, 1, 0)
+    TabdisplayIcon.AutomaticSize = Enum.AutomaticSize.X
+    TabdisplayIcon.Text = "</>"
     TabdisplayIcon.TextColor3 = Color3.new(0.51, 0.51, 0.51)
-    TabdisplayIcon.TextDirection = Enum.TextDirection.RightToLeft
+    TabdisplayIcon.TextDirection = Enum.TextDirection.LeftToRight
     TabdisplayIcon.TextSize = 13
-    TabdisplayIcon.TextXAlignment = Enum.TextXAlignment.Right
+    TabdisplayIcon.TextXAlignment = Enum.TextXAlignment.Left
     TabdisplayIcon.Parent = Tabdisplay
     
     local TabdisplayName = Instance.new("TextLabel")
@@ -56,7 +59,8 @@ function Bottombar.Create(Main, maid)
     TabdisplayName.BorderSizePixel = 0
     TabdisplayName.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     TabdisplayName.LayoutOrder = 1
-    TabdisplayName.Size = UDim2.new(1, 0, 1, 0)
+    TabdisplayName.Size = UDim2.new(0, 0, 1, 0)
+    TabdisplayName.AutomaticSize = Enum.AutomaticSize.X
     TabdisplayName.Text = "No Tab Selected"
     TabdisplayName.TextColor3 = Color3.new(0.529, 0.529, 0.529)
     TabdisplayName.TextSize = 14
@@ -64,12 +68,13 @@ function Bottombar.Create(Main, maid)
     TabdisplayName.Parent = Tabdisplay
     
     local TabdisplayNamePadding = Instance.new("UIPadding")
-    TabdisplayNamePadding.PaddingLeft = UDim.new(0, 3)
+    TabdisplayNamePadding.PaddingLeft = UDim.new(0, 5)
     TabdisplayNamePadding.Parent = TabdisplayName
     
     local TabdisplayLayout = Instance.new("UIListLayout")
     TabdisplayLayout.FillDirection = Enum.FillDirection.Horizontal
     TabdisplayLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    TabdisplayLayout.VerticalAlignment = Enum.VerticalAlignment.Center
     TabdisplayLayout.Parent = Tabdisplay
     
     local Info = Instance.new("Frame")

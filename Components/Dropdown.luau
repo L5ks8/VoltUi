@@ -308,13 +308,40 @@ function DropdownComponent.Create(TabContent, Maid, Config)
             SearchContainer.Name = "SearchContainer"
             SearchContainer.BackgroundTransparency = 1
             SearchContainer.Size = UDim2.new(1, 0, 0, searchHeight)
+            SearchContainer.ZIndex = 10003
             SearchContainer.Parent = DropdownMenu
+
+            local SearchBoxWrapper = Instance.new("Frame")
+            SearchBoxWrapper.Name = "SearchBoxWrapper"
+            SearchBoxWrapper.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
+            SearchBoxWrapper.Size = UDim2.new(1, -12, 0, 26)
+            SearchBoxWrapper.Position = UDim2.new(0, 6, 0, 5)
+            SearchBoxWrapper.ZIndex = 10003
+            SearchBoxWrapper.Parent = SearchContainer
+
+            local SearchCorner = Instance.new("UICorner")
+            SearchCorner.CornerRadius = UDim.new(0, 4)
+            SearchCorner.Parent = SearchBoxWrapper
+
+            local SearchStroke = Instance.new("UIStroke")
+            SearchStroke.Color = Color3.fromRGB(48, 48, 48)
+            SearchStroke.Parent = SearchBoxWrapper
+
+            local SearchIcon = Instance.new("ImageLabel")
+            SearchIcon.Name = "SearchIcon"
+            SearchIcon.BackgroundTransparency = 1
+            SearchIcon.Image = "rbxassetid://88107177696245"
+            SearchIcon.ImageColor3 = Color3.fromRGB(160, 160, 170)
+            SearchIcon.Size = UDim2.new(0, 14, 0, 14)
+            SearchIcon.Position = UDim2.new(0, 7, 0.5, -7)
+            SearchIcon.ZIndex = 10004
+            SearchIcon.Parent = SearchBoxWrapper
 
             SearchBox = Instance.new("TextBox")
             SearchBox.Name = "SearchBox"
-            SearchBox.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
-            SearchBox.Size = UDim2.new(1, -12, 0, 26)
-            SearchBox.Position = UDim2.new(0, 6, 0, 5)
+            SearchBox.BackgroundTransparency = 1
+            SearchBox.Size = UDim2.new(1, -26, 1, 0)
+            SearchBox.Position = UDim2.new(0, 26, 0, 0)
             SearchBox.PlaceholderText = "Search..."
             SearchBox.Text = ""
             SearchBox.TextColor3 = Color3.fromRGB(210, 210, 215)
@@ -322,33 +349,15 @@ function DropdownComponent.Create(TabContent, Maid, Config)
             SearchBox.TextSize = 12
             SearchBox.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
             SearchBox.TextXAlignment = Enum.TextXAlignment.Left
-            SearchBox.Parent = SearchContainer
-
-            local SearchPadding = Instance.new("UIPadding")
-            SearchPadding.PaddingLeft = UDim.new(0, 26)
-            SearchPadding.Parent = SearchBox
-
-            local SearchIcon = Instance.new("ImageLabel")
-            SearchIcon.BackgroundTransparency = 1
-            SearchIcon.Image = "rbxassetid://134267746401089"
-            SearchIcon.ImageColor3 = Color3.fromRGB(150, 150, 160)
-            SearchIcon.Size = UDim2.new(0, 14, 0, 14)
-            SearchIcon.Position = UDim2.new(0, 8, 0.5, -7)
-            SearchIcon.Parent = SearchBox
-
-            local SearchCorner = Instance.new("UICorner")
-            SearchCorner.CornerRadius = UDim.new(0, 4)
-            SearchCorner.Parent = SearchBox
-
-            local SearchStroke = Instance.new("UIStroke")
-            SearchStroke.Color = Color3.fromRGB(48, 48, 48)
-            SearchStroke.Parent = SearchBox
+            SearchBox.ZIndex = 10004
+            SearchBox.Parent = SearchBoxWrapper
 
             local Divider = Instance.new("Frame")
             Divider.BackgroundColor3 = Color3.fromRGB(48, 48, 48)
             Divider.BorderSizePixel = 0
             Divider.Size = UDim2.new(1, 0, 0, 1)
             Divider.Position = UDim2.new(0, 0, 1, -1)
+            Divider.ZIndex = 10003
             Divider.Parent = SearchContainer
         end
 
