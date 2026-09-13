@@ -1,6 +1,5 @@
 local CheckboxComponent = {}
 local TweenService = game:GetService("TweenService")
-local ThemeManager = require(script.Parent.Parent.Core.Theme)
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
@@ -44,7 +43,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
 
     local Card = Instance.new("Frame")
     Card.Name = "ColorPickerCard"
-    ThemeManager:Register(Card, "BackgroundColor3", "SecondaryBackground")
+    Card.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
     Card.BorderSizePixel = 0
     Card.Size = UDim2.new(0, 230, 0, 260)
     Card.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -57,7 +56,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
     CardCorner.Parent = Card
 
     local CardStroke = Instance.new("UIStroke")
-    ThemeManager:Register(CardStroke, "Color", "StrokeColor")
+    CardStroke.Color = Color3.fromRGB(48, 48, 48)
     CardStroke.Thickness = 1
     CardStroke.Parent = Card
 
@@ -74,7 +73,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
     Title.Size = UDim2.new(0, 100, 1, 0)
     Title.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     Title.Text = "Color Picker"
-    ThemeManager:Register(Title, "TextColor3", "TextPrimary")
+    Title.TextColor3 = Color3.fromRGB(240, 240, 245)
     Title.TextSize = 13
     Title.TextXAlignment = Enum.TextXAlignment.Left
     Title.ZIndex = 50002
@@ -87,7 +86,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
     HexLabel.Size = UDim2.new(0, 45, 1, 0)
     HexLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     HexLabel.Text = "#" .. currentColor:ToHex():upper()
-    ThemeManager:Register(HexLabel, "TextColor3", "TextSecondary")
+    HexLabel.TextColor3 = Color3.fromRGB(150, 150, 160)
     HexLabel.TextSize = 11
     HexLabel.TextXAlignment = Enum.TextXAlignment.Right
     HexLabel.ZIndex = 50002
@@ -99,7 +98,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
     CloseBtn.Position = UDim2.new(1, -24, 0, 4)
     CloseBtn.Size = UDim2.new(0, 20, 0, 20)
     CloseBtn.Text = "✕"
-    ThemeManager:Register(CloseBtn, "TextColor3", "TextSecondary")
+    CloseBtn.TextColor3 = Color3.fromRGB(150, 150, 160)
     CloseBtn.TextSize = 12
     CloseBtn.ZIndex = 50002
     CloseBtn.Parent = Header
@@ -129,7 +128,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
 
     local ValOverlay = Instance.new("Frame")
     ValOverlay.Name = "ValOverlay"
-    ThemeManager:Register(ValOverlay, "BackgroundColor3", "MainBackground")
+    ValOverlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
     ValOverlay.BorderSizePixel = 0
     ValOverlay.Size = UDim2.new(1, 0, 1, 0)
     ValOverlay.ZIndex = 50003
@@ -162,7 +161,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
     SVCursorCorner.Parent = SVCursor
 
     local SVCursorStroke = Instance.new("UIStroke")
-    ThemeManager:Register(SVCursorStroke, "Color", "MainBackground")
+    SVCursorStroke.Color = Color3.fromRGB(0, 0, 0)
     SVCursorStroke.Thickness = 1.5
     SVCursorStroke.Parent = SVCursor
 
@@ -208,7 +207,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
     HueKnobCorner.Parent = HueKnob
 
     local HueKnobStroke = Instance.new("UIStroke")
-    ThemeManager:Register(HueKnobStroke, "Color", "MainBackground")
+    HueKnobStroke.Color = Color3.fromRGB(0, 0, 0)
     HueKnobStroke.Thickness = 1.5
     HueKnobStroke.Parent = HueKnob
 
@@ -342,7 +341,7 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
     local state = config.CurrentValue ~= nil and config.CurrentValue or (config.Default ~= nil and config.Default or false)
     local cb = config.Callback or function() end
     local boxOnColor = config.AccentColor or Color3.fromRGB(245, 245, 245)
-    local strokeOffColor = ThemeManager:GetColor("StrokeColor")
+    local strokeOffColor = Color3.fromRGB(48, 48, 48)
     local strokeOnColor = config.AccentColor or Color3.fromRGB(245, 245, 245)
     local isLightOn = (boxOnColor.R * 0.299 + boxOnColor.G * 0.587 + boxOnColor.B * 0.114) > 0.5
     local checkOnColor = isLightOn and Color3.fromRGB(24, 24, 24) or Color3.fromRGB(255, 255, 255)
@@ -351,7 +350,7 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
     CheckboxFrame.Name = headerText
     CheckboxFrame.AutoButtonColor = false
     CheckboxFrame.Text = ""
-    ThemeManager:Register(CheckboxFrame, "BackgroundColor3", "SecondaryBackground")
+    CheckboxFrame.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
     CheckboxFrame.BackgroundTransparency = 1
     CheckboxFrame.BorderSizePixel = 0
     CheckboxFrame.Size = UDim2.new(1, 0, 0, descText == "" and 44 or 54)
@@ -381,7 +380,7 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
     Header.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     Header.Size = UDim2.new(1, 0, 0, 16)
     Header.Text = headerText
-    ThemeManager:Register(Header, "TextColor3", "TextPrimary")
+    Header.TextColor3 = Color3.fromRGB(240, 240, 245)
     Header.TextSize = 14
     Header.TextXAlignment = Enum.TextXAlignment.Left
     Header.TextYAlignment = Enum.TextYAlignment.Center
@@ -395,7 +394,7 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
         Description.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
         Description.Size = UDim2.new(1, 0, 0, 14)
         Description.Text = descText
-        ThemeManager:Register(Description, "TextColor3", "TextSecondary")
+        Description.TextColor3 = Color3.fromRGB(150, 150, 160)
         Description.TextSize = 12
         Description.TextXAlignment = Enum.TextXAlignment.Left
         Description.TextYAlignment = Enum.TextYAlignment.Center
@@ -424,7 +423,7 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
     BoxBg.Name = "CheckboxBg"
     BoxBg.AutoButtonColor = false
     BoxBg.Text = ""
-    BoxBg.BackgroundColor3 = state and boxOnColor or ThemeManager:GetColor("MainBackground")
+    BoxBg.BackgroundColor3 = state and boxOnColor or Color3.fromRGB(28, 28, 28)
     BoxBg.BackgroundTransparency = state and 0 or 0.2
     BoxBg.Size = UDim2.new(0, 22, 0, 22)
     BoxBg.LayoutOrder = 100
@@ -452,7 +451,6 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
     CheckIcon.Parent = BoxBg
 
     local function updateVisuals()
-        local currentStrokeOff = ThemeManager:GetColor("StrokeColor")
         if state then
             Tween(BoxBg, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
                 BackgroundColor3 = boxOnColor,
@@ -468,11 +466,11 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
             })
         else
             Tween(BoxBg, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-                BackgroundColor3 = ThemeManager:GetColor("MainBackground"),
+                BackgroundColor3 = Color3.fromRGB(28, 28, 28),
                 BackgroundTransparency = 0.2,
             })
             Tween(BoxStroke, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-                Color = currentStrokeOff,
+                Color = strokeOffColor,
             })
             Tween(CheckIcon, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
                 ImageTransparency = 1,
@@ -496,12 +494,6 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
     CheckboxFrame.MouseLeave:Connect(function()
         Tween(CheckboxFrame, TweenInfo.new(0.2), {BackgroundTransparency = 1})
     end)
-    
-    if ThemeManager.OnThemeChanged then
-        Maid:GiveTask(ThemeManager.OnThemeChanged.Event:Connect(function()
-            updateVisuals()
-        end))
-    end
 
     local CheckboxObject = {}
     CheckboxObject.Instance = CheckboxFrame
@@ -537,7 +529,7 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
         SwatchCorner.Parent = SwatchBtn
 
         local SwatchStroke = Instance.new("UIStroke")
-        ThemeManager:Register(SwatchStroke, "Color", "StrokeColor")
+        SwatchStroke.Color = Color3.fromRGB(48, 48, 48)
         SwatchStroke.Thickness = 1
         SwatchStroke.Parent = SwatchBtn
 
@@ -577,7 +569,7 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
         local KeybindBtn = Instance.new("TextButton")
         KeybindBtn.Name = "KeybindBadge"
         KeybindBtn.AutoButtonColor = false
-        ThemeManager:Register(KeybindBtn, "BackgroundColor3", "MainBackground")
+        KeybindBtn.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
         KeybindBtn.Size = UDim2.new(0, 0, 0, 22)
         KeybindBtn.AutomaticSize = Enum.AutomaticSize.X
         KeybindBtn.LayoutOrder = 20
@@ -589,7 +581,7 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
         KbCorner.Parent = KeybindBtn
 
         local KbStroke = Instance.new("UIStroke")
-        ThemeManager:Register(KbStroke, "Color", "StrokeColor")
+        KbStroke.Color = Color3.fromRGB(48, 48, 48)
         KbStroke.Thickness = 1
         KbStroke.Parent = KeybindBtn
 
@@ -604,7 +596,7 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
         KbLabel.Size = UDim2.new(1, 0, 1, 0)
         KbLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
         KbLabel.Text = tostring(currentKey)
-        ThemeManager:Register(KbLabel, "TextColor3", "TextPrimary")
+        KbLabel.TextColor3 = Color3.fromRGB(240, 240, 245)
         KbLabel.TextSize = 12
         KbLabel.Parent = KeybindBtn
 
@@ -637,7 +629,7 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
                 if capturedKey then
                     currentKey = capturedKey
                     KbLabel.Text = currentKey
-                    Tween(KbStroke, TweenInfo.new(0.2), {Color = ThemeManager:GetColor("StrokeColor")})
+                    Tween(KbStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(48, 48, 48)})
                     listening = false
                     if listenConn then
                         listenConn:Disconnect()

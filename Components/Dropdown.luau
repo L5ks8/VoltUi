@@ -1,6 +1,5 @@
 local DropdownComponent = {}
 local TweenService = game:GetService("TweenService")
-local ThemeManager = require(script.Parent.Parent.Core.Theme)
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local LocalPlayer = Players.LocalPlayer
@@ -66,7 +65,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
 
     local DropdownFrame = Instance.new("Frame")
     DropdownFrame.Name = headerText
-    ThemeManager:Register(DropdownFrame, "BackgroundColor3", "SecondaryBackground")
+    DropdownFrame.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
     DropdownFrame.BackgroundTransparency = 1
     DropdownFrame.BorderSizePixel = 0
 
@@ -109,7 +108,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
     Header.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     Header.Size = UDim2.new(1, 0, 0, 16)
     Header.Text = headerText
-    ThemeManager:Register(Header, "TextColor3", "TextPrimary")
+    Header.TextColor3 = Color3.fromRGB(240, 240, 245)
     Header.TextSize = 14
     Header.TextXAlignment = Enum.TextXAlignment.Left
     Header.TextYAlignment = Enum.TextYAlignment.Center
@@ -122,7 +121,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
         Description.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
         Description.Size = UDim2.new(1, 0, 0, 14)
         Description.Text = descText
-        ThemeManager:Register(Description, "TextColor3", "TextSecondary")
+        Description.TextColor3 = Color3.fromRGB(150, 150, 160)
         Description.TextSize = 12
         Description.TextXAlignment = Enum.TextXAlignment.Left
         Description.TextYAlignment = Enum.TextYAlignment.Center
@@ -150,7 +149,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
 
     local DropdownBtn = Instance.new("TextButton")
     DropdownBtn.Name = "DropdownBtn"
-    ThemeManager:Register(DropdownBtn, "BackgroundColor3", "MainBackground")
+    DropdownBtn.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
     DropdownBtn.Size = isLarge and UDim2.new(1, -28, 0, 28) or UDim2.new(0, 136, 0, 26)
     DropdownBtn.Text = ""
     DropdownBtn.AutoButtonColor = false
@@ -161,7 +160,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
     DropdownCorner.Parent = DropdownBtn
 
     local DropdownStroke = Instance.new("UIStroke")
-    ThemeManager:Register(DropdownStroke, "Color", "StrokeColor")
+    DropdownStroke.Color = Color3.fromRGB(48, 48, 48)
     DropdownStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     DropdownStroke.Parent = DropdownBtn
 
@@ -172,7 +171,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
     DropdownText.Position = UDim2.new(0, 10, 0, 0)
     DropdownText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     DropdownText.Text = getDisplayText()
-    ThemeManager:Register(DropdownText, "TextColor3", "TextPrimary")
+    DropdownText.TextColor3 = Color3.fromRGB(240, 240, 245)
     DropdownText.TextSize = 12
     DropdownText.TextXAlignment = Enum.TextXAlignment.Left
     DropdownText.TextTruncate = Enum.TextTruncate.AtEnd
@@ -184,7 +183,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
     ChevronIcon.Position = UDim2.new(1, -22, 0.5, -8)
     ChevronIcon.Size = UDim2.new(0, 16, 0, 16)
     ChevronIcon.Image = "rbxassetid://6031091004"
-    ThemeManager:Register(ChevronIcon, "ImageColor3", "TextSecondary")
+    ChevronIcon.ImageColor3 = Color3.fromRGB(150, 150, 160)
     ChevronIcon.Parent = DropdownBtn
 
     local Tooltip
@@ -192,13 +191,13 @@ function DropdownComponent.Create(TabContent, Maid, Config)
     if hoverText ~= "" then
         Tooltip = Instance.new("TextLabel")
         Tooltip.Name = "Tooltip"
-        ThemeManager:Register(Tooltip, "BackgroundColor3", "MainBackground")
+        Tooltip.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
         Tooltip.BackgroundTransparency = 1
         Tooltip.Size = UDim2.new(0, 0, 0, 22)
         Tooltip.AutomaticSize = Enum.AutomaticSize.X
         Tooltip.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
         Tooltip.Text = hoverText
-        ThemeManager:Register(Tooltip, "TextColor3", "TextPrimary")
+        Tooltip.TextColor3 = Color3.fromRGB(240, 240, 245)
         Tooltip.TextSize = 12
         Tooltip.TextTransparency = 1
         Tooltip.ZIndex = 100000
@@ -212,7 +211,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
         TooltipCorner.Parent = Tooltip
 
         local TooltipStroke = Instance.new("UIStroke")
-        ThemeManager:Register(TooltipStroke, "Color", "StrokeColor")
+        TooltipStroke.Color = Color3.fromRGB(48, 48, 48)
         TooltipStroke.Transparency = 1
         TooltipStroke.Parent = Tooltip
 
@@ -235,7 +234,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
         end
 
         Tween(ChevronIcon, TweenInfo.new(0.2), {Rotation = 0})
-        Tween(DropdownStroke, TweenInfo.new(0.2), {Color = ThemeManager:GetColor("StrokeColor")})
+        Tween(DropdownStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(48, 48, 48)})
 
         if DropdownMenu then
             Tween(DropdownMenu, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0, DropdownBtn.AbsoluteSize.X, 0, 0)})
@@ -266,7 +265,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
         end
 
         Tween(ChevronIcon, TweenInfo.new(0.2), {Rotation = 180})
-        Tween(DropdownStroke, TweenInfo.new(0.2), {Color = config.AccentColor or ThemeManager:GetColor("ActiveStrokeColor")})
+        Tween(DropdownStroke, TweenInfo.new(0.2), {Color = config.AccentColor or Color3.fromRGB(245, 245, 245)})
 
         DropdownOverlay = Instance.new("TextButton")
         DropdownOverlay.Name = "DropdownOverlay"
@@ -282,7 +281,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
 
         DropdownMenu = Instance.new("Frame")
         DropdownMenu.Name = "DropdownMenu"
-        ThemeManager:Register(DropdownMenu, "BackgroundColor3", "SecondaryBackground")
+        DropdownMenu.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
         DropdownMenu.BorderSizePixel = 0
         DropdownMenu.ClipsDescendants = true
         local startX = DropdownBtn.AbsolutePosition.X - ScreenGui.AbsolutePosition.X
@@ -297,7 +296,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
         MenuCorner.Parent = DropdownMenu
 
         local MenuStroke = Instance.new("UIStroke")
-        ThemeManager:Register(MenuStroke, "Color", "StrokeColor")
+        MenuStroke.Color = Color3.fromRGB(48, 48, 48)
         MenuStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
         MenuStroke.Parent = DropdownMenu
 
@@ -306,7 +305,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
         ScrollFrame.BorderSizePixel = 0
         ScrollFrame.Size = UDim2.new(1, 0, 1, 0)
         ScrollFrame.ScrollBarThickness = 2
-        ThemeManager:Register(ScrollFrame, "ScrollBarImageColor3", "StrokeColor")
+        ScrollFrame.ScrollBarImageColor3 = Color3.fromRGB(60, 60, 60)
         ScrollFrame.ZIndex = 10002
         ScrollFrame.Parent = DropdownMenu
 
@@ -329,7 +328,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
 
             local OptBtn = Instance.new("TextButton")
             OptBtn.Name = option
-            ThemeManager:Register(OptBtn, "BackgroundColor3", "TertiaryBackground")
+            OptBtn.BackgroundColor3 = Color3.fromRGB(36, 36, 36)
             OptBtn.BackgroundTransparency = isSelected and 0 or 1
             OptBtn.Size = UDim2.new(1, 0, 0, 26)
             OptBtn.Text = ""
@@ -343,7 +342,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
 
             local OptStroke = Instance.new("UIStroke")
             OptStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-            OptStroke.Color = ThemeManager:GetColor("StrokeColor")
+            OptStroke.Color = Color3.fromRGB(55, 55, 55)
             OptStroke.Transparency = isSelected and 0 or 1
             OptStroke.Parent = OptBtn
 
@@ -353,7 +352,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
             OptText.Position = UDim2.new(0, 8, 0, 0)
             OptText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
             OptText.Text = option
-            OptText.TextColor3 = isSelected and ThemeManager:GetColor("TextPrimary") or ThemeManager:GetColor("TextSecondary")
+            OptText.TextColor3 = isSelected and Color3.fromRGB(240, 240, 245) or Color3.fromRGB(150, 150, 160)
             OptText.TextSize = 12
             OptText.TextXAlignment = Enum.TextXAlignment.Left
             OptText.TextTruncate = Enum.TextTruncate.AtEnd
@@ -366,7 +365,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
             Checkmark.Position = UDim2.new(1, -22, 0.5, -7)
             Checkmark.Size = UDim2.new(0, 14, 0, 14)
             Checkmark.Image = "rbxassetid://118922551501473"
-            Checkmark.ImageColor3 = config.AccentColor or ThemeManager:GetColor("TextPrimary")
+            Checkmark.ImageColor3 = config.AccentColor or Color3.fromRGB(245, 245, 245)
             Checkmark.ZIndex = 10004
             Checkmark.Visible = isSelected
             Checkmark.Parent = OptBtn
@@ -375,7 +374,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
                 local active = isMulti and selectedMulti[option] or (selectedSingle == option)
                 if not active then
                     Tween(OptBtn, TweenInfo.new(0.15), {BackgroundTransparency = 0.6})
-                    Tween(OptText, TweenInfo.new(0.15), {TextColor3 = ThemeManager:GetColor("TextPrimary")})
+                    Tween(OptText, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(240, 240, 245)})
                 end
             end)
 
@@ -383,7 +382,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
                 local active = isMulti and selectedMulti[option] or (selectedSingle == option)
                 if not active then
                     Tween(OptBtn, TweenInfo.new(0.15), {BackgroundTransparency = 1})
-                    Tween(OptText, TweenInfo.new(0.15), {TextColor3 = ThemeManager:GetColor("TextSecondary")})
+                    Tween(OptText, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(150, 150, 160)})
                 end
             end)
 
@@ -394,7 +393,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
                     Checkmark.Visible = currentActive
                     Tween(OptBtn, TweenInfo.new(0.15), {BackgroundTransparency = currentActive and 0 or 1})
                     Tween(OptStroke, TweenInfo.new(0.15), {Transparency = currentActive and 0 or 1})
-                    Tween(OptText, TweenInfo.new(0.15), {TextColor3 = currentActive and ThemeManager:GetColor("TextPrimary") or ThemeManager:GetColor("TextSecondary")})
+                    Tween(OptText, TweenInfo.new(0.15), {TextColor3 = currentActive and Color3.fromRGB(240, 240, 245) or Color3.fromRGB(150, 150, 160)})
 
                     DropdownText.Text = getDisplayText()
                     cb(getMultiList())

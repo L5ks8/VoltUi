@@ -3,13 +3,21 @@ local Maid = require(Utils.Maid)
 local Signal = require(Utils.Signal)
 local Tween = require(Utils.Tween)
 local Utility = require(Utils.Utility)
-local ThemeManager = require(script.Parent.Theme)
 
 local Api = nil
 pcall(function()
     Api = require(Utils.Api)
 end)
 
+local Topbar = require(script.Parent.Topbar)
+local Sidebar = require(script.Parent.Sidebar)
+local Bottombar = require(script.Parent.Bottombar)
+local Minimized = require(script.Parent.Minimized)
+local CloseWarn = require(script.Parent.CloseWarn)
+local AccountPage = require(script.Parent.AccountPage)
+local LoginPage = require(script.Parent.LoginPage)
+local Notifications = require(script.Parent.Notifications)
+local Tabs = require(script.Parent.Tabs)
 local Loading = require(script.Parent.Loading)
 
 local Window = {}
@@ -26,25 +34,12 @@ function Window:CreateWindow(Config)
     
     Utility.ProtectGui(VoltUi)
     
-    local loadingScreen
-    if Config._externalLoadingScreen then
-        loadingScreen = Config._externalLoadingScreen
-    elseif not Config._skipLoadingSequence then
-        loadingScreen = Loading.Create(VoltUi)
-        loadingScreen:SetStatus("Initializing Volt...")
-        loadingScreen:SetProgress(0.1)
-        task.wait(0)
-    end
-    
-    if loadingScreen then loadingScreen:SetStatus("Loading Ui Modules...") loadingScreen:SetProgress(0.55) task.wait(0) end
-    if loadingScreen then loadingScreen:SetStatus("Loading Notifications...") loadingScreen:SetProgress(0.60) task.wait(0) end
-    local Notifications = require(script.Parent.Notifications)
     Notifications.Init(VoltUi)
     
     local Main = Instance.new("Frame")
     Main.Name = "Main"
     Main.AnchorPoint = Vector2.new(0.5, 0.5)
-    ThemeManager:Register(Main, "BackgroundColor3", "MainBackground")
+    Main.BackgroundColor3 = Color3.new(0.075, 0.075, 0.075)
     Main.BorderColor3 = Color3.new(0, 0, 0)
     Main.BorderSizePixel = 0
     Main.ClipsDescendants = false
@@ -57,14 +52,12 @@ function Window:CreateWindow(Config)
     UICorner.Parent = Main
     
     local UIStroke = Instance.new("UIStroke")
-    ThemeManager:Register(UIStroke, "Color", "StrokeColor")
+    UIStroke.Color = Color3.new(0.216, 0.216, 0.216)
     UIStroke.Parent = Main
     
     local MainScale = Instance.new("UIScale")
     MainScale.Parent = Main
     
-    if loadingScreen then loadingScreen:SetStatus("Loading Topbar...") loadingScreen:SetProgress(0.65) task.wait(0) end
-    local Topbar = require(script.Parent.Topbar)
     local TopbarElements = Topbar.Create(Main, Config, maid)
     
     local PagesContainer = Instance.new("Frame")
@@ -103,8 +96,6 @@ function Window:CreateWindow(Config)
     local OnCollapse = Signal.new()
     maid:GiveTask(OnCollapse)
     
-    if loadingScreen then loadingScreen:SetStatus("Loading Sidebar...") loadingScreen:SetProgress(0.70) task.wait(0) end
-    local Sidebar = require(script.Parent.Sidebar)
     local SidebarElements = Sidebar.Create(Content, maid, OnCollapse)
     
 
@@ -184,16 +175,10 @@ function Window:CreateWindow(Config)
         isAuthSystem = true
     end
 
-    if loadingScreen then loadingScreen:SetStatus("Loading Bottombar...") loadingScreen:SetProgress(0.75) task.wait(0) end
-    local Bottombar = require(script.Parent.Bottombar)
     local BottombarElements = Bottombar.Create(Main, maid)
     
     local OnLoginSuccess
-    local WindowObject = {}
 
-    if loadingScreen then loadingScreen:SetStatus("Loading Core Components...") loadingScreen:SetProgress(0.85) task.wait(0) end
-    local AccountPage = require(script.Parent.AccountPage)
-    local LoginPage = require(script.Parent.LoginPage)
     local AccountPageElements
     pcall(function()
         AccountPageElements = AccountPage.Create(PagesContainer, maid, function()
@@ -205,11 +190,7 @@ function Window:CreateWindow(Config)
         end)
     end)
     
-    if loadingScreen then loadingScreen:SetStatus("Loading Settings...") loadingScreen:SetProgress(0.90) task.wait(0) end
     local SettingsPage = require(script.Parent.SettingsPage)
-    local Tabs = require(script.Parent.Tabs)
-    local Minimized = require(script.Parent.Minimized)
-    local CloseWarn = require(script.Parent.CloseWarn)
     local SettingsPageElements
     local success, err = pcall(function()
         SettingsPageElements = SettingsPage.Create(PagesContainer, maid, function()
@@ -582,12 +563,19 @@ function Window:CreateWindow(Config)
         end)
     end
 
+    local showLoading = true
+
     if isAuthSystem then
-        if loadingScreen then loadingScreen:SetStatus("Checking OS & Version...") loadingScreen:SetProgress(0.95) task.wait(0) end
         if not Api then
             pcall(function() Api = require(Utils.Api) end)
         end
-        if loadingScreen then loadingScreen:SetStatus("Connecting API...") loadingScreen:SetProgress(0.98) task.wait(0) end
+
+        local loadingScreen
+        if showLoading then
+            pcall(function()
+                loadingScreen = Loading.Create(VoltUi)
+            end)
+        end
 
         local token = nil
         if Api then
@@ -599,11 +587,11 @@ function Window:CreateWindow(Config)
                 local data = nil
                 pcall(function() data = Api.FetchMe() end)
                 if data then
-                    if loadingScreen then loadingScreen:SetStatus("Finalizing UI...") loadingScreen:SetProgress(1) task.wait(0.1) end
+                    if loadingScreen then loadingScreen:WaitForReady() end
                     OnLoginSuccess()
                     if loadingScreen then loadingScreen:FadeOut() end
                 else
-                    if loadingScreen then loadingScreen:SetStatus("Finalizing UI...") loadingScreen:SetProgress(1) task.wait(0.1) end
+                    if loadingScreen then loadingScreen:WaitForReady() end
                     LoginPage.Create(VoltUi, function()
                         OnLoginSuccess()
                     end)
@@ -611,26 +599,46 @@ function Window:CreateWindow(Config)
                 end
             end)
         else
-            task.spawn(function()
-                if loadingScreen then loadingScreen:SetStatus("Finalizing UI...") loadingScreen:SetProgress(1) task.wait(0.1) end
+            if loadingScreen then
+                task.spawn(function()
+                    loadingScreen:WaitForReady()
+                    LoginPage.Create(VoltUi, function()
+                        OnLoginSuccess()
+                    end)
+                    loadingScreen:FadeOut()
+                end)
+            else
                 LoginPage.Create(VoltUi, function()
                     OnLoginSuccess()
                 end)
-                if loadingScreen then loadingScreen:FadeOut() end
-            end)
+            end
         end
     elseif isStandaloneKey then
-        task.spawn(function()
-            if loadingScreen then loadingScreen:SetStatus("Finalizing UI...") loadingScreen:SetProgress(1) task.wait(0.1) end
+        if showLoading then
+            local loadingScreen
+            pcall(function() loadingScreen = Loading.Create(VoltUi) end)
+            task.spawn(function()
+                if loadingScreen then loadingScreen:WaitForReady() end
+                ShowKeySystem(function() OnLoginSuccess() end)
+                if loadingScreen then loadingScreen:FadeOut() end
+            end)
+        else
             ShowKeySystem(function() OnLoginSuccess() end)
-            if loadingScreen then loadingScreen:FadeOut() end
-        end)
+        end
     else
-        task.spawn(function()
-            if loadingScreen then loadingScreen:SetStatus("Finalizing UI...") loadingScreen:SetProgress(1) task.wait(0.1) end
+        if showLoading then
+            local loadingScreen
+            pcall(function()
+                loadingScreen = Loading.Create(VoltUi)
+            end)
+            task.spawn(function()
+                if loadingScreen then loadingScreen:WaitForReady() end
+                Main.Visible = true
+                if loadingScreen then loadingScreen:FadeOut() end
+            end)
+        else
             Main.Visible = true
-            if loadingScreen then loadingScreen:FadeOut() end
-        end)
+        end
     end
     
     maid:GiveTask(SidebarElements.AccountBtn.MouseButton1Click:Connect(function()
@@ -716,7 +724,7 @@ function Window:CreateWindow(Config)
     local OnClose = Signal.new()
     maid:GiveTask(OnClose)
     
-    WindowObject = {
+    local WindowObject = {
         Instance = VoltUi,
         Main = Main,
         Topbar = TopbarElements,

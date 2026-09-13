@@ -1,6 +1,5 @@
 local SliderComponent = {}
 local TweenService = game:GetService("TweenService")
-local ThemeManager = require(script.Parent.Parent.Core.Theme)
 local UserInputService = game:GetService("UserInputService")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
@@ -27,7 +26,7 @@ function SliderComponent.Create(TabContent, Maid, Config)
 
     local SliderFrame = Instance.new("Frame")
     SliderFrame.Name = headerText
-    ThemeManager:Register(SliderFrame, "BackgroundColor3", "SecondaryBackground")
+    SliderFrame.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
     SliderFrame.BackgroundTransparency = 1
     SliderFrame.BorderSizePixel = 0
     SliderFrame.Size = UDim2.new(1, 0, 0, descText == "" and 48 or 58)
@@ -46,7 +45,7 @@ function SliderComponent.Create(TabContent, Maid, Config)
     Header.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     Header.Size = UDim2.new(1, -80, 1, 0)
     Header.Text = headerText
-    ThemeManager:Register(Header, "TextColor3", "TextPrimary")
+    Header.TextColor3 = Color3.fromRGB(240, 240, 245)
     Header.TextSize = 14
     Header.TextXAlignment = Enum.TextXAlignment.Left
     Header.TextYAlignment = Enum.TextYAlignment.Center
@@ -59,7 +58,7 @@ function SliderComponent.Create(TabContent, Maid, Config)
     ValueLabel.Size = UDim2.new(0, 80, 1, 0)
     ValueLabel.Position = UDim2.new(1, -80, 0, 0)
     ValueLabel.Text = tostring(currentValue) .. suffix
-    ThemeManager:Register(ValueLabel, "TextColor3", "TextPrimary")
+    ValueLabel.TextColor3 = accentColor
     ValueLabel.TextSize = 13
     ValueLabel.TextXAlignment = Enum.TextXAlignment.Right
     ValueLabel.TextYAlignment = Enum.TextYAlignment.Center
@@ -73,7 +72,7 @@ function SliderComponent.Create(TabContent, Maid, Config)
         Description.Position = UDim2.new(0, 14, 0, 26)
         Description.Size = UDim2.new(1, -28, 0, 14)
         Description.Text = descText
-        ThemeManager:Register(Description, "TextColor3", "TextSecondary")
+        Description.TextColor3 = Color3.fromRGB(150, 150, 160)
         Description.TextSize = 12
         Description.TextXAlignment = Enum.TextXAlignment.Left
         Description.TextYAlignment = Enum.TextYAlignment.Center
@@ -84,7 +83,7 @@ function SliderComponent.Create(TabContent, Maid, Config)
     SliderBar.Name = "SliderBar"
     SliderBar.AutoButtonColor = false
     SliderBar.Text = ""
-    ThemeManager:Register(SliderBar, "BackgroundColor3", "SecondaryBackground")
+    SliderBar.BackgroundColor3 = Color3.fromRGB(36, 36, 36)
     SliderBar.BorderSizePixel = 0
     SliderBar.Position = UDim2.new(0, 14, 1, -12)
     SliderBar.Size = UDim2.new(1, -28, 0, 6)
@@ -95,7 +94,7 @@ function SliderComponent.Create(TabContent, Maid, Config)
     BarCorner.Parent = SliderBar
 
     local BarStroke = Instance.new("UIStroke")
-    ThemeManager:Register(BarStroke, "Color", "StrokeColor")
+    BarStroke.Color = Color3.fromRGB(55, 55, 55)
     BarStroke.Thickness = 1
     BarStroke.Parent = SliderBar
 
@@ -116,7 +115,7 @@ function SliderComponent.Create(TabContent, Maid, Config)
     Knob.AnchorPoint = Vector2.new(0.5, 0.5)
     Knob.Position = UDim2.new(pct, 0, 0.5, 0)
     Knob.Size = UDim2.new(0, 14, 0, 14)
-    ThemeManager:Register(Knob, "BackgroundColor3", "TextPrimary")
+    Knob.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     Knob.BorderSizePixel = 0
     Knob.Parent = SliderBar
 
@@ -125,7 +124,7 @@ function SliderComponent.Create(TabContent, Maid, Config)
     KnobCorner.Parent = Knob
 
     local KnobStroke = Instance.new("UIStroke")
-    ThemeManager:Register(KnobStroke, "Color", "StrokeColor")
+    KnobStroke.Color = Color3.fromRGB(55, 55, 55)
     KnobStroke.Thickness = 1.5
     KnobStroke.Parent = Knob
 

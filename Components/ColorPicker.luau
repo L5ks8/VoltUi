@@ -1,6 +1,5 @@
 local ColorPickerComponent = {}
 local TweenService = game:GetService("TweenService")
-local ThemeManager = require(script.Parent.Parent.Core.Theme)
 local UserInputService = game:GetService("UserInputService")
 
 local function Tween(instance, tweenInfo, properties)
@@ -40,7 +39,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
 
     local Card = Instance.new("Frame")
     Card.Name = "ColorPickerCard"
-    ThemeManager:Register(Card, "BackgroundColor3", "SecondaryBackground")
+    Card.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
     Card.BorderSizePixel = 0
     Card.Size = UDim2.new(0, 230, 0, 260)
     Card.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -53,7 +52,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
     CardCorner.Parent = Card
 
     local CardStroke = Instance.new("UIStroke")
-    ThemeManager:Register(CardStroke, "Color", "StrokeColor")
+    CardStroke.Color = Color3.fromRGB(48, 48, 48)
     CardStroke.Thickness = 1
     CardStroke.Parent = Card
 
@@ -70,7 +69,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
     Title.Size = UDim2.new(0, 100, 1, 0)
     Title.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     Title.Text = "Color Picker"
-    ThemeManager:Register(Title, "TextColor3", "TextPrimary")
+    Title.TextColor3 = Color3.fromRGB(240, 240, 245)
     Title.TextSize = 13
     Title.TextXAlignment = Enum.TextXAlignment.Left
     Title.ZIndex = 50002
@@ -83,7 +82,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
     HexLabel.Size = UDim2.new(0, 45, 1, 0)
     HexLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     HexLabel.Text = "#" .. currentColor:ToHex():upper()
-    ThemeManager:Register(HexLabel, "TextColor3", "TextSecondary")
+    HexLabel.TextColor3 = Color3.fromRGB(150, 150, 160)
     HexLabel.TextSize = 11
     HexLabel.TextXAlignment = Enum.TextXAlignment.Right
     HexLabel.ZIndex = 50002
@@ -95,7 +94,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
     CloseBtn.Position = UDim2.new(1, -26, 0, 4)
     CloseBtn.Size = UDim2.new(0, 20, 0, 20)
     CloseBtn.Image = "rbxassetid://121170570745612"
-    ThemeManager:Register(CloseBtn, "ImageColor3", "TextSecondary")
+    CloseBtn.ImageColor3 = Color3.fromRGB(150, 150, 160)
     CloseBtn.ZIndex = 50002
     CloseBtn.Parent = Header
 
@@ -124,7 +123,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
 
     local ValOverlay = Instance.new("Frame")
     ValOverlay.Name = "ValOverlay"
-    ThemeManager:Register(ValOverlay, "BackgroundColor3", "MainBackground")
+    ValOverlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
     ValOverlay.BorderSizePixel = 0
     ValOverlay.Size = UDim2.new(1, 0, 1, 0)
     ValOverlay.ZIndex = 50003
@@ -157,7 +156,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
     SVCursorCorner.Parent = SVCursor
 
     local SVCursorStroke = Instance.new("UIStroke")
-    ThemeManager:Register(SVCursorStroke, "Color", "MainBackground")
+    SVCursorStroke.Color = Color3.fromRGB(0, 0, 0)
     SVCursorStroke.Thickness = 1.5
     SVCursorStroke.Parent = SVCursor
 
@@ -203,7 +202,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
     HueKnobCorner.Parent = HueKnob
 
     local HueKnobStroke = Instance.new("UIStroke")
-    ThemeManager:Register(HueKnobStroke, "Color", "MainBackground")
+    HueKnobStroke.Color = Color3.fromRGB(0, 0, 0)
     HueKnobStroke.Thickness = 1.5
     HueKnobStroke.Parent = HueKnob
 
@@ -341,7 +340,7 @@ function ColorPickerComponent.Create(TabContent, Maid, Config)
 
     local RowFrame = Instance.new("Frame")
     RowFrame.Name = headerText
-    ThemeManager:Register(RowFrame, "BackgroundColor3", "SecondaryBackground")
+    RowFrame.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
     RowFrame.BackgroundTransparency = 1
     RowFrame.BorderSizePixel = 0
     RowFrame.Size = UDim2.new(1, 0, 0, descText == "" and 42 or 52)
@@ -375,7 +374,7 @@ function ColorPickerComponent.Create(TabContent, Maid, Config)
     Header.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     Header.Size = UDim2.new(1, 0, 0, 16)
     Header.Text = headerText
-    ThemeManager:Register(Header, "TextColor3", "TextPrimary")
+    Header.TextColor3 = Color3.fromRGB(240, 240, 245)
     Header.TextSize = 14
     Header.TextXAlignment = Enum.TextXAlignment.Left
     Header.TextYAlignment = Enum.TextYAlignment.Center
@@ -388,7 +387,7 @@ function ColorPickerComponent.Create(TabContent, Maid, Config)
         Description.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
         Description.Size = UDim2.new(1, 0, 0, 14)
         Description.Text = descText
-        ThemeManager:Register(Description, "TextColor3", "TextSecondary")
+        Description.TextColor3 = Color3.fromRGB(150, 150, 160)
         Description.TextSize = 12
         Description.TextXAlignment = Enum.TextXAlignment.Left
         Description.TextYAlignment = Enum.TextYAlignment.Center
@@ -419,7 +418,7 @@ function ColorPickerComponent.Create(TabContent, Maid, Config)
     HexPreview.Size = UDim2.new(0, 56, 0, 20)
     HexPreview.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     HexPreview.Text = "#" .. currentColor:ToHex():upper()
-    ThemeManager:Register(HexPreview, "TextColor3", "TextTertiary")
+    HexPreview.TextColor3 = Color3.fromRGB(140, 140, 150)
     HexPreview.TextSize = 11
     HexPreview.TextXAlignment = Enum.TextXAlignment.Right
     HexPreview.Parent = SwatchContainer
@@ -437,7 +436,7 @@ function ColorPickerComponent.Create(TabContent, Maid, Config)
     SwatchCorner.Parent = SwatchBtn
 
     local SwatchStroke = Instance.new("UIStroke")
-    ThemeManager:Register(SwatchStroke, "Color", "StrokeColor")
+    SwatchStroke.Color = Color3.fromRGB(55, 52, 65)
     SwatchStroke.Thickness = 1
     SwatchStroke.Parent = SwatchBtn
 

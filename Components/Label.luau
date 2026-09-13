@@ -1,7 +1,6 @@
 local LabelComponent = {}
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
-local ThemeManager = require(script.Parent.Parent.Core.Theme)
 
 local function Tween(instance, tweenInfo, properties)
     local tw = TweenService:Create(instance, tweenInfo, properties)
@@ -33,7 +32,7 @@ function LabelComponent.Create(TabContent, Maid, Config)
 
     local LabelFrame = Instance.new("Frame")
     LabelFrame.Name = headerText
-    ThemeManager:Register(LabelFrame, "BackgroundColor3", "SecondaryBackground")
+    LabelFrame.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
     LabelFrame.BackgroundTransparency = 1
     LabelFrame.BorderSizePixel = 0
     LabelFrame.Size = UDim2.new(1, 0, 0, descText == "" and 38 or 48)
@@ -79,7 +78,7 @@ function LabelComponent.Create(TabContent, Maid, Config)
         Icon.BackgroundTransparency = 1
         Icon.Size = UDim2.new(0, 16, 0, 16)
         Icon.Image = (type(iconAsset) == "number") and ("rbxassetid://" .. tostring(iconAsset)) or tostring(iconAsset)
-        ThemeManager:Register(Icon, "ImageColor3", "IconColor")
+        Icon.ImageColor3 = Color3.fromRGB(240, 240, 245)
         Icon.Parent = HeaderRow
     end
 
@@ -89,7 +88,7 @@ function LabelComponent.Create(TabContent, Maid, Config)
     Header.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     Header.Size = UDim2.new(1, -30, 1, 0)
     Header.Text = headerText
-    ThemeManager:Register(Header, "TextColor3", "TextPrimary")
+    Header.TextColor3 = Color3.fromRGB(240, 240, 245)
     Header.TextSize = 14
     Header.TextXAlignment = Enum.TextXAlignment.Left
     Header.TextYAlignment = Enum.TextYAlignment.Center
@@ -102,7 +101,7 @@ function LabelComponent.Create(TabContent, Maid, Config)
         Description.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
         Description.Size = UDim2.new(1, 0, 0, 14)
         Description.Text = descText
-        ThemeManager:Register(Description, "TextColor3", "TextSecondary")
+        Description.TextColor3 = Color3.fromRGB(150, 150, 160)
         Description.TextSize = 12
         Description.TextXAlignment = Enum.TextXAlignment.Left
         Description.TextYAlignment = Enum.TextYAlignment.Center
@@ -149,7 +148,7 @@ function LabelComponent.Create(TabContent, Maid, Config)
         local KeybindBtn = Instance.new("TextButton")
         KeybindBtn.Name = "KeybindBadge"
         KeybindBtn.AutoButtonColor = false
-        ThemeManager:Register(KeybindBtn, "BackgroundColor3", "MainBackground")
+        KeybindBtn.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
         KeybindBtn.Size = UDim2.new(0, 0, 0, 22)
         KeybindBtn.AutomaticSize = Enum.AutomaticSize.X
         KeybindBtn.Text = ""
@@ -160,7 +159,7 @@ function LabelComponent.Create(TabContent, Maid, Config)
         KbCorner.Parent = KeybindBtn
 
         local KbStroke = Instance.new("UIStroke")
-        ThemeManager:Register(KbStroke, "Color", "StrokeColor")
+        KbStroke.Color = Color3.fromRGB(48, 48, 48)
         KbStroke.Thickness = 1
         KbStroke.Parent = KeybindBtn
 
@@ -175,7 +174,7 @@ function LabelComponent.Create(TabContent, Maid, Config)
         KbLabel.Size = UDim2.new(1, 0, 1, 0)
         KbLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
         KbLabel.Text = tostring(currentKey)
-        ThemeManager:Register(KbLabel, "TextColor3", "TextPrimary")
+        KbLabel.TextColor3 = Color3.fromRGB(240, 240, 245)
         KbLabel.TextSize = 12
         KbLabel.Parent = KeybindBtn
 
@@ -206,7 +205,7 @@ function LabelComponent.Create(TabContent, Maid, Config)
                 if capturedKey then
                     currentKey = capturedKey
                     KbLabel.Text = currentKey
-                    Tween(KbStroke, TweenInfo.new(0.2), {Color = ThemeManager:GetColor("StrokeColor")})
+                    Tween(KbStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(48, 48, 48)})
                     listening = false
                     listenConn:Disconnect()
                     kbCallback(currentKey)
@@ -242,7 +241,7 @@ function LabelComponent.Create(TabContent, Maid, Config)
         SwatchCorner.Parent = SwatchBtn
 
         local SwatchStroke = Instance.new("UIStroke")
-        ThemeManager:Register(SwatchStroke, "Color", "StrokeColor")
+        SwatchStroke.Color = Color3.fromRGB(48, 48, 48)
         SwatchStroke.Thickness = 1
         SwatchStroke.Parent = SwatchBtn
 

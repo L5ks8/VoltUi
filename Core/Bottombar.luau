@@ -1,10 +1,9 @@
-local ThemeManager = require(script.Parent.Theme)
 local Bottombar = {}
 
 function Bottombar.Create(Main, maid)
     local BottombarFrame = Instance.new("Frame")
     BottombarFrame.Name = "Bottombar"
-    ThemeManager:Register(BottombarFrame, "BackgroundColor3", "TertiaryBackground")
+    BottombarFrame.BackgroundColor3 = Color3.new(0.11, 0.11, 0.11)
     BottombarFrame.BorderColor3 = Color3.new(0, 0, 0)
     BottombarFrame.BorderSizePixel = 0
     BottombarFrame.LayoutOrder = 2
@@ -19,7 +18,7 @@ function Bottombar.Create(Main, maid)
     
     local BottombarBorder = Instance.new("Frame")
     BottombarBorder.Name = "Border"
-    ThemeManager:Register(BottombarBorder, "BackgroundColor3", "StrokeColor")
+    BottombarBorder.BackgroundColor3 = Color3.new(0.216, 0.216, 0.216)
     BottombarBorder.BorderSizePixel = 0
     BottombarBorder.Position = UDim2.new(0, 0, 0, 0)
     BottombarBorder.Size = UDim2.new(1, 0, 0, 1)
@@ -43,7 +42,7 @@ function Bottombar.Create(Main, maid)
     TabdisplayIcon.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     TabdisplayIcon.Size = UDim2.new(0.2, 0, 1, 0)
     TabdisplayIcon.Text = "< ⁄ >"
-    ThemeManager:Register(TabdisplayIcon, "TextColor3", "TextTertiary")
+    TabdisplayIcon.TextColor3 = Color3.new(0.51, 0.51, 0.51)
     TabdisplayIcon.TextDirection = Enum.TextDirection.RightToLeft
     TabdisplayIcon.TextSize = 13
     TabdisplayIcon.TextXAlignment = Enum.TextXAlignment.Right
@@ -59,7 +58,7 @@ function Bottombar.Create(Main, maid)
     TabdisplayName.LayoutOrder = 1
     TabdisplayName.Size = UDim2.new(1, 0, 1, 0)
     TabdisplayName.Text = "No Tab Selected"
-    ThemeManager:Register(TabdisplayName, "TextColor3", "TextTertiary")
+    TabdisplayName.TextColor3 = Color3.new(0.529, 0.529, 0.529)
     TabdisplayName.TextSize = 14
     TabdisplayName.TextXAlignment = Enum.TextXAlignment.Left
     TabdisplayName.Parent = Tabdisplay
@@ -109,7 +108,6 @@ function Bottombar.Create(Main, maid)
     StatusIcon.BorderColor3 = Color3.new(0, 0, 0)
     StatusIcon.BorderSizePixel = 0
     StatusIcon.Image = "rbxassetid://102114288213902"
-    StatusIcon.ImageColor3 = Color3.fromRGB(46, 204, 113)
     StatusIcon.Size = UDim2.new(0, 20, 0, 20)
     StatusIcon.Parent = Status
     
@@ -123,7 +121,7 @@ function Bottombar.Create(Main, maid)
     StatusText.Size = UDim2.new(0, 0, 1, 0)
     StatusText.AutomaticSize = Enum.AutomaticSize.X
     StatusText.Text = "Connected"
-    ThemeManager:Register(StatusText, "TextColor3", "TextTertiary")
+    StatusText.TextColor3 = Color3.new(0.482, 0.482, 0.482)
     StatusText.TextSize = 14
     StatusText.TextXAlignment = Enum.TextXAlignment.Left
     StatusText.Parent = Status
@@ -159,7 +157,7 @@ function Bottombar.Create(Main, maid)
     GamenameText.AutomaticSize = Enum.AutomaticSize.X
     local Success, GameNameResult = pcall(function() return game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name end)
     GamenameText.Text = Success and GameNameResult or "Unknown Game"
-    ThemeManager:Register(GamenameText, "TextColor3", "TextTertiary")
+    GamenameText.TextColor3 = Color3.new(0.529, 0.529, 0.529)
     GamenameText.TextSize = 14
     GamenameText.Parent = Gamename
     

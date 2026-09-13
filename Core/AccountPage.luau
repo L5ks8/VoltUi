@@ -1,12 +1,11 @@
 local Notifications = require(script.Parent.Notifications)
-local ThemeManager = require(script.Parent.Theme)
 local AccountPage = {}
 
 function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     local Page = Instance.new("Frame")
     Page.Name = "AccountPage"
     Page.AnchorPoint = Vector2.new(0.5, 0.5)
-    ThemeManager:Register(Page, "BackgroundColor3", "MainBackground")
+    Page.BackgroundColor3 = Color3.new(0.067, 0.067, 0.067)
     Page.BorderColor3 = Color3.new(0, 0, 0)
     Page.BorderSizePixel = 0
     Page.Position = UDim2.new(0.5, 0, 0.518, 0)
@@ -21,12 +20,12 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     PageCorner.Parent = Page
 
     local PageStroke = Instance.new("UIStroke")
-    ThemeManager:Register(PageStroke, "Color", "StrokeColor")
+    PageStroke.Color = Color3.new(0.353, 0.353, 0.353)
     PageStroke.Parent = Page
 
     local Actions = Instance.new("Frame")
     Actions.Name = "Actions"
-    ThemeManager:Register(Actions, "BackgroundColor3", "TextPrimary")
+    Actions.BackgroundColor3 = Color3.new(1, 1, 1)
     Actions.BackgroundTransparency = 1
     Actions.BorderColor3 = Color3.new(0, 0, 0)
     Actions.BorderSizePixel = 0
@@ -42,12 +41,12 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local ActionsStroke = Instance.new("UIStroke")
     ActionsStroke.BorderStrokePosition = Enum.BorderStrokePosition.Center
-    ThemeManager:Register(ActionsStroke, "Color", "StrokeColor")
+    ActionsStroke.Color = Color3.new(0.149, 0.149, 0.149)
     ActionsStroke.Parent = Actions
 
     local ReturnButton = Instance.new("ImageButton")
     ReturnButton.Name = "Return"
-    ThemeManager:Register(ReturnButton, "BackgroundColor3", "TextPrimary")
+    ReturnButton.BackgroundColor3 = Color3.new(1, 1, 1)
     ReturnButton.BackgroundTransparency = 1
     ReturnButton.BorderColor3 = Color3.new(0, 0, 0)
     ReturnButton.BorderSizePixel = 0
@@ -67,13 +66,12 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local ReturnIcon = Instance.new("ImageLabel")
     ReturnIcon.Name = "Icon"
-    ThemeManager:Register(ReturnIcon, "BackgroundColor3", "TextPrimary")
+    ReturnIcon.BackgroundColor3 = Color3.new(1, 1, 1)
     ReturnIcon.BackgroundTransparency = 1
     ReturnIcon.BorderColor3 = Color3.new(0, 0, 0)
     ReturnIcon.BorderSizePixel = 0
     ReturnIcon.Image = "rbxassetid://93526157530558"
     ReturnIcon.ImageTransparency = 0.3
-    ThemeManager:Register(ReturnIcon, "ImageColor3", "IconColor")
     ReturnIcon.Size = UDim2.new(0, 25, 0, 25)
     ReturnIcon.Parent = ReturnButton
 
@@ -90,14 +88,14 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     end))
 
     local AccountText = Instance.new("TextLabel")
-    ThemeManager:Register(AccountText, "BackgroundColor3", "TextPrimary")
+    AccountText.BackgroundColor3 = Color3.new(1, 1, 1)
     AccountText.BackgroundTransparency = 1
     AccountText.BorderColor3 = Color3.new(0, 0, 0)
     AccountText.BorderSizePixel = 0
-    AccountText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    AccountText.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     AccountText.Size = UDim2.new(0, 200, 0, 35)
     AccountText.Text = "Account"
-    ThemeManager:Register(AccountText, "TextColor3", "TextSecondary")
+    AccountText.TextColor3 = Color3.new(0.71, 0.71, 0.71)
     AccountText.TextSize = 14
     AccountText.TextXAlignment = Enum.TextXAlignment.Left
     AccountText.Parent = Actions
@@ -108,7 +106,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local ContentFrame = Instance.new("Frame")
     ContentFrame.Name = "Content"
-    ThemeManager:Register(ContentFrame, "BackgroundColor3", "TextPrimary")
+    ContentFrame.BackgroundColor3 = Color3.new(1, 1, 1)
     ContentFrame.BackgroundTransparency = 1
     ContentFrame.BorderColor3 = Color3.new(0, 0, 0)
     ContentFrame.BorderSizePixel = 0
@@ -125,7 +123,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local AccountPageFrame = Instance.new("Frame")
     AccountPageFrame.Name = "AccountPage"
-    ThemeManager:Register(AccountPageFrame, "BackgroundColor3", "SecondaryBackground")
+    AccountPageFrame.BackgroundColor3 = Color3.new(0.09, 0.09, 0.09)
     AccountPageFrame.BorderColor3 = Color3.new(0, 0, 0)
     AccountPageFrame.BorderSizePixel = 0
     AccountPageFrame.Position = UDim2.new(0.038, 0, 0.03, 0)
@@ -136,7 +134,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     AccountPageCorner.Parent = AccountPageFrame
 
     local AccountPageStroke = Instance.new("UIStroke")
-    ThemeManager:Register(AccountPageStroke, "Color", "StrokeColor")
+    AccountPageStroke.Color = Color3.new(0.149, 0.149, 0.149)
     AccountPageStroke.Parent = AccountPageFrame
 
     local AccountPageLayout = Instance.new("UIListLayout")
@@ -145,7 +143,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local Userinfo = Instance.new("Frame")
     Userinfo.Name = "Userinfo"
-    ThemeManager:Register(Userinfo, "BackgroundColor3", "TextPrimary")
+    Userinfo.BackgroundColor3 = Color3.new(1, 1, 1)
     Userinfo.BackgroundTransparency = 1
     Userinfo.BorderColor3 = Color3.new(0, 0, 0)
     Userinfo.BorderSizePixel = 0
@@ -158,7 +156,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     UserinfoCorner.Parent = Userinfo
 
     local UserinfoStroke = Instance.new("UIStroke")
-    ThemeManager:Register(UserinfoStroke, "Color", "StrokeColor")
+    UserinfoStroke.Color = Color3.new(0.149, 0.149, 0.149)
     UserinfoStroke.Parent = Userinfo
 
     local UserinfoLayout = Instance.new("UIListLayout")
@@ -168,7 +166,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local Profile = Instance.new("Frame")
     Profile.Name = "Profile"
-    ThemeManager:Register(Profile, "BackgroundColor3", "TextPrimary")
+    Profile.BackgroundColor3 = Color3.new(1, 1, 1)
     Profile.BackgroundTransparency = 1
     Profile.BorderColor3 = Color3.new(0, 0, 0)
     Profile.BorderSizePixel = 0
@@ -185,7 +183,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     local ProfileImage = Instance.new("ImageButton")
     ProfileImage.Name = "Frame"
     ProfileImage.AutoButtonColor = false
-    ThemeManager:Register(ProfileImage, "BackgroundColor3", "TertiaryBackground")
+    ProfileImage.BackgroundColor3 = Color3.new(0.188, 0.188, 0.188)
     ProfileImage.BorderColor3 = Color3.new(0, 0, 0)
     ProfileImage.BorderSizePixel = 0
     ProfileImage.Selectable = false
@@ -208,7 +206,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     ProfileImageCorner.Parent = ProfileImage
 
     local ProfileImageStroke = Instance.new("UIStroke")
-    ThemeManager:Register(ProfileImageStroke, "Color", "StrokeColor")
+    ProfileImageStroke.Color = Color3.new(0.31, 0.31, 0.31)
     ProfileImageStroke.Parent = ProfileImage
 
     local function LoadAvatar()
@@ -231,7 +229,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local Info = Instance.new("Frame")
     Info.Name = "Info"
-    ThemeManager:Register(Info, "BackgroundColor3", "TextPrimary")
+    Info.BackgroundColor3 = Color3.new(1, 1, 1)
     Info.BackgroundTransparency = 1
     Info.BorderColor3 = Color3.new(0, 0, 0)
     Info.BorderSizePixel = 0
@@ -247,7 +245,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     InfoLayoutInner.Parent = Info
 
     local InfoContainer = Instance.new("Frame")
-    ThemeManager:Register(InfoContainer, "BackgroundColor3", "TextPrimary")
+    InfoContainer.BackgroundColor3 = Color3.new(1, 1, 1)
     InfoContainer.BackgroundTransparency = 1
     InfoContainer.BorderColor3 = Color3.new(0, 0, 0)
     InfoContainer.BorderSizePixel = 0
@@ -260,7 +258,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     InfoContainerLayout.Parent = InfoContainer
 
     local TextContainer = Instance.new("Frame")
-    ThemeManager:Register(TextContainer, "BackgroundColor3", "TextPrimary")
+    TextContainer.BackgroundColor3 = Color3.new(1, 1, 1)
     TextContainer.BackgroundTransparency = 1
     TextContainer.BorderColor3 = Color3.new(0, 0, 0)
     TextContainer.BorderSizePixel = 0
@@ -273,7 +271,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local UsernameContainer = Instance.new("Frame")
     UsernameContainer.Name = "UsernameContainer"
-    ThemeManager:Register(UsernameContainer, "BackgroundColor3", "TextPrimary")
+    UsernameContainer.BackgroundColor3 = Color3.new(1, 1, 1)
     UsernameContainer.BackgroundTransparency = 1
     UsernameContainer.BorderColor3 = Color3.new(0, 0, 0)
     UsernameContainer.BorderSizePixel = 0
@@ -289,7 +287,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local Username = Instance.new("TextLabel")
     Username.Name = "Name"
-    ThemeManager:Register(Username, "BackgroundColor3", "TextPrimary")
+    Username.BackgroundColor3 = Color3.new(1, 1, 1)
     Username.BackgroundTransparency = 1
     Username.BorderColor3 = Color3.new(0, 0, 0)
     Username.BorderSizePixel = 0
@@ -297,7 +295,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     Username.AutomaticSize = Enum.AutomaticSize.XY
     Username.Size = UDim2.new(0, 0, 0, 25)
     Username.Text = "Username"
-    ThemeManager:Register(Username, "TextColor3", "TextPrimary")
+    Username.TextColor3 = Color3.new(0.8, 0.8, 0.8)
     Username.TextSize = 20
     Username.TextXAlignment = Enum.TextXAlignment.Left
     Username.TextYAlignment = Enum.TextYAlignment.Bottom
@@ -305,7 +303,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local HiddenId = Instance.new("TextBox")
     HiddenId.Name = "HiddenId"
-    ThemeManager:Register(HiddenId, "BackgroundColor3", "TextPrimary")
+    HiddenId.BackgroundColor3 = Color3.new(1, 1, 1)
     HiddenId.BackgroundTransparency = 1
     HiddenId.BorderColor3 = Color3.new(0, 0, 0)
     HiddenId.BorderSizePixel = 0
@@ -313,7 +311,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     HiddenId.AutomaticSize = Enum.AutomaticSize.XY
     HiddenId.Size = UDim2.new(0, 0, 0, 22)
     HiddenId.Text = ""
-    ThemeManager:Register(HiddenId, "TextColor3", "TextTertiary")
+    HiddenId.TextColor3 = Color3.new(0.5, 0.5, 0.5)
     HiddenId.TextSize = 14
     HiddenId.TextXAlignment = Enum.TextXAlignment.Left
     HiddenId.TextYAlignment = Enum.TextYAlignment.Bottom
@@ -324,21 +322,21 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local MemberSince = Instance.new("TextLabel")
     MemberSince.Name = "MemberSince"
-    ThemeManager:Register(MemberSince, "BackgroundColor3", "TextPrimary")
+    MemberSince.BackgroundColor3 = Color3.new(1, 1, 1)
     MemberSince.BackgroundTransparency = 1
     MemberSince.BorderColor3 = Color3.new(0, 0, 0)
     MemberSince.BorderSizePixel = 0
     MemberSince.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
     MemberSince.Size = UDim2.new(0, 150, 0, 25)
     MemberSince.Text = ""
-    ThemeManager:Register(MemberSince, "TextColor3", "TextTertiary")
+    MemberSince.TextColor3 = Color3.new(0.439, 0.439, 0.439)
     MemberSince.TextSize = 14
     MemberSince.TextXAlignment = Enum.TextXAlignment.Left
     MemberSince.Parent = TextContainer
 
     local License = Instance.new("Frame")
     License.Name = "License"
-    ThemeManager:Register(License, "BackgroundColor3", "TextPrimary")
+    License.BackgroundColor3 = Color3.new(1, 1, 1)
     License.BackgroundTransparency = 1
     License.BorderColor3 = Color3.new(0, 0, 0)
     License.BorderSizePixel = 0
@@ -349,7 +347,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local LicenseStroke = Instance.new("UIStroke")
     LicenseStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
-    ThemeManager:Register(LicenseStroke, "Color", "StrokeColor")
+    LicenseStroke.Color = Color3.new(0.149, 0.149, 0.149)
     LicenseStroke.Parent = License
 
     local LicenseLayout = Instance.new("UIListLayout")
@@ -357,7 +355,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     LicenseLayout.Parent = License
 
     local LicenseHeader = Instance.new("Frame")
-    ThemeManager:Register(LicenseHeader, "BackgroundColor3", "TextPrimary")
+    LicenseHeader.BackgroundColor3 = Color3.new(1, 1, 1)
     LicenseHeader.BackgroundTransparency = 1
     LicenseHeader.BorderColor3 = Color3.new(0, 0, 0)
     LicenseHeader.BorderSizePixel = 0
@@ -366,7 +364,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local LicenseHeaderStroke = Instance.new("UIStroke")
     LicenseHeaderStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
-    ThemeManager:Register(LicenseHeaderStroke, "Color", "StrokeColor")
+    LicenseHeaderStroke.Color = Color3.new(0.149, 0.149, 0.149)
     LicenseHeaderStroke.Parent = LicenseHeader
 
     local LicenseHeaderLayout = Instance.new("UIListLayout")
@@ -377,7 +375,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local LicenseInfo = Instance.new("Frame")
     LicenseInfo.Name = "Info"
-    ThemeManager:Register(LicenseInfo, "BackgroundColor3", "TextPrimary")
+    LicenseInfo.BackgroundColor3 = Color3.new(1, 1, 1)
     LicenseInfo.BackgroundTransparency = 1
     LicenseInfo.BorderColor3 = Color3.new(0, 0, 0)
     LicenseInfo.BorderSizePixel = 0
@@ -392,7 +390,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local LicenseIcon = Instance.new("ImageLabel")
     LicenseIcon.Name = "Icon"
-    ThemeManager:Register(LicenseIcon, "BackgroundColor3", "TextPrimary")
+    LicenseIcon.BackgroundColor3 = Color3.new(1, 1, 1)
     LicenseIcon.BackgroundTransparency = 1
     LicenseIcon.BorderColor3 = Color3.new(0, 0, 0)
     LicenseIcon.BorderSizePixel = 0
@@ -406,7 +404,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local LicenseText = Instance.new("Frame")
     LicenseText.Name = "Text"
-    ThemeManager:Register(LicenseText, "BackgroundColor3", "TextPrimary")
+    LicenseText.BackgroundColor3 = Color3.new(1, 1, 1)
     LicenseText.BackgroundTransparency = 1
     LicenseText.BorderColor3 = Color3.new(0, 0, 0)
     LicenseText.BorderSizePixel = 0
@@ -419,28 +417,28 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     LicenseTextLayout.Parent = LicenseText
 
     local LicensesLabel = Instance.new("TextLabel")
-    ThemeManager:Register(LicensesLabel, "BackgroundColor3", "TextPrimary")
+    LicensesLabel.BackgroundColor3 = Color3.new(1, 1, 1)
     LicensesLabel.BackgroundTransparency = 1
     LicensesLabel.BorderColor3 = Color3.new(0, 0, 0)
     LicensesLabel.BorderSizePixel = 0
     LicensesLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     LicensesLabel.Size = UDim2.new(0, 200, 0, 25)
     LicensesLabel.Text = "Licenses"
-    ThemeManager:Register(LicensesLabel, "TextColor3", "TextPrimary")
+    LicensesLabel.TextColor3 = Color3.new(0.8, 0.8, 0.8)
     LicensesLabel.TextSize = 16
     LicensesLabel.TextXAlignment = Enum.TextXAlignment.Left
     LicensesLabel.TextYAlignment = Enum.TextYAlignment.Bottom
     LicensesLabel.Parent = LicenseText
 
     local LicensesDesc = Instance.new("TextLabel")
-    ThemeManager:Register(LicensesDesc, "BackgroundColor3", "TextPrimary")
+    LicensesDesc.BackgroundColor3 = Color3.new(1, 1, 1)
     LicensesDesc.BackgroundTransparency = 1
     LicensesDesc.BorderColor3 = Color3.new(0, 0, 0)
     LicensesDesc.BorderSizePixel = 0
     LicensesDesc.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
     LicensesDesc.Size = UDim2.new(0, 200, 0, 25)
     LicensesDesc.Text = "Subscription and Claimed keys"
-    ThemeManager:Register(LicensesDesc, "TextColor3", "TextPrimary")
+    LicensesDesc.TextColor3 = Color3.new(0.8, 0.8, 0.8)
     LicensesDesc.TextSize = 15
     LicensesDesc.TextXAlignment = Enum.TextXAlignment.Left
     LicensesDesc.TextYAlignment = Enum.TextYAlignment.Top
@@ -452,7 +450,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local Redeem = Instance.new("Frame")
     Redeem.Name = "Redeem"
-    ThemeManager:Register(Redeem, "BackgroundColor3", "TextPrimary")
+    Redeem.BackgroundColor3 = Color3.new(1, 1, 1)
     Redeem.BackgroundTransparency = 1
     Redeem.BorderColor3 = Color3.new(0, 0, 0)
     Redeem.BorderSizePixel = 0
@@ -469,7 +467,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local InputFrame = Instance.new("Frame")
     InputFrame.Name = "Input"
-    ThemeManager:Register(InputFrame, "BackgroundColor3", "TertiaryBackground")
+    InputFrame.BackgroundColor3 = Color3.new(0.086, 0.086, 0.086)
     InputFrame.BorderColor3 = Color3.new(0, 0, 0)
     InputFrame.BorderSizePixel = 0
     InputFrame.Position = UDim2.new(0.236, 0, 0, 0)
@@ -480,11 +478,11 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     InputCorner.Parent = InputFrame
 
     local InputStroke = Instance.new("UIStroke")
-    ThemeManager:Register(InputStroke, "Color", "StrokeColor")
+    InputStroke.Color = Color3.new(0.208, 0.208, 0.208)
     InputStroke.Parent = InputFrame
 
     local TextBox = Instance.new("TextBox")
-    ThemeManager:Register(TextBox, "BackgroundColor3", "TextPrimary")
+    TextBox.BackgroundColor3 = Color3.new(1, 1, 1)
     TextBox.BackgroundTransparency = 1
     TextBox.BorderColor3 = Color3.new(0, 0, 0)
     TextBox.BorderSizePixel = 0
@@ -493,8 +491,8 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     TextBox.Size = UDim2.new(1, 0, 1, 0)
     TextBox.Text = ""
     TextBox.PlaceholderText = "Enter license key"
-    ThemeManager:Register(TextBox, "PlaceholderColor3", "TextTertiary")
-    ThemeManager:Register(TextBox, "TextColor3", "TextPrimary")
+    TextBox.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
+    TextBox.TextColor3 = Color3.new(0.8, 0.8, 0.8)
     TextBox.TextSize = 17
     TextBox.TextXAlignment = Enum.TextXAlignment.Left
     TextBox.Parent = InputFrame
@@ -505,7 +503,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local ClaimFrame = Instance.new("Frame")
     ClaimFrame.Name = "Claim"
-    ThemeManager:Register(ClaimFrame, "BackgroundColor3", "TextPrimary")
+    ClaimFrame.BackgroundColor3 = Color3.new(1, 1, 1)
     ClaimFrame.BackgroundTransparency = 1
     ClaimFrame.BorderColor3 = Color3.new(0, 0, 0)
     ClaimFrame.BorderSizePixel = 0
@@ -523,7 +521,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     local ClaimButtonFrame = Instance.new("Frame")
     ClaimButtonFrame.Name = "Button"
     ClaimButtonFrame.Active = true
-    ThemeManager:Register(ClaimButtonFrame, "BackgroundColor3", "StrokeColor")
+    ClaimButtonFrame.BackgroundColor3 = Color3.new(0.149, 0.149, 0.149)
     ClaimButtonFrame.BorderColor3 = Color3.new(0.298, 0.298, 0.298)
     ClaimButtonFrame.BorderSizePixel = 0
     ClaimButtonFrame.Selectable = true
@@ -534,18 +532,18 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     ClaimButtonFrameCorner.Parent = ClaimButtonFrame
 
     local ClaimButtonFrameStroke = Instance.new("UIStroke")
-    ThemeManager:Register(ClaimButtonFrameStroke, "Color", "StrokeColor")
+    ClaimButtonFrameStroke.Color = Color3.new(0.247, 0.247, 0.247)
     ClaimButtonFrameStroke.Parent = ClaimButtonFrame
 
     local ClaimButton = Instance.new("TextButton")
-    ThemeManager:Register(ClaimButton, "BackgroundColor3", "StrokeColor")
+    ClaimButton.BackgroundColor3 = Color3.new(0.149, 0.149, 0.149)
     ClaimButton.BorderColor3 = Color3.new(0.298, 0.298, 0.298)
     ClaimButton.BorderSizePixel = 0
     ClaimButton.AutoButtonColor = false
     ClaimButton.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     ClaimButton.Size = UDim2.new(0, 70, 0, 35)
     ClaimButton.Text = "Claim"
-    ThemeManager:Register(ClaimButton, "TextColor3", "TextPrimary")
+    ClaimButton.TextColor3 = Color3.new(0.8, 0.8, 0.8)
     ClaimButton.TextSize = 16
     ClaimButton.Parent = ClaimButtonFrame
 
@@ -553,7 +551,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     ClaimButtonCorner.Parent = ClaimButton
 
     local DetailsFrame = Instance.new("Frame")
-    ThemeManager:Register(DetailsFrame, "BackgroundColor3", "TextPrimary")
+    DetailsFrame.BackgroundColor3 = Color3.new(1, 1, 1)
     DetailsFrame.BackgroundTransparency = 1
     DetailsFrame.BorderColor3 = Color3.new(0, 0, 0)
     DetailsFrame.BorderSizePixel = 0
@@ -568,7 +566,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local StatusFrame = Instance.new("Frame")
     StatusFrame.Name = "Status"
-    ThemeManager:Register(StatusFrame, "BackgroundColor3", "TextPrimary")
+    StatusFrame.BackgroundColor3 = Color3.new(1, 1, 1)
     StatusFrame.BackgroundTransparency = 1
     StatusFrame.BorderColor3 = Color3.new(0, 0, 0)
     StatusFrame.BorderSizePixel = 0
@@ -583,7 +581,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     StatusFrameLayout.Parent = StatusFrame
 
     local StatusInner = Instance.new("Frame")
-    ThemeManager:Register(StatusInner, "BackgroundColor3", "TextPrimary")
+    StatusInner.BackgroundColor3 = Color3.new(1, 1, 1)
     StatusInner.BackgroundTransparency = 1
     StatusInner.BorderColor3 = Color3.new(0, 0, 0)
     StatusInner.BorderSizePixel = 0
@@ -595,7 +593,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local StatusInnerStroke = Instance.new("UIStroke")
     StatusInnerStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
-    ThemeManager:Register(StatusInnerStroke, "Color", "StrokeColor")
+    StatusInnerStroke.Color = Color3.new(0.149, 0.149, 0.149)
     StatusInnerStroke.Parent = StatusInner
 
     local StatusInnerLayout = Instance.new("UIListLayout")
@@ -604,7 +602,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local StatusText = Instance.new("Frame")
     StatusText.Name = "Text"
-    ThemeManager:Register(StatusText, "BackgroundColor3", "TextPrimary")
+    StatusText.BackgroundColor3 = Color3.new(1, 1, 1)
     StatusText.BackgroundTransparency = 1
     StatusText.BorderColor3 = Color3.new(0, 0, 0)
     StatusText.BorderSizePixel = 0
@@ -619,7 +617,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local StatusTextInfo = Instance.new("Frame")
     StatusTextInfo.Name = "Info"
-    ThemeManager:Register(StatusTextInfo, "BackgroundColor3", "TextPrimary")
+    StatusTextInfo.BackgroundColor3 = Color3.new(1, 1, 1)
     StatusTextInfo.BackgroundTransparency = 1
     StatusTextInfo.BorderColor3 = Color3.new(0, 0, 0)
     StatusTextInfo.BorderSizePixel = 0
@@ -631,14 +629,14 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     StatusTextInfoLayout.Parent = StatusTextInfo
 
     local VoltLabel = Instance.new("TextLabel")
-    ThemeManager:Register(VoltLabel, "BackgroundColor3", "TextPrimary")
+    VoltLabel.BackgroundColor3 = Color3.new(1, 1, 1)
     VoltLabel.BackgroundTransparency = 1
     VoltLabel.BorderColor3 = Color3.new(0, 0, 0)
     VoltLabel.BorderSizePixel = 0
     VoltLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     VoltLabel.Size = UDim2.new(0, 110, 0, 22)
     VoltLabel.Text = "Volt"
-    ThemeManager:Register(VoltLabel, "TextColor3", "TextPrimary")
+    VoltLabel.TextColor3 = Color3.new(0.8, 0.8, 0.8)
     VoltLabel.TextSize = 16
     VoltLabel.TextXAlignment = Enum.TextXAlignment.Left
     VoltLabel.TextYAlignment = Enum.TextYAlignment.Bottom
@@ -649,14 +647,14 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     VoltLabelPadding.Parent = VoltLabel
 
     local VoltSubLabel = Instance.new("TextLabel")
-    ThemeManager:Register(VoltSubLabel, "BackgroundColor3", "TextPrimary")
+    VoltSubLabel.BackgroundColor3 = Color3.new(1, 1, 1)
     VoltSubLabel.BackgroundTransparency = 1
     VoltSubLabel.BorderColor3 = Color3.new(0, 0, 0)
     VoltSubLabel.BorderSizePixel = 0
     VoltSubLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
     VoltSubLabel.Size = UDim2.new(0, 110, 0, 22)
     VoltSubLabel.Text = "Current subscription"
-    ThemeManager:Register(VoltSubLabel, "TextColor3", "TextPrimary")
+    VoltSubLabel.TextColor3 = Color3.new(0.8, 0.8, 0.8)
     VoltSubLabel.TextSize = 14
     VoltSubLabel.TextXAlignment = Enum.TextXAlignment.Left
     VoltSubLabel.TextYAlignment = Enum.TextYAlignment.Top
@@ -668,7 +666,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local StatusBadgeFrame = Instance.new("Frame")
     StatusBadgeFrame.Name = "Status"
-    ThemeManager:Register(StatusBadgeFrame, "BackgroundColor3", "TextPrimary")
+    StatusBadgeFrame.BackgroundColor3 = Color3.new(1, 1, 1)
     StatusBadgeFrame.BackgroundTransparency = 1
     StatusBadgeFrame.BorderColor3 = Color3.new(0, 0, 0)
     StatusBadgeFrame.BorderSizePixel = 0
@@ -683,14 +681,14 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     StatusBadgeFrameLayout.Parent = StatusBadgeFrame
 
     local StatusBadge = Instance.new("Frame")
-    ThemeManager:Register(StatusBadge, "BackgroundColor3", "TertiaryBackground")
+    StatusBadge.BackgroundColor3 = Color3.new(0.173, 0.173, 0.173)
     StatusBadge.BorderColor3 = Color3.new(0, 0, 0)
     StatusBadge.BorderSizePixel = 0
     StatusBadge.Size = UDim2.new(0, 40, 0, 20)
     StatusBadge.Parent = StatusBadgeFrame
 
     local StatusBadgeStroke = Instance.new("UIStroke")
-    ThemeManager:Register(StatusBadgeStroke, "Color", "StrokeColor")
+    StatusBadgeStroke.Color = Color3.new(0.353, 0.353, 0.353)
     StatusBadgeStroke.Parent = StatusBadge
 
     local StatusBadgeCorner = Instance.new("UICorner")
@@ -702,20 +700,20 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     StatusBadgeCorner.Parent = StatusBadge
 
     local StatusBadgeText = Instance.new("TextLabel")
-    ThemeManager:Register(StatusBadgeText, "BackgroundColor3", "TextPrimary")
+    StatusBadgeText.BackgroundColor3 = Color3.new(1, 1, 1)
     StatusBadgeText.BackgroundTransparency = 1
     StatusBadgeText.BorderColor3 = Color3.new(0, 0, 0)
     StatusBadgeText.BorderSizePixel = 0
     StatusBadgeText.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     StatusBadgeText.Size = UDim2.new(1, 0, 1, 0)
     StatusBadgeText.Text = "Active"
-    ThemeManager:Register(StatusBadgeText, "TextColor3", "TextPrimary")
+    StatusBadgeText.TextColor3 = Color3.new(0.8, 0.8, 0.8)
     StatusBadgeText.TextSize = 14
     StatusBadgeText.Parent = StatusBadge
 
     local StatsFrame = Instance.new("Frame")
     StatsFrame.Name = "Stats"
-    ThemeManager:Register(StatsFrame, "BackgroundColor3", "TextPrimary")
+    StatsFrame.BackgroundColor3 = Color3.new(1, 1, 1)
     StatsFrame.BackgroundTransparency = 1
     StatsFrame.BorderColor3 = Color3.new(0, 0, 0)
     StatsFrame.BorderSizePixel = 0
@@ -732,7 +730,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local RemainingFrame = Instance.new("Frame")
     RemainingFrame.Name = "Remaining"
-    ThemeManager:Register(RemainingFrame, "BackgroundColor3", "TextPrimary")
+    RemainingFrame.BackgroundColor3 = Color3.new(1, 1, 1)
     RemainingFrame.BackgroundTransparency = 1
     RemainingFrame.BorderColor3 = Color3.new(0, 0, 0)
     RemainingFrame.BorderSizePixel = 0
@@ -744,7 +742,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local RemainingStroke = Instance.new("UIStroke")
     RemainingStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
-    ThemeManager:Register(RemainingStroke, "Color", "StrokeColor")
+    RemainingStroke.Color = Color3.new(0.149, 0.149, 0.149)
     RemainingStroke.Parent = RemainingFrame
 
     local RemainingLayout = Instance.new("UIListLayout")
@@ -753,14 +751,14 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local RemainingLabel = Instance.new("TextLabel")
     RemainingLabel.Name = "Remaining"
-    ThemeManager:Register(RemainingLabel, "BackgroundColor3", "TextPrimary")
+    RemainingLabel.BackgroundColor3 = Color3.new(1, 1, 1)
     RemainingLabel.BackgroundTransparency = 1
     RemainingLabel.BorderColor3 = Color3.new(0, 0, 0)
     RemainingLabel.BorderSizePixel = 0
     RemainingLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
     RemainingLabel.Size = UDim2.new(0, 175, 0, 22)
     RemainingLabel.Text = "Remaining"
-    ThemeManager:Register(RemainingLabel, "TextColor3", "TextTertiary")
+    RemainingLabel.TextColor3 = Color3.new(0.451, 0.451, 0.451)
     RemainingLabel.TextSize = 14
     RemainingLabel.TextXAlignment = Enum.TextXAlignment.Left
     RemainingLabel.Parent = RemainingFrame
@@ -771,7 +769,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local RemainingValue = Instance.new("TextLabel")
     RemainingValue.Name = "Value"
-    ThemeManager:Register(RemainingValue, "BackgroundColor3", "TextPrimary")
+    RemainingValue.BackgroundColor3 = Color3.new(1, 1, 1)
     RemainingValue.BackgroundTransparency = 1
     RemainingValue.BorderColor3 = Color3.new(0, 0, 0)
     RemainingValue.BorderSizePixel = 0
@@ -779,7 +777,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     RemainingValue.LayoutOrder = 1
     RemainingValue.Size = UDim2.new(0, 175, 0, 22)
     RemainingValue.Text = "-"
-    ThemeManager:Register(RemainingValue, "TextColor3", "TextPrimary")
+    RemainingValue.TextColor3 = Color3.new(0.8, 0.8, 0.8)
     RemainingValue.TextSize = 20
     RemainingValue.TextXAlignment = Enum.TextXAlignment.Left
     RemainingValue.TextYAlignment = Enum.TextYAlignment.Top
@@ -791,7 +789,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local EndsFrame = Instance.new("Frame")
     EndsFrame.Name = "Ends"
-    ThemeManager:Register(EndsFrame, "BackgroundColor3", "TextPrimary")
+    EndsFrame.BackgroundColor3 = Color3.new(1, 1, 1)
     EndsFrame.BackgroundTransparency = 1
     EndsFrame.BorderColor3 = Color3.new(0, 0, 0)
     EndsFrame.BorderSizePixel = 0
@@ -801,7 +799,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local EndsStroke = Instance.new("UIStroke")
     EndsStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
-    ThemeManager:Register(EndsStroke, "Color", "StrokeColor")
+    EndsStroke.Color = Color3.new(0.149, 0.149, 0.149)
     EndsStroke.Parent = EndsFrame
 
     local EndsCorner = Instance.new("UICorner")
@@ -814,7 +812,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local EndsIconFrame = Instance.new("Frame")
     EndsIconFrame.Name = "Icon"
-    ThemeManager:Register(EndsIconFrame, "BackgroundColor3", "TextPrimary")
+    EndsIconFrame.BackgroundColor3 = Color3.new(1, 1, 1)
     EndsIconFrame.BackgroundTransparency = 1
     EndsIconFrame.BorderColor3 = Color3.new(0, 0, 0)
     EndsIconFrame.BorderSizePixel = 0
@@ -828,17 +826,16 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     EndsIconLayout.Parent = EndsIconFrame
 
     local EndsIcon = Instance.new("ImageLabel")
-    ThemeManager:Register(EndsIcon, "BackgroundColor3", "TextPrimary")
+    EndsIcon.BackgroundColor3 = Color3.new(1, 1, 1)
     EndsIcon.BackgroundTransparency = 1
     EndsIcon.BorderColor3 = Color3.new(0, 0, 0)
     EndsIcon.BorderSizePixel = 0
     EndsIcon.Image = "rbxassetid://91439385685471"
-    ThemeManager:Register(EndsIcon, "ImageColor3", "IconColor")
     EndsIcon.Size = UDim2.new(0, 20, 0, 20)
     EndsIcon.Parent = EndsIconFrame
 
     local EndsTextFrame = Instance.new("Frame")
-    ThemeManager:Register(EndsTextFrame, "BackgroundColor3", "TextPrimary")
+    EndsTextFrame.BackgroundColor3 = Color3.new(1, 1, 1)
     EndsTextFrame.BackgroundTransparency = 1
     EndsTextFrame.BorderColor3 = Color3.new(0, 0, 0)
     EndsTextFrame.BorderSizePixel = 0
@@ -853,14 +850,14 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local EndsLabel = Instance.new("TextLabel")
     EndsLabel.Name = "Ends"
-    ThemeManager:Register(EndsLabel, "BackgroundColor3", "TextPrimary")
+    EndsLabel.BackgroundColor3 = Color3.new(1, 1, 1)
     EndsLabel.BackgroundTransparency = 1
     EndsLabel.BorderColor3 = Color3.new(0, 0, 0)
     EndsLabel.BorderSizePixel = 0
     EndsLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
     EndsLabel.Size = UDim2.new(0, 130, 0, 22)
     EndsLabel.Text = "Ends"
-    ThemeManager:Register(EndsLabel, "TextColor3", "TextTertiary")
+    EndsLabel.TextColor3 = Color3.new(0.451, 0.451, 0.451)
     EndsLabel.TextSize = 14
     EndsLabel.TextXAlignment = Enum.TextXAlignment.Left
     EndsLabel.TextYAlignment = Enum.TextYAlignment.Bottom
@@ -868,7 +865,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local EndsValue = Instance.new("TextLabel")
     EndsValue.Name = "Value"
-    ThemeManager:Register(EndsValue, "BackgroundColor3", "TextPrimary")
+    EndsValue.BackgroundColor3 = Color3.new(1, 1, 1)
     EndsValue.BackgroundTransparency = 1
     EndsValue.BorderColor3 = Color3.new(0, 0, 0)
     EndsValue.BorderSizePixel = 0
@@ -876,7 +873,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     EndsValue.LayoutOrder = 1
     EndsValue.Size = UDim2.new(0, 130, 0, 22)
     EndsValue.Text = "-"
-    ThemeManager:Register(EndsValue, "TextColor3", "TextPrimary")
+    EndsValue.TextColor3 = Color3.new(0.8, 0.8, 0.8)
     EndsValue.TextSize = 16
     EndsValue.TextXAlignment = Enum.TextXAlignment.Left
     EndsValue.TextYAlignment = Enum.TextYAlignment.Top
@@ -884,7 +881,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local StartedFrame = Instance.new("Frame")
     StartedFrame.Name = "Started"
-    ThemeManager:Register(StartedFrame, "BackgroundColor3", "TextPrimary")
+    StartedFrame.BackgroundColor3 = Color3.new(1, 1, 1)
     StartedFrame.BackgroundTransparency = 1
     StartedFrame.BorderColor3 = Color3.new(0, 0, 0)
     StartedFrame.BorderSizePixel = 0
@@ -894,7 +891,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local StartedStroke = Instance.new("UIStroke")
     StartedStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
-    ThemeManager:Register(StartedStroke, "Color", "StrokeColor")
+    StartedStroke.Color = Color3.new(0.149, 0.149, 0.149)
     StartedStroke.Parent = StartedFrame
 
     local StartedCorner = Instance.new("UICorner")
@@ -907,7 +904,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local StartedIconFrame = Instance.new("Frame")
     StartedIconFrame.Name = "Icon"
-    ThemeManager:Register(StartedIconFrame, "BackgroundColor3", "TextPrimary")
+    StartedIconFrame.BackgroundColor3 = Color3.new(1, 1, 1)
     StartedIconFrame.BackgroundTransparency = 1
     StartedIconFrame.BorderColor3 = Color3.new(0, 0, 0)
     StartedIconFrame.BorderSizePixel = 0
@@ -921,7 +918,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     StartedIconLayout.Parent = StartedIconFrame
 
     local StartedIcon = Instance.new("ImageLabel")
-    ThemeManager:Register(StartedIcon, "BackgroundColor3", "TextPrimary")
+    StartedIcon.BackgroundColor3 = Color3.new(1, 1, 1)
     StartedIcon.BackgroundTransparency = 1
     StartedIcon.BorderColor3 = Color3.new(0, 0, 0)
     StartedIcon.BorderSizePixel = 0
@@ -930,7 +927,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     StartedIcon.Parent = StartedIconFrame
 
     local StartedTextFrame = Instance.new("Frame")
-    ThemeManager:Register(StartedTextFrame, "BackgroundColor3", "TextPrimary")
+    StartedTextFrame.BackgroundColor3 = Color3.new(1, 1, 1)
     StartedTextFrame.BackgroundTransparency = 1
     StartedTextFrame.BorderColor3 = Color3.new(0, 0, 0)
     StartedTextFrame.BorderSizePixel = 0
@@ -945,14 +942,14 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local StartedLabel = Instance.new("TextLabel")
     StartedLabel.Name = "Started"
-    ThemeManager:Register(StartedLabel, "BackgroundColor3", "TextPrimary")
+    StartedLabel.BackgroundColor3 = Color3.new(1, 1, 1)
     StartedLabel.BackgroundTransparency = 1
     StartedLabel.BorderColor3 = Color3.new(0, 0, 0)
     StartedLabel.BorderSizePixel = 0
     StartedLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
     StartedLabel.Size = UDim2.new(0, 130, 0, 22)
     StartedLabel.Text = "Started"
-    ThemeManager:Register(StartedLabel, "TextColor3", "TextTertiary")
+    StartedLabel.TextColor3 = Color3.new(0.451, 0.451, 0.451)
     StartedLabel.TextSize = 14
     StartedLabel.TextXAlignment = Enum.TextXAlignment.Left
     StartedLabel.TextYAlignment = Enum.TextYAlignment.Bottom
@@ -960,7 +957,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local StartedValue = Instance.new("TextLabel")
     StartedValue.Name = "Value"
-    ThemeManager:Register(StartedValue, "BackgroundColor3", "TextPrimary")
+    StartedValue.BackgroundColor3 = Color3.new(1, 1, 1)
     StartedValue.BackgroundTransparency = 1
     StartedValue.BorderColor3 = Color3.new(0, 0, 0)
     StartedValue.BorderSizePixel = 0
@@ -968,7 +965,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     StartedValue.LayoutOrder = 1
     StartedValue.Size = UDim2.new(0, 130, 0, 22)
     StartedValue.Text = "-"
-    ThemeManager:Register(StartedValue, "TextColor3", "TextPrimary")
+    StartedValue.TextColor3 = Color3.new(0.8, 0.8, 0.8)
     StartedValue.TextSize = 16
     StartedValue.TextXAlignment = Enum.TextXAlignment.Left
     StartedValue.TextYAlignment = Enum.TextYAlignment.Top
@@ -976,7 +973,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local ClaimedKeysFrame = Instance.new("Frame")
     ClaimedKeysFrame.Name = "ClaimedKeys"
-    ThemeManager:Register(ClaimedKeysFrame, "BackgroundColor3", "TextPrimary")
+    ClaimedKeysFrame.BackgroundColor3 = Color3.new(1, 1, 1)
     ClaimedKeysFrame.BackgroundTransparency = 1
     ClaimedKeysFrame.BorderColor3 = Color3.new(0, 0, 0)
     ClaimedKeysFrame.BorderSizePixel = 0
@@ -992,7 +989,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local KeysFrame = Instance.new("Frame")
     KeysFrame.Name = "Keys"
-    ThemeManager:Register(KeysFrame, "BackgroundColor3", "TextPrimary")
+    KeysFrame.BackgroundColor3 = Color3.new(1, 1, 1)
     KeysFrame.BackgroundTransparency = 1
     KeysFrame.BorderColor3 = Color3.new(0, 0, 0)
     KeysFrame.BorderSizePixel = 0
@@ -1002,7 +999,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local KeysStroke = Instance.new("UIStroke")
     KeysStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
-    ThemeManager:Register(KeysStroke, "Color", "StrokeColor")
+    KeysStroke.Color = Color3.new(0.149, 0.149, 0.149)
     KeysStroke.Parent = KeysFrame
 
     local KeysLayout2 = Instance.new("UIListLayout")
@@ -1014,7 +1011,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local KeysTextFrame = Instance.new("Frame")
     KeysTextFrame.Name = "Text"
-    ThemeManager:Register(KeysTextFrame, "BackgroundColor3", "TextPrimary")
+    KeysTextFrame.BackgroundColor3 = Color3.new(1, 1, 1)
     KeysTextFrame.BackgroundTransparency = 1
     KeysTextFrame.BorderColor3 = Color3.new(0, 0, 0)
     KeysTextFrame.BorderSizePixel = 0
@@ -1029,7 +1026,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local KeysIconFrame = Instance.new("Frame")
     KeysIconFrame.Name = "Icon"
-    ThemeManager:Register(KeysIconFrame, "BackgroundColor3", "TextPrimary")
+    KeysIconFrame.BackgroundColor3 = Color3.new(1, 1, 1)
     KeysIconFrame.BackgroundTransparency = 1
     KeysIconFrame.BorderColor3 = Color3.new(0, 0, 0)
     KeysIconFrame.BorderSizePixel = 0
@@ -1043,7 +1040,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     KeysIconLayout.Parent = KeysIconFrame
 
     local KeysIcon = Instance.new("ImageLabel")
-    ThemeManager:Register(KeysIcon, "BackgroundColor3", "TextPrimary")
+    KeysIcon.BackgroundColor3 = Color3.new(1, 1, 1)
     KeysIcon.BackgroundTransparency = 1
     KeysIcon.BorderColor3 = Color3.new(0, 0, 0)
     KeysIcon.BorderSizePixel = 0
@@ -1053,22 +1050,22 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local KeysTitle = Instance.new("TextLabel")
     KeysTitle.Name = "Text"
-    ThemeManager:Register(KeysTitle, "BackgroundColor3", "TextPrimary")
+    KeysTitle.BackgroundColor3 = Color3.new(1, 1, 1)
     KeysTitle.BackgroundTransparency = 1
     KeysTitle.BorderColor3 = Color3.new(0, 0, 0)
     KeysTitle.BorderSizePixel = 0
-    KeysTitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    KeysTitle.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     KeysTitle.LayoutOrder = 1
     KeysTitle.Size = UDim2.new(0, 100, 0, 30)
     KeysTitle.Text = "Claimed keys"
-    ThemeManager:Register(KeysTitle, "TextColor3", "TextPrimary")
+    KeysTitle.TextColor3 = Color3.new(0.8, 0.8, 0.8)
     KeysTitle.TextSize = 15
     KeysTitle.TextXAlignment = Enum.TextXAlignment.Left
     KeysTitle.Parent = KeysTextFrame
 
     local KeysTextStroke = Instance.new("UIStroke")
     KeysTextStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
-    ThemeManager:Register(KeysTextStroke, "Color", "StrokeColor")
+    KeysTextStroke.Color = Color3.new(0.149, 0.149, 0.149)
     KeysTextStroke.Parent = KeysTextFrame
 
     local KeysTextCorner = Instance.new("UICorner")
@@ -1078,7 +1075,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local CountFrame = Instance.new("Frame")
     CountFrame.Name = "Count"
-    ThemeManager:Register(CountFrame, "BackgroundColor3", "TertiaryBackground")
+    CountFrame.BackgroundColor3 = Color3.new(0.173, 0.173, 0.173)
     CountFrame.BorderSizePixel = 0
     CountFrame.LayoutOrder = 3
     CountFrame.Size = UDim2.new(0, 20, 0, 20)
@@ -1093,25 +1090,25 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     CountCorner.Parent = CountFrame
 
     local CountStroke = Instance.new("UIStroke")
-    ThemeManager:Register(CountStroke, "Color", "StrokeColor")
+    CountStroke.Color = Color3.new(0.353, 0.353, 0.353)
     CountStroke.Parent = CountFrame
 
     local CountLabel = Instance.new("TextLabel")
     CountLabel.Name = "Count"
-    ThemeManager:Register(CountLabel, "BackgroundColor3", "TextPrimary")
+    CountLabel.BackgroundColor3 = Color3.new(1, 1, 1)
     CountLabel.BackgroundTransparency = 1
     CountLabel.BorderColor3 = Color3.new(0, 0, 0)
     CountLabel.BorderSizePixel = 0
     CountLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     CountLabel.Size = UDim2.new(1, 0, 1, 0)
     CountLabel.Text = "0"
-    ThemeManager:Register(CountLabel, "TextColor3", "TextSecondary")
+    CountLabel.TextColor3 = Color3.new(0.557, 0.557, 0.557)
     CountLabel.TextSize = 15
     CountLabel.Parent = CountFrame
 
     local Filler = Instance.new("Frame")
     Filler.Name = "Filler"
-    ThemeManager:Register(Filler, "BackgroundColor3", "TextPrimary")
+    Filler.BackgroundColor3 = Color3.new(1, 1, 1)
     Filler.BackgroundTransparency = 1
     Filler.BorderColor3 = Color3.new(0, 0, 0)
     Filler.BorderSizePixel = 0
@@ -1121,7 +1118,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local Claimed = Instance.new("ScrollingFrame")
     Claimed.Name = "Claimed"
-    ThemeManager:Register(Claimed, "BackgroundColor3", "TextPrimary")
+    Claimed.BackgroundColor3 = Color3.new(1, 1, 1)
     Claimed.BackgroundTransparency = 1
     Claimed.BorderColor3 = Color3.new(0, 0, 0)
     Claimed.BorderSizePixel = 0
@@ -1140,7 +1137,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local Security = Instance.new("Frame")
     Security.Name = "Security"
-    ThemeManager:Register(Security, "BackgroundColor3", "TextPrimary")
+    Security.BackgroundColor3 = Color3.new(1, 1, 1)
     Security.BackgroundTransparency = 1
     Security.BorderColor3 = Color3.new(0, 0, 0)
     Security.BorderSizePixel = 0
@@ -1156,7 +1153,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local SecurityText = Instance.new("Frame")
     SecurityText.Name = "Text"
-    ThemeManager:Register(SecurityText, "BackgroundColor3", "TextPrimary")
+    SecurityText.BackgroundColor3 = Color3.new(1, 1, 1)
     SecurityText.BackgroundTransparency = 1
     SecurityText.BorderColor3 = Color3.new(0, 0, 0)
     SecurityText.BorderSizePixel = 0
@@ -1165,7 +1162,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local SecurityIconFrame = Instance.new("Frame")
     SecurityIconFrame.Name = "Icon"
-    ThemeManager:Register(SecurityIconFrame, "BackgroundColor3", "TextPrimary")
+    SecurityIconFrame.BackgroundColor3 = Color3.new(1, 1, 1)
     SecurityIconFrame.BackgroundTransparency = 1
     SecurityIconFrame.BorderColor3 = Color3.new(0, 0, 0)
     SecurityIconFrame.BorderSizePixel = 0
@@ -1179,13 +1176,12 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     SecurityIconLayout.Parent = SecurityIconFrame
 
     local SecurityIcon = Instance.new("ImageLabel")
-    ThemeManager:Register(SecurityIcon, "BackgroundColor3", "TextPrimary")
+    SecurityIcon.BackgroundColor3 = Color3.new(1, 1, 1)
     SecurityIcon.BackgroundTransparency = 1
     SecurityIcon.BorderColor3 = Color3.new(0, 0, 0)
     SecurityIcon.BorderSizePixel = 0
     SecurityIcon.Image = "rbxassetid://104512588477874"
     SecurityIcon.ImageTransparency = 0.3
-    ThemeManager:Register(SecurityIcon, "ImageColor3", "IconColor")
     SecurityIcon.Size = UDim2.new(0, 25, 0, 25)
     SecurityIcon.Parent = SecurityIconFrame
 
@@ -1196,7 +1192,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local SecurityInfo = Instance.new("Frame")
     SecurityInfo.Name = "Info"
-    ThemeManager:Register(SecurityInfo, "BackgroundColor3", "TextPrimary")
+    SecurityInfo.BackgroundColor3 = Color3.new(1, 1, 1)
     SecurityInfo.BackgroundTransparency = 1
     SecurityInfo.BorderColor3 = Color3.new(0, 0, 0)
     SecurityInfo.BorderSizePixel = 0
@@ -1210,14 +1206,14 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local SecurityLabel = Instance.new("TextLabel")
     SecurityLabel.Name = "Security"
-    ThemeManager:Register(SecurityLabel, "BackgroundColor3", "TextPrimary")
+    SecurityLabel.BackgroundColor3 = Color3.new(1, 1, 1)
     SecurityLabel.BackgroundTransparency = 1
     SecurityLabel.BorderColor3 = Color3.new(0, 0, 0)
     SecurityLabel.BorderSizePixel = 0
     SecurityLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     SecurityLabel.Size = UDim2.new(0, 200, 0, 20)
     SecurityLabel.Text = "Security"
-    ThemeManager:Register(SecurityLabel, "TextColor3", "TextPrimary")
+    SecurityLabel.TextColor3 = Color3.new(0.8, 0.8, 0.8)
     SecurityLabel.TextSize = 15
     SecurityLabel.TextXAlignment = Enum.TextXAlignment.Left
     SecurityLabel.TextYAlignment = Enum.TextYAlignment.Bottom
@@ -1225,7 +1221,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local SecuritySmallText = Instance.new("TextLabel")
     SecuritySmallText.Name = "SmallText"
-    ThemeManager:Register(SecuritySmallText, "BackgroundColor3", "TextPrimary")
+    SecuritySmallText.BackgroundColor3 = Color3.new(1, 1, 1)
     SecuritySmallText.BackgroundTransparency = 1
     SecuritySmallText.BorderColor3 = Color3.new(0, 0, 0)
     SecuritySmallText.BorderSizePixel = 0
@@ -1233,14 +1229,14 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     SecuritySmallText.LayoutOrder = 1
     SecuritySmallText.Size = UDim2.new(0, 200, 0, 20)
     SecuritySmallText.Text = "Session controlls"
-    ThemeManager:Register(SecuritySmallText, "TextColor3", "TextPrimary")
+    SecuritySmallText.TextColor3 = Color3.new(0.8, 0.8, 0.8)
     SecuritySmallText.TextSize = 14
     SecuritySmallText.TextXAlignment = Enum.TextXAlignment.Left
     SecuritySmallText.TextYAlignment = Enum.TextYAlignment.Top
     SecuritySmallText.Parent = SecurityInfo
 
     local SecurityContent = Instance.new("Frame")
-    ThemeManager:Register(SecurityContent, "BackgroundColor3", "TextPrimary")
+    SecurityContent.BackgroundColor3 = Color3.new(1, 1, 1)
     SecurityContent.BackgroundTransparency = 1
     SecurityContent.BorderColor3 = Color3.new(0, 0, 0)
     SecurityContent.BorderSizePixel = 0
@@ -1250,7 +1246,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local LogoutFrame = Instance.new("Frame")
     LogoutFrame.Name = "Logout"
-    ThemeManager:Register(LogoutFrame, "BackgroundColor3", "TextPrimary")
+    LogoutFrame.BackgroundColor3 = Color3.new(1, 1, 1)
     LogoutFrame.BackgroundTransparency = 1
     LogoutFrame.BorderColor3 = Color3.new(0, 0, 0)
     LogoutFrame.BorderSizePixel = 0
@@ -1263,7 +1259,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     LogoutCorner.Parent = LogoutFrame
 
     local LogoutStroke = Instance.new("UIStroke")
-    ThemeManager:Register(LogoutStroke, "Color", "StrokeColor")
+    LogoutStroke.Color = Color3.new(0.149, 0.149, 0.149)
     LogoutStroke.Parent = LogoutFrame
 
     local LogoutLayout = Instance.new("UIListLayout")
@@ -1273,7 +1269,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local LogoutTextFrame = Instance.new("Frame")
     LogoutTextFrame.Name = "Text"
-    ThemeManager:Register(LogoutTextFrame, "BackgroundColor3", "TextPrimary")
+    LogoutTextFrame.BackgroundColor3 = Color3.new(1, 1, 1)
     LogoutTextFrame.BackgroundTransparency = 1
     LogoutTextFrame.BorderColor3 = Color3.new(0, 0, 0)
     LogoutTextFrame.BorderSizePixel = 0
@@ -1286,14 +1282,14 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local LogoutHeader = Instance.new("TextLabel")
     LogoutHeader.Name = "Header"
-    ThemeManager:Register(LogoutHeader, "BackgroundColor3", "TextPrimary")
+    LogoutHeader.BackgroundColor3 = Color3.new(1, 1, 1)
     LogoutHeader.BackgroundTransparency = 1
     LogoutHeader.BorderColor3 = Color3.new(0, 0, 0)
     LogoutHeader.BorderSizePixel = 0
     LogoutHeader.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     LogoutHeader.Size = UDim2.new(0, 195, 0, 25)
     LogoutHeader.Text = "Sign out"
-    ThemeManager:Register(LogoutHeader, "TextColor3", "TextPrimary")
+    LogoutHeader.TextColor3 = Color3.new(0.8, 0.8, 0.8)
     LogoutHeader.TextSize = 15
     LogoutHeader.TextXAlignment = Enum.TextXAlignment.Left
     LogoutHeader.TextYAlignment = Enum.TextYAlignment.Bottom
@@ -1301,7 +1297,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local LogoutDesc = Instance.new("TextLabel")
     LogoutDesc.Name = "Description"
-    ThemeManager:Register(LogoutDesc, "BackgroundColor3", "TextPrimary")
+    LogoutDesc.BackgroundColor3 = Color3.new(1, 1, 1)
     LogoutDesc.BackgroundTransparency = 1
     LogoutDesc.BorderColor3 = Color3.new(0, 0, 0)
     LogoutDesc.BorderSizePixel = 0
@@ -1309,7 +1305,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     LogoutDesc.LayoutOrder = 1
     LogoutDesc.Size = UDim2.new(0, 195, 0, 25)
     LogoutDesc.Text = "End the session on this device"
-    ThemeManager:Register(LogoutDesc, "TextColor3", "TextPrimary")
+    LogoutDesc.TextColor3 = Color3.new(0.8, 0.8, 0.8)
     LogoutDesc.TextSize = 14
     LogoutDesc.TextXAlignment = Enum.TextXAlignment.Left
     LogoutDesc.TextYAlignment = Enum.TextYAlignment.Top
@@ -1321,7 +1317,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local LogoutButtonContainer = Instance.new("Frame")
     LogoutButtonContainer.Name = "Button"
-    ThemeManager:Register(LogoutButtonContainer, "BackgroundColor3", "TextPrimary")
+    LogoutButtonContainer.BackgroundColor3 = Color3.new(1, 1, 1)
     LogoutButtonContainer.BackgroundTransparency = 1
     LogoutButtonContainer.BorderColor3 = Color3.new(0, 0, 0)
     LogoutButtonContainer.BorderSizePixel = 0
@@ -1336,7 +1332,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local LogoutButtonInner = Instance.new("Frame")
     LogoutButtonInner.Active = true
-    ThemeManager:Register(LogoutButtonInner, "BackgroundColor3", "TextPrimary")
+    LogoutButtonInner.BackgroundColor3 = Color3.new(1, 1, 1)
     LogoutButtonInner.BackgroundTransparency = 1
     LogoutButtonInner.BorderColor3 = Color3.new(0, 0, 0)
     LogoutButtonInner.BorderSizePixel = 0
@@ -1352,7 +1348,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     LogoutButtonInnerLayout.Parent = LogoutButtonInner
 
     local LogoutButton = Instance.new("ImageButton")
-    ThemeManager:Register(LogoutButton, "BackgroundColor3", "DangerBackground")
+    LogoutButton.BackgroundColor3 = Color3.new(0.816, 0.243, 0.243)
     LogoutButton.BackgroundTransparency = 0.7
     LogoutButton.BorderColor3 = Color3.new(0, 0, 0)
     LogoutButton.BorderSizePixel = 0
@@ -1375,7 +1371,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local LogoutButtonIconFrame = Instance.new("Frame")
     LogoutButtonIconFrame.Name = "Icon"
-    ThemeManager:Register(LogoutButtonIconFrame, "BackgroundColor3", "TextPrimary")
+    LogoutButtonIconFrame.BackgroundColor3 = Color3.new(1, 1, 1)
     LogoutButtonIconFrame.BackgroundTransparency = 1
     LogoutButtonIconFrame.BorderColor3 = Color3.new(0, 0, 0)
     LogoutButtonIconFrame.BorderSizePixel = 0
@@ -1389,25 +1385,25 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     LogoutButtonIconLayout.Parent = LogoutButtonIconFrame
 
     local LogoutButtonIcon = Instance.new("ImageLabel")
-    ThemeManager:Register(LogoutButtonIcon, "BackgroundColor3", "TextPrimary")
+    LogoutButtonIcon.BackgroundColor3 = Color3.new(1, 1, 1)
     LogoutButtonIcon.BackgroundTransparency = 1
     LogoutButtonIcon.BorderColor3 = Color3.new(0, 0, 0)
     LogoutButtonIcon.BorderSizePixel = 0
     LogoutButtonIcon.Image = "rbxassetid://83408923775191"
-    ThemeManager:Register(LogoutButtonIcon, "ImageColor3", "DangerText")
+    LogoutButtonIcon.ImageColor3 = Color3.new(0.816, 0.243, 0.243)
     LogoutButtonIcon.Size = UDim2.new(0, 15, 0, 15)
     LogoutButtonIcon.Parent = LogoutButtonIconFrame
 
     local LogoutButtonText = Instance.new("TextLabel")
     LogoutButtonText.Name = "Description"
-    ThemeManager:Register(LogoutButtonText, "BackgroundColor3", "TextPrimary")
+    LogoutButtonText.BackgroundColor3 = Color3.new(1, 1, 1)
     LogoutButtonText.BackgroundTransparency = 1
     LogoutButtonText.BorderColor3 = Color3.new(0, 0, 0)
     LogoutButtonText.BorderSizePixel = 0
     LogoutButtonText.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     LogoutButtonText.Size = UDim2.new(0, 50, 0, 30)
     LogoutButtonText.Text = "Sign Out"
-    ThemeManager:Register(LogoutButtonText, "TextColor3", "DangerText")
+    LogoutButtonText.TextColor3 = Color3.new(0.816, 0.243, 0.243)
     LogoutButtonText.TextSize = 14
     LogoutButtonText.TextXAlignment = Enum.TextXAlignment.Left
     LogoutButtonText.Parent = LogoutButton
@@ -1417,7 +1413,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     LogoutButtonTextPadding.Parent = LogoutButtonText
 
     local LogoutButtonStroke = Instance.new("UIStroke")
-    ThemeManager:Register(LogoutButtonStroke, "Color", "DangerStroke")
+    LogoutButtonStroke.Color = Color3.new(0.816, 0.243, 0.243)
     LogoutButtonStroke.Parent = LogoutButton
 
     local SecurityContentLayout = Instance.new("UIListLayout")
@@ -1599,7 +1595,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
         if isLoggedIn and isActive then
             StatusBadgeText.Text = "Active"
-            ThemeManager:Register(StatusBadgeText, "TextColor3", "SuccessText")
+            StatusBadgeText.TextColor3 = Color3.fromRGB(100, 220, 100)
 
             if isLifetime then
                 EndsValue.Text = "Lifetime"
@@ -1641,7 +1637,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
                         calcRemaining = "Expired"
                         isActive = false
                         StatusBadgeText.Text = "Expired"
-                        ThemeManager:Register(StatusBadgeText, "TextColor3", "DangerText")
+                        StatusBadgeText.TextColor3 = Color3.fromRGB(220, 80, 80)
                     end
                 elseif remainingStr and remainingStr ~= "" then
                     local rStr = tostring(remainingStr)
@@ -1667,7 +1663,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
             end
         else
             StatusBadgeText.Text = "Inactive"
-            ThemeManager:Register(StatusBadgeText, "TextColor3", "TextSecondary")
+            StatusBadgeText.TextColor3 = Color3.new(0.6, 0.6, 0.6)
             RemainingValue.Text = "None"
             StartedValue.Text = "N/A"
             EndsValue.Text = "N/A"
@@ -1682,33 +1678,12 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
             if data.licenseObjects and type(data.licenseObjects) == "table" then
                 keyList = data.licenseObjects
             else
-                local keysData = data.keys or data.key or data.claimedKeys or data.claimedkey or data.claimedKey or data.licenses or data.licenseKeys or data.usedKey or data.license or data.usedKeys or data.redeemedKeys or data.redeemed_keys or data.claimed_keys or data.license_keys
-                
-                if not keysData and data.subscription and type(data.subscription) == "table" then
-                    keysData = data.subscription.keys or data.subscription.key or data.subscription.claimedKeys or data.subscription.claimedkey or data.subscription.claimedKey or data.subscription.licenseKeys or data.subscription.licenses
+                local keysData = data.keys or data.key or data.claimedKeys or data.claimedkey or data.claimedKey or data.licenses or data.licenseKeys or data.usedKey or data.license
+                if data.subscription and type(data.subscription) == "table" then
+                    keysData = keysData or data.subscription.keys or data.subscription.key or data.subscription.claimedKeys or data.subscription.claimedkey or data.subscription.claimedKey
                 end
-                
-                if not keysData and data.subscriptions and type(data.subscriptions) == "table" then
-                    keysData = {}
-                    for _, sub in ipairs(data.subscriptions) do
-                        if type(sub) == "table" then
-                            local k = sub.key or sub.license or sub.licenseKey or sub.id
-                            if k then table.insert(keysData, tostring(k)) end
-                        elseif type(sub) == "string" then
-                            table.insert(keysData, sub)
-                        end
-                    end
-                end
-                
                 if type(keysData) == "table" then
-                    for _, k in ipairs(keysData) do 
-                        if type(k) == "table" then
-                            local actualKey = k.key or k.licenseKey or k.license or k.id or k.name
-                            if actualKey then table.insert(keyList, { key = tostring(actualKey) }) end
-                        else
-                            table.insert(keyList, { key = tostring(k) }) 
-                        end
-                    end
+                    for _, k in ipairs(keysData) do table.insert(keyList, { key = tostring(k) }) end
                 elseif type(keysData) == "string" and keysData ~= "" then
                     keyList = {{ key = tostring(keysData) }}
                 end
@@ -1724,7 +1699,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
             EmptyLabel.Size = UDim2.new(1, 0, 0, 40)
             EmptyLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Italic)
             EmptyLabel.TextSize = 14
-            ThemeManager:Register(EmptyLabel, "TextColor3", "TextTertiary")
+            EmptyLabel.TextColor3 = Color3.fromRGB(120, 120, 120)
             EmptyLabel.Text = isLoggedIn and "No claimed keys" or "Sign in to view claimed keys"
             EmptyLabel.Parent = Claimed
         else
@@ -1735,7 +1710,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
                 local KeyItem = Instance.new("Frame")
                 KeyItem.Name = "KeyItem"
-                ThemeManager:Register(KeyItem, "BackgroundColor3", "SecondaryBackground")
+                KeyItem.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
                 KeyItem.BackgroundTransparency = 0
                 KeyItem.BorderSizePixel = 0
                 KeyItem.Size = UDim2.new(1, -10, 0, 50)
@@ -1746,7 +1721,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
                 KeyCorner.Parent = KeyItem
 
                 local KeyStroke = Instance.new("UIStroke")
-                ThemeManager:Register(KeyStroke, "Color", "StrokeColor")
+                KeyStroke.Color = Color3.fromRGB(48, 48, 48)
                 KeyStroke.Thickness = 1
                 KeyStroke.Parent = KeyItem
 
@@ -1781,7 +1756,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
                 KeyLabel.Position = UDim2.new(0, 16, 0, 5)
                 KeyLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
                 KeyLabel.TextSize = 15
-                ThemeManager:Register(KeyLabel, "TextColor3", "TextPrimary")
+                KeyLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
                 KeyLabel.TextXAlignment = Enum.TextXAlignment.Left
                 KeyLabel.Text = tostring(keyStr)
                 KeyLabel.Parent = KeyItem
@@ -1792,7 +1767,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
                 DetailsLabel.Position = UDim2.new(0, 16, 0, 30)
                 DetailsLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
                 DetailsLabel.TextSize = 13
-                ThemeManager:Register(DetailsLabel, "TextColor3", "TextSecondary")
+                DetailsLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
                 DetailsLabel.TextXAlignment = Enum.TextXAlignment.Left
 
                 local claimedStr = type(licenseObj) == "table" and licenseObj.claimedStr or "N/A"
@@ -1804,12 +1779,12 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
                 BadgeFrame.AnchorPoint = Vector2.new(1, 0.5)
                 BadgeFrame.Position = UDim2.new(1, -10, 0.5, 0)
                 BadgeFrame.Size = UDim2.new(0, 75, 0, 22)
-                ThemeManager:Register(BadgeFrame, "BackgroundColor3", "TertiaryBackground")
+                BadgeFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
                 BadgeFrame.Parent = KeyItem
                 Instance.new("UICorner", BadgeFrame).CornerRadius = UDim.new(0, 4)
 
                 local BadgeStroke = Instance.new("UIStroke")
-                ThemeManager:Register(BadgeStroke, "Color", "StrokeColor")
+                BadgeStroke.Color = Color3.fromRGB(80, 80, 80)
                 BadgeStroke.Parent = BadgeFrame
 
                 local BadgeText = Instance.new("TextLabel")
@@ -1817,7 +1792,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
                 BadgeText.Size = UDim2.new(1, 0, 1, 0)
                 BadgeText.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
                 BadgeText.TextSize = 13
-                ThemeManager:Register(BadgeText, "TextColor3", "TextPrimary")
+                BadgeText.TextColor3 = Color3.fromRGB(255, 255, 255)
 
                 local badgeName = "unknown"
                 if type(licenseObj) == "table" then
@@ -1845,10 +1820,10 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
             LogoutHeader.Text = "Sign out"
             LogoutDesc.Text = "End the session on this device"
             LogoutButtonText.Text = "Sign Out"
-            ThemeManager:Register(LogoutButtonText, "TextColor3", "DangerText")
-            ThemeManager:Register(LogoutButton, "BackgroundColor3", "DangerBackground")
-            ThemeManager:Register(LogoutButtonStroke, "Color", "DangerStroke")
-            ThemeManager:Register(LogoutButtonIcon, "ImageColor3", "DangerText")
+            LogoutButtonText.TextColor3 = Color3.new(0.816, 0.243, 0.243)
+            LogoutButton.BackgroundColor3 = Color3.new(0.816, 0.243, 0.243)
+            LogoutButtonStroke.Color = Color3.new(0.816, 0.243, 0.243)
+            LogoutButtonIcon.ImageColor3 = Color3.new(0.816, 0.243, 0.243)
             LogoutFrame.Visible = true
         else
             LogoutFrame.Visible = false

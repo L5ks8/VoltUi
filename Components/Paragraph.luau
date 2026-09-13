@@ -1,7 +1,6 @@
 local ParagraphComponent = {}
 local TweenService = game:GetService("TweenService")
 local TextService = game:GetService("TextService")
-local ThemeManager = require(script.Parent.Parent.Core.Theme)
 
 local function Tween(instance, tweenInfo, properties)
     local tw = TweenService:Create(instance, tweenInfo, properties)
@@ -17,7 +16,7 @@ function ParagraphComponent.Create(TabContent, Maid, Config)
 
     local ParagraphFrame = Instance.new("Frame")
     ParagraphFrame.Name = headerText
-    ThemeManager:Register(ParagraphFrame, "BackgroundColor3", "SecondaryBackground")
+    ParagraphFrame.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
     ParagraphFrame.BackgroundTransparency = 0.4
     ParagraphFrame.BorderSizePixel = 0
     ParagraphFrame.Size = UDim2.new(1, 0, 0, 0)
@@ -29,7 +28,7 @@ function ParagraphComponent.Create(TabContent, Maid, Config)
     Corner.Parent = ParagraphFrame
 
     local Stroke = Instance.new("UIStroke")
-    ThemeManager:Register(Stroke, "Color", "StrokeColor")
+    Stroke.Color = Color3.fromRGB(48, 48, 48)
     Stroke.Thickness = 1
     Stroke.Parent = ParagraphFrame
 
@@ -63,7 +62,7 @@ function ParagraphComponent.Create(TabContent, Maid, Config)
         Icon.BackgroundTransparency = 1
         Icon.Size = UDim2.new(0, 16, 0, 16)
         Icon.Image = (type(iconAsset) == "number") and ("rbxassetid://" .. tostring(iconAsset)) or tostring(iconAsset)
-        ThemeManager:Register(Icon, "ImageColor3", "IconColor")
+        Icon.ImageColor3 = Color3.fromRGB(240, 240, 245)
         Icon.Parent = HeaderRow
     end
 
@@ -73,7 +72,7 @@ function ParagraphComponent.Create(TabContent, Maid, Config)
     Header.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     Header.Size = UDim2.new(1, -30, 1, 0)
     Header.Text = headerText
-    ThemeManager:Register(Header, "TextColor3", "TextPrimary")
+    Header.TextColor3 = Color3.fromRGB(240, 240, 245)
     Header.TextSize = 14
     Header.TextXAlignment = Enum.TextXAlignment.Left
     Header.TextYAlignment = Enum.TextYAlignment.Center
@@ -86,7 +85,7 @@ function ParagraphComponent.Create(TabContent, Maid, Config)
     Content.Size = UDim2.new(1, 0, 0, 0)
     Content.AutomaticSize = Enum.AutomaticSize.Y
     Content.Text = contentText
-    ThemeManager:Register(Content, "TextColor3", "TextSecondary")
+    Content.TextColor3 = Color3.fromRGB(160, 160, 170)
     Content.TextSize = 12
     Content.TextWrapped = true
     Content.TextXAlignment = Enum.TextXAlignment.Left

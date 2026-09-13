@@ -1,6 +1,5 @@
 local InputComponent = {}
 local TweenService = game:GetService("TweenService")
-local ThemeManager = require(script.Parent.Parent.Core.Theme)
 
 local function Tween(instance, tweenInfo, properties)
     local tw = TweenService:Create(instance, tweenInfo, properties)
@@ -21,7 +20,7 @@ function InputComponent.Create(TabContent, Maid, Config)
 
     local InputFrame = Instance.new("Frame")
     InputFrame.Name = headerText
-    ThemeManager:Register(InputFrame, "BackgroundColor3", "SecondaryBackground")
+    InputFrame.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
     InputFrame.BackgroundTransparency = 1
     InputFrame.BorderSizePixel = 0
     InputFrame.Size = UDim2.new(1, 0, 0, descText == "" and 42 or 52)
@@ -55,7 +54,7 @@ function InputComponent.Create(TabContent, Maid, Config)
     Header.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     Header.Size = UDim2.new(1, 0, 0, 16)
     Header.Text = headerText
-    ThemeManager:Register(Header, "TextColor3", "TextPrimary")
+    Header.TextColor3 = Color3.fromRGB(240, 240, 245)
     Header.TextSize = 14
     Header.TextXAlignment = Enum.TextXAlignment.Left
     Header.TextYAlignment = Enum.TextYAlignment.Center
@@ -68,7 +67,7 @@ function InputComponent.Create(TabContent, Maid, Config)
         Description.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
         Description.Size = UDim2.new(1, 0, 0, 14)
         Description.Text = descText
-        ThemeManager:Register(Description, "TextColor3", "TextSecondary")
+        Description.TextColor3 = Color3.fromRGB(150, 150, 160)
         Description.TextSize = 12
         Description.TextXAlignment = Enum.TextXAlignment.Left
         Description.TextYAlignment = Enum.TextYAlignment.Center
@@ -84,7 +83,7 @@ function InputComponent.Create(TabContent, Maid, Config)
 
     local BoxWrapper = Instance.new("Frame")
     BoxWrapper.Name = "BoxWrapper"
-    ThemeManager:Register(BoxWrapper, "BackgroundColor3", "MainBackground")
+    BoxWrapper.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
     BoxWrapper.BorderSizePixel = 0
     BoxWrapper.AnchorPoint = Vector2.new(1, 0.5)
     BoxWrapper.Position = UDim2.new(1, -14, 0.5, 0)
@@ -96,7 +95,7 @@ function InputComponent.Create(TabContent, Maid, Config)
     BoxCorner.Parent = BoxWrapper
 
     local BoxStroke = Instance.new("UIStroke")
-    ThemeManager:Register(BoxStroke, "Color", "StrokeColor")
+    BoxStroke.Color = Color3.fromRGB(48, 48, 48)
     BoxStroke.Thickness = 1
     BoxStroke.Parent = BoxWrapper
 
@@ -105,12 +104,12 @@ function InputComponent.Create(TabContent, Maid, Config)
     TextBox.BackgroundTransparency = 1
     TextBox.ClearTextOnFocus = config.ClearOnFocus or false
     TextBox.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
-    ThemeManager:Register(TextBox, "PlaceholderColor3", "TextTertiary")
+    TextBox.PlaceholderColor3 = Color3.fromRGB(100, 100, 110)
     TextBox.PlaceholderText = placeholder
     TextBox.Size = UDim2.new(1, -16, 1, 0)
     TextBox.Position = UDim2.new(0, 8, 0, 0)
     TextBox.Text = tostring(currentValue)
-    ThemeManager:Register(TextBox, "TextColor3", "TextPrimary")
+    TextBox.TextColor3 = Color3.fromRGB(240, 240, 245)
     TextBox.TextSize = 12
     TextBox.TextXAlignment = Enum.TextXAlignment.Left
     TextBox.Parent = BoxWrapper
@@ -132,7 +131,7 @@ function InputComponent.Create(TabContent, Maid, Config)
     end)
 
     TextBox.FocusLost:Connect(function(enterPressed)
-        Tween(BoxStroke, TweenInfo.new(0.2), {Color = ThemeManager:GetColor("StrokeColor")})
+        Tween(BoxStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(48, 48, 48)})
         currentValue = TextBox.Text
         if config.RemoveTextAfterFocusLost then
             TextBox.Text = ""

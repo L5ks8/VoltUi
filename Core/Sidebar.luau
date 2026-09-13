@@ -1,13 +1,12 @@
 local Utils = script.Parent.Parent.Utils
 local Tween = require(Utils.Tween)
-local ThemeManager = require(script.Parent.Theme)
 
 local Sidebar = {}
 
 function Sidebar.Create(Content, maid, OnCollapse)
     local SidebarFrame = Instance.new("Frame")
     SidebarFrame.Name = "Sidebar"
-    ThemeManager:Register(SidebarFrame, "BackgroundColor3", "TertiaryBackground")
+    SidebarFrame.BackgroundColor3 = Color3.new(0.11, 0.11, 0.11)
     SidebarFrame.BorderColor3 = Color3.new(0, 0, 0)
     SidebarFrame.BorderSizePixel = 0
     SidebarFrame.Size = UDim2.new(0, 200, 1, 0)
@@ -50,7 +49,6 @@ function Sidebar.Create(Content, maid, OnCollapse)
     HomeIcon.BorderColor3 = Color3.new(0, 0, 0)
     HomeIcon.BorderSizePixel = 0
     HomeIcon.Image = "rbxassetid://94685968948870"
-    ThemeManager:Register(HomeIcon, "ImageColor3", "IconColor")
     HomeIcon.ImageTransparency = 0.2
     HomeIcon.Size = UDim2.new(0, 20, 0, 20)
     HomeIcon.Parent = Home
@@ -73,7 +71,6 @@ function Sidebar.Create(Content, maid, OnCollapse)
     AccountIcon.BorderColor3 = Color3.new(0, 0, 0)
     AccountIcon.BorderSizePixel = 0
     AccountIcon.Image = "rbxassetid://134568818132029"
-    ThemeManager:Register(AccountIcon, "ImageColor3", "IconColor")
     AccountIcon.ImageTransparency = 0.1
     AccountIcon.Size = UDim2.new(0, 15, 0, 15)
     AccountIcon.Parent = Account
@@ -96,7 +93,6 @@ function Sidebar.Create(Content, maid, OnCollapse)
     SettingsIcon.BorderColor3 = Color3.new(0, 0, 0)
     SettingsIcon.BorderSizePixel = 0
     SettingsIcon.Image = "rbxassetid://95898765113869"
-    ThemeManager:Register(SettingsIcon, "ImageColor3", "IconColor")
     SettingsIcon.Size = UDim2.new(0, 15, 0, 15)
     SettingsIcon.Parent = Settings
     
@@ -130,7 +126,6 @@ function Sidebar.Create(Content, maid, OnCollapse)
     CollapseIcon.BorderColor3 = Color3.new(0, 0, 0)
     CollapseIcon.BorderSizePixel = 0
     CollapseIcon.Image = "rbxassetid://93526157530558"
-    ThemeManager:Register(CollapseIcon, "ImageColor3", "IconColor")
     CollapseIcon.ImageTransparency = 0.3
     CollapseIcon.Rotation = -180
     CollapseIcon.Size = UDim2.new(0, 20, 0, 20)
@@ -147,7 +142,7 @@ function Sidebar.Create(Content, maid, OnCollapse)
     SidebarFiller2.Size = UDim2.new(0, 200, 0, 5)
     SidebarFiller2.Parent = SidebarFrame
     
-    local HoverColor = ThemeManager:GetColor("StrokeColor")
+    local HoverColor = Color3.fromRGB(45, 45, 45)
     local TweenInfoObj = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
     
     local function ApplyHover(button, text)
@@ -171,7 +166,7 @@ function Sidebar.Create(Content, maid, OnCollapse)
         
         local Tooltip = Instance.new("TextLabel")
         Tooltip.Name = "Tooltip"
-        Tooltip.BackgroundColor3 = ThemeManager:GetColor("MainBackground")
+        Tooltip.BackgroundColor3 = Color3.new(0.075, 0.075, 0.075)
         Tooltip.BackgroundTransparency = 1
         Tooltip.AnchorPoint = Vector2.new(0.5, 0)
         Tooltip.Position = UDim2.new(0.5, 0, 1, 4)
@@ -179,7 +174,7 @@ function Sidebar.Create(Content, maid, OnCollapse)
         Tooltip.AutomaticSize = Enum.AutomaticSize.X
         Tooltip.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
         Tooltip.Text = text
-        Tooltip.TextColor3 = ThemeManager:GetColor("TextSecondary")
+        Tooltip.TextColor3 = Color3.new(0.7, 0.7, 0.7)
         Tooltip.TextSize = 12
         Tooltip.TextTransparency = 1
         Tooltip.ZIndex = 10
@@ -196,7 +191,7 @@ function Sidebar.Create(Content, maid, OnCollapse)
         TooltipPadding.Parent = Tooltip
         
         local TooltipStroke = Instance.new("UIStroke")
-        TooltipStroke.Color = ThemeManager:GetColor("StrokeColor")
+        TooltipStroke.Color = Color3.new(0.216, 0.216, 0.216)
         TooltipStroke.Transparency = 1
         TooltipStroke.Parent = Tooltip
         
@@ -256,7 +251,7 @@ function Sidebar.Create(Content, maid, OnCollapse)
     
     local Search = Instance.new("Frame")
     Search.Name = "Search"
-    ThemeManager:Register(Search, "BackgroundColor3", "SecondaryBackground")
+    Search.BackgroundColor3 = Color3.new(0.094, 0.094, 0.094)
     Search.BorderColor3 = Color3.new(0, 0, 0)
     Search.BorderSizePixel = 0
     Search.Size = UDim2.new(0, 180, 0, 30)
@@ -264,7 +259,7 @@ function Sidebar.Create(Content, maid, OnCollapse)
     
     local SearchStroke = Instance.new("UIStroke")
     SearchStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
-    ThemeManager:Register(SearchStroke, "Color", "StrokeColor")
+    SearchStroke.Color = Color3.new(0.216, 0.216, 0.216)
     SearchStroke.Parent = Search
     
     local SearchCorner = Instance.new("UICorner")
@@ -286,8 +281,7 @@ function Sidebar.Create(Content, maid, OnCollapse)
     SearchInput.Position = UDim2.new(0.167, 0, 0, 0)
     SearchInput.Size = UDim2.new(0.833, 0, 1, 0)
     SearchInput.Text = "Search..."
-    ThemeManager:Register(SearchInput, "TextColor3", "TextPrimary")
-    ThemeManager:Register(SearchInput, "PlaceholderColor3", "TextTertiary")
+    SearchInput.TextColor3 = Color3.new(0.478, 0.478, 0.478)
     SearchInput.TextSize = 12
     SearchInput.TextXAlignment = Enum.TextXAlignment.Left
     SearchInput.Parent = Search
@@ -311,7 +305,6 @@ function Sidebar.Create(Content, maid, OnCollapse)
     SearchIconLabel.BorderColor3 = Color3.new(0, 0, 0)
     SearchIconLabel.BorderSizePixel = 0
     SearchIconLabel.Image = "rbxassetid://88107177696245"
-    ThemeManager:Register(SearchIconLabel, "ImageColor3", "IconColor")
     SearchIconLabel.ImageTransparency = 0.3
     SearchIconLabel.Size = UDim2.new(0, 16, 0, 16)
     SearchIconLabel.Parent = SearchIconFrame
@@ -337,7 +330,7 @@ function Sidebar.Create(Content, maid, OnCollapse)
     
     local TabsTopBorder = Instance.new("Frame")
     TabsTopBorder.Name = "TopBorder"
-    ThemeManager:Register(TabsTopBorder, "BackgroundColor3", "StrokeColor")
+    TabsTopBorder.BackgroundColor3 = Color3.new(0.216, 0.216, 0.216)
     TabsTopBorder.BorderSizePixel = 0
     TabsTopBorder.Size = UDim2.new(1, 0, 0, 1)
     TabsTopBorder.Parent = TabsContainer

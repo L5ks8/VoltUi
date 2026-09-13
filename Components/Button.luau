@@ -1,7 +1,6 @@
 local ButtonComponent = {}
 local Utils = script.Parent.Parent.Utils
 local Tween = require(Utils.Tween)
-local ThemeManager = require(script.Parent.Parent.Core.Theme)
 
 function ButtonComponent.Create(TabContent, Maid, Config)
     local btnConfig = type(Config) == "string" and {Header = Config} or Config
@@ -12,7 +11,7 @@ function ButtonComponent.Create(TabContent, Maid, Config)
     
     local BtnFrame = Instance.new("Frame")
     BtnFrame.Name = headerText
-    ThemeManager:Register(BtnFrame, "BackgroundColor3", "TertiaryBackground")
+    BtnFrame.BackgroundColor3 = Color3.new(0.13, 0.13, 0.13)
     BtnFrame.BackgroundTransparency = 1
     BtnFrame.BorderSizePixel = 0
     BtnFrame.Size = UDim2.new(1, 0, 0, descText == "" and 42 or 52)
@@ -45,7 +44,7 @@ function ButtonComponent.Create(TabContent, Maid, Config)
     Header.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     Header.Size = UDim2.new(1, 0, 0, 16)
     Header.Text = headerText
-    ThemeManager:Register(Header, "TextColor3", "TextPrimary")
+    Header.TextColor3 = Color3.new(0.9, 0.9, 0.9)
     Header.TextSize = 14
     Header.TextXAlignment = Enum.TextXAlignment.Left
     Header.TextYAlignment = Enum.TextYAlignment.Center
@@ -58,7 +57,7 @@ function ButtonComponent.Create(TabContent, Maid, Config)
         Description.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
         Description.Size = UDim2.new(1, 0, 0, 14)
         Description.Text = descText
-        ThemeManager:Register(Description, "TextColor3", "TextSecondary")
+        Description.TextColor3 = Color3.new(0.6, 0.6, 0.6)
         Description.TextSize = 12
         Description.TextXAlignment = Enum.TextXAlignment.Left
         Description.TextYAlignment = Enum.TextYAlignment.Center
@@ -85,12 +84,12 @@ function ButtonComponent.Create(TabContent, Maid, Config)
     local ClickBtn = Instance.new("TextButton")
     ClickBtn.Name = "Button"
     ClickBtn.AutoButtonColor = false
-    ThemeManager:Register(ClickBtn, "BackgroundColor3", "SecondaryBackground")
+    ClickBtn.BackgroundColor3 = Color3.new(0.141, 0.141, 0.141)
     ClickBtn.BorderSizePixel = 0
     ClickBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
     ClickBtn.Size = UDim2.new(0, 100, 0, 30)
     ClickBtn.Text = buttonText
-    ThemeManager:Register(ClickBtn, "TextColor3", "TextPrimary")
+    ClickBtn.TextColor3 = Color3.new(0.8, 0.8, 0.8)
     ClickBtn.TextSize = 13
     ClickBtn.Parent = ButtonContainer
     
@@ -100,7 +99,7 @@ function ButtonComponent.Create(TabContent, Maid, Config)
     
     local ClickBtnStroke = Instance.new("UIStroke")
     ClickBtnStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-    ThemeManager:Register(ClickBtnStroke, "Color", "StrokeColor")
+    ClickBtnStroke.Color = Color3.new(0.2, 0.2, 0.2)
     ClickBtnStroke.Parent = ClickBtn
     
     Maid:GiveTask(ClickBtn.MouseButton1Click:Connect(function()
@@ -109,11 +108,11 @@ function ButtonComponent.Create(TabContent, Maid, Config)
     
 
     Maid:GiveTask(ClickBtn.MouseButton1Down:Connect(function()
-        Tween(ClickBtn, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = ThemeManager:GetColor("StrokeColor")})
+        Tween(ClickBtn, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.new(0.22, 0.22, 0.22)})
     end))
     
     Maid:GiveTask(ClickBtn.MouseButton1Up:Connect(function()
-        Tween(ClickBtn, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = ThemeManager:GetColor("SecondaryBackground")})
+        Tween(ClickBtn, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.new(0.18, 0.18, 0.18)})
     end))
     
     Maid:GiveTask(BtnFrame.MouseEnter:Connect(function()

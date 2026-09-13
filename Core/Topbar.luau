@@ -1,7 +1,6 @@
 local Utils = script.Parent.Parent.Utils
 local Tween = require(Utils.Tween)
 local Utility = require(Utils.Utility)
-local ThemeManager = require(script.Parent.Theme)
 
 local Topbar = {}
 
@@ -10,7 +9,7 @@ function Topbar.Create(Main, Config, maid)
     
     local TopbarFrame = Instance.new("Frame")
     TopbarFrame.Name = "Topbar"
-    ThemeManager:Register(TopbarFrame, "BackgroundColor3", "TertiaryBackground")
+    TopbarFrame.BackgroundColor3 = Color3.new(0.11, 0.11, 0.11)
     TopbarFrame.BorderColor3 = Color3.new(0, 0, 0)
     TopbarFrame.BorderSizePixel = 0
     TopbarFrame.Size = UDim2.new(1, 0, 0, 30)
@@ -24,7 +23,7 @@ function Topbar.Create(Main, Config, maid)
     
     local TopbarBorder = Instance.new("Frame")
     TopbarBorder.Name = "Border"
-    ThemeManager:Register(TopbarBorder, "BackgroundColor3", "StrokeColor")
+    TopbarBorder.BackgroundColor3 = Color3.new(0.216, 0.216, 0.216)
     TopbarBorder.BorderSizePixel = 0
     TopbarBorder.Position = UDim2.new(0, 0, 1, -1)
     TopbarBorder.Size = UDim2.new(1, 0, 0, 1)
@@ -46,8 +45,8 @@ function Topbar.Create(Main, Config, maid)
     TopbarLogo.BackgroundColor3 = Color3.new(1, 1, 1)
     TopbarLogo.BackgroundTransparency = 1
     TopbarLogo.BorderColor3 = Color3.new(0, 0, 0)
+    TopbarLogo.BorderSizePixel = 0
     TopbarLogo.Image = "rbxassetid://71942076965693"
-    ThemeManager:Register(TopbarLogo, "ImageColor3", "IconColor")
     TopbarLogo.Size = UDim2.new(0, 20, 0, 20)
     TopbarLogo.Parent = TopbarIcon
     
@@ -92,7 +91,6 @@ function Topbar.Create(Main, Config, maid)
     MinimizeIcon.BorderColor3 = Color3.new(0, 0, 0)
     MinimizeIcon.BorderSizePixel = 0
     MinimizeIcon.Image = "rbxassetid://109304937949559"
-    ThemeManager:Register(MinimizeIcon, "ImageColor3", "IconColor")
     MinimizeIcon.ImageTransparency = 0.3
     MinimizeIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
     MinimizeIcon.Size = UDim2.new(0, 30, 0, 30)
@@ -116,8 +114,8 @@ function Topbar.Create(Main, Config, maid)
     FullscreenIcon.BackgroundColor3 = Color3.new(1, 1, 1)
     FullscreenIcon.BackgroundTransparency = 1
     FullscreenIcon.BorderColor3 = Color3.new(0, 0, 0)
+    FullscreenIcon.BorderSizePixel = 0
     FullscreenIcon.Image = "rbxassetid://89144063792928"
-    ThemeManager:Register(FullscreenIcon, "ImageColor3", "IconColor")
     FullscreenIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
     FullscreenIcon.Size = UDim2.new(0, 23, 0, 23)
     FullscreenIcon.Parent = Fullscreen
@@ -147,7 +145,6 @@ function Topbar.Create(Main, Config, maid)
     CloseIcon.BorderColor3 = Color3.new(0, 0, 0)
     CloseIcon.BorderSizePixel = 0
     CloseIcon.Image = "rbxassetid://121170570745612"
-    ThemeManager:Register(CloseIcon, "ImageColor3", "IconColor")
     CloseIcon.ImageTransparency = 0.3
     CloseIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
     CloseIcon.Size = UDim2.new(0, 30, 0, 30)
@@ -187,7 +184,7 @@ function Topbar.Create(Main, Config, maid)
     VersionText.Size = UDim2.new(1, 0, 1, 0)
     VersionText.AutomaticSize = Enum.AutomaticSize.X
     VersionText.Text = formatHeader(baseTitle, initialVersion)
-    ThemeManager:Register(VersionText, "TextColor3", "TextTertiary")
+    VersionText.TextColor3 = Color3.new(0.537, 0.537, 0.537)
     VersionText.TextSize = 13
     VersionText.Parent = Version
 
@@ -237,7 +234,7 @@ function Topbar.Create(Main, Config, maid)
         
         local Tooltip = Instance.new("TextLabel")
         Tooltip.Name = "Tooltip"
-        Tooltip.BackgroundColor3 = ThemeManager:GetColor("MainBackground")
+        Tooltip.BackgroundColor3 = Color3.new(0.075, 0.075, 0.075)
         Tooltip.BackgroundTransparency = 1
         Tooltip.AnchorPoint = Vector2.new(0.5, 0)
         Tooltip.Position = UDim2.new(0.5, 0, 1, 4)
@@ -245,7 +242,7 @@ function Topbar.Create(Main, Config, maid)
         Tooltip.AutomaticSize = Enum.AutomaticSize.X
         Tooltip.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
         Tooltip.Text = text
-        Tooltip.TextColor3 = ThemeManager:GetColor("TextSecondary")
+        Tooltip.TextColor3 = Color3.new(0.7, 0.7, 0.7)
         Tooltip.TextSize = 12
         Tooltip.TextTransparency = 1
         Tooltip.ZIndex = 10
@@ -262,7 +259,7 @@ function Topbar.Create(Main, Config, maid)
         TooltipPadding.Parent = Tooltip
         
         local TooltipStroke = Instance.new("UIStroke")
-        TooltipStroke.Color = ThemeManager:GetColor("StrokeColor")
+        TooltipStroke.Color = Color3.new(0.216, 0.216, 0.216)
         TooltipStroke.Transparency = 1
         TooltipStroke.Parent = Tooltip
         
@@ -294,8 +291,8 @@ function Topbar.Create(Main, Config, maid)
         end))
     end
     
-    ApplyHover(Minimize, "Minimize", ThemeManager:GetColor("StrokeColor"))
-    ApplyHover(Fullscreen, "Fullscreen", ThemeManager:GetColor("StrokeColor"))
+    ApplyHover(Minimize, "Minimize", Color3.fromRGB(45, 45, 45))
+    ApplyHover(Fullscreen, "Fullscreen", Color3.fromRGB(45, 45, 45))
     ApplyHover(Close, "Close", Color3.fromRGB(235, 70, 70))
     
     Utility.MakeDraggable(TopbarFrame, Main, maid)
