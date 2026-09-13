@@ -93,7 +93,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     AccountText.BackgroundTransparency = 1
     AccountText.BorderColor3 = Color3.new(0, 0, 0)
     AccountText.BorderSizePixel = 0
-    AccountText.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    AccountText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     AccountText.Size = UDim2.new(0, 200, 0, 35)
     AccountText.Text = "Account"
     AccountText.TextColor3 = Color3.new(0.71, 0.71, 0.71)
@@ -422,11 +422,11 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     LicensesLabel.BackgroundTransparency = 1
     LicensesLabel.BorderColor3 = Color3.new(0, 0, 0)
     LicensesLabel.BorderSizePixel = 0
-    LicensesLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    LicensesLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     LicensesLabel.Size = UDim2.new(0, 200, 0, 25)
     LicensesLabel.Text = "Licenses"
     LicensesLabel.TextColor3 = Color3.new(0.8, 0.8, 0.8)
-    LicensesLabel.TextSize = 16
+    LicensesLabel.TextSize = 15
     LicensesLabel.TextXAlignment = Enum.TextXAlignment.Left
     LicensesLabel.TextYAlignment = Enum.TextYAlignment.Bottom
     LicensesLabel.Parent = LicenseText
@@ -436,11 +436,11 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     LicensesDesc.BackgroundTransparency = 1
     LicensesDesc.BorderColor3 = Color3.new(0, 0, 0)
     LicensesDesc.BorderSizePixel = 0
-    LicensesDesc.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+    LicensesDesc.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     LicensesDesc.Size = UDim2.new(0, 200, 0, 25)
     LicensesDesc.Text = "Subscription and Claimed keys"
-    LicensesDesc.TextColor3 = Color3.new(0.8, 0.8, 0.8)
-    LicensesDesc.TextSize = 15
+    LicensesDesc.TextColor3 = Color3.fromRGB(160, 160, 170)
+    LicensesDesc.TextSize = 13
     LicensesDesc.TextXAlignment = Enum.TextXAlignment.Left
     LicensesDesc.TextYAlignment = Enum.TextYAlignment.Top
     LicensesDesc.Parent = LicenseText
@@ -634,11 +634,11 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     VoltLabel.BackgroundTransparency = 1
     VoltLabel.BorderColor3 = Color3.new(0, 0, 0)
     VoltLabel.BorderSizePixel = 0
-    VoltLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    VoltLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     VoltLabel.Size = UDim2.new(0, 110, 0, 22)
     VoltLabel.Text = "Volt"
     VoltLabel.TextColor3 = Color3.new(0.8, 0.8, 0.8)
-    VoltLabel.TextSize = 16
+    VoltLabel.TextSize = 15
     VoltLabel.TextXAlignment = Enum.TextXAlignment.Left
     VoltLabel.TextYAlignment = Enum.TextYAlignment.Bottom
     VoltLabel.Parent = StatusTextInfo
@@ -652,11 +652,11 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     VoltSubLabel.BackgroundTransparency = 1
     VoltSubLabel.BorderColor3 = Color3.new(0, 0, 0)
     VoltSubLabel.BorderSizePixel = 0
-    VoltSubLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+    VoltSubLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     VoltSubLabel.Size = UDim2.new(0, 110, 0, 22)
     VoltSubLabel.Text = "Current subscription"
-    VoltSubLabel.TextColor3 = Color3.new(0.8, 0.8, 0.8)
-    VoltSubLabel.TextSize = 14
+    VoltSubLabel.TextColor3 = Color3.fromRGB(160, 160, 170)
+    VoltSubLabel.TextSize = 13
     VoltSubLabel.TextXAlignment = Enum.TextXAlignment.Left
     VoltSubLabel.TextYAlignment = Enum.TextYAlignment.Top
     VoltSubLabel.Parent = StatusTextInfo
@@ -706,11 +706,11 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     StatusBadgeText.BackgroundTransparency = 1
     StatusBadgeText.BorderColor3 = Color3.new(0, 0, 0)
     StatusBadgeText.BorderSizePixel = 0
-    StatusBadgeText.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    StatusBadgeText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     StatusBadgeText.Size = UDim2.new(1, 0, 1, 0)
     StatusBadgeText.Text = "Active"
     StatusBadgeText.TextColor3 = Color3.new(0.8, 0.8, 0.8)
-    StatusBadgeText.TextSize = 14
+    StatusBadgeText.TextSize = 12
     StatusBadgeText.Parent = StatusBadge
 
     local StatsFrame = Instance.new("Frame")
@@ -1056,12 +1056,12 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     KeysTitle.BackgroundTransparency = 1
     KeysTitle.BorderColor3 = Color3.new(0, 0, 0)
     KeysTitle.BorderSizePixel = 0
-    KeysTitle.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    KeysTitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     KeysTitle.LayoutOrder = 1
     KeysTitle.Size = UDim2.new(0, 100, 0, 30)
     KeysTitle.Text = "Claimed keys"
     KeysTitle.TextColor3 = Color3.new(0.8, 0.8, 0.8)
-    KeysTitle.TextSize = 15
+    KeysTitle.TextSize = 14
     KeysTitle.TextXAlignment = Enum.TextXAlignment.Left
     KeysTitle.Parent = KeysTextFrame
 
@@ -1101,11 +1101,11 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     CountLabel.BackgroundTransparency = 1
     CountLabel.BorderColor3 = Color3.new(0, 0, 0)
     CountLabel.BorderSizePixel = 0
-    CountLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    CountLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     CountLabel.Size = UDim2.new(1, 0, 1, 0)
     CountLabel.Text = "0"
     CountLabel.TextColor3 = Color3.new(0.557, 0.557, 0.557)
-    CountLabel.TextSize = 15
+    CountLabel.TextSize = 12
     CountLabel.Parent = CountFrame
 
     local Filler = Instance.new("Frame")
@@ -1212,7 +1212,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     SecurityLabel.BackgroundTransparency = 1
     SecurityLabel.BorderColor3 = Color3.new(0, 0, 0)
     SecurityLabel.BorderSizePixel = 0
-    SecurityLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    SecurityLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     SecurityLabel.Size = UDim2.new(0, 200, 0, 20)
     SecurityLabel.Text = "Security"
     SecurityLabel.TextColor3 = Color3.new(0.8, 0.8, 0.8)
@@ -1227,12 +1227,12 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     SecuritySmallText.BackgroundTransparency = 1
     SecuritySmallText.BorderColor3 = Color3.new(0, 0, 0)
     SecuritySmallText.BorderSizePixel = 0
-    SecuritySmallText.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+    SecuritySmallText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     SecuritySmallText.LayoutOrder = 1
     SecuritySmallText.Size = UDim2.new(0, 200, 0, 20)
     SecuritySmallText.Text = "Session controlls"
-    SecuritySmallText.TextColor3 = Color3.new(0.8, 0.8, 0.8)
-    SecuritySmallText.TextSize = 14
+    SecuritySmallText.TextColor3 = Color3.fromRGB(160, 160, 170)
+    SecuritySmallText.TextSize = 13
     SecuritySmallText.TextXAlignment = Enum.TextXAlignment.Left
     SecuritySmallText.TextYAlignment = Enum.TextYAlignment.Top
     SecuritySmallText.Parent = SecurityInfo
