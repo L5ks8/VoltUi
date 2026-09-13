@@ -63,7 +63,31 @@ const commands = [
         .addUserOption(option => option.setName('user').setDescription('User to DM the keys to').setRequired(true))
         .addIntegerOption(option => option.setName('amount').setDescription('Amount of keys to generate').setRequired(true))
         .addStringOption(option => option.setName('note').setDescription('Note to add to every key').setRequired(false))
-        .addIntegerOption(option => option.setName('days').setDescription('Duration in days').setRequired(false))
+        .addIntegerOption(option => option.setName('days').setDescription('Duration in days').setRequired(false)),
+    new SlashCommandBuilder()
+        .setName('check')
+        .setDescription('Account management')
+        .addSubcommand(sub =>
+            sub.setName('account')
+                .setDescription('View account details by User ID or Discord ID')
+                .addStringOption(option =>
+                    option.setName('id')
+                        .setDescription('Account ID or Discord ID')
+                        .setRequired(true)
+                )
+        ),
+    new SlashCommandBuilder()
+        .setName('remove')
+        .setDescription('Subscription management')
+        .addSubcommand(sub =>
+            sub.setName('subscription')
+                .setDescription('Remove user subscription by User ID or Discord ID')
+                .addStringOption(option =>
+                    option.setName('id')
+                        .setDescription('Account ID or Discord ID')
+                        .setRequired(true)
+                )
+        )
 ].map(command => command.toJSON());
 
 const parseDuration = (str) => {
@@ -420,6 +444,114 @@ client.on('interactionCreate', async interaction => {
             );
 
             await interaction.reply({ embeds: [embed], components: [row] });
+        } else if (interaction.commandName === 'check') {
+            const sub = interaction.options.getSubcommand();
+            if (sub === 'account') {
+                const inputId = interaction.options.getString('id').trim();
+                try {
+                    let user = null;
+                    if (mongoose.Types.ObjectId.isValid(inputId)) {
+                        user = await User.findById(inputId);
+                    }
+                    if (!user) {
+                        user = await User.findOne({ discordId: inputId });
+                    }
+                    if (!user) {
+                        user = await User.findOne({ username: inputId });
+                    }
+
+                    if (!user) {
+                        const errEmbed = new EmbedBuilder()
+                            .setTitle('Account Not Found')
+                            .setDescription(`No account found for ID \`${inputId}\`.`)
+                            .setColor('#e74c3c');
+                        return interaction.reply({ embeds: [errEmbed], ephemeral: true });
+                    }
+
+                    let subStatus = 'Expired / None';
+                    if (user.subscriptionEnd === null) {
+                        subStatus = 'Lifetime';
+                    } else if (user.subscriptionEnd) {
+                        const ms = new Date(user.subscriptionEnd).getTime() - Date.now();
+                        if (ms > 0) {
+                            subStatus = `Active (<t:${Math.floor(new Date(user.subscriptionEnd).getTime() / 1000)}:R>)`;
+                        } else {
+                            subStatus = `Expired (<t:${Math.floor(new Date(user.subscriptionEnd).getTime() / 1000)}:R>)`;
+                        }
+                    }
+
+                    let keysFormatted = 'None';
+                    if (user.keys && user.keys.length > 0) {
+                        keysFormatted = user.keys.map(k => `\`${k}\``).join(', ');
+                    }
+
+                    const embed = new EmbedBuilder()
+                        .setTitle(`Account Info: ${user.username}`)
+                        .setColor('#2b2d31')
+                        .addFields(
+                            { name: 'User ID', value: `\`${user._id.toString()}\``, inline: true },
+                            { name: 'Discord', value: user.discordId ? `<@${user.discordId}> (\`${user.discordId}\`)` : 'Not linked', inline: true },
+                            { name: 'Role', value: `\`${user.role || 'user'}\``, inline: true },
+                            { name: 'Subscription', value: subStatus, inline: true },
+                            { name: 'Total Executions', value: `${user.executions || 0}`, inline: true },
+                            { name: 'Banned', value: user.banned ? `Yes (Reason: ${user.banReason || 'None'})` : 'No', inline: true },
+                            { name: 'HWID', value: user.hwid ? `\`${user.hwid}\`` : 'None', inline: false },
+                            { name: 'HWID Resets', value: `${user.hwidResets || 0}`, inline: true },
+                            { name: 'Last Reset', value: user.lastReset ? `<t:${Math.floor(new Date(user.lastReset).getTime() / 1000)}:R>` : 'Never', inline: true },
+                            { name: 'Created', value: `<t:${Math.floor(user._id.getTimestamp().getTime() / 1000)}:f>`, inline: true },
+                            { name: 'Claimed Keys', value: keysFormatted, inline: false }
+                        )
+                        .setTimestamp();
+
+                    await interaction.reply({ embeds: [embed], ephemeral: true });
+                } catch (err) {
+                    console.error(err);
+                    await interaction.reply({ embeds: [new EmbedBuilder().setDescription('Error fetching account info.').setColor('#e74c3c')], ephemeral: true });
+                }
+            }
+        } else if (interaction.commandName === 'remove') {
+            const sub = interaction.options.getSubcommand();
+            if (sub === 'subscription') {
+                const inputId = interaction.options.getString('id').trim();
+                try {
+                    let user = null;
+                    if (mongoose.Types.ObjectId.isValid(inputId)) {
+                        user = await User.findById(inputId);
+                    }
+                    if (!user) {
+                        user = await User.findOne({ discordId: inputId });
+                    }
+                    if (!user) {
+                        user = await User.findOne({ username: inputId });
+                    }
+
+                    if (!user) {
+                        const errEmbed = new EmbedBuilder()
+                            .setTitle('Account Not Found')
+                            .setDescription(`No account found for ID \`${inputId}\`.`)
+                            .setColor('#e74c3c');
+                        return interaction.reply({ embeds: [errEmbed], ephemeral: true });
+                    }
+
+                    user.subscriptionEnd = new Date(Date.now() - 1000);
+                    await user.save();
+
+                    const embed = new EmbedBuilder()
+                        .setTitle('Subscription Removed')
+                        .setColor('#2ecc71')
+                        .addFields(
+                            { name: 'User', value: `**${user.username}** (\`${user._id.toString()}\`)`, inline: true },
+                            { name: 'Discord', value: user.discordId ? `<@${user.discordId}>` : 'Not linked', inline: true },
+                            { name: 'Status', value: 'Subscription has been revoked.', inline: false }
+                        )
+                        .setTimestamp();
+
+                    await interaction.reply({ embeds: [embed], ephemeral: true });
+                } catch (err) {
+                    console.error(err);
+                    await interaction.reply({ embeds: [new EmbedBuilder().setDescription('Error removing subscription.').setColor('#e74c3c')], ephemeral: true });
+                }
+            }
         }
     } else if (interaction.isButton()) {
         if (interaction.customId === 'panel_redeem') {
