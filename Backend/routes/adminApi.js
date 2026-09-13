@@ -3,12 +3,10 @@ const router = express.Router();
 const User = require('../models/User');
 const License = require('../models/License');
 
-// POST /api/v1/keys
-// Generate a new key
 router.post('/keys', async (req, res) => {
     try {
         const { durationDays, note, isFree, discordId } = req.body;
-        
+
         const generateKey = () => {
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
             let key = '';
@@ -42,12 +40,10 @@ router.post('/keys', async (req, res) => {
     }
 });
 
-// POST /api/v1/users/resethwid
-// Reset HWID for a given discordId or username
 router.post('/users/resethwid', async (req, res) => {
     try {
         const { discordId, username, force } = req.body;
-        
+
         if (!discordId && !username) {
             return res.status(400).json({ success: false, message: 'Provide discordId or username' });
         }
@@ -78,19 +74,17 @@ router.post('/users/resethwid', async (req, res) => {
     }
 });
 
-// GET /api/v1/stats
-// Return some basic stats about executions and users
 router.get('/stats', async (req, res) => {
     try {
         const totalUsers = await User.countDocuments();
         const bannedUsers = await User.countDocuments({ banned: true });
-        
+
         const result = await User.aggregate([
             { $group: { _id: null, totalExecutions: { $sum: "$executions" } } }
         ]);
-        
+
         const totalExecutions = result.length > 0 ? result[0].totalExecutions : 0;
-        
+
         res.json({
             success: true,
             stats: {
