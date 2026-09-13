@@ -41,7 +41,7 @@ const commands = [
     new SlashCommandBuilder()
         .setName('reset_hwid')
         .setDescription('Reset HWID for a user')
-        .addUserOption(option => option.setName('user').setDescription('The Discord user to reset HWID').setRequired(true))
+        .addStringOption(option => option.setName('user').setDescription('Account ID (e.g. 6aa6bac604984badfe4f9b1a) or Discord ID').setRequired(true))
         .addBooleanOption(option => option.setName('force').setDescription('Bypass the cooldown').setRequired(false)),
     new SlashCommandBuilder()
         .setName('compensate')
@@ -296,16 +296,35 @@ client.on('interactionCreate', async interaction => {
                 await interaction.reply({ embeds: [new EmbedBuilder().setDescription('Error unblacklisting user.').setColor('#e74c3c')], ephemeral: true });
             }
         } else if (interaction.commandName === 'reset_hwid') {
-            const targetUser = interaction.options.getUser('user');
+            const rawInput = interaction.options.getString('user').trim();
             const force = interaction.options.getBoolean('force');
+            const cleanedInput = rawInput.replace(/[<@!>]/g, '');
             try {
-                const user = await User.findOne({ discordId: targetUser.id });
-                if (!user) return interaction.reply({ embeds: [new EmbedBuilder().setDescription('That Discord user has not registered an account yet.').setColor('#e74c3c')], ephemeral: true });
+                let user = null;
+                if (mongoose.Types.ObjectId.isValid(cleanedInput)) {
+                    user = await User.findById(cleanedInput);
+                }
+                if (!user) {
+                    user = await User.findOne({ discordId: cleanedInput });
+                }
+                if (!user) {
+                    user = await User.findOne({ username: rawInput });
+                }
                 
+                if (!user) {
+                    return interaction.reply({
+                        embeds: [new EmbedBuilder().setDescription(`No account found for ID or User \`${rawInput}\`.`).setColor('#e74c3c')],
+                        ephemeral: true
+                    });
+                }
+                
+                const cooldown = 24 * 60 * 60 * 1000;
                 if (!force && user.lastReset) {
-                    const cooldown = 24 * 60 * 60 * 1000;
                     if ((Date.now() - user.lastReset.getTime()) < cooldown) {
-                        return interaction.reply({ embeds: [new EmbedBuilder().setDescription(`User is on HWID reset cooldown. Available <t:${Math.floor((user.lastReset.getTime() + cooldown) / 1000)}:R>.\nUse \`force: true\` to bypass.`).setColor('#e74c3c')], ephemeral: true });
+                        return interaction.reply({
+                            embeds: [new EmbedBuilder().setDescription(`User is on HWID reset cooldown. Available <t:${Math.floor((user.lastReset.getTime() + cooldown) / 1000)}:R>.\nUse \`force: true\` to bypass.`).setColor('#e74c3c')],
+                            ephemeral: true
+                        });
                     }
                 }
                 
@@ -313,10 +332,21 @@ client.on('interactionCreate', async interaction => {
                 user.hwidResets = (user.hwidResets || 0) + 1;
                 user.lastReset = new Date();
                 await user.save();
-                await interaction.reply({ embeds: [new EmbedBuilder().setDescription(`HWID for **${user.username}** (<@${targetUser.id}>) has been reset.`).setColor('#2ecc71')], ephemeral: true });
+                
+                const embed = new EmbedBuilder()
+                    .setTitle('HWID Reset Successful')
+                    .setColor('#2ecc71')
+                    .addFields(
+                        { name: 'User', value: `**${user.username}** (\`${user._id.toString()}\`)`, inline: true },
+                        { name: 'Discord', value: user.discordId ? `<@${user.discordId}>` : 'Not linked', inline: true },
+                        { name: 'Resets Count', value: `${user.hwidResets}`, inline: true }
+                    )
+                    .setTimestamp();
+
+                await interaction.reply({ embeds: [embed], ephemeral: true });
             } catch (err) {
                 console.error(err);
-                await interaction.reply({ embeds: [new EmbedBuilder().setDescription('Error resetting HWID.').setColor('#2ecc71')], ephemeral: true });
+                await interaction.reply({ embeds: [new EmbedBuilder().setDescription('Error resetting HWID.').setColor('#e74c3c')], ephemeral: true });
             }
         } else if (interaction.commandName === 'compensate') {
             const days = interaction.options.getInteger('days');
