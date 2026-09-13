@@ -1,4 +1,4 @@
-local ButtonComponent = {}
+﻿local ButtonComponent = {}
 local Utils = script.Parent.Parent.Utils
 local Tween = require(Utils.Tween)
 
@@ -127,3 +127,4 @@ function ButtonComponent.Create(TabContent, Maid, Config)
 end
 
 return ButtonComponent
+

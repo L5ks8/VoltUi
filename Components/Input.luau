@@ -1,4 +1,4 @@
-local InputComponent = {}
+﻿local InputComponent = {}
 local TweenService = game:GetService("TweenService")
 
 local function Tween(instance, tweenInfo, properties)
@@ -54,7 +54,7 @@ function InputComponent.Create(TabContent, Maid, Config)
     Header.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     Header.Size = UDim2.new(1, 0, 0, 16)
     Header.Text = headerText
-    Header.TextColor3 = Color3.fromRGB(240, 240, 245)
+    Header.TextColor3 = Color3.fromRGB(210, 210, 215)
     Header.TextSize = 14
     Header.TextXAlignment = Enum.TextXAlignment.Left
     Header.TextYAlignment = Enum.TextYAlignment.Center
@@ -109,7 +109,7 @@ function InputComponent.Create(TabContent, Maid, Config)
     TextBox.Size = UDim2.new(1, -16, 1, 0)
     TextBox.Position = UDim2.new(0, 8, 0, 0)
     TextBox.Text = tostring(currentValue)
-    TextBox.TextColor3 = Color3.fromRGB(240, 240, 245)
+    TextBox.TextColor3 = Color3.fromRGB(210, 210, 215)
     TextBox.TextSize = 12
     TextBox.TextXAlignment = Enum.TextXAlignment.Left
     TextBox.Parent = BoxWrapper
@@ -168,3 +168,4 @@ function InputComponent.Create(TabContent, Maid, Config)
 end
 
 return InputComponent
+

@@ -1,4 +1,4 @@
-local Utils = script.Parent.Parent.Utils
+﻿local Utils = script.Parent.Parent.Utils
 local Topbar = require(script.Parent.Topbar)
 local Tween = require(Utils.Tween)
 local Utility = require(Utils.Utility)
@@ -262,7 +262,7 @@ function LoginPage.Create(ParentGui, OnSuccess)
             ActionBtn.Text = "Send Reset Code"
             userFrame.Visible = true
             SwitchBtn.Visible = true
-            SwitchBtn.Text = "← <b>Back to Login</b>"
+            SwitchBtn.Text = "â† <b>Back to Login</b>"
             TopbarElements.Instance.Version.Text.Text = "Reset Password"
             
         elseif UIState == "Reset" then
@@ -272,7 +272,7 @@ function LoginPage.Create(ParentGui, OnSuccess)
             codeFrame.Visible = true
             newPassFrame.Visible = true
             SwitchBtn.Visible = true
-            SwitchBtn.Text = "← <b>Back to Login</b>"
+            SwitchBtn.Text = "â† <b>Back to Login</b>"
             TopbarElements.Instance.Version.Text.Text = "Enter Code"
         end
     end
@@ -357,3 +357,4 @@ function LoginPage.Create(ParentGui, OnSuccess)
 end
 
 return LoginPage
+

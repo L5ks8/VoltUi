@@ -1,4 +1,4 @@
-local RunService = game:GetService("RunService")
+﻿local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
 local TextService = game:GetService("TextService")
 
@@ -293,3 +293,4 @@ function Notifications.Notify(options)
 end
 
 return Notifications
+

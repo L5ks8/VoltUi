@@ -1,4 +1,4 @@
-local Utils = script.Parent.Parent.Utils
+﻿local Utils = script.Parent.Parent.Utils
 local Maid = require(Utils.Maid)
 local Signal = require(Utils.Signal)
 local Tween = require(Utils.Tween)
@@ -374,7 +374,7 @@ function Window:CreateWindow(Config)
         TitleLbl.Size = UDim2.new(1, -30, 0, 18)
         TitleLbl.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
         TitleLbl.Text = ks.Title or Config.Name or Config.Title or "Volt UI"
-        TitleLbl.TextColor3 = Color3.fromRGB(240, 240, 245)
+        TitleLbl.TextColor3 = Color3.fromRGB(210, 210, 215)
         TitleLbl.TextSize = 16
         TitleLbl.TextXAlignment = Enum.TextXAlignment.Left
         TitleLbl.Parent = HeaderRow
@@ -441,7 +441,7 @@ function Window:CreateWindow(Config)
         InputBox.PlaceholderText = "Enter key here..."
         InputBox.PlaceholderColor3 = Color3.fromRGB(100, 100, 110)
         InputBox.Text = ""
-        InputBox.TextColor3 = Color3.fromRGB(240, 240, 245)
+        InputBox.TextColor3 = Color3.fromRGB(210, 210, 215)
         InputBox.TextSize = 13
         InputBox.ClearTextOnFocus = false
         InputBox.Parent = InputFrame
@@ -850,7 +850,7 @@ function Window:CreateWindow(Config)
         TitleLabel.Size = UDim2.new(1, -25, 1, 0)
         TitleLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
         TitleLabel.Text = titleText
-        TitleLabel.TextColor3 = Color3.fromRGB(240, 240, 245)
+        TitleLabel.TextColor3 = Color3.fromRGB(210, 210, 215)
         TitleLabel.TextSize = 14
         TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
         TitleLabel.ZIndex = 60002
@@ -861,7 +861,7 @@ function Window:CreateWindow(Config)
         CloseBtn.BackgroundTransparency = 1
         CloseBtn.Position = UDim2.new(1, -16, 0, 0)
         CloseBtn.Size = UDim2.new(0, 16, 0, 16)
-        CloseBtn.Text = "✕"
+        CloseBtn.Text = "âœ•"
         CloseBtn.TextColor3 = Color3.fromRGB(150, 150, 160)
         CloseBtn.TextSize = 12
         CloseBtn.ZIndex = 60002
@@ -942,7 +942,7 @@ function Window:CreateWindow(Config)
             BtnLabel.Size = UDim2.new(1, 0, 1, 0)
             BtnLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
             BtnLabel.Text = bText
-            BtnLabel.TextColor3 = isPrimary and Color3.fromRGB(240, 240, 245) or Color3.fromRGB(180, 180, 190)
+            BtnLabel.TextColor3 = isPrimary and Color3.fromRGB(210, 210, 215) or Color3.fromRGB(180, 180, 190)
             BtnLabel.TextSize = 12
             BtnLabel.ZIndex = 60004
             BtnLabel.Parent = ActionBtn
@@ -966,3 +966,4 @@ function Window:CreateWindow(Config)
 end
 
 return Window
+

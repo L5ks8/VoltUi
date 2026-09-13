@@ -1,4 +1,4 @@
-local CheckboxComponent = {}
+﻿local CheckboxComponent = {}
 local TweenService = game:GetService("TweenService")
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -73,7 +73,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
     Title.Size = UDim2.new(0, 100, 1, 0)
     Title.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     Title.Text = "Color Picker"
-    Title.TextColor3 = Color3.fromRGB(240, 240, 245)
+    Title.TextColor3 = Color3.fromRGB(210, 210, 215)
     Title.TextSize = 13
     Title.TextXAlignment = Enum.TextXAlignment.Left
     Title.ZIndex = 50002
@@ -97,7 +97,7 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
     CloseBtn.BackgroundTransparency = 1
     CloseBtn.Position = UDim2.new(1, -24, 0, 4)
     CloseBtn.Size = UDim2.new(0, 20, 0, 20)
-    CloseBtn.Text = "✕"
+    CloseBtn.Text = "âœ•"
     CloseBtn.TextColor3 = Color3.fromRGB(150, 150, 160)
     CloseBtn.TextSize = 12
     CloseBtn.ZIndex = 50002
@@ -380,7 +380,7 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
     Header.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     Header.Size = UDim2.new(1, 0, 0, 16)
     Header.Text = headerText
-    Header.TextColor3 = Color3.fromRGB(240, 240, 245)
+    Header.TextColor3 = Color3.fromRGB(210, 210, 215)
     Header.TextSize = 14
     Header.TextXAlignment = Enum.TextXAlignment.Left
     Header.TextYAlignment = Enum.TextYAlignment.Center
@@ -596,7 +596,7 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
         KbLabel.Size = UDim2.new(1, 0, 1, 0)
         KbLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
         KbLabel.Text = tostring(currentKey)
-        KbLabel.TextColor3 = Color3.fromRGB(240, 240, 245)
+        KbLabel.TextColor3 = Color3.fromRGB(210, 210, 215)
         KbLabel.TextSize = 12
         KbLabel.Parent = KeybindBtn
 
@@ -686,3 +686,4 @@ function CheckboxComponent.Create(TabContent, Maid, Config, Flag)
 end
 
 return CheckboxComponent
+

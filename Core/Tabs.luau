@@ -1,4 +1,4 @@
-local Utils = script.Parent.Parent.Utils
+﻿local Utils = script.Parent.Parent.Utils
 local Components = script.Parent.Parent.Components
 local Core = script.Parent
 local Tween = require(Utils.Tween)
@@ -247,3 +247,4 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
 end
 
 return Tabs
+

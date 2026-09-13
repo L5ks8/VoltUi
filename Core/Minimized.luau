@@ -1,4 +1,4 @@
-local Utils = script.Parent.Parent.Utils
+﻿local Utils = script.Parent.Parent.Utils
 local Utility = require(Utils.Utility)
 
 local Minimized = {}
@@ -49,3 +49,4 @@ function Minimized.Create(ParentGui, maid, RestoreCallback)
 end
 
 return Minimized
+

@@ -682,6 +682,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     local StatusBadge = Instance.new("Frame")
     StatusBadge.BackgroundColor3 = Color3.new(0.173, 0.173, 0.173)
+    StatusBadge.BackgroundTransparency = 0.5
     StatusBadge.BorderColor3 = Color3.new(0, 0, 0)
     StatusBadge.BorderSizePixel = 0
     StatusBadge.Size = UDim2.new(0, 40, 0, 20)
@@ -1613,9 +1614,9 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
         if isLoggedIn and isActive then
             StatusBadgeText.Text = "Active"
-            StatusBadgeText.TextColor3 = Color3.fromRGB(255, 255, 255)
+            StatusBadgeText.TextColor3 = Color3.fromRGB(200, 200, 205)
             pcall(function()
-                StatusBadgeStroke.Color = Color3.fromRGB(255, 255, 255)
+                StatusBadgeStroke.Color = Color3.fromRGB(150, 150, 155)
             end)
 
             if isLifetime then
@@ -1795,7 +1796,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
                 KeyLabel.Position = UDim2.new(0, 16, 0, 5)
                 KeyLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
                 KeyLabel.TextSize = 15
-                KeyLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+                KeyLabel.TextColor3 = Color3.fromRGB(210, 210, 215)
                 KeyLabel.TextXAlignment = Enum.TextXAlignment.Left
                 KeyLabel.Text = tostring(keyStr)
                 KeyLabel.Parent = KeyItem
@@ -1831,7 +1832,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
                 BadgeText.Size = UDim2.new(1, 0, 1, 0)
                 BadgeText.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
                 BadgeText.TextSize = 13
-                BadgeText.TextColor3 = Color3.fromRGB(255, 255, 255)
+                BadgeText.TextColor3 = Color3.fromRGB(210, 210, 215)
 
                 local badgeName = "unknown"
                 if type(licenseObj) == "table" then
@@ -1874,3 +1875,4 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 end
 
 return AccountPage
+

@@ -1,4 +1,4 @@
-local DropdownComponent = {}
+﻿local DropdownComponent = {}
 local TweenService = game:GetService("TweenService")
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -108,7 +108,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
     Header.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     Header.Size = UDim2.new(1, 0, 0, 16)
     Header.Text = headerText
-    Header.TextColor3 = Color3.fromRGB(240, 240, 245)
+    Header.TextColor3 = Color3.fromRGB(210, 210, 215)
     Header.TextSize = 14
     Header.TextXAlignment = Enum.TextXAlignment.Left
     Header.TextYAlignment = Enum.TextYAlignment.Center
@@ -171,7 +171,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
     DropdownText.Position = UDim2.new(0, 10, 0, 0)
     DropdownText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     DropdownText.Text = getDisplayText()
-    DropdownText.TextColor3 = Color3.fromRGB(240, 240, 245)
+    DropdownText.TextColor3 = Color3.fromRGB(210, 210, 215)
     DropdownText.TextSize = 12
     DropdownText.TextXAlignment = Enum.TextXAlignment.Left
     DropdownText.TextTruncate = Enum.TextTruncate.AtEnd
@@ -197,7 +197,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
         Tooltip.AutomaticSize = Enum.AutomaticSize.X
         Tooltip.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
         Tooltip.Text = hoverText
-        Tooltip.TextColor3 = Color3.fromRGB(240, 240, 245)
+        Tooltip.TextColor3 = Color3.fromRGB(210, 210, 215)
         Tooltip.TextSize = 12
         Tooltip.TextTransparency = 1
         Tooltip.ZIndex = 100000
@@ -352,7 +352,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
             OptText.Position = UDim2.new(0, 8, 0, 0)
             OptText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
             OptText.Text = option
-            OptText.TextColor3 = isSelected and Color3.fromRGB(240, 240, 245) or Color3.fromRGB(150, 150, 160)
+            OptText.TextColor3 = isSelected and Color3.fromRGB(210, 210, 215) or Color3.fromRGB(150, 150, 160)
             OptText.TextSize = 12
             OptText.TextXAlignment = Enum.TextXAlignment.Left
             OptText.TextTruncate = Enum.TextTruncate.AtEnd
@@ -374,7 +374,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
                 local active = isMulti and selectedMulti[option] or (selectedSingle == option)
                 if not active then
                     Tween(OptBtn, TweenInfo.new(0.15), {BackgroundTransparency = 0.6})
-                    Tween(OptText, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(240, 240, 245)})
+                    Tween(OptText, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(210, 210, 215)})
                 end
             end)
 
@@ -393,7 +393,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
                     Checkmark.Visible = currentActive
                     Tween(OptBtn, TweenInfo.new(0.15), {BackgroundTransparency = currentActive and 0 or 1})
                     Tween(OptStroke, TweenInfo.new(0.15), {Transparency = currentActive and 0 or 1})
-                    Tween(OptText, TweenInfo.new(0.15), {TextColor3 = currentActive and Color3.fromRGB(240, 240, 245) or Color3.fromRGB(150, 150, 160)})
+                    Tween(OptText, TweenInfo.new(0.15), {TextColor3 = currentActive and Color3.fromRGB(210, 210, 215) or Color3.fromRGB(150, 150, 160)})
 
                     DropdownText.Text = getDisplayText()
                     cb(getMultiList())
@@ -525,3 +525,4 @@ function DropdownComponent.Create(TabContent, Maid, Config)
 end
 
 return DropdownComponent
+

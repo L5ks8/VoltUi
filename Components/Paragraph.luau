@@ -1,4 +1,4 @@
-local ParagraphComponent = {}
+﻿local ParagraphComponent = {}
 local TweenService = game:GetService("TweenService")
 local TextService = game:GetService("TextService")
 
@@ -62,7 +62,7 @@ function ParagraphComponent.Create(TabContent, Maid, Config)
         Icon.BackgroundTransparency = 1
         Icon.Size = UDim2.new(0, 16, 0, 16)
         Icon.Image = (type(iconAsset) == "number") and ("rbxassetid://" .. tostring(iconAsset)) or tostring(iconAsset)
-        Icon.ImageColor3 = Color3.fromRGB(240, 240, 245)
+        Icon.ImageColor3 = Color3.fromRGB(210, 210, 215)
         Icon.Parent = HeaderRow
     end
 
@@ -72,7 +72,7 @@ function ParagraphComponent.Create(TabContent, Maid, Config)
     Header.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     Header.Size = UDim2.new(1, -30, 1, 0)
     Header.Text = headerText
-    Header.TextColor3 = Color3.fromRGB(240, 240, 245)
+    Header.TextColor3 = Color3.fromRGB(210, 210, 215)
     Header.TextSize = 14
     Header.TextXAlignment = Enum.TextXAlignment.Left
     Header.TextYAlignment = Enum.TextYAlignment.Center
@@ -117,3 +117,4 @@ function ParagraphComponent.Create(TabContent, Maid, Config)
 end
 
 return ParagraphComponent
+

@@ -1,4 +1,4 @@
-local Utils = script.Parent.Parent.Utils
+﻿local Utils = script.Parent.Parent.Utils
 local Tween = require(Utils.Tween)
 local ContextActionService = game:GetService("ContextActionService")
 
@@ -172,3 +172,4 @@ function CloseWarn.Create(ParentGui, maid, ConfirmCallback, CancelCallback)
 end
 
 return CloseWarn
+

@@ -1,4 +1,4 @@
-local Bottombar = {}
+﻿local Bottombar = {}
 
 function Bottombar.Create(Main, maid)
     local BottombarFrame = Instance.new("Frame")
@@ -41,7 +41,7 @@ function Bottombar.Create(Main, maid)
     TabdisplayIcon.BorderSizePixel = 0
     TabdisplayIcon.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     TabdisplayIcon.Size = UDim2.new(0.2, 0, 1, 0)
-    TabdisplayIcon.Text = "< ⁄ >"
+    TabdisplayIcon.Text = "< â„ >"
     TabdisplayIcon.TextColor3 = Color3.new(0.51, 0.51, 0.51)
     TabdisplayIcon.TextDirection = Enum.TextDirection.RightToLeft
     TabdisplayIcon.TextSize = 13
@@ -168,3 +168,4 @@ function Bottombar.Create(Main, maid)
 end
 
 return Bottombar
+

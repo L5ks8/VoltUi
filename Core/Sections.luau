@@ -1,4 +1,4 @@
-local Components = script.Parent.Parent.Components
+﻿local Components = script.Parent.Parent.Components
 local ButtonComponent = require(Components.Button)
 local ToggleComponent = require(Components.Toggle)
 local CheckboxComponent = require(Components.Checkbox)
@@ -74,7 +74,7 @@ function Sections.CreateSection(TabContent, Maid, Title, Description)
         TitleLabel.Size = UDim2.new(1, -20, 0, 16)
         TitleLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
         TitleLabel.Text = Title
-        TitleLabel.TextColor3 = Color3.fromRGB(240, 240, 245)
+        TitleLabel.TextColor3 = Color3.fromRGB(210, 210, 215)
         TitleLabel.TextSize = 14
         TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
         TitleLabel.TextYAlignment = Enum.TextYAlignment.Center
@@ -197,3 +197,4 @@ function Sections.CreateSection(TabContent, Maid, Title, Description)
 end
 
 return Sections
+

@@ -1,4 +1,4 @@
-local Tween = require(script.Parent.Parent.Utils.Tween)
+﻿local Tween = require(script.Parent.Parent.Utils.Tween)
 local Tabs = require(script.Parent.Tabs)
 local SettingsManager = require(script.Parent.Parent.Utils.SettingsManager)
 
@@ -150,7 +150,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     SearchBox.Position = UDim2.new(0, 10, 0, 10)
     SearchBox.PlaceholderText = "Search settings"
     SearchBox.Text = ""
-    SearchBox.TextColor3 = Color3.fromRGB(240, 240, 245)
+    SearchBox.TextColor3 = Color3.fromRGB(210, 210, 215)
     SearchBox.PlaceholderColor3 = Color3.fromRGB(150, 150, 160)
     SearchBox.TextSize = 12
     SearchBox.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
@@ -355,3 +355,4 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
 end
 
 return SettingsPage
+

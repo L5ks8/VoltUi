@@ -1,4 +1,4 @@
-local Utils = script.Parent.Parent.Utils
+﻿local Utils = script.Parent.Parent.Utils
 local Tween = require(Utils.Tween)
 
 local Sidebar = {}
@@ -436,3 +436,4 @@ function Sidebar.Create(Content, maid, OnCollapse)
 end
 
 return Sidebar
+
