@@ -60,7 +60,7 @@ router.post('/users/resethwid', async (req, res) => {
         }
 
         if (!force && user.lastReset) {
-            const cooldown = 48 * 60 * 60 * 1000;
+            const cooldown = 24 * 60 * 60 * 1000;
             if ((Date.now() - user.lastReset.getTime()) < cooldown) {
                 return res.status(400).json({ success: false, message: 'User is on HWID reset cooldown' });
             }

@@ -87,6 +87,23 @@ const commands = [
                         .setDescription('Account ID or Discord ID')
                         .setRequired(true)
                 )
+        ),
+    new SlashCommandBuilder()
+        .setName('reset')
+        .setDescription('Reset management')
+        .addSubcommand(sub =>
+            sub.setName('hwid')
+                .setDescription('Reset user HWID by Account ID or Discord ID')
+                .addStringOption(option =>
+                    option.setName('id')
+                        .setDescription('Account ID (e.g. 6aa6bac604984badfe4f9b1a) or Discord ID')
+                        .setRequired(true)
+                )
+                .addBooleanOption(option =>
+                    option.setName('force')
+                        .setDescription('Bypass the cooldown')
+                        .setRequired(false)
+                )
         )
 ].map(command => command.toJSON());
 
@@ -286,7 +303,7 @@ client.on('interactionCreate', async interaction => {
                 if (!user) return interaction.reply({ embeds: [new EmbedBuilder().setDescription('That Discord user has not registered an account yet.').setColor('#e74c3c')], ephemeral: true });
                 
                 if (!force && user.lastReset) {
-                    const cooldown = 48 * 60 * 60 * 1000;
+                    const cooldown = 24 * 60 * 60 * 1000;
                     if ((Date.now() - user.lastReset.getTime()) < cooldown) {
                         return interaction.reply({ embeds: [new EmbedBuilder().setDescription(`User is on HWID reset cooldown. Available <t:${Math.floor((user.lastReset.getTime() + cooldown) / 1000)}:R>.\nUse \`force: true\` to bypass.`).setColor('#e74c3c')], ephemeral: true });
                     }
@@ -552,6 +569,62 @@ client.on('interactionCreate', async interaction => {
                     await interaction.reply({ embeds: [new EmbedBuilder().setDescription('Error removing subscription.').setColor('#e74c3c')], ephemeral: true });
                 }
             }
+        } else if (interaction.commandName === 'reset') {
+            const sub = interaction.options.getSubcommand();
+            if (sub === 'hwid') {
+                const inputId = interaction.options.getString('id').trim();
+                const force = interaction.options.getBoolean('force');
+                try {
+                    let user = null;
+                    if (mongoose.Types.ObjectId.isValid(inputId)) {
+                        user = await User.findById(inputId);
+                    }
+                    if (!user) {
+                        user = await User.findOne({ discordId: inputId });
+                    }
+                    if (!user) {
+                        user = await User.findOne({ username: inputId });
+                    }
+
+                    if (!user) {
+                        const errEmbed = new EmbedBuilder()
+                            .setTitle('Account Not Found')
+                            .setDescription(`No account found for ID \`${inputId}\`.`)
+                            .setColor('#e74c3c');
+                        return interaction.reply({ embeds: [errEmbed], ephemeral: true });
+                    }
+
+                    const cooldown = 24 * 60 * 60 * 1000;
+                    if (!force && user.lastReset) {
+                        if ((Date.now() - user.lastReset.getTime()) < cooldown) {
+                            return interaction.reply({
+                                embeds: [new EmbedBuilder().setDescription(`User is on HWID reset cooldown. Available <t:${Math.floor((user.lastReset.getTime() + cooldown) / 1000)}:R>.\nUse \`force: true\` to bypass.`).setColor('#e74c3c')],
+                                ephemeral: true
+                            });
+                        }
+                    }
+
+                    user.hwid = null;
+                    user.hwidResets = (user.hwidResets || 0) + 1;
+                    user.lastReset = new Date();
+                    await user.save();
+
+                    const embed = new EmbedBuilder()
+                        .setTitle('HWID Reset Successful')
+                        .setColor('#2ecc71')
+                        .addFields(
+                            { name: 'User', value: `**${user.username}** (\`${user._id.toString()}\`)`, inline: true },
+                            { name: 'Discord', value: user.discordId ? `<@${user.discordId}>` : 'Not linked', inline: true },
+                            { name: 'Resets Count', value: `${user.hwidResets}`, inline: true }
+                        )
+                        .setTimestamp();
+
+                    await interaction.reply({ embeds: [embed], ephemeral: true });
+                } catch (err) {
+                    console.error(err);
+                    await interaction.reply({ embeds: [new EmbedBuilder().setDescription('Error resetting HWID.').setColor('#e74c3c')], ephemeral: true });
+                }
+            }
         }
     } else if (interaction.isButton()) {
         if (interaction.customId === 'panel_redeem') {
@@ -608,7 +681,7 @@ client.on('interactionCreate', async interaction => {
                 }
                 
                 if (user.lastReset) {
-                    const cooldown = 48 * 60 * 60 * 1000;
+                    const cooldown = 24 * 60 * 60 * 1000;
                     if ((Date.now() - user.lastReset.getTime()) < cooldown) {
                         return interaction.reply({ embeds: [new EmbedBuilder().setDescription(`You are on cooldown! You can reset your HWID again <t:${Math.floor((user.lastReset.getTime() + cooldown) / 1000)}:R>.`).setColor('#e74c3c')], ephemeral: true });
                     }
