@@ -915,9 +915,9 @@ function Window:CreateWindow(Config)
         CloseBtn.BackgroundTransparency = 1
         CloseBtn.Position = UDim2.new(1, -16, 0, 0)
         CloseBtn.Size = UDim2.new(0, 16, 0, 16)
-        CloseBtn.Text = "âœ•"
+        CloseBtn.Text = "×"
         CloseBtn.TextColor3 = Color3.fromRGB(150, 150, 160)
-        CloseBtn.TextSize = 12
+        CloseBtn.TextSize = 14
         CloseBtn.ZIndex = 60002
         CloseBtn.Parent = HeaderRow
 

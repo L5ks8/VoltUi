@@ -98,9 +98,9 @@ local function createColorPickerPopup(rootOverlay, initialColor, initialAlpha, o
     CloseBtn.BackgroundTransparency = 1
     CloseBtn.Position = UDim2.new(1, -24, 0, 4)
     CloseBtn.Size = UDim2.new(0, 20, 0, 20)
-    CloseBtn.Text = "âœ•"
+    CloseBtn.Text = "×"
     CloseBtn.TextColor3 = Color3.fromRGB(150, 150, 160)
-    CloseBtn.TextSize = 12
+    CloseBtn.TextSize = 14
     CloseBtn.ZIndex = 50002
     CloseBtn.Parent = Header
 
@@ -777,7 +777,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
         Dl.BackgroundTransparency = 1
         Dl.Size = UDim2.new(1, 0, 1, 0)
         Dl.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
-        Dl.Text = tostring(currentOption) .. "  â–¾"
+        Dl.Text = tostring(currentOption) .. "  ▾"
         Dl.TextColor3 = Color3.fromRGB(210, 210, 215)
         Dl.TextSize = 12
         Dl.Parent = DropBtn
@@ -853,7 +853,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
 
                 OptBtn.MouseButton1Click:Connect(function()
                     currentOption = opt
-                    Dl.Text = tostring(currentOption) .. "  â–¾"
+                    Dl.Text = tostring(currentOption) .. "  ▾"
                     closeDropdownMenu()
                     ddCallback(currentOption)
                 end)
@@ -863,7 +863,7 @@ function ToggleComponent.Create(TabContent, Maid, Config, Flag)
         local DDObject = {}
         function DDObject:Set(newOpt)
             currentOption = newOpt
-            Dl.Text = tostring(currentOption) .. "  â–¾"
+            Dl.Text = tostring(currentOption) .. "  ▾"
             ddCallback(currentOption)
         end
         function DDObject:Get()
