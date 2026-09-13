@@ -1,4 +1,4 @@
-﻿local DropdownComponent = {}
+local DropdownComponent = {}
 local TweenService = game:GetService("TweenService")
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -18,6 +18,7 @@ function DropdownComponent.Create(TabContent, Maid, Config)
     local hoverText = config.HoverText or ""
     local options = config.Options or {}
     local isMulti = config.MultipleOptions or config.Multiselect or false
+    local isSearchable = config.Searchbar or config.Searchable or false
     local isLarge = config.Large or false
     local cb = config.Callback or function() end
 
@@ -300,10 +301,62 @@ function DropdownComponent.Create(TabContent, Maid, Config)
         MenuStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
         MenuStroke.Parent = DropdownMenu
 
+        local searchHeight = isSearchable and 36 or 0
+        local SearchBox
+        if isSearchable then
+            local SearchContainer = Instance.new("Frame")
+            SearchContainer.Name = "SearchContainer"
+            SearchContainer.BackgroundTransparency = 1
+            SearchContainer.Size = UDim2.new(1, 0, 0, searchHeight)
+            SearchContainer.Parent = DropdownMenu
+
+            SearchBox = Instance.new("TextBox")
+            SearchBox.Name = "SearchBox"
+            SearchBox.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
+            SearchBox.Size = UDim2.new(1, -12, 0, 26)
+            SearchBox.Position = UDim2.new(0, 6, 0, 5)
+            SearchBox.PlaceholderText = "Search..."
+            SearchBox.Text = ""
+            SearchBox.TextColor3 = Color3.fromRGB(210, 210, 215)
+            SearchBox.PlaceholderColor3 = Color3.fromRGB(150, 150, 160)
+            SearchBox.TextSize = 12
+            SearchBox.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+            SearchBox.TextXAlignment = Enum.TextXAlignment.Left
+            SearchBox.Parent = SearchContainer
+
+            local SearchPadding = Instance.new("UIPadding")
+            SearchPadding.PaddingLeft = UDim.new(0, 26)
+            SearchPadding.Parent = SearchBox
+
+            local SearchIcon = Instance.new("ImageLabel")
+            SearchIcon.BackgroundTransparency = 1
+            SearchIcon.Image = "rbxassetid://134267746401089"
+            SearchIcon.ImageColor3 = Color3.fromRGB(150, 150, 160)
+            SearchIcon.Size = UDim2.new(0, 14, 0, 14)
+            SearchIcon.Position = UDim2.new(0, 8, 0.5, -7)
+            SearchIcon.Parent = SearchBox
+
+            local SearchCorner = Instance.new("UICorner")
+            SearchCorner.CornerRadius = UDim.new(0, 4)
+            SearchCorner.Parent = SearchBox
+
+            local SearchStroke = Instance.new("UIStroke")
+            SearchStroke.Color = Color3.fromRGB(48, 48, 48)
+            SearchStroke.Parent = SearchBox
+
+            local Divider = Instance.new("Frame")
+            Divider.BackgroundColor3 = Color3.fromRGB(48, 48, 48)
+            Divider.BorderSizePixel = 0
+            Divider.Size = UDim2.new(1, 0, 0, 1)
+            Divider.Position = UDim2.new(0, 0, 1, -1)
+            Divider.Parent = SearchContainer
+        end
+
         local ScrollFrame = Instance.new("ScrollingFrame")
         ScrollFrame.BackgroundTransparency = 1
         ScrollFrame.BorderSizePixel = 0
-        ScrollFrame.Size = UDim2.new(1, 0, 1, 0)
+        ScrollFrame.Size = UDim2.new(1, 0, 1, -searchHeight)
+        ScrollFrame.Position = UDim2.new(0, 0, 0, searchHeight)
         ScrollFrame.ScrollBarThickness = 2
         ScrollFrame.ScrollBarImageColor3 = Color3.fromRGB(60, 60, 60)
         ScrollFrame.ZIndex = 10002
@@ -321,7 +374,8 @@ function DropdownComponent.Create(TabContent, Maid, Config)
         ScrollPadding.PaddingRight = UDim.new(0, 4)
         ScrollPadding.Parent = ScrollFrame
 
-        local targetHeight = 8
+        local targetHeight = 8 + searchHeight
+        local OptionButtons = {}
 
         for _, option in ipairs(options) do
             local isSelected = isMulti and (selectedMulti[option] == true) or (selectedSingle == option)
@@ -406,10 +460,27 @@ function DropdownComponent.Create(TabContent, Maid, Config)
             end)
 
             targetHeight = targetHeight + 28
+            table.insert(OptionButtons, {Btn = OptBtn, Text = option})
         end
 
-        ScrollFrame.CanvasSize = UDim2.new(0, 0, 0, targetHeight)
-        local maxHeight = math.clamp(targetHeight, 28, 160)
+        if SearchBox then
+            SearchBox:GetPropertyChangedSignal("Text"):Connect(function()
+                local query = string.lower(SearchBox.Text)
+                local newTarget = 8
+                for _, optData in ipairs(OptionButtons) do
+                    if string.find(string.lower(optData.Text), query, 1, true) then
+                        optData.Btn.Visible = true
+                        newTarget = newTarget + 28
+                    else
+                        optData.Btn.Visible = false
+                    end
+                end
+                ScrollFrame.CanvasSize = UDim2.new(0, 0, 0, newTarget)
+            end)
+        end
+
+        ScrollFrame.CanvasSize = UDim2.new(0, 0, 0, targetHeight - searchHeight)
+        local maxHeight = math.clamp(targetHeight, 28 + searchHeight, 160 + searchHeight)
 
         Tween(DropdownMenu, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0, DropdownBtn.AbsoluteSize.X, 0, maxHeight)})
     end
