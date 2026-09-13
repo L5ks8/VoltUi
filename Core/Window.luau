@@ -191,16 +191,6 @@ function Window:CreateWindow(Config)
         end)
     end)
     
-    local SettingsPage = require(script.Parent.SettingsPage)
-    local SettingsPageElements
-    local success, err = pcall(function()
-        SettingsPageElements = SettingsPage.Create(PagesContainer, maid, function()
-            WindowObject:OpenHome()
-        end, Config)
-    end)
-    if not success then
-        warn("[VoltUi] Failed to create Settings Page: " .. tostring(err))
-    end
     
     -- Connect Sidebar clicks
     maid:GiveTask(SidebarElements.HomeBtn.MouseButton1Click:Connect(function()
@@ -211,13 +201,6 @@ function Window:CreateWindow(Config)
     maid:GiveTask(SidebarElements.AccountBtn.MouseButton1Click:Connect(function()
         if WindowObject and WindowObject.OpenAccount then
             WindowObject:OpenAccount()
-        end
-    end))
-    maid:GiveTask(SidebarElements.SettingsBtn.MouseButton1Click:Connect(function()
-        if SettingsPageElements and SettingsPageElements.Instance then
-            PageLayout:JumpTo(SettingsPageElements.Instance)
-            BottombarElements.Instance.Visible = false
-            Tween(PagesContainer, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -30)})
         end
     end))
 
