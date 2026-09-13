@@ -7,12 +7,13 @@ local SettingsPage = {}
 function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     local Page = Instance.new("Frame")
     Page.Name = "SettingsPage"
-    Page.AnchorPoint = Vector2.new(0.5, 0.5)
+    Page.AnchorPoint = Vector2.new(0, 0)
     Page.BackgroundColor3 = Color3.new(0.067, 0.067, 0.067)
     Page.BorderColor3 = Color3.new(0, 0, 0)
     Page.BorderSizePixel = 0
-    Page.Position = UDim2.new(0.5, 0, 0.518, 0)
+    Page.Position = UDim2.new(0, 0, 0, 0)
     Page.Size = UDim2.new(1, 0, 1, 0)
+    Page.Visible = false
     Page.LayoutOrder = 3
     Page.Parent = Content
 
@@ -225,26 +226,21 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     MainSettingsContent.Name = "MainContent"
     MainSettingsContent.BackgroundTransparency = 1
     MainSettingsContent.Size = UDim2.new(1, 0, 1, 0)
+    MainSettingsContent.ClipsDescendants = true
     MainSettingsContent.LayoutOrder = 2
     MainSettingsContent.Parent = ContentFrame
     
     local SettingsWindowObject = {
         Maid = Maid,
         Sidebar = { TabsContainer = SettingsTabsContainer },
-        ContentContainer = MainSettingsContent,
-        PageLayout = Instance.new("UIPageLayout", MainSettingsContent)
+        ContentContainer = MainSettingsContent
     }
-    SettingsWindowObject.PageLayout.TweenTime = 0.3
-    SettingsWindowObject.PageLayout.EasingStyle = Enum.EasingStyle.Quint
-    SettingsWindowObject.PageLayout.EasingDirection = Enum.EasingDirection.Out
-    SettingsWindowObject.PageLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    SettingsWindowObject.PageLayout.ScrollWheelInputEnabled = false
-    SettingsWindowObject.PageLayout.TouchInputEnabled = false
-    SettingsWindowObject.PageLayout.GamepadInputEnabled = false
 
     -- Custom CreateTab function for settings
     local ActiveTab = nil
     local TabContentRefs = {}
+    local tabTransitionToken = 0
+
     local function CreateSettingsTab(name, icon, indent)
         local TabBtn = Instance.new("TextButton")
         TabBtn.Name = name
@@ -285,7 +281,9 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
         TabContent.Name = name .. "Content"
         TabContent.BackgroundTransparency = 1
         TabContent.BorderSizePixel = 0
+        TabContent.Position = UDim2.new(0, 0, 0, 0)
         TabContent.Size = UDim2.new(1, 0, 1, 0)
+        TabContent.Visible = false
         TabContent.ScrollBarThickness = 2
         TabContent.ScrollBarImageColor3 = Color3.new(0.2, 0.2, 0.2)
         TabContent.Parent = MainSettingsContent
@@ -306,16 +304,71 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
         
         local function SelectTab()
             if ActiveTab == TabBtn then return end
+            local prevTab = ActiveTab
             ActiveTab = TabBtn
+            tabTransitionToken = tabTransitionToken + 1
+            local currentToken = tabTransitionToken
             
             for _, ref in ipairs(TabContentRefs) do
-                Tween(ref.Btn, TweenInfo.new(0.2), {BackgroundTransparency = 1})
-                Tween(ref.Title, TweenInfo.new(0.2), {TextColor3 = Color3.new(0.6, 0.6, 0.6)})
+                if ref.Btn == TabBtn then
+                    Tween(ref.Btn, TweenInfo.new(0.2), {BackgroundTransparency = 0.95})
+                    Tween(ref.Title, TweenInfo.new(0.2), {TextColor3 = Color3.new(1, 1, 1)})
+                else
+                    Tween(ref.Btn, TweenInfo.new(0.2), {BackgroundTransparency = 1})
+                    Tween(ref.Title, TweenInfo.new(0.2), {TextColor3 = Color3.new(0.6, 0.6, 0.6)})
+                end
             end
-            
-            Tween(TabBtn, TweenInfo.new(0.2), {BackgroundTransparency = 0.95})
-            Tween(TabTitle, TweenInfo.new(0.2), {TextColor3 = Color3.new(1, 1, 1)})
-            SettingsWindowObject.PageLayout:JumpTo(TabContent)
+
+            -- Outgoing tab animation
+            if prevTab then
+                for _, ref in ipairs(TabContentRefs) do
+                    if ref.Btn == prevTab then
+                        local oldContent = ref.Content
+                        local oldScale = oldContent:FindFirstChildOfClass("UIScale")
+                        if not oldScale then
+                            oldScale = Instance.new("UIScale")
+                            oldScale.Parent = oldContent
+                        end
+                        Tween(oldContent, TweenInfo.new(0.14, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+                            Position = UDim2.new(0, 0, 0, -8)
+                        })
+                        Tween(oldScale, TweenInfo.new(0.14, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+                            Scale = 0.985
+                        })
+                        task.delay(0.14, function()
+                            if tabTransitionToken == currentToken or ActiveTab ~= prevTab then
+                                oldContent.Visible = false
+                                oldContent.Position = UDim2.new(0, 0, 0, 0)
+                                oldScale.Scale = 1
+                            end
+                        end)
+                        break
+                    end
+                end
+            end
+
+            -- Incoming tab animation
+            local scale = TabContent:FindFirstChildOfClass("UIScale")
+            if not scale then
+                scale = Instance.new("UIScale")
+                scale.Parent = TabContent
+            end
+
+            if prevTab then
+                TabContent.Position = UDim2.new(0, 0, 0, 14)
+                scale.Scale = 0.97
+                TabContent.Visible = true
+                Tween(TabContent, TweenInfo.new(0.28, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out), {
+                    Position = UDim2.new(0, 0, 0, 0)
+                })
+                Tween(scale, TweenInfo.new(0.28, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out), {
+                    Scale = 1
+                })
+            else
+                TabContent.Position = UDim2.new(0, 0, 0, 0)
+                scale.Scale = 1
+                TabContent.Visible = true
+            end
         end
         Maid:GiveTask(TabBtn.MouseButton1Click:Connect(SelectTab))
         

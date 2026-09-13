@@ -70,18 +70,12 @@ function Window:CreateWindow(Config)
     PagesContainer.ClipsDescendants = true
     PagesContainer.Parent = Main
     
-    local PageLayout = Instance.new("UIPageLayout")
-    PageLayout.TweenTime = 0
-    PageLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    PageLayout.ScrollWheelInputEnabled = false
-    PageLayout.TouchInputEnabled = false
-    PageLayout.GamepadInputEnabled = false
-    PageLayout.Parent = PagesContainer
-    
     local Content = Instance.new("Frame")
     Content.Name = "Content"
     Content.BackgroundTransparency = 1
+    Content.Position = UDim2.new(0, 0, 0, 0)
     Content.Size = UDim2.new(1, 0, 1, 0)
+    Content.Visible = true
     Content.LayoutOrder = 1
     Content.Parent = PagesContainer
     
@@ -707,6 +701,83 @@ function Window:CreateWindow(Config)
     local OnClose = Signal.new()
     maid:GiveTask(OnClose)
     
+    local CurrentPage = Content
+    local pageTransitionToken = 0
+
+    local function SwitchPage(targetPage, showBottombar)
+        if showBottombar then
+            BottombarElements.Instance.Visible = true
+            Tween(PagesContainer, TweenInfo.new(0.28, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out), {
+                Size = UDim2.new(1, 0, 1, -50)
+            })
+        else
+            BottombarElements.Instance.Visible = false
+            Tween(PagesContainer, TweenInfo.new(0.28, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out), {
+                Size = UDim2.new(1, 0, 1, -30)
+            })
+        end
+
+        if not targetPage or targetPage == CurrentPage then return end
+
+        pageTransitionToken = pageTransitionToken + 1
+        local currentToken = pageTransitionToken
+
+        local oldPage = CurrentPage
+        CurrentPage = targetPage
+
+        if oldPage then
+            local oldScale = oldPage:FindFirstChildOfClass("UIScale")
+            if not oldScale then
+                oldScale = Instance.new("UIScale")
+                oldScale.Parent = oldPage
+            end
+            Tween(oldPage, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+                Position = UDim2.new(0, 0, 0, -8)
+            })
+            Tween(oldScale, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+                Scale = 0.985
+            })
+
+            task.delay(0.15, function()
+                if pageTransitionToken == currentToken or CurrentPage ~= oldPage then
+                    oldPage.Visible = false
+                    oldPage.Position = UDim2.new(0, 0, 0, 0)
+                    oldScale.Scale = 1
+                end
+            end)
+        end
+
+        local newScale = targetPage:FindFirstChildOfClass("UIScale")
+        if not newScale then
+            newScale = Instance.new("UIScale")
+            newScale.Parent = targetPage
+        end
+        targetPage.Position = UDim2.new(0, 0, 0, 14)
+        newScale.Scale = 0.97
+        targetPage.Visible = true
+
+        Tween(targetPage, TweenInfo.new(0.28, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out), {
+            Position = UDim2.new(0, 0, 0, 0)
+        })
+        Tween(newScale, TweenInfo.new(0.28, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out), {
+            Scale = 1
+        })
+    end
+
+    local PageLayoutMock = {
+        JumpTo = function(_, target)
+            if target == Content then
+                WindowObject:OpenHome()
+            elseif SettingsPageElements and target == SettingsPageElements.Instance then
+                WindowObject:OpenSettings()
+            elseif AccountPageElements and target == AccountPageElements.Instance then
+                WindowObject:OpenAccount()
+            else
+                SwitchPage(target, target == Content)
+            end
+        end
+    }
+
     WindowObject = {
         Instance = VoltUi,
         Main = Main,
@@ -714,7 +785,7 @@ function Window:CreateWindow(Config)
         Sidebar = SidebarElements,
         Bottombar = BottombarElements,
         ContentContainer = MainContent,
-        PageLayout = PageLayout,
+        PageLayout = PageLayoutMock,
         PagesContainer = PagesContainer,
         Content = Content,
         AccountPage = AccountPageElements,
@@ -737,65 +808,23 @@ function Window:CreateWindow(Config)
 
     function WindowObject:OpenSettings()
         if SettingsPageElements and SettingsPageElements.Instance then
-            PageLayout:JumpTo(SettingsPageElements.Instance)
-            BottombarElements.Instance.Visible = false
-            Tween(PagesContainer, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -30)})
-
-            local inst = SettingsPageElements.Instance
-            inst.Position = UDim2.new(0.5, 0, 0.518, 10)
-            local scale = inst:FindFirstChildOfClass("UIScale")
-            if not scale then
-                scale = Instance.new("UIScale")
-                scale.Parent = inst
-            end
-            scale.Scale = 0.985
-            Tween(inst, TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2.new(0.5, 0, 0.518, 0)})
-            Tween(scale, TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Scale = 1})
+            SwitchPage(SettingsPageElements.Instance, false)
         end
     end
 
     function WindowObject:OpenAccount()
         if AccountPageElements and AccountPageElements.Instance then
-            PageLayout:JumpTo(AccountPageElements.Instance)
-            BottombarElements.Instance.Visible = false
-            Tween(PagesContainer, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -30)})
+            SwitchPage(AccountPageElements.Instance, false)
             RefreshAccountData()
-
-            local inst = AccountPageElements.Instance
-            inst.Position = UDim2.new(0.038, 0, 0.03, 10)
-            local scale = inst:FindFirstChildOfClass("UIScale")
-            if not scale then
-                scale = Instance.new("UIScale")
-                scale.Parent = inst
-            end
-            scale.Scale = 0.985
-            Tween(inst, TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2.new(0.038, 0, 0.03, 0)})
-            Tween(scale, TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Scale = 1})
         end
     end
 
     function WindowObject:OpenHome()
-        PageLayout:JumpTo(Content)
-        BottombarElements.Instance.Visible = true
-        Tween(PagesContainer, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -50)})
+        SwitchPage(Content, true)
         if Api and Api.UserData and Api.UserData.remaining == "Expired" then
             ExpiredOverlay.Visible = true
         else
             ExpiredOverlay.Visible = false
-        end
-
-        local activeTab = Tabs.ActiveTab
-        if activeTab and activeTab.Content then
-            local tc = activeTab.Content
-            tc.Position = UDim2.new(0, 0, 0, 10)
-            local scale = tc:FindFirstChildOfClass("UIScale")
-            if not scale then
-                scale = Instance.new("UIScale")
-                scale.Parent = tc
-            end
-            scale.Scale = 0.985
-            Tween(tc, TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2.new(0, 0, 0, 0)})
-            Tween(scale, TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Scale = 1})
         end
     end
     

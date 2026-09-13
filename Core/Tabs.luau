@@ -125,44 +125,85 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
     
     table.insert(Tabs.Instances, TabObj)
     
+    local tabTransitionToken = 0
+
     local function ActivateTab()
-        if WindowObject.PageLayout and WindowObject.Content then
-            WindowObject.PageLayout:JumpTo(WindowObject.Content)
-            if WindowObject.Bottombar and WindowObject.Bottombar.Instance then
-                WindowObject.Bottombar.Instance.Visible = true
-            end
-            if WindowObject.PagesContainer then
-                Tween(WindowObject.PagesContainer, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -50)})
-            end
+        if WindowObject.OpenHome then
+            WindowObject:OpenHome()
         end
 
         if Tabs.ActiveTab == TabObj then return end
         
-        for _, otherTab in ipairs(Tabs.Instances) do
-            otherTab.Content.Visible = false
-            Tween(otherTab.Button, TweenInfo.new(0.2), {BackgroundTransparency = 1})
-            Tween(otherTab.Button:FindFirstChildOfClass("TextLabel"), TweenInfo.new(0.2), {TextColor3 = Color3.new(0.6, 0.6, 0.6)})
-            Tween(otherTab.Button:FindFirstChildOfClass("ImageLabel"), TweenInfo.new(0.2), {ImageColor3 = Color3.new(0.6, 0.6, 0.6)})
-        end
-        
+        local oldTab = Tabs.ActiveTab
         Tabs.ActiveTab = TabObj
-        
-        TabContent.Position = UDim2.new(0, 0, 0, 10)
+
+        tabTransitionToken = tabTransitionToken + 1
+        local currentToken = tabTransitionToken
+
+        for _, inst in ipairs(Tabs.Instances) do
+            if inst == TabObj then
+                Tween(inst.Button, TweenInfo.new(0.2), {BackgroundTransparency = 0.95})
+                local txt = inst.Button:FindFirstChildOfClass("TextLabel")
+                if txt then Tween(txt, TweenInfo.new(0.2), {TextColor3 = Color3.new(1, 1, 1)}) end
+                local img = inst.Button:FindFirstChildOfClass("ImageLabel")
+                if img then Tween(img, TweenInfo.new(0.2), {ImageColor3 = Color3.new(1, 1, 1)}) end
+            else
+                Tween(inst.Button, TweenInfo.new(0.2), {BackgroundTransparency = 1})
+                local txt = inst.Button:FindFirstChildOfClass("TextLabel")
+                if txt then Tween(txt, TweenInfo.new(0.2), {TextColor3 = Color3.new(0.6, 0.6, 0.6)}) end
+                local img = inst.Button:FindFirstChildOfClass("ImageLabel")
+                if img then Tween(img, TweenInfo.new(0.2), {ImageColor3 = Color3.new(0.6, 0.6, 0.6)}) end
+            end
+        end
+
+        -- Outgoing tab animation
+        if oldTab and oldTab.Content then
+            local oldContent = oldTab.Content
+            local oldScale = oldContent:FindFirstChildOfClass("UIScale")
+            if not oldScale then
+                oldScale = Instance.new("UIScale")
+                oldScale.Parent = oldContent
+            end
+            Tween(oldContent, TweenInfo.new(0.14, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+                Position = UDim2.new(0, 0, 0, -8)
+            })
+            Tween(oldScale, TweenInfo.new(0.14, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+                Scale = 0.985
+            })
+            task.delay(0.14, function()
+                if tabTransitionToken == currentToken or Tabs.ActiveTab ~= oldTab then
+                    oldContent.Visible = false
+                    oldContent.Position = UDim2.new(0, 0, 0, 0)
+                    oldScale.Scale = 1
+                end
+            end)
+        end
+
+        -- Incoming tab animation
         local scale = TabContent:FindFirstChildOfClass("UIScale")
         if not scale then
             scale = Instance.new("UIScale")
             scale.Parent = TabContent
         end
-        scale.Scale = 0.985
-        TabContent.Visible = true
-        task.defer(UpdateContentScroll)
 
-        Tween(TabContent, TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2.new(0, 0, 0, 0)})
-        Tween(scale, TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Scale = 1})
-        
-        Tween(TabBtn, TweenInfo.new(0.2), {BackgroundTransparency = 0.95})
-        Tween(TabTitle, TweenInfo.new(0.2), {TextColor3 = Color3.new(1, 1, 1)})
-        Tween(TabIcon, TweenInfo.new(0.2), {ImageColor3 = Color3.new(1, 1, 1)})
+        if oldTab then
+            TabContent.Position = UDim2.new(0, 0, 0, 14)
+            scale.Scale = 0.97
+            TabContent.Visible = true
+            task.defer(UpdateContentScroll)
+
+            Tween(TabContent, TweenInfo.new(0.28, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out), {
+                Position = UDim2.new(0, 0, 0, 0)
+            })
+            Tween(scale, TweenInfo.new(0.28, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out), {
+                Scale = 1
+            })
+        else
+            TabContent.Position = UDim2.new(0, 0, 0, 0)
+            scale.Scale = 1
+            TabContent.Visible = true
+            task.defer(UpdateContentScroll)
+        end
         
         if WindowObject.Bottombar and WindowObject.Bottombar.TabdisplayName then
             WindowObject.Bottombar.TabdisplayName.Text = Name

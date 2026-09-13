@@ -4,12 +4,13 @@ local AccountPage = {}
 function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
     local Page = Instance.new("Frame")
     Page.Name = "AccountPage"
-    Page.AnchorPoint = Vector2.new(0.5, 0.5)
+    Page.AnchorPoint = Vector2.new(0, 0)
     Page.BackgroundColor3 = Color3.new(0.067, 0.067, 0.067)
     Page.BorderColor3 = Color3.new(0, 0, 0)
     Page.BorderSizePixel = 0
-    Page.Position = UDim2.new(0.5, 0, 0.518, 0)
+    Page.Position = UDim2.new(0, 0, 0, 0)
     Page.Size = UDim2.new(1, 0, 1, 0)
+    Page.Visible = false
     Page.LayoutOrder = 2
     Page.Parent = Content
 
