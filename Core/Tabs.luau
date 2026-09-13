@@ -58,7 +58,7 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
     TabTitle.BackgroundTransparency = 1
     TabTitle.Size = hasIcon and UDim2.new(1, -45, 1, 0) or UDim2.new(1, -20, 1, 0)
     TabTitle.Position = hasIcon and UDim2.new(0, 38, 0, 0) or UDim2.new(0, 14, 0, 0)
-    TabTitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+    TabTitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     TabTitle.Text = Name
     TabTitle.TextColor3 = Color3.new(0.6, 0.6, 0.6)
     TabTitle.TextSize = 13

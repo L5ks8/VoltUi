@@ -259,7 +259,7 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
         TabTitle.BackgroundTransparency = 1
         TabTitle.Size = UDim2.new(1, -20, 1, 0)
         TabTitle.Position = UDim2.new(0, icon and 32 or 14, 0, 0)
-        TabTitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+        TabTitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
         TabTitle.Text = name
         TabTitle.TextColor3 = Color3.new(0.6, 0.6, 0.6)
         TabTitle.TextSize = 13
