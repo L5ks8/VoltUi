@@ -1750,8 +1750,8 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
                 local KeyItem = Instance.new("Frame")
                 KeyItem.Name = "KeyItem"
-                KeyItem.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
-                KeyItem.BackgroundTransparency = 0
+                KeyItem.BackgroundColor3 = Color3.fromRGB(36, 36, 36)
+                KeyItem.BackgroundTransparency = 1
                 KeyItem.BorderSizePixel = 0
                 KeyItem.Size = UDim2.new(1, -10, 0, 50)
                 KeyItem.Parent = Claimed
@@ -1759,11 +1759,6 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
                 local KeyCorner = Instance.new("UICorner")
                 KeyCorner.CornerRadius = UDim.new(0, 6)
                 KeyCorner.Parent = KeyItem
-
-                local KeyStroke = Instance.new("UIStroke")
-                KeyStroke.Color = Color3.fromRGB(48, 48, 48)
-                KeyStroke.Thickness = 1
-                KeyStroke.Parent = KeyItem
 
                 local HoverButton = Instance.new("TextButton")
                 HoverButton.BackgroundTransparency = 1
@@ -1773,10 +1768,10 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
                 HoverButton.Parent = KeyItem
 
                 Maid:GiveTask(HoverButton.MouseEnter:Connect(function()
-                    Tween(KeyItem, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(36, 36, 36)})
+                    Tween(KeyItem, TweenInfo.new(0.2), {BackgroundTransparency = 0.5})
                 end))
                 Maid:GiveTask(HoverButton.MouseLeave:Connect(function()
-                    Tween(KeyItem, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(28, 28, 28)})
+                    Tween(KeyItem, TweenInfo.new(0.2), {BackgroundTransparency = 1})
                 end))
                 Maid:GiveTask(HoverButton.MouseButton1Click:Connect(function()
                     local setcb = setclipboard or (Clipboard and Clipboard.set) or nil
@@ -1796,7 +1791,8 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
                 KeyLabel.Position = UDim2.new(0, 16, 0, 5)
                 KeyLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
                 KeyLabel.TextSize = 15
-                KeyLabel.TextColor3 = Color3.fromRGB(210, 210, 215)
+                KeyLabel.TextColor3 = Color3.fromRGB(200, 200, 205)
+                KeyLabel.TextTransparency = 0.25
                 KeyLabel.TextXAlignment = Enum.TextXAlignment.Left
                 KeyLabel.Text = tostring(keyStr)
                 KeyLabel.Parent = KeyItem
@@ -1807,7 +1803,8 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
                 DetailsLabel.Position = UDim2.new(0, 16, 0, 30)
                 DetailsLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
                 DetailsLabel.TextSize = 13
-                DetailsLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+                DetailsLabel.TextColor3 = Color3.fromRGB(160, 160, 165)
+                DetailsLabel.TextTransparency = 0.35
                 DetailsLabel.TextXAlignment = Enum.TextXAlignment.Left
 
                 local claimedStr = type(licenseObj) == "table" and licenseObj.claimedStr or "N/A"
@@ -1819,12 +1816,14 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
                 BadgeFrame.AnchorPoint = Vector2.new(1, 0.5)
                 BadgeFrame.Position = UDim2.new(1, -10, 0.5, 0)
                 BadgeFrame.Size = UDim2.new(0, 75, 0, 22)
-                BadgeFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+                BadgeFrame.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
+                BadgeFrame.BackgroundTransparency = 0.4
                 BadgeFrame.Parent = KeyItem
                 Instance.new("UICorner", BadgeFrame).CornerRadius = UDim.new(0, 4)
 
                 local BadgeStroke = Instance.new("UIStroke")
                 BadgeStroke.Color = Color3.fromRGB(80, 80, 80)
+                BadgeStroke.Transparency = 0.5
                 BadgeStroke.Parent = BadgeFrame
 
                 local BadgeText = Instance.new("TextLabel")
@@ -1832,7 +1831,8 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
                 BadgeText.Size = UDim2.new(1, 0, 1, 0)
                 BadgeText.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
                 BadgeText.TextSize = 13
-                BadgeText.TextColor3 = Color3.fromRGB(210, 210, 215)
+                BadgeText.TextColor3 = Color3.fromRGB(190, 190, 195)
+                BadgeText.TextTransparency = 0.25
 
                 local badgeName = "unknown"
                 if type(licenseObj) == "table" then
