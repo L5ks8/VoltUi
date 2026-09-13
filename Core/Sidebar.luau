@@ -75,7 +75,27 @@ function Sidebar.Create(Content, maid, OnCollapse)
     AccountIcon.Size = UDim2.new(0, 15, 0, 15)
     AccountIcon.Parent = Account
     
-
+    local Settings = Instance.new("ImageButton")
+    Settings.Name = "Settings"
+    Settings.BackgroundColor3 = Color3.new(1, 1, 1)
+    Settings.BackgroundTransparency = 1
+    Settings.BorderColor3 = Color3.new(0, 0, 0)
+    Settings.BorderSizePixel = 0
+    Settings.LayoutOrder = 2
+    Settings.Size = UDim2.new(0, 35, 0, 35)
+    Settings.Parent = SidebarActions
+    
+    local SettingsIcon = Instance.new("ImageLabel")
+    SettingsIcon.AnchorPoint = Vector2.new(0.5, 0.5)
+    SettingsIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
+    SettingsIcon.BackgroundColor3 = Color3.new(1, 1, 1)
+    SettingsIcon.BackgroundTransparency = 1
+    SettingsIcon.BorderColor3 = Color3.new(0, 0, 0)
+    SettingsIcon.BorderSizePixel = 0
+    SettingsIcon.Image = "rbxassetid://95898765113869"
+    SettingsIcon.Size = UDim2.new(0, 15, 0, 15)
+    SettingsIcon.Parent = Settings
+    
     local SidebarFiller = Instance.new("Frame")
     SidebarFiller.Name = "Filler"
     SidebarFiller.BackgroundColor3 = Color3.new(1, 1, 1)
@@ -208,6 +228,7 @@ function Sidebar.Create(Content, maid, OnCollapse)
     
     ApplyHover(Home, "Home")
     ApplyHover(Account, "Account")
+    ApplyHover(Settings, "Settings")
     ApplyHover(Collapse, "Collapse")
     
     local Searchbar = Instance.new("Frame")
@@ -381,6 +402,7 @@ function Sidebar.Create(Content, maid, OnCollapse)
             Searchbar.Visible = false
             Home.Visible = false
             Account.Visible = false
+            Settings.Visible = false
             SidebarFiller.Visible = false
             SidebarFiller2.Visible = false
             SidebarActionsLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
@@ -392,6 +414,7 @@ function Sidebar.Create(Content, maid, OnCollapse)
             Searchbar.Visible = true
             Home.Visible = true
             Account.Visible = true
+            Settings.Visible = true
             SidebarFiller.Visible = true
             SidebarFiller2.Visible = true
             SidebarActionsLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
@@ -407,7 +430,8 @@ function Sidebar.Create(Content, maid, OnCollapse)
         TabsContainer = TabsScrolling,
         SearchInput = SearchInput,
         AccountBtn = Account,
-        HomeBtn = Home
+        HomeBtn = Home,
+        SettingsBtn = Settings
     }
 end
 
