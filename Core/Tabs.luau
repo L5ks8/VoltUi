@@ -132,7 +132,7 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
                 WindowObject.Bottombar.Instance.Visible = true
             end
             if WindowObject.PagesContainer then
-                Tween(WindowObject.PagesContainer, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -50)})
+                Tween(WindowObject.PagesContainer, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -50)})
             end
         end
 

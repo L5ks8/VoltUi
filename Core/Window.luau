@@ -71,9 +71,7 @@ function Window:CreateWindow(Config)
     PagesContainer.Parent = Main
     
     local PageLayout = Instance.new("UIPageLayout")
-    PageLayout.TweenTime = 0.4
-    PageLayout.EasingStyle = Enum.EasingStyle.Quint
-    PageLayout.EasingDirection = Enum.EasingDirection.Out
+    PageLayout.TweenTime = 0
     PageLayout.SortOrder = Enum.SortOrder.LayoutOrder
     PageLayout.ScrollWheelInputEnabled = false
     PageLayout.TouchInputEnabled = false
@@ -214,10 +212,8 @@ function Window:CreateWindow(Config)
         end
     end))
     maid:GiveTask(SidebarElements.SettingsBtn.MouseButton1Click:Connect(function()
-        if SettingsPageElements and SettingsPageElements.Instance then
-            PageLayout:JumpTo(SettingsPageElements.Instance)
-            BottombarElements.Instance.Visible = false
-            Tween(PagesContainer, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -30)})
+        if WindowObject and WindowObject.OpenSettings then
+            WindowObject:OpenSettings()
         end
     end))
 
@@ -642,23 +638,7 @@ function Window:CreateWindow(Config)
             Main.Visible = true
         end
     end
-    
-    maid:GiveTask(SidebarElements.AccountBtn.MouseButton1Click:Connect(function()
-        if AccountPageElements and AccountPageElements.Instance then
-            PageLayout:JumpTo(AccountPageElements.Instance)
-            BottombarElements.Instance.Visible = false
-            Tween(PagesContainer, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -30)})
-            RefreshAccountData()
-        end
-    end))
-    
-    if SidebarElements.HomeBtn then
-        maid:GiveTask(SidebarElements.HomeBtn.MouseButton1Click:Connect(function()
-            PageLayout:JumpTo(Content)
-            BottombarElements.Instance.Visible = true
-            Tween(PagesContainer, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -50)})
-        end))
-    end
+
     
     local ClosePrompt = CloseWarn.Create(VoltUi, maid, function()
         maid:DoCleaning()
@@ -754,11 +734,19 @@ function Window:CreateWindow(Config)
     WindowObject.CreateTabSection = WindowObject.CreateTab
     WindowObject.AddTab = WindowObject.CreateTab
 
+    function WindowObject:OpenSettings()
+        if SettingsPageElements and SettingsPageElements.Instance then
+            PageLayout:JumpTo(SettingsPageElements.Instance)
+            BottombarElements.Instance.Visible = false
+            Tween(PagesContainer, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -30)})
+        end
+    end
+
     function WindowObject:OpenAccount()
         if AccountPageElements and AccountPageElements.Instance then
             PageLayout:JumpTo(AccountPageElements.Instance)
             BottombarElements.Instance.Visible = false
-            Tween(PagesContainer, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -30)})
+            Tween(PagesContainer, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -30)})
             RefreshAccountData()
         end
     end
@@ -766,7 +754,7 @@ function Window:CreateWindow(Config)
     function WindowObject:OpenHome()
         PageLayout:JumpTo(Content)
         BottombarElements.Instance.Visible = true
-        Tween(PagesContainer, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -50)})
+        Tween(PagesContainer, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -50)})
         if Api and Api.UserData and Api.UserData.remaining == "Expired" then
             ExpiredOverlay.Visible = true
         else
