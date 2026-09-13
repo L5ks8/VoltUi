@@ -171,6 +171,10 @@ function Window:CreateWindow(Config)
     if Api then
         pcall(function() tokenExists = (Api.GetToken() ~= nil) end)
     end
+    
+    if not tokenExists then
+        isAuthSystem = true
+    end
 
     local BottombarElements = Bottombar.Create(Main, maid)
     
