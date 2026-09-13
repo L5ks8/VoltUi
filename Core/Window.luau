@@ -172,7 +172,7 @@ function Window:CreateWindow(Config)
         pcall(function() tokenExists = (Api.GetToken() ~= nil) end)
     end
     
-    if not tokenExists then
+    if Config.DisableAuth ~= true and Config.NoAuth ~= true and not isStandaloneKey then
         isAuthSystem = true
     end
 
@@ -593,6 +593,7 @@ function Window:CreateWindow(Config)
                     if loadingScreen then loadingScreen:FadeOut() end
                 else
                     if loadingScreen then loadingScreen:WaitForReady() end
+                    pcall(function() Api.ClearToken() end)
                     LoginPage.Create(VoltUi, function()
                         OnLoginSuccess()
                     end)

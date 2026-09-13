@@ -131,7 +131,8 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     SettingsSidebar.BackgroundColor3 = Color3.new(0.08, 0.08, 0.08)
     SettingsSidebar.BorderColor3 = Color3.new(0, 0, 0)
     SettingsSidebar.BorderSizePixel = 0
-    SettingsSidebar.Size = UDim2.new(0, 200, 1, 0)
+    SettingsSidebar.Size = UDim2.new(0, 0, 1, 0)
+    SettingsSidebar.Visible = false
     SettingsSidebar.LayoutOrder = 0
     SettingsSidebar.Parent = ContentFrame
     
@@ -216,13 +217,14 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     SidebarSeparator.BackgroundColor3 = Color3.new(0.216, 0.216, 0.216)
     SidebarSeparator.BorderSizePixel = 0
     SidebarSeparator.Size = UDim2.new(0, 1, 1, 0)
+    SidebarSeparator.Visible = false
     SidebarSeparator.LayoutOrder = 1
     SidebarSeparator.Parent = ContentFrame
     
     local MainSettingsContent = Instance.new("Frame")
     MainSettingsContent.Name = "MainContent"
     MainSettingsContent.BackgroundTransparency = 1
-    MainSettingsContent.Size = UDim2.new(1, -207, 1, 0)
+    MainSettingsContent.Size = UDim2.new(1, 0, 1, 0)
     MainSettingsContent.LayoutOrder = 2
     MainSettingsContent.Parent = ContentFrame
     
