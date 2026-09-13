@@ -1432,15 +1432,17 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
     Maid:GiveTask(LogoutButton.MouseButton1Click:Connect(function()
         if PageData.CurrentIsLoggedIn then
-            if Api and Api.ClearToken then
-                Api.ClearToken()
-            elseif Api and Api.SaveToken then
-                Api.SaveToken("")
-            end
-            if Api then Api.UserData = nil end
+            pcall(function()
+                if Api and Api.ClearToken then
+                    Api.ClearToken()
+                elseif Api and Api.SaveToken then
+                    Api.SaveToken("")
+                end
+                if Api then Api.UserData = nil end
+            end)
             local Players = game:GetService("Players")
             if Players.LocalPlayer then
-                Players.LocalPlayer:Kick("You have been signed out. Please rejoin to sign in again.")
+                Players.LocalPlayer:Kick("You have been signed out. Please rejoin the game.")
             end
         end
     end))
@@ -1595,7 +1597,10 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
 
         if isLoggedIn and isActive then
             StatusBadgeText.Text = "Active"
-            StatusBadgeText.TextColor3 = Color3.fromRGB(100, 220, 100)
+            StatusBadgeText.TextColor3 = Color3.fromRGB(255, 255, 255)
+            pcall(function()
+                StatusBadgeStroke.Color = Color3.fromRGB(100, 220, 100)
+            end)
 
             if isLifetime then
                 EndsValue.Text = "Lifetime"
@@ -1679,11 +1684,20 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
                 keyList = data.licenseObjects
             else
                 local keysData = data.keys or data.key or data.claimedKeys or data.claimedkey or data.claimedKey or data.licenses or data.licenseKeys or data.usedKey or data.license
-                if data.subscription and type(data.subscription) == "table" then
-                    keysData = keysData or data.subscription.keys or data.subscription.key or data.subscription.claimedKeys or data.subscription.claimedkey or data.subscription.claimedKey
+                if not keysData and data.subscription and type(data.subscription) == "table" then
+                    keysData = data.subscription.keys or data.subscription.key or data.subscription.claimedKeys or data.subscription.claimedkey or data.subscription.claimedKey
+                end
+                if not keysData and data.subscriptions and type(data.subscriptions) == "table" and data.subscriptions[1] then
+                    keysData = data.subscriptions[1].key or data.subscriptions[1].keys or data.subscriptions[1].license
                 end
                 if type(keysData) == "table" then
-                    for _, k in ipairs(keysData) do table.insert(keyList, { key = tostring(k) }) end
+                    for _, k in pairs(keysData) do 
+                        if type(k) == "table" then
+                            table.insert(keyList, k)
+                        else
+                            table.insert(keyList, { key = tostring(k) }) 
+                        end
+                    end
                 elseif type(keysData) == "string" and keysData ~= "" then
                     keyList = {{ key = tostring(keysData) }}
                 end
