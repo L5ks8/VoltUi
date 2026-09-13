@@ -1442,7 +1442,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
             end)
             local Players = game:GetService("Players")
             if Players.LocalPlayer then
-                Players.LocalPlayer:Kick("You have been signed out. Please rejoin the game.")
+                Players.LocalPlayer:Kick("You will be kicked out of this experience.")
             end
         end
     end))
@@ -1599,7 +1599,7 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
             StatusBadgeText.Text = "Active"
             StatusBadgeText.TextColor3 = Color3.fromRGB(255, 255, 255)
             pcall(function()
-                StatusBadgeStroke.Color = Color3.fromRGB(100, 220, 100)
+                StatusBadgeStroke.Color = Color3.fromRGB(255, 255, 255)
             end)
 
             if isLifetime then
@@ -1685,11 +1685,9 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
             else
                 local keysData = data.keys or data.key or data.claimedKeys or data.claimedkey or data.claimedKey or data.licenses or data.licenseKeys or data.usedKey or data.license
                 if not keysData and data.subscription and type(data.subscription) == "table" then
-                    keysData = data.subscription.keys or data.subscription.key or data.subscription.claimedKeys or data.subscription.claimedkey or data.subscription.claimedKey
+                    keysData = data.subscription.keys or data.subscription.key or data.subscription.claimedKeys or data.subscription.claimedkey or data.subscription.claimedKey or data.subscription.license
                 end
-                if not keysData and data.subscriptions and type(data.subscriptions) == "table" and data.subscriptions[1] then
-                    keysData = data.subscriptions[1].key or data.subscriptions[1].keys or data.subscriptions[1].license
-                end
+                
                 if type(keysData) == "table" then
                     for _, k in pairs(keysData) do 
                         if type(k) == "table" then
@@ -1699,7 +1697,18 @@ function AccountPage.Create(Content, Maid, BackCallback, Api, OnLoginRequest)
                         end
                     end
                 elseif type(keysData) == "string" and keysData ~= "" then
-                    keyList = {{ key = tostring(keysData) }}
+                    for kStr in string.gmatch(keysData, "([^,]+)") do
+                        table.insert(keyList, { key = tostring(kStr) })
+                    end
+                end
+
+                if #keyList == 0 and data.subscriptions and type(data.subscriptions) == "table" then
+                    for _, sub in pairs(data.subscriptions) do
+                        if type(sub) == "table" then
+                            local k = sub.key or sub.licenseKey or sub.license or sub.claimedKey
+                            if k then table.insert(keyList, { key = tostring(k) }) end
+                        end
+                    end
                 end
             end
         end
