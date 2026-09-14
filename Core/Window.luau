@@ -702,9 +702,19 @@ function Window:CreateWindow(Config)
     maid:GiveTask(OnClose)
     
     local CurrentPage = Content
+    local isPageSwitching = false
     local pageTransitionToken = 0
 
     local function SwitchPage(targetPage, showBottombar)
+        if not targetPage or targetPage == CurrentPage or isPageSwitching then return end
+        isPageSwitching = true
+
+        pageTransitionToken = pageTransitionToken + 1
+        local currentToken = pageTransitionToken
+
+        local oldPage = CurrentPage
+        CurrentPage = targetPage
+
         if showBottombar then
             BottombarElements.Instance.Visible = true
             Tween(PagesContainer, TweenInfo.new(0.28, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out), {
@@ -717,51 +727,36 @@ function Window:CreateWindow(Config)
             })
         end
 
-        if not targetPage or targetPage == CurrentPage then return end
+        local slideDuration = 0.28
+        local slideTweenInfo = TweenInfo.new(slideDuration, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out)
 
-        pageTransitionToken = pageTransitionToken + 1
-        local currentToken = pageTransitionToken
-
-        local oldPage = CurrentPage
-        CurrentPage = targetPage
-
+        -- Animate outgoing page sliding out to the left
         if oldPage then
-            local oldScale = oldPage:FindFirstChildOfClass("UIScale")
-            if not oldScale then
-                oldScale = Instance.new("UIScale")
-                oldScale.Parent = oldPage
-            end
-            Tween(oldPage, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
-                Position = UDim2.new(0, 0, 0, -8)
-            })
-            Tween(oldScale, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
-                Scale = 0.985
+            Tween(oldPage, slideTweenInfo, {
+                Position = UDim2.new(-1, 0, 0, 0)
             })
 
-            task.delay(0.15, function()
+            task.delay(slideDuration, function()
                 if pageTransitionToken == currentToken or CurrentPage ~= oldPage then
                     oldPage.Visible = false
                     oldPage.Position = UDim2.new(0, 0, 0, 0)
-                    oldScale.Scale = 1
                 end
             end)
         end
 
-        local newScale = targetPage:FindFirstChildOfClass("UIScale")
-        if not newScale then
-            newScale = Instance.new("UIScale")
-            newScale.Parent = targetPage
-        end
-        targetPage.Position = UDim2.new(0, 0, 0, 14)
-        newScale.Scale = 0.97
+        -- Animate incoming page sliding in from the right to left
+        targetPage.Position = UDim2.new(1, 0, 0, 0)
         targetPage.Visible = true
 
-        Tween(targetPage, TweenInfo.new(0.28, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out), {
+        Tween(targetPage, slideTweenInfo, {
             Position = UDim2.new(0, 0, 0, 0)
         })
-        Tween(newScale, TweenInfo.new(0.28, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out), {
-            Scale = 1
-        })
+
+        task.delay(slideDuration, function()
+            if pageTransitionToken == currentToken then
+                isPageSwitching = false
+            end
+        end)
     end
 
     local PageLayoutMock = {

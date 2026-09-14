@@ -125,8 +125,6 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
     
     table.insert(Tabs.Instances, TabObj)
     
-    local tabTransitionToken = 0
-
     local function ActivateTab()
         if WindowObject.OpenHome then
             WindowObject:OpenHome()
@@ -136,9 +134,6 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
         
         local oldTab = Tabs.ActiveTab
         Tabs.ActiveTab = TabObj
-
-        tabTransitionToken = tabTransitionToken + 1
-        local currentToken = tabTransitionToken
 
         for _, inst in ipairs(Tabs.Instances) do
             if inst == TabObj then
@@ -156,54 +151,23 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
             end
         end
 
-        -- Outgoing tab animation
+        -- Instant tab switch
         if oldTab and oldTab.Content then
-            local oldContent = oldTab.Content
-            local oldScale = oldContent:FindFirstChildOfClass("UIScale")
-            if not oldScale then
-                oldScale = Instance.new("UIScale")
-                oldScale.Parent = oldContent
+            oldTab.Content.Visible = false
+            oldTab.Content.Position = UDim2.new(0, 0, 0, 0)
+            local oldScale = oldTab.Content:FindFirstChildOfClass("UIScale")
+            if oldScale then
+                oldScale.Scale = 1
             end
-            Tween(oldContent, TweenInfo.new(0.14, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
-                Position = UDim2.new(0, 0, 0, -8)
-            })
-            Tween(oldScale, TweenInfo.new(0.14, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
-                Scale = 0.985
-            })
-            task.delay(0.14, function()
-                if tabTransitionToken == currentToken or Tabs.ActiveTab ~= oldTab then
-                    oldContent.Visible = false
-                    oldContent.Position = UDim2.new(0, 0, 0, 0)
-                    oldScale.Scale = 1
-                end
-            end)
         end
 
-        -- Incoming tab animation
         local scale = TabContent:FindFirstChildOfClass("UIScale")
-        if not scale then
-            scale = Instance.new("UIScale")
-            scale.Parent = TabContent
-        end
-
-        if oldTab then
-            TabContent.Position = UDim2.new(0, 0, 0, 14)
-            scale.Scale = 0.97
-            TabContent.Visible = true
-            task.defer(UpdateContentScroll)
-
-            Tween(TabContent, TweenInfo.new(0.28, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out), {
-                Position = UDim2.new(0, 0, 0, 0)
-            })
-            Tween(scale, TweenInfo.new(0.28, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out), {
-                Scale = 1
-            })
-        else
-            TabContent.Position = UDim2.new(0, 0, 0, 0)
+        if scale then
             scale.Scale = 1
-            TabContent.Visible = true
-            task.defer(UpdateContentScroll)
         end
+        TabContent.Position = UDim2.new(0, 0, 0, 0)
+        TabContent.Visible = true
+        task.defer(UpdateContentScroll)
         
         if WindowObject.Bottombar and WindowObject.Bottombar.TabdisplayName then
             WindowObject.Bottombar.TabdisplayName.Text = Name

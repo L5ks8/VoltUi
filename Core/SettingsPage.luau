@@ -239,7 +239,6 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
     -- Custom CreateTab function for settings
     local ActiveTab = nil
     local TabContentRefs = {}
-    local tabTransitionToken = 0
 
     local function CreateSettingsTab(name, icon, indent)
         local TabBtn = Instance.new("TextButton")
@@ -306,8 +305,6 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
             if ActiveTab == TabBtn then return end
             local prevTab = ActiveTab
             ActiveTab = TabBtn
-            tabTransitionToken = tabTransitionToken + 1
-            local currentToken = tabTransitionToken
             
             for _, ref in ipairs(TabContentRefs) do
                 if ref.Btn == TabBtn then
@@ -319,56 +316,27 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
                 end
             end
 
-            -- Outgoing tab animation
+            -- Instant tab switch
             if prevTab then
                 for _, ref in ipairs(TabContentRefs) do
                     if ref.Btn == prevTab then
-                        local oldContent = ref.Content
-                        local oldScale = oldContent:FindFirstChildOfClass("UIScale")
-                        if not oldScale then
-                            oldScale = Instance.new("UIScale")
-                            oldScale.Parent = oldContent
+                        ref.Content.Visible = false
+                        ref.Content.Position = UDim2.new(0, 0, 0, 0)
+                        local oldScale = ref.Content:FindFirstChildOfClass("UIScale")
+                        if oldScale then
+                            oldScale.Scale = 1
                         end
-                        Tween(oldContent, TweenInfo.new(0.14, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
-                            Position = UDim2.new(0, 0, 0, -8)
-                        })
-                        Tween(oldScale, TweenInfo.new(0.14, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
-                            Scale = 0.985
-                        })
-                        task.delay(0.14, function()
-                            if tabTransitionToken == currentToken or ActiveTab ~= prevTab then
-                                oldContent.Visible = false
-                                oldContent.Position = UDim2.new(0, 0, 0, 0)
-                                oldScale.Scale = 1
-                            end
-                        end)
                         break
                     end
                 end
             end
 
-            -- Incoming tab animation
             local scale = TabContent:FindFirstChildOfClass("UIScale")
-            if not scale then
-                scale = Instance.new("UIScale")
-                scale.Parent = TabContent
-            end
-
-            if prevTab then
-                TabContent.Position = UDim2.new(0, 0, 0, 14)
-                scale.Scale = 0.97
-                TabContent.Visible = true
-                Tween(TabContent, TweenInfo.new(0.28, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out), {
-                    Position = UDim2.new(0, 0, 0, 0)
-                })
-                Tween(scale, TweenInfo.new(0.28, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out), {
-                    Scale = 1
-                })
-            else
-                TabContent.Position = UDim2.new(0, 0, 0, 0)
+            if scale then
                 scale.Scale = 1
-                TabContent.Visible = true
             end
+            TabContent.Position = UDim2.new(0, 0, 0, 0)
+            TabContent.Visible = true
         end
         Maid:GiveTask(TabBtn.MouseButton1Click:Connect(SelectTab))
         
