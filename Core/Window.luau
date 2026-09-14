@@ -730,7 +730,6 @@ function Window:CreateWindow(Config)
         local slideDuration = 0.28
         local slideTweenInfo = TweenInfo.new(slideDuration, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out)
 
-        -- Animate outgoing page sliding out to the left
         if oldPage then
             Tween(oldPage, slideTweenInfo, {
                 Position = UDim2.new(-1, 0, 0, 0)
@@ -744,7 +743,6 @@ function Window:CreateWindow(Config)
             end)
         end
 
-        -- Animate incoming page sliding in from the right to left
         targetPage.Position = UDim2.new(1, 0, 0, 0)
         targetPage.Visible = true
 

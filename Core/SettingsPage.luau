@@ -316,7 +316,6 @@ function SettingsPage.Create(Content, Maid, BackCallback, WindowConfig)
                 end
             end
 
-            -- Instant tab switch
             if prevTab then
                 for _, ref in ipairs(TabContentRefs) do
                     if ref.Btn == prevTab then

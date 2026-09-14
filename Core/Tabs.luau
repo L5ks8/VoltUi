@@ -151,7 +151,6 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
             end
         end
 
-        -- Instant tab switch
         if oldTab and oldTab.Content then
             oldTab.Content.Visible = false
             oldTab.Content.Position = UDim2.new(0, 0, 0, 0)
