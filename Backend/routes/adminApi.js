@@ -42,14 +42,23 @@ router.post('/keys', async (req, res) => {
 
 router.post('/users/resethwid', async (req, res) => {
     try {
-        const { discordId, username, force } = req.body;
+        const { discordId, username, force, id, accountId } = req.body;
+        const targetId = id || accountId;
 
-        if (!discordId && !username) {
-            return res.status(400).json({ success: false, message: 'Provide discordId or username' });
+        if (!discordId && !username && !targetId) {
+            return res.status(400).json({ success: false, message: 'Provide discordId, username, or accountId' });
         }
 
-        const query = discordId ? { discordId } : { username };
-        const user = await User.findOne(query);
+        let user = null;
+        if (targetId && mongoose.Types.ObjectId.isValid(targetId)) {
+            user = await User.findById(targetId);
+        }
+        if (!user && discordId) {
+            user = await User.findOne({ discordId });
+        }
+        if (!user && username) {
+            user = await User.findOne({ username });
+        }
 
         if (!user) {
             return res.status(404).json({ success: false, message: 'User not found' });

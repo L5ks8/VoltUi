@@ -128,15 +128,28 @@ const generateKey = () => {
     return key;
 };
 
-client.once(Events?.ClientReady || 'clientReady', async () => {
+client.on('error', err => console.error('Discord client error:', err));
+client.on('shardError', err => console.error('Discord shard error:', err));
+
+client.once('ready', async () => {
     console.log(`Bot logged in as ${client.user.tag}`);
     try {
-        const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
+        const token = (process.env.TOKEN || process.env.DISCORD_TOKEN || process.env.BOT_TOKEN || '').trim();
+        const rest = new REST({ version: '10' }).setToken(token);
         await rest.put(
             Routes.applicationCommands(client.user.id),
             { body: commands }
         );
         console.log('Successfully registered application commands.');
+
+        const guildId = (process.env.GUILD_ID || process.env.DISCORD_GUILD_ID || '').trim();
+        if (guildId) {
+            await rest.put(
+                Routes.applicationGuildCommands(client.user.id, guildId),
+                { body: commands }
+            );
+            console.log(`Successfully registered application commands to guild ${guildId}.`);
+        }
     } catch (error) {
         console.error('Error registering commands:', error);
     }
@@ -144,7 +157,9 @@ client.once(Events?.ClientReady || 'clientReady', async () => {
 
 client.on('interactionCreate', async interaction => {
     if (interaction.isChatInputCommand()) {
-        if (interaction.user.id !== process.env.OWNER && !['panel', 'key'].includes(interaction.commandName)) {
+        const isOwner = (process.env.OWNER && interaction.user.id === process.env.OWNER.trim());
+        const allowedCommands = ['panel', 'key', 'reset'];
+        if (!isOwner && !allowedCommands.includes(interaction.commandName)) {
             return interaction.reply({ embeds: [new EmbedBuilder().setDescription('You do not have permission to use this command.').setColor('#e74c3c')], ephemeral: true });
         }
 
@@ -545,7 +560,8 @@ client.on('interactionCreate', async interaction => {
             const sub = interaction.options.getSubcommand();
             if (sub === 'hwid') {
                 const inputId = interaction.options.getString('id').trim();
-                const force = interaction.options.getBoolean('force');
+                const isOwner = (process.env.OWNER && interaction.user.id === process.env.OWNER.trim());
+                const force = isOwner ? interaction.options.getBoolean('force') : false;
                 try {
                     let user = null;
                     if (mongoose.Types.ObjectId.isValid(inputId)) {
@@ -566,11 +582,23 @@ client.on('interactionCreate', async interaction => {
                         return interaction.reply({ embeds: [errEmbed], ephemeral: true });
                     }
 
+                    if (!isOwner) {
+                        if (user.discordId && user.discordId !== interaction.user.id) {
+                            return interaction.reply({
+                                embeds: [new EmbedBuilder().setDescription('You do not have permission to reset another user\'s HWID.').setColor('#e74c3c')],
+                                ephemeral: true
+                            });
+                        }
+                        if (!user.discordId) {
+                            user.discordId = interaction.user.id;
+                        }
+                    }
+
                     const cooldown = 24 * 60 * 60 * 1000;
                     if (!force && user.lastReset) {
                         if ((Date.now() - user.lastReset.getTime()) < cooldown) {
                             return interaction.reply({
-                                embeds: [new EmbedBuilder().setDescription(`User is on HWID reset cooldown. Available <t:${Math.floor((user.lastReset.getTime() + cooldown) / 1000)}:R>.\nUse \`force: true\` to bypass.`).setColor('#e74c3c')],
+                                embeds: [new EmbedBuilder().setDescription(`User is on HWID reset cooldown. Available <t:${Math.floor((user.lastReset.getTime() + cooldown) / 1000)}:R>.${isOwner ? '\nUse `force: true` to bypass.' : ''}`).setColor('#e74c3c')],
                                 ephemeral: true
                             });
                         }
@@ -593,7 +621,7 @@ client.on('interactionCreate', async interaction => {
 
                     await interaction.reply({ embeds: [embed], ephemeral: true });
                 } catch (err) {
-                    console.error(err);
+                    console.error('Reset HWID error:', err);
                     await interaction.reply({ embeds: [new EmbedBuilder().setDescription('Error resetting HWID.').setColor('#e74c3c')], ephemeral: true });
                 }
             }
@@ -647,9 +675,32 @@ client.on('interactionCreate', async interaction => {
             }
         } else if (interaction.customId === 'panel_hwid') {
             try {
-                const user = await User.findOne({ discordId: interaction.user.id });
+                let user = await User.findOne({ discordId: interaction.user.id });
                 if (!user) {
-                    return interaction.reply({ embeds: [new EmbedBuilder().setDescription('You have not registered an account yet.').setColor('#e74c3c')], ephemeral: true });
+                    const license = await License.findOne({ discordId: interaction.user.id });
+                    if (license && license.claimedBy) {
+                        user = await User.findById(license.claimedBy);
+                        if (user && !user.discordId) {
+                            user.discordId = interaction.user.id;
+                            await user.save();
+                        }
+                    }
+                }
+
+                if (!user) {
+                    const modal = new ModalBuilder()
+                        .setCustomId('hwid_reset_modal')
+                        .setTitle('Reset HWID');
+
+                    const accInput = new TextInputBuilder()
+                        .setCustomId('acc_id_input')
+                        .setLabel('Enter Account ID or Username:')
+                        .setPlaceholder('e.g. 6aa6bac604984badfe4f9b1a or your username')
+                        .setStyle(TextInputStyle.Short)
+                        .setRequired(true);
+
+                    modal.addComponents(new ActionRowBuilder().addComponents(accInput));
+                    return interaction.showModal(modal);
                 }
                 
                 if (user.lastReset) {
@@ -664,9 +715,9 @@ client.on('interactionCreate', async interaction => {
                 user.lastReset = new Date();
                 await user.save();
                 
-                await interaction.reply({ embeds: [new EmbedBuilder().setDescription('Your HWID has been reset!').setColor('#2ecc71')], ephemeral: true });
+                await interaction.reply({ embeds: [new EmbedBuilder().setDescription(`Your HWID has been reset! Account: **${user.username}**`).setColor('#2ecc71')], ephemeral: true });
             } catch (err) {
-                console.error(err);
+                console.error('panel_hwid error:', err);
                 await interaction.reply({ embeds: [new EmbedBuilder().setDescription('An error occurred.').setColor('#e74c3c')], ephemeral: true });
             }
         } else if (interaction.customId === 'panel_stats') {
@@ -705,7 +756,7 @@ client.on('interactionCreate', async interaction => {
         }
     } else if (interaction.isModalSubmit()) {
         if (interaction.customId === 'redeem_modal') {
-            const keyInput = interaction.fields.getTextInputValue('key_input');
+            const keyInput = interaction.fields.getTextInputValue('key_input').trim();
 
             try {
                 const license = await License.findOne({ key: keyInput });
@@ -714,25 +765,70 @@ client.on('interactionCreate', async interaction => {
                     return interaction.reply({ embeds: [new EmbedBuilder().setDescription('Invalid license key.').setColor('#e74c3c')], ephemeral: true });
                 }
 
-                if (license.claimedBy) {
-                    return interaction.reply({ embeds: [new EmbedBuilder().setDescription('This key has already been fully claimed and used.').setColor('#e74c3c')], ephemeral: true });
-                }
-
                 if (license.discordId && license.discordId !== interaction.user.id) {
-                    return interaction.reply({ embeds: [new EmbedBuilder().setDescription('This key is already linked to another Discord account.').setColor('#2ecc71')], ephemeral: true });
+                    return interaction.reply({ embeds: [new EmbedBuilder().setDescription('This key is already linked to another Discord account.').setColor('#e74c3c')], ephemeral: true });
                 }
 
                 license.discordId = interaction.user.id;
                 await license.save();
 
-                await interaction.reply({ embeds: [new EmbedBuilder().setDescription('Key successfully linked to your Discord account! Please click the **Get Role** button to receive your role.').setColor('#2ecc71')], ephemeral: true });
+                let linkedMsg = 'Key successfully linked to your Discord account!';
+                if (license.claimedBy) {
+                    const user = await User.findById(license.claimedBy);
+                    if (user && !user.discordId) {
+                        user.discordId = interaction.user.id;
+                        await user.save();
+                        linkedMsg = `Key and account (**${user.username}**) successfully linked to your Discord!`;
+                    }
+                }
+
+                await interaction.reply({ embeds: [new EmbedBuilder().setDescription(`${linkedMsg} Please click the **Get Role** button to receive your role.`).setColor('#2ecc71')], ephemeral: true });
             } catch (err) {
-                console.error(err);
+                console.error('redeem_modal error:', err);
                 if (interaction.deferred || interaction.replied) {
                     await interaction.followUp({ embeds: [new EmbedBuilder().setDescription('An error occurred while processing your key.').setColor('#e74c3c')], ephemeral: true }).catch(console.error);
                 } else {
                     await interaction.reply({ embeds: [new EmbedBuilder().setDescription('An error occurred while processing your key.').setColor('#e74c3c')], ephemeral: true }).catch(console.error);
                 }
+            }
+        } else if (interaction.customId === 'hwid_reset_modal') {
+            const inputId = interaction.fields.getTextInputValue('acc_id_input').trim();
+            const isOwner = (process.env.OWNER && interaction.user.id === process.env.OWNER.trim());
+            try {
+                let user = null;
+                if (mongoose.Types.ObjectId.isValid(inputId)) {
+                    user = await User.findById(inputId);
+                }
+                if (!user) {
+                    user = await User.findOne({ username: inputId });
+                }
+                if (!user) {
+                    return interaction.reply({ embeds: [new EmbedBuilder().setDescription(`No account found for \`${inputId}\`.`).setColor('#e74c3c')], ephemeral: true });
+                }
+
+                if (!isOwner) {
+                    if (user.discordId && user.discordId !== interaction.user.id) {
+                        return interaction.reply({ embeds: [new EmbedBuilder().setDescription('This account is already linked to another Discord user.').setColor('#e74c3c')], ephemeral: true });
+                    }
+                    if (!user.discordId) {
+                        user.discordId = interaction.user.id;
+                    }
+                }
+
+                const cooldown = 24 * 60 * 60 * 1000;
+                if (user.lastReset && (Date.now() - user.lastReset.getTime()) < cooldown) {
+                    return interaction.reply({ embeds: [new EmbedBuilder().setDescription(`You are on cooldown! You can reset your HWID again <t:${Math.floor((user.lastReset.getTime() + cooldown) / 1000)}:R>.`).setColor('#e74c3c')], ephemeral: true });
+                }
+
+                user.hwid = null;
+                user.hwidResets = (user.hwidResets || 0) + 1;
+                user.lastReset = new Date();
+                await user.save();
+
+                await interaction.reply({ embeds: [new EmbedBuilder().setTitle('HWID Reset Successful').setDescription(`HWID for account **${user.username}** has been reset and linked to your Discord!`).setColor('#2ecc71')], ephemeral: true });
+            } catch (err) {
+                console.error('hwid_reset_modal error:', err);
+                await interaction.reply({ embeds: [new EmbedBuilder().setDescription('An error occurred.').setColor('#e74c3c')], ephemeral: true });
             }
         }
     }
@@ -740,13 +836,14 @@ client.on('interactionCreate', async interaction => {
 
 module.exports = {
     start: () => {
-        if (process.env.TOKEN && process.env.OWNER) {
+        const token = (process.env.TOKEN || process.env.DISCORD_TOKEN || process.env.BOT_TOKEN || '').trim();
+        if (token) {
             console.log('Attempting to login to Discord...');
-            client.login(process.env.TOKEN.trim()).catch(err => {
+            client.login(token).catch(err => {
                 console.error('Discord login error:', err);
             });
         } else {
-            console.log('Missing TOKEN or OWNER in .env, Discord Bot not started.');
+            console.log('Missing TOKEN in environment variables, Discord Bot not started.');
         }
     },
     sendDM: async (discordId, content, embed = null) => {
