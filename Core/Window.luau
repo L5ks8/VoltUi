@@ -273,7 +273,7 @@ function Window:CreateWindow(Config)
             if postFunc then
                 local HttpService = game:GetService("HttpService")
                 local body = HttpService:JSONEncode({ key = k })
-                local ok, res = pcall(postFunc, "https://volthub-18b3.onrender.com/check-key", body)
+                local ok, res = pcall(postFunc, "https://getvolt-hub.onrender.com/check-key", body)
                 if ok and res and res.Body then
                     local decOk, dec = pcall(function() return HttpService:JSONDecode(res.Body) end)
                     if decOk and dec and dec.valid == true then

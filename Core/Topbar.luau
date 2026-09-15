@@ -194,7 +194,7 @@ function Topbar.Create(Main, Config, maid)
                 local getFunc = (game and game.HttpGet and function(u) return game:HttpGet(u) end)
                              or (request and function(u) return request({Url = u, Method = "GET"}).Body end)
                 if getFunc then
-                    local res = getFunc("https://volthub-18b3.onrender.com/version")
+                    local res = getFunc("https://getvolt-hub.onrender.com/version")
                     if res then
                         local HttpService = game:GetService("HttpService")
                         local ok, decoded = pcall(function() return HttpService:JSONDecode(res) end)

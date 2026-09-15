@@ -2,7 +2,7 @@ local HttpService = game:GetService("HttpService")
 local AES = require(script.Parent.AES)
 
 local Api = {}
-Api.BaseUrl = "https://volthub-18b3.onrender.com/api"
+Api.BaseUrl = "https://getvolt-hub.onrender.com/api"
 Api.Token = nil
 Api.UserData = nil
 

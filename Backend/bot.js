@@ -131,7 +131,7 @@ const generateKey = () => {
 client.on('error', err => console.error('Discord client error:', err));
 client.on('shardError', err => console.error('Discord shard error:', err));
 
-client.once('ready', async () => {
+client.once(Events.ClientReady, async () => {
     console.log(`Bot logged in as ${client.user.tag}`);
     try {
         const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
