@@ -134,22 +134,12 @@ client.on('shardError', err => console.error('Discord shard error:', err));
 client.once('ready', async () => {
     console.log(`Bot logged in as ${client.user.tag}`);
     try {
-        const token = (process.env.TOKEN || process.env.DISCORD_TOKEN || process.env.BOT_TOKEN || '').trim();
-        const rest = new REST({ version: '10' }).setToken(token);
+        const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
         await rest.put(
             Routes.applicationCommands(client.user.id),
             { body: commands }
         );
         console.log('Successfully registered application commands.');
-
-        const guildId = (process.env.GUILD_ID || process.env.DISCORD_GUILD_ID || '').trim();
-        if (guildId) {
-            await rest.put(
-                Routes.applicationGuildCommands(client.user.id, guildId),
-                { body: commands }
-            );
-            console.log(`Successfully registered application commands to guild ${guildId}.`);
-        }
     } catch (error) {
         console.error('Error registering commands:', error);
     }
@@ -836,10 +826,9 @@ client.on('interactionCreate', async interaction => {
 
 module.exports = {
     start: () => {
-        const token = (process.env.TOKEN || process.env.DISCORD_TOKEN || process.env.BOT_TOKEN || '').trim();
-        if (token) {
+        if (process.env.TOKEN) {
             console.log('Attempting to login to Discord...');
-            client.login(token).catch(err => {
+            client.login(process.env.TOKEN.trim()).catch(err => {
                 console.error('Discord login error:', err);
             });
         } else {
