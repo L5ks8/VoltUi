@@ -1513,16 +1513,52 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
         end)
     end))
 
+    local function getExecutor()
+        local name = nil
+        pcall(function()
+            if identifyexecutor then
+                name = identifyexecutor()
+            elseif getexecutorname then
+                name = getexecutorname()
+            end
+        end)
+        if not name or name == "" then
+            pcall(function()
+                if KRNL_LOADED then name = "Krnl"
+                elseif syn then name = "Synapse"
+                elseif fluxus then name = "Fluxus"
+                elseif SENTINEL_LOADED then name = "Sentinel"
+                end
+            end)
+        end
+        if not name or name == "" then
+            name = "Volt Client"
+        end
+        return tostring(name)
+    end
+
+    local uiStartTime = os.time()
+    local function formatUptime(seconds)
+        local hrs = math.floor(seconds / 3600)
+        local mins = math.floor((seconds % 3600) / 60)
+        local secs = seconds % 60
+        if hrs > 0 then
+            return string.format("%02d:%02d:%02d", hrs, mins, secs)
+        else
+            return string.format("%02d:%02d", mins, secs)
+        end
+    end
+
     local ClientCard = CreateQuickCard("ClientCard", 3)
     CreateHeader(ClientCard, "rbxassetid://136385496998416", "Client")
-    local VersionVal = CreateStatRow(ClientCard, "Version", "v1.1.4", 2)
+    local ExecVal = CreateStatRow(ClientCard, "Executor", getExecutor(), 2)
+    local UptimeVal = CreateStatRow(ClientCard, "Uptime", "00:00", 3)
     
     local subText = "Active"
     if Api and Api.UserData and Api.UserData.remaining then
         subText = tostring(Api.UserData.remaining)
     end
-    local SubVal = CreateStatRow(ClientCard, "License", subText, 3, Color3.fromRGB(46, 204, 113))
-    local SecVal = CreateStatRow(ClientCard, "Security", "Verified", 4, Color3.fromRGB(46, 204, 113))
+    local SubVal = CreateStatRow(ClientCard, "License", subText, 4, Color3.fromRGB(46, 204, 113))
 
     task.spawn(function()
         local lastTime = os.clock()
@@ -1566,8 +1602,9 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
                 MemValue.Text = tostring(mem) .. " MB"
 
                 ServerPlayersVal.Text = tostring(#Players:GetPlayers()) .. " / " .. tostring(Players.MaxPlayers)
+                UptimeVal.Text = formatUptime(os.time() - uiStartTime)
             end)
-            task.wait(1.5)
+            task.wait(1)
         end
     end)
 
@@ -1975,6 +2012,385 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
                 Type = "success"
             })
         end))
+
+    local BottomSectionWrapper = Instance.new("Frame")
+    BottomSectionWrapper.Name = "BottomSectionWrapper"
+    BottomSectionWrapper.BackgroundTransparency = 1
+    BottomSectionWrapper.Size = UDim2.new(1, 0, 0, 72)
+    BottomSectionWrapper.LayoutOrder = 4
+    BottomSectionWrapper.Parent = Page
+
+    local BottomSectionPadding = Instance.new("UIPadding")
+    BottomSectionPadding.PaddingLeft = UDim.new(0, 8)
+    BottomSectionPadding.PaddingRight = UDim.new(0, 8)
+    BottomSectionPadding.Parent = BottomSectionWrapper
+
+    local BottomLayout = Instance.new("UIListLayout")
+    BottomLayout.FillDirection = Enum.FillDirection.Horizontal
+    BottomLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    BottomLayout.Padding = UDim.new(0, 10)
+    BottomLayout.Parent = BottomSectionWrapper
+
+    local ActionsCard = Instance.new("Frame")
+    ActionsCard.Name = "ActionsCard"
+    ActionsCard.BackgroundColor3 = Color3.new(0.09, 0.09, 0.09)
+    ActionsCard.BorderSizePixel = 0
+    ActionsCard.LayoutOrder = 1
+    ActionsCard.Size = UDim2.new(0.62, -5, 1, 0)
+    ActionsCard.Parent = BottomSectionWrapper
+
+    local ActionsCorner = Instance.new("UICorner")
+    ActionsCorner.CornerRadius = UDim.new(0, 8)
+    ActionsCorner.Parent = ActionsCard
+
+    local ActionsStroke = Instance.new("UIStroke")
+    ActionsStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
+    ActionsStroke.Color = Color3.new(0.149, 0.149, 0.149)
+    ActionsStroke.Parent = ActionsCard
+
+    local ActionsPadding = Instance.new("UIPadding")
+    ActionsPadding.PaddingLeft = UDim.new(0, 12)
+    ActionsPadding.PaddingRight = UDim.new(0, 12)
+    ActionsPadding.PaddingTop = UDim.new(0, 8)
+    ActionsPadding.PaddingBottom = UDim.new(0, 8)
+    ActionsPadding.Parent = ActionsCard
+
+    local ActionsCardLayout = Instance.new("UIListLayout")
+    ActionsCardLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    ActionsCardLayout.Padding = UDim.new(0, 6)
+    ActionsCardLayout.Parent = ActionsCard
+
+    CreateHeader(ActionsCard, "rbxassetid://10734898355", "Quick Actions")
+
+    local ActionButtonsRow = Instance.new("Frame")
+    ActionButtonsRow.Name = "ButtonsRow"
+    ActionButtonsRow.BackgroundTransparency = 1
+    ActionButtonsRow.LayoutOrder = 2
+    ActionButtonsRow.Size = UDim2.new(1, 0, 1, -24)
+    ActionButtonsRow.Parent = ActionsCard
+
+    local ActionRowLayout = Instance.new("UIListLayout")
+    ActionRowLayout.FillDirection = Enum.FillDirection.Horizontal
+    ActionRowLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    ActionRowLayout.Padding = UDim.new(0, 6)
+    ActionRowLayout.Parent = ActionButtonsRow
+
+    local function CreateActionButton(parent, text, iconId, order, callback)
+        local btn = Instance.new("TextButton")
+        btn.Name = text .. "Btn"
+        btn.BackgroundColor3 = Color3.fromRGB(26, 26, 26)
+        btn.BorderSizePixel = 0
+        btn.LayoutOrder = order
+        btn.Size = UDim2.new(0.25, -5, 1, 0)
+        btn.Text = ""
+        btn.AutoButtonColor = false
+        btn.Parent = parent
+
+        local btnCorner = Instance.new("UICorner")
+        btnCorner.CornerRadius = UDim.new(0, 5)
+        btnCorner.Parent = btn
+
+        local btnStroke = Instance.new("UIStroke")
+        btnStroke.Color = Color3.fromRGB(44, 44, 44)
+        btnStroke.Thickness = 1
+        btnStroke.Parent = btn
+
+        local bLayout = Instance.new("UIListLayout")
+        bLayout.FillDirection = Enum.FillDirection.Horizontal
+        bLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+        bLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+        bLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        bLayout.Padding = UDim.new(0, 5)
+        bLayout.Parent = btn
+
+        if iconId and iconId ~= "" then
+            local icon = Instance.new("ImageLabel")
+            icon.Name = "Icon"
+            icon.BackgroundTransparency = 1
+            icon.Size = UDim2.new(0, 12, 0, 12)
+            icon.Image = iconId
+            icon.ImageColor3 = Color3.fromRGB(180, 180, 180)
+            icon.LayoutOrder = 1
+            icon.Parent = btn
+        end
+
+        local lbl = Instance.new("TextLabel")
+        lbl.Name = "Label"
+        lbl.BackgroundTransparency = 1
+        lbl.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+        lbl.Size = UDim2.new(0, 0, 1, 0)
+        lbl.AutomaticSize = Enum.AutomaticSize.X
+        lbl.Text = text
+        lbl.TextColor3 = Color3.fromRGB(180, 180, 180)
+        lbl.TextSize = 10
+        lbl.LayoutOrder = 2
+        lbl.Parent = btn
+
+        Maid:GiveTask(btn.MouseEnter:Connect(function()
+            Tween(btn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(36, 36, 36)})
+            Tween(lbl, TweenInfo.new(0.2), {TextColor3 = Color3.new(1, 1, 1)})
+            local icon = btn:FindFirstChild("Icon")
+            if icon then
+                Tween(icon, TweenInfo.new(0.2), {ImageColor3 = Color3.new(1, 1, 1)})
+            end
+        end))
+
+        Maid:GiveTask(btn.MouseLeave:Connect(function()
+            Tween(btn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(26, 26, 26)})
+            Tween(lbl, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(180, 180, 180)})
+            local icon = btn:FindFirstChild("Icon")
+            if icon then
+                Tween(icon, TweenInfo.new(0.2), {ImageColor3 = Color3.fromRGB(180, 180, 180)})
+            end
+        end))
+
+        Maid:GiveTask(btn.MouseButton1Click:Connect(function()
+            callback()
+        end))
+
+        return btn
+    end
+
+    CreateActionButton(ActionButtonsRow, "Server Hop", "rbxassetid://10734940376", 1, function()
+        SendNotification({
+            Title = "Server Hop",
+            Content = "Searching for a new server...",
+            Duration = 3,
+            Type = "info"
+        })
+        task.spawn(function()
+            local success = pcall(function()
+                local placeId = game.PlaceId
+                local currentJobId = game.JobId
+                local req = request or http_request or (http and http.request) or (syn and syn.request)
+                local url = "https://games.roblox.com/v1/games/" .. tostring(placeId) .. "/servers/Public?sortOrder=Asc&limit=100"
+                local body = nil
+                if req then
+                    local res = req({Url = url, Method = "GET"})
+                    if res and res.Body then body = res.Body end
+                elseif game and game.HttpGet then
+                    body = game:HttpGet(url)
+                end
+
+                local foundServer = nil
+                if body then
+                    local data = HttpService:JSONDecode(body)
+                    if data and data.data then
+                        for _, s in ipairs(data.data) do
+                            if s.id ~= currentJobId and type(s.playing) == "number" and s.playing < (s.maxPlayers or 100) and s.playing > 0 then
+                                foundServer = s.id
+                                break
+                            end
+                        end
+                    end
+                end
+
+                if foundServer then
+                    TeleportService:TeleportToPlaceInstance(placeId, foundServer, Players.LocalPlayer)
+                else
+                    TeleportService:Teleport(placeId, Players.LocalPlayer)
+                end
+            end)
+            if not success then
+                pcall(function()
+                    TeleportService:Teleport(game.PlaceId, Players.LocalPlayer)
+                end)
+            end
+        end)
+    end)
+
+    CreateActionButton(ActionButtonsRow, "Copy JobId", "rbxassetid://10734886795", 2, function()
+        local jobId = tostring(game.JobId)
+        local setclip = setclipboard or toclipboard or (Clipboard and Clipboard.set)
+        if setclip then
+            pcall(setclip, jobId)
+        end
+        SendNotification({
+            Title = "JobId Copied",
+            Content = "Server JobId copied to clipboard!",
+            Duration = 3,
+            Type = "success"
+        })
+    end)
+
+    CreateActionButton(ActionButtonsRow, "Copy Join", "rbxassetid://10723346959", 3, function()
+        local code = string.format("game:GetService('TeleportService'):TeleportToPlaceInstance(%d, '%s', game.Players.LocalPlayer)", game.PlaceId, tostring(game.JobId))
+        local setclip = setclipboard or toclipboard or (Clipboard and Clipboard.set)
+        if setclip then
+            pcall(setclip, code)
+        end
+        SendNotification({
+            Title = "Join Script Copied",
+            Content = "Teleport script copied to clipboard!",
+            Duration = 3,
+            Type = "success"
+        })
+    end)
+
+    CreateActionButton(ActionButtonsRow, "Reload UI", "rbxassetid://10734940376", 4, function()
+        SendNotification({
+            Title = "Reload UI",
+            Content = "Reloading Volt UI...",
+            Duration = 2,
+            Type = "info"
+        })
+        task.delay(0.5, function()
+            pcall(function()
+                local screenGui = Page:FindFirstAncestorOfClass("ScreenGui")
+                if screenGui then
+                    screenGui:Destroy()
+                end
+            end)
+        end)
+    end)
+
+    local CommunityCard = Instance.new("Frame")
+    CommunityCard.Name = "CommunityCard"
+    CommunityCard.BackgroundColor3 = Color3.new(0.09, 0.09, 0.09)
+    CommunityCard.BorderSizePixel = 0
+    CommunityCard.LayoutOrder = 2
+    CommunityCard.Size = UDim2.new(0.38, -5, 1, 0)
+    CommunityCard.Parent = BottomSectionWrapper
+
+    local CommunityCorner = Instance.new("UICorner")
+    CommunityCorner.CornerRadius = UDim.new(0, 8)
+    CommunityCorner.Parent = CommunityCard
+
+    local CommunityStroke = Instance.new("UIStroke")
+    CommunityStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
+    CommunityStroke.Color = Color3.new(0.149, 0.149, 0.149)
+    CommunityStroke.Parent = CommunityCard
+
+    local CommunityPadding = Instance.new("UIPadding")
+    CommunityPadding.PaddingLeft = UDim.new(0, 12)
+    CommunityPadding.PaddingRight = UDim.new(0, 12)
+    CommunityPadding.PaddingTop = UDim.new(0, 8)
+    CommunityPadding.PaddingBottom = UDim.new(0, 8)
+    CommunityPadding.Parent = CommunityCard
+
+    local CommunityCardLayout = Instance.new("UIListLayout")
+    CommunityCardLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    CommunityCardLayout.Padding = UDim.new(0, 6)
+    CommunityCardLayout.Parent = CommunityCard
+
+    CreateHeader(CommunityCard, "rbxassetid://10747373176", "Community")
+
+    local CommunityButtonsRow = Instance.new("Frame")
+    CommunityButtonsRow.Name = "ButtonsRow"
+    CommunityButtonsRow.BackgroundTransparency = 1
+    CommunityButtonsRow.LayoutOrder = 2
+    CommunityButtonsRow.Size = UDim2.new(1, 0, 1, -24)
+    CommunityButtonsRow.Parent = CommunityCard
+
+    local CommRowLayout = Instance.new("UIListLayout")
+    CommRowLayout.FillDirection = Enum.FillDirection.Horizontal
+    CommRowLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    CommRowLayout.Padding = UDim.new(0, 6)
+    CommRowLayout.Parent = CommunityButtonsRow
+
+    local function CreateCommunityButton(parent, text, iconId, order, callback)
+        local btn = Instance.new("TextButton")
+        btn.Name = text .. "Btn"
+        btn.BackgroundColor3 = Color3.fromRGB(26, 26, 26)
+        btn.BorderSizePixel = 0
+        btn.LayoutOrder = order
+        btn.Size = UDim2.new(0.5, -3, 1, 0)
+        btn.Text = ""
+        btn.AutoButtonColor = false
+        btn.Parent = parent
+
+        local btnCorner = Instance.new("UICorner")
+        btnCorner.CornerRadius = UDim.new(0, 5)
+        btnCorner.Parent = btn
+
+        local btnStroke = Instance.new("UIStroke")
+        btnStroke.Color = Color3.fromRGB(44, 44, 44)
+        btnStroke.Thickness = 1
+        btnStroke.Parent = btn
+
+        local bLayout = Instance.new("UIListLayout")
+        bLayout.FillDirection = Enum.FillDirection.Horizontal
+        bLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+        bLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+        bLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        bLayout.Padding = UDim.new(0, 5)
+        bLayout.Parent = btn
+
+        if iconId and iconId ~= "" then
+            local icon = Instance.new("ImageLabel")
+            icon.Name = "Icon"
+            icon.BackgroundTransparency = 1
+            icon.Size = UDim2.new(0, 13, 0, 13)
+            icon.Image = iconId
+            icon.ImageColor3 = Color3.fromRGB(180, 180, 180)
+            icon.LayoutOrder = 1
+            icon.Parent = btn
+        end
+
+        local lbl = Instance.new("TextLabel")
+        lbl.Name = "Label"
+        lbl.BackgroundTransparency = 1
+        lbl.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+        lbl.Size = UDim2.new(0, 0, 1, 0)
+        lbl.AutomaticSize = Enum.AutomaticSize.X
+        lbl.Text = text
+        lbl.TextColor3 = Color3.fromRGB(180, 180, 180)
+        lbl.TextSize = 11
+        lbl.LayoutOrder = 2
+        lbl.Parent = btn
+
+        Maid:GiveTask(btn.MouseEnter:Connect(function()
+            Tween(btn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(36, 36, 36)})
+            Tween(lbl, TweenInfo.new(0.2), {TextColor3 = Color3.new(1, 1, 1)})
+            local icon = btn:FindFirstChild("Icon")
+            if icon then
+                Tween(icon, TweenInfo.new(0.2), {ImageColor3 = Color3.new(1, 1, 1)})
+            end
+        end))
+
+        Maid:GiveTask(btn.MouseLeave:Connect(function()
+            Tween(btn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(26, 26, 26)})
+            Tween(lbl, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(180, 180, 180)})
+            local icon = btn:FindFirstChild("Icon")
+            if icon then
+                Tween(icon, TweenInfo.new(0.2), {ImageColor3 = Color3.fromRGB(180, 180, 180)})
+            end
+        end))
+
+        Maid:GiveTask(btn.MouseButton1Click:Connect(function()
+            callback()
+        end))
+
+        return btn
+    end
+
+    CreateCommunityButton(CommunityButtonsRow, "Discord", "rbxassetid://10747373176", 1, function()
+        local link = "https://discord.gg/xRkepZnK2c"
+        local setclip = setclipboard or toclipboard or (Clipboard and Clipboard.set)
+        if setclip then
+            pcall(setclip, link)
+        end
+        SendNotification({
+            Title = "Discord",
+            Content = "Discord invite copied to clipboard!",
+            Duration = 3,
+            Type = "success"
+        })
+    end)
+
+    CreateCommunityButton(CommunityButtonsRow, "Support", "rbxassetid://10723415766", 2, function()
+        local link = "https://discord.gg/xRkepZnK2c"
+        local setclip = setclipboard or toclipboard or (Clipboard and Clipboard.set)
+        if setclip then
+            pcall(setclip, link)
+        end
+        SendNotification({
+            Title = "Support",
+            Content = "Support link copied to clipboard!",
+            Duration = 3,
+            Type = "success"
+        })
+    end)
 
     return {
         Instance = Page,
