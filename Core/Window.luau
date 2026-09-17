@@ -25,7 +25,15 @@ local Window = {}
 
 function Window:CreateWindow(Config)
     local maid = Maid.new()
-    local WindowObject
+    local WindowObject = {}
+    
+    function WindowObject:Notify(Config)
+        return Notifications.Notify(Config)
+    end
+
+    function WindowObject:Notification(Config)
+        return Notifications.Notify(Config)
+    end
     
     local VoltUi = Instance.new("ScreenGui")
     VoltUi.Name = "VoltUi"
@@ -780,22 +788,20 @@ function Window:CreateWindow(Config)
         end
     }
 
-    WindowObject = {
-        Instance = VoltUi,
-        Main = Main,
-        Topbar = TopbarElements,
-        Sidebar = SidebarElements,
-        Bottombar = BottombarElements,
-        ContentContainer = MainContent,
-        PageLayout = PageLayoutMock,
-        PagesContainer = PagesContainer,
-        Content = Content,
-        HomePage = HomePageElements,
-        AccountPage = AccountPageElements,
-        Maid = maid,
-        OnClose = OnClose,
-        OnCollapse = OnCollapse
-    }
+    WindowObject.Instance = VoltUi
+    WindowObject.Main = Main
+    WindowObject.Topbar = TopbarElements
+    WindowObject.Sidebar = SidebarElements
+    WindowObject.Bottombar = BottombarElements
+    WindowObject.ContentContainer = MainContent
+    WindowObject.PageLayout = PageLayoutMock
+    WindowObject.PagesContainer = PagesContainer
+    WindowObject.Content = Content
+    WindowObject.HomePage = HomePageElements
+    WindowObject.AccountPage = AccountPageElements
+    WindowObject.Maid = maid
+    WindowObject.OnClose = OnClose
+    WindowObject.OnCollapse = OnCollapse
     
     function WindowObject:CreateTab(NameOrConfig, IconAsset)
         local tabName = NameOrConfig

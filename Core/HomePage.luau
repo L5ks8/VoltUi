@@ -1,6 +1,10 @@
 local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 local Tween = require(script.Parent.Parent.Utils.Tween)
+local Notifications = nil
+pcall(function()
+    Notifications = require(script.Parent.Notifications)
+end)
 
 local HomePage = {}
 
@@ -14,7 +18,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     local Page = Instance.new("Frame")
     Page.Name = "HomePage"
     Page.AnchorPoint = Vector2.new(0, 0)
-    Page.BackgroundColor3 = Color3.new(0.09, 0.09, 0.09)
+    Page.BackgroundColor3 = Color3.new(0.067, 0.067, 0.067)
     Page.BorderColor3 = Color3.new(0, 0, 0)
     Page.BorderSizePixel = 0
     Page.Position = UDim2.new(0, 0, 0, 0)
@@ -1593,19 +1597,26 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     Maid:GiveTask(SendBtn.MouseLeave:Connect(function()
         Tween(SendBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.new(0.149, 0.149, 0.149)})
     end))
+    local function SendNotification(options)
+        if Notifications and Notifications.Notify then
+            Notifications.Notify(options)
+        elseif WindowObject and WindowObject.Notify then
+            WindowObject:Notify(options)
+        end
+    end
+
     Maid:GiveTask(SendBtn.MouseButton1Click:Connect(function()
         if isSendingBug then return end
 
         local cooldown = GetCooldownRemaining()
         if cooldown then
             UpdateBugButton()
-            if WindowObject and WindowObject.Notify then
-                WindowObject:Notify({
-                    Title = "Bug Report",
-                    Content = "You can only submit 1 bug report every 24 hours. Time left: " .. cooldown,
-                    Duration = 4
-                })
-            end
+            SendNotification({
+                Title = "Bug Report",
+                Content = "You can only submit 1 bug report every 24 hours. Time left: " .. cooldown,
+                Duration = 4,
+                Type = "error"
+            })
             return
         end
 
@@ -1740,13 +1751,12 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
             isSendingBug = false
             UpdateBugButton()
             
-            if WindowObject and WindowObject.Notify then
-                WindowObject:Notify({
-                    Title = "Bug Report",
-                    Content = "Bug report successfully submitted!",
-                    Duration = 4
-                })
-            end
+            SendNotification({
+                Title = "Bug Report",
+                Content = "Bug report successfully submitted!",
+                Duration = 4,
+                Type = "success"
+            })
         end))
 
     return {
