@@ -1,5 +1,7 @@
 local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local TeleportService = game:GetService("TeleportService")
 local Tween = require(script.Parent.Parent.Utils.Tween)
 local Notifications = nil
 pcall(function()
@@ -1353,12 +1355,233 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     RenderUpdates({})
     FetchUpdates()
 
+    local QuickSectionWrapper = Instance.new("Frame")
+    QuickSectionWrapper.Name = "QuickSectionWrapper"
+    QuickSectionWrapper.BackgroundTransparency = 1
+    QuickSectionWrapper.Size = UDim2.new(1, 0, 0, 118)
+    QuickSectionWrapper.LayoutOrder = 2
+    QuickSectionWrapper.Parent = Page
+
+    local QuickSectionPadding = Instance.new("UIPadding")
+    QuickSectionPadding.PaddingLeft = UDim.new(0, 8)
+    QuickSectionPadding.PaddingRight = UDim.new(0, 8)
+    QuickSectionPadding.Parent = QuickSectionWrapper
+
+    local QuickLayout = Instance.new("UIListLayout")
+    QuickLayout.FillDirection = Enum.FillDirection.Horizontal
+    QuickLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    QuickLayout.Padding = UDim.new(0, 10)
+    QuickLayout.Parent = QuickSectionWrapper
+
+    local function CreateQuickCard(name, order)
+        local card = Instance.new("Frame")
+        card.Name = name
+        card.BackgroundColor3 = Color3.new(0.08, 0.08, 0.08)
+        card.BackgroundTransparency = 0.5
+        card.BorderSizePixel = 0
+        card.LayoutOrder = order
+        card.Size = UDim2.new(0.333, -7, 1, 0)
+        card.Parent = QuickSectionWrapper
+
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(0, 8)
+        corner.Parent = card
+
+        local stroke = Instance.new("UIStroke")
+        stroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
+        stroke.Color = Color3.new(0.149, 0.149, 0.149)
+        stroke.Parent = card
+
+        local padding = Instance.new("UIPadding")
+        padding.PaddingLeft = UDim.new(0, 12)
+        padding.PaddingRight = UDim.new(0, 12)
+        padding.PaddingTop = UDim.new(0, 10)
+        padding.PaddingBottom = UDim.new(0, 10)
+        padding.Parent = card
+
+        local layout = Instance.new("UIListLayout")
+        layout.SortOrder = Enum.SortOrder.LayoutOrder
+        layout.Padding = UDim.new(0, 5)
+        layout.Parent = card
+
+        return card
+    end
+
+    local function CreateHeader(parent, iconAsset, titleText)
+        local header = Instance.new("Frame")
+        header.Name = "Header"
+        header.BackgroundTransparency = 1
+        header.Size = UDim2.new(1, 0, 0, 18)
+        header.LayoutOrder = 1
+        header.Parent = parent
+
+        local hLayout = Instance.new("UIListLayout")
+        hLayout.FillDirection = Enum.FillDirection.Horizontal
+        hLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        hLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+        hLayout.Padding = UDim.new(0, 6)
+        hLayout.Parent = header
+
+        local icon = Instance.new("ImageLabel")
+        icon.BackgroundTransparency = 1
+        icon.Size = UDim2.new(0, 15, 0, 15)
+        icon.Image = iconAsset
+        icon.ImageColor3 = Color3.fromRGB(180, 180, 180)
+        icon.Parent = header
+
+        local title = Instance.new("TextLabel")
+        title.BackgroundTransparency = 1
+        title.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+        title.Size = UDim2.new(1, -22, 1, 0)
+        title.Text = titleText
+        title.TextColor3 = Color3.new(0.85, 0.85, 0.85)
+        title.TextSize = 13
+        title.TextXAlignment = Enum.TextXAlignment.Left
+        title.Parent = header
+    end
+
+    local function CreateStatRow(parent, labelText, initialValue, order, valueColor)
+        local row = Instance.new("Frame")
+        row.Name = "Row"
+        row.BackgroundTransparency = 1
+        row.Size = UDim2.new(1, 0, 0, 17)
+        row.LayoutOrder = order
+        row.Parent = parent
+
+        local lbl = Instance.new("TextLabel")
+        lbl.BackgroundTransparency = 1
+        lbl.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+        lbl.Size = UDim2.new(0.5, 0, 1, 0)
+        lbl.Text = labelText
+        lbl.TextColor3 = Color3.fromRGB(130, 130, 130)
+        lbl.TextSize = 12
+        lbl.TextXAlignment = Enum.TextXAlignment.Left
+        lbl.Parent = row
+
+        local val = Instance.new("TextLabel")
+        val.Name = "Value"
+        val.BackgroundTransparency = 1
+        val.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+        val.Size = UDim2.new(0.5, 0, 1, 0)
+        val.Position = UDim2.new(0.5, 0, 0, 0)
+        val.Text = initialValue
+        val.TextColor3 = valueColor or Color3.new(0.85, 0.85, 0.85)
+        val.TextSize = 12
+        val.TextXAlignment = Enum.TextXAlignment.Right
+        val.TextTruncate = Enum.TextTruncate.AtEnd
+        val.Parent = row
+
+        return val
+    end
+
+    local PerfCard = CreateQuickCard("PerformanceCard", 1)
+    CreateHeader(PerfCard, "rbxassetid://10709791437", "Performance")
+    local PingValue = CreateStatRow(PerfCard, "Ping", "... ms", 2)
+    local FpsValue = CreateStatRow(PerfCard, "FPS", "60 FPS", 3)
+    local MemValue = CreateStatRow(PerfCard, "Memory", "... MB", 4)
+
+    local ServerCard = CreateQuickCard("ServerCard", 2)
+    CreateHeader(ServerCard, "rbxassetid://97001881921521", "Server Info")
+    local ServerPlayersVal = CreateStatRow(ServerCard, "Players", tostring(#Players:GetPlayers()) .. " / " .. tostring(Players.MaxPlayers), 2)
+    local PlaceIdVal = CreateStatRow(ServerCard, "Place ID", tostring(game.PlaceId), 3)
+
+    local RejoinBtn = Instance.new("TextButton")
+    RejoinBtn.Name = "RejoinBtn"
+    RejoinBtn.BackgroundColor3 = Color3.fromRGB(26, 26, 26)
+    RejoinBtn.BorderSizePixel = 0
+    RejoinBtn.LayoutOrder = 4
+    RejoinBtn.Size = UDim2.new(1, 0, 0, 22)
+    RejoinBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    RejoinBtn.Text = "Rejoin Server"
+    RejoinBtn.TextColor3 = Color3.fromRGB(180, 180, 180)
+    RejoinBtn.TextSize = 11
+    RejoinBtn.Parent = ServerCard
+
+    local RejoinCorner = Instance.new("UICorner")
+    RejoinCorner.CornerRadius = UDim.new(0, 5)
+    RejoinCorner.Parent = RejoinBtn
+
+    local RejoinStroke = Instance.new("UIStroke")
+    RejoinStroke.Color = Color3.fromRGB(44, 44, 44)
+    RejoinStroke.Thickness = 1
+    RejoinStroke.Parent = RejoinBtn
+
+    Maid:GiveTask(RejoinBtn.MouseEnter:Connect(function()
+        Tween(RejoinBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(36, 36, 36), TextColor3 = Color3.new(1, 1, 1)})
+    end))
+    Maid:GiveTask(RejoinBtn.MouseLeave:Connect(function()
+        Tween(RejoinBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(26, 26, 26), TextColor3 = Color3.fromRGB(180, 180, 180)})
+    end))
+    Maid:GiveTask(RejoinBtn.MouseButton1Click:Connect(function()
+        pcall(function()
+            TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, Players.LocalPlayer)
+        end)
+    end))
+
+    local ClientCard = CreateQuickCard("ClientCard", 3)
+    CreateHeader(ClientCard, "rbxassetid://136385496998416", "Client")
+    local VersionVal = CreateStatRow(ClientCard, "Version", "v1.1.4", 2)
+    
+    local subText = "Active"
+    if Api and Api.UserData and Api.UserData.remaining then
+        subText = tostring(Api.UserData.remaining)
+    end
+    local SubVal = CreateStatRow(ClientCard, "License", subText, 3, Color3.fromRGB(46, 204, 113))
+    local SecVal = CreateStatRow(ClientCard, "Security", "Verified", 4, Color3.fromRGB(46, 204, 113))
+
+    task.spawn(function()
+        local lastTime = os.clock()
+        local frameCount = 0
+        local currentFps = 60
+
+        local conn = RunService.RenderStepped:Connect(function()
+            frameCount = frameCount + 1
+            local now = os.clock()
+            if now - lastTime >= 1 then
+                currentFps = math.round(frameCount / (now - lastTime))
+                frameCount = 0
+                lastTime = now
+            end
+        end)
+        Maid:GiveTask(conn)
+
+        while Page and Page.Parent do
+            pcall(function()
+                FpsValue.Text = tostring(currentFps) .. " FPS"
+
+                local ping = 0
+                pcall(function()
+                    local statsService = game:GetService("Stats")
+                    if statsService and statsService.Network and statsService.Network.ServerStatsItem then
+                        local dp = statsService.Network.ServerStatsItem["Data Ping"]
+                        if dp then
+                            ping = math.round(dp:GetValue())
+                        end
+                    end
+                end)
+                PingValue.Text = tostring(ping) .. " ms"
+
+                local mem = 0
+                pcall(function()
+                    local statsService = game:GetService("Stats")
+                    if statsService then
+                        mem = math.round(statsService:GetTotalMemoryUsageMb())
+                    end
+                end)
+                MemValue.Text = tostring(mem) .. " MB"
+
+                ServerPlayersVal.Text = tostring(#Players:GetPlayers()) .. " / " .. tostring(Players.MaxPlayers)
+            end)
+            task.wait(1.5)
+        end
+    end)
+
     local BugSectionWrapper = Instance.new("Frame")
     BugSectionWrapper.Name = "BugReportsWrapper"
     BugSectionWrapper.BackgroundTransparency = 1
     BugSectionWrapper.Size = UDim2.new(1, 0, 0, 0)
     BugSectionWrapper.AutomaticSize = Enum.AutomaticSize.Y
-    BugSectionWrapper.LayoutOrder = 2
+    BugSectionWrapper.LayoutOrder = 3
     BugSectionWrapper.Parent = Page
 
     local BugSectionPadding = Instance.new("UIPadding")
@@ -1458,7 +1681,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     BugSubtitle.BackgroundTransparency = 1
     BugSubtitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
     BugSubtitle.Size = UDim2.new(1, 0, 0, 18)
-    BugSubtitle.Text = "Subscription and Claimed keys"
+    BugSubtitle.Text = "Report bugs or submit feedback"
     BugSubtitle.TextColor3 = Color3.new(0.65, 0.65, 0.65)
     BugSubtitle.TextSize = 13
     BugSubtitle.TextXAlignment = Enum.TextXAlignment.Left
