@@ -252,10 +252,6 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     PopoverStroke.Thickness = 1.2
     PopoverStroke.Parent = NotificationsPopover
 
-    local PopoverScale = Instance.new("UIScale")
-    PopoverScale.Scale = 0.95
-    PopoverScale.Parent = NotificationsPopover
-
     local PopoverHeader = Instance.new("Frame")
     PopoverHeader.Name = "Header"
     PopoverHeader.BackgroundTransparency = 1
@@ -321,21 +317,24 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     EmptyState.ZIndex = 50001
     EmptyState.Parent = PopoverBody
 
-    local EmptyStateLayout = Instance.new("UIListLayout")
-    EmptyStateLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    EmptyStateLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    EmptyStateLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    EmptyStateLayout.Padding = UDim.new(0, 14)
-    EmptyStateLayout.Parent = EmptyState
+    local EmptyContent = Instance.new("Frame")
+    EmptyContent.Name = "EmptyContent"
+    EmptyContent.BackgroundTransparency = 1
+    EmptyContent.AnchorPoint = Vector2.new(0.5, 0.5)
+    EmptyContent.Position = UDim2.new(0.5, 0, 0.5, 0)
+    EmptyContent.Size = UDim2.new(1, -32, 0, 134)
+    EmptyContent.ZIndex = 50001
+    EmptyContent.Parent = EmptyState
 
     local IconBox = Instance.new("Frame")
     IconBox.Name = "IconBox"
     IconBox.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
     IconBox.BorderSizePixel = 0
+    IconBox.AnchorPoint = Vector2.new(0.5, 0)
+    IconBox.Position = UDim2.new(0.5, 0, 0, 0)
     IconBox.Size = UDim2.new(0, 58, 0, 58)
-    IconBox.LayoutOrder = 1
     IconBox.ZIndex = 50002
-    IconBox.Parent = EmptyState
+    IconBox.Parent = EmptyContent
 
     local IconBoxCorner = Instance.new("UICorner")
     IconBoxCorner.CornerRadius = UDim.new(0, 14)
@@ -360,25 +359,24 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     local TextBox = Instance.new("Frame")
     TextBox.Name = "TextBox"
     TextBox.BackgroundTransparency = 1
-    TextBox.Size = UDim2.new(1, -32, 0, 56)
-    TextBox.LayoutOrder = 2
+    TextBox.AnchorPoint = Vector2.new(0.5, 0)
+    TextBox.Position = UDim2.new(0.5, 0, 0, 70)
+    TextBox.Size = UDim2.new(1, 0, 0, 60)
     TextBox.ZIndex = 50002
-    TextBox.Parent = EmptyState
-
-    local TextBoxLayout = Instance.new("UIListLayout")
-    TextBoxLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    TextBoxLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    TextBoxLayout.Padding = UDim.new(0, 6)
-    TextBoxLayout.Parent = TextBox
+    TextBox.Parent = EmptyContent
 
     local CaughtUpTitle = Instance.new("TextLabel")
     CaughtUpTitle.Name = "Title"
     CaughtUpTitle.BackgroundTransparency = 1
     CaughtUpTitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    CaughtUpTitle.AnchorPoint = Vector2.new(0.5, 0)
+    CaughtUpTitle.Position = UDim2.new(0.5, 0, 0, 0)
     CaughtUpTitle.Size = UDim2.new(1, 0, 0, 20)
     CaughtUpTitle.Text = "You're all caught up"
     CaughtUpTitle.TextColor3 = Color3.new(0.95, 0.95, 0.95)
     CaughtUpTitle.TextSize = 16
+    CaughtUpTitle.TextXAlignment = Enum.TextXAlignment.Center
+    CaughtUpTitle.TextYAlignment = Enum.TextYAlignment.Center
     CaughtUpTitle.ZIndex = 50003
     CaughtUpTitle.Parent = TextBox
 
@@ -386,11 +384,15 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     CaughtUpDesc.Name = "Description"
     CaughtUpDesc.BackgroundTransparency = 1
     CaughtUpDesc.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+    CaughtUpDesc.AnchorPoint = Vector2.new(0.5, 0)
+    CaughtUpDesc.Position = UDim2.new(0.5, 0, 0, 24)
     CaughtUpDesc.Size = UDim2.new(1, 0, 0, 32)
     CaughtUpDesc.Text = "Milestones, recaps and alerts will show up here."
     CaughtUpDesc.TextColor3 = Color3.fromRGB(120, 120, 120)
     CaughtUpDesc.TextSize = 13
     CaughtUpDesc.TextWrapped = true
+    CaughtUpDesc.TextXAlignment = Enum.TextXAlignment.Center
+    CaughtUpDesc.TextYAlignment = Enum.TextYAlignment.Top
     CaughtUpDesc.ZIndex = 50003
     CaughtUpDesc.Parent = TextBox
 
@@ -660,11 +662,11 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
             UpdateFloatingPositions()
             NotificationsPopover.Visible = true
             NotificationsPopover.BackgroundTransparency = 1
-            PopoverScale.Scale = 0.94
+            PopoverStroke.Transparency = 1
             Tween(NotificationsBtn, TweenInfoFast, {BackgroundTransparency = 0.8, BackgroundColor3 = Color3.fromRGB(40, 40, 40)})
             Tween(NotifStroke, TweenInfoFast, {Color = Color3.new(1, 1, 1), Transparency = 0, Thickness = 1.4})
-            Tween(NotificationsPopover, TweenInfo.new(0.22, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out), {BackgroundTransparency = 0})
-            Tween(PopoverScale, TweenInfo.new(0.22, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out), {Scale = 1})
+            Tween(NotificationsPopover, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0})
+            Tween(PopoverStroke, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Transparency = 0})
 
             for _, n in ipairs(currentNotifications) do
                 local id = tostring(n._id or n.id or (tostring(n.title) .. "_" .. tostring(n.message)))
@@ -677,9 +679,9 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
             local targetTrans = isHoveringNotif and 0.5 or 1
             Tween(NotificationsBtn, TweenInfoFast, {BackgroundTransparency = isHoveringNotif and 0.85 or 1})
             Tween(NotifStroke, TweenInfoFast, {Color = targetColor, Transparency = targetTrans, Thickness = 1.2})
-            Tween(NotificationsPopover, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1})
-            Tween(PopoverScale, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Scale = 0.94})
-            task.delay(0.18, function()
+            Tween(NotificationsPopover, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1})
+            Tween(PopoverStroke, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Transparency = 1})
+            task.delay(0.15, function()
                 if not isNotifOpen then
                     NotificationsPopover.Visible = false
                 end
