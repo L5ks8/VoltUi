@@ -16,24 +16,29 @@ app.get('/', (req, res) => {
     res.type('json').send(JSON.stringify({ message: "Volt API is running" }));
 });
 
+let packageVersion = "1.1.11";
+try {
+    packageVersion = require('./package.json').version || "1.1.10";
+} catch (e) {}
+
 app.get('/api', (req, res) => {
     res.type('json').send(JSON.stringify({
         status: "online",
         name: "Volt API",
-        version: "1.1.10",
+        version: packageVersion,
         message: "Volt API is operational"
     }));
 });
 
 app.get('/version', (req, res) => {
     res.type('json').send(JSON.stringify({
-        version: "1.1.10"
+        version: packageVersion
     }));
 });
 
 app.get('/api/version', (req, res) => {
     res.type('json').send(JSON.stringify({
-        version: "1.1.10"
+        version: packageVersion
     }));
 });
 

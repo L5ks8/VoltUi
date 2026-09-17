@@ -67,7 +67,8 @@ def update_files(new_ver):
     if os.path.exists(server_path):
         with open(server_path, "r", encoding="utf-8") as f:
             content = f.read()
-        new_content = re.sub(r'version:\s*"\d+\.\d+\.\d+"', f'version: "{new_ver}"', content)
+        new_content = re.sub(r'packageVersion\s*=\s*"\d+\.\d+\.\d+"', f'packageVersion = "{new_ver}"', content)
+        new_content = re.sub(r'version:\s*"\d+\.\d+\.\d+"', f'version: "{new_ver}"', new_content)
         if new_content != content:
             with open(server_path, "w", encoding="utf-8", newline="\n") as f:
                 f.write(new_content)

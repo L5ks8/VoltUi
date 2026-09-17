@@ -5,7 +5,7 @@ local Utility = require(Utils.Utility)
 local Topbar = {}
 
 function Topbar.Create(Main, Config, maid)
-    local Title = Config.Title or "Volt - 1.1.10"
+    local Title = Config.Title or "Volt - 1.1.11"
     
     local TopbarFrame = Instance.new("Frame")
     TopbarFrame.Name = "Topbar"
@@ -151,7 +151,7 @@ function Topbar.Create(Main, Config, maid)
     CloseIcon.Parent = Close
     
     local baseTitle = Config.Title or Config.Name or "Volt"
-    local initialVersion = Config.Version or "1.1.10"
+    local initialVersion = Config.Version or "1.1.11"
     
     local isSpecialPage = (baseTitle == "Sign In" or baseTitle == "Register" or baseTitle == "Reset Password" or baseTitle == "Enter Code" or baseTitle:find("Forgot") ~= nil)
     local function formatHeader(t, v)
@@ -199,8 +199,17 @@ function Topbar.Create(Main, Config, maid)
                         local HttpService = game:GetService("HttpService")
                         local ok, decoded = pcall(function() return HttpService:JSONDecode(res) end)
                         local v = (ok and decoded and decoded.version) or res:match('"(%d+%.%d+%.%d+)"') or res:match('(%d+%.%d+%.%d+)')
-                        if v and v ~= "" then
-                            VersionText.Text = formatHeader(baseTitle, v)
+                        if v and v ~= "" and v ~= initialVersion then
+                            local function parseVer(str)
+                                local p = {}
+                                for num in string.gmatch(str, "%d+") do
+                                    table.insert(p, tonumber(num) or 0)
+                                end
+                                return (p[1] or 0) * 10000 + (p[2] or 0) * 100 + (p[3] or 0)
+                            end
+                            if parseVer(v) >= parseVer(initialVersion) then
+                                VersionText.Text = formatHeader(baseTitle, v)
+                            end
                         end
                     end
                 end
