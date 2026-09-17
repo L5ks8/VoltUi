@@ -162,11 +162,11 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     local NotifBadge = Instance.new("Frame")
     NotifBadge.Name = "Badge"
     NotifBadge.AnchorPoint = Vector2.new(0.5, 0.5)
-    NotifBadge.Position = UDim2.new(0, 2, 0, 2)
+    NotifBadge.Position = UDim2.new(1, -8, 0, 8)
     NotifBadge.Size = UDim2.new(0, 16, 0, 16)
     NotifBadge.BackgroundColor3 = Color3.fromRGB(235, 45, 45)
     NotifBadge.BorderSizePixel = 0
-    NotifBadge.ZIndex = 50
+    NotifBadge.ZIndex = 1000
     NotifBadge.Visible = false
     NotifBadge.Parent = NotificationsBtn
 
@@ -189,7 +189,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     NotifBadgeText.TextSize = 10
     NotifBadgeText.TextXAlignment = Enum.TextXAlignment.Center
     NotifBadgeText.TextYAlignment = Enum.TextYAlignment.Center
-    NotifBadgeText.ZIndex = 51
+    NotifBadgeText.ZIndex = 1001
     NotifBadgeText.Parent = NotifBadge
 
     local Tooltip = Instance.new("Frame")
@@ -200,7 +200,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     Tooltip.Size = UDim2.new(0, 0, 0, 22)
     Tooltip.AutomaticSize = Enum.AutomaticSize.X
     Tooltip.BorderSizePixel = 0
-    Tooltip.ZIndex = 6000
+    Tooltip.ZIndex = 60000
     Tooltip.Visible = false
     Tooltip.Parent = MainFrame
 
@@ -227,7 +227,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     TooltipText.TextTransparency = 1
     TooltipText.Size = UDim2.new(1, 0, 1, 0)
     TooltipText.AutomaticSize = Enum.AutomaticSize.X
-    TooltipText.ZIndex = 6001
+    TooltipText.ZIndex = 60001
     TooltipText.Parent = Tooltip
 
     local NotificationsPopover = Instance.new("Frame")
@@ -236,7 +236,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     NotificationsPopover.Size = UDim2.new(0, 305, 0, 275)
     NotificationsPopover.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
     NotificationsPopover.BorderSizePixel = 0
-    NotificationsPopover.ZIndex = 5000
+    NotificationsPopover.ZIndex = 50000
     NotificationsPopover.Visible = false
     NotificationsPopover.ClipsDescendants = true
     NotificationsPopover.Parent = MainFrame
@@ -258,7 +258,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     PopoverHeader.Name = "Header"
     PopoverHeader.BackgroundTransparency = 1
     PopoverHeader.Size = UDim2.new(1, 0, 0, 44)
-    PopoverHeader.ZIndex = 5001
+    PopoverHeader.ZIndex = 50001
     PopoverHeader.Parent = NotificationsPopover
 
     local PopoverTitle = Instance.new("TextLabel")
@@ -271,7 +271,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     PopoverTitle.TextColor3 = Color3.new(0.95, 0.95, 0.95)
     PopoverTitle.TextSize = 15
     PopoverTitle.TextXAlignment = Enum.TextXAlignment.Left
-    PopoverTitle.ZIndex = 5002
+    PopoverTitle.ZIndex = 50002
     PopoverTitle.Parent = PopoverHeader
 
     local ClearAllBtn = Instance.new("TextButton")
@@ -285,7 +285,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     ClearAllBtn.TextColor3 = Color3.fromRGB(130, 130, 130)
     ClearAllBtn.TextSize = 13
     ClearAllBtn.TextXAlignment = Enum.TextXAlignment.Right
-    ClearAllBtn.ZIndex = 5002
+    ClearAllBtn.ZIndex = 50002
     ClearAllBtn.Parent = PopoverHeader
 
     Maid:GiveTask(ClearAllBtn.MouseEnter:Connect(function()
@@ -301,7 +301,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     PopoverDivider.BorderSizePixel = 0
     PopoverDivider.Position = UDim2.new(0, 0, 1, -1)
     PopoverDivider.Size = UDim2.new(1, 0, 0, 1)
-    PopoverDivider.ZIndex = 5001
+    PopoverDivider.ZIndex = 50001
     PopoverDivider.Parent = PopoverHeader
 
     local PopoverBody = Instance.new("Frame")
@@ -309,14 +309,14 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     PopoverBody.BackgroundTransparency = 1
     PopoverBody.Position = UDim2.new(0, 0, 0, 44)
     PopoverBody.Size = UDim2.new(1, 0, 1, -44)
-    PopoverBody.ZIndex = 5001
+    PopoverBody.ZIndex = 50001
     PopoverBody.Parent = NotificationsPopover
 
     local EmptyState = Instance.new("Frame")
     EmptyState.Name = "EmptyState"
     EmptyState.BackgroundTransparency = 1
     EmptyState.Size = UDim2.new(1, 0, 1, 0)
-    EmptyState.ZIndex = 5001
+    EmptyState.ZIndex = 50001
     EmptyState.Parent = PopoverBody
 
     local EmptyStateLayout = Instance.new("UIListLayout")
@@ -332,7 +332,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     IconBox.BorderSizePixel = 0
     IconBox.Size = UDim2.new(0, 58, 0, 58)
     IconBox.LayoutOrder = 1
-    IconBox.ZIndex = 5002
+    IconBox.ZIndex = 50002
     IconBox.Parent = EmptyState
 
     local IconBoxCorner = Instance.new("UICorner")
@@ -352,7 +352,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     IconBoxImg.BackgroundTransparency = 1
     IconBoxImg.Image = "rbxassetid://118205848671512"
     IconBoxImg.ImageColor3 = Color3.fromRGB(180, 180, 180)
-    IconBoxImg.ZIndex = 5003
+    IconBoxImg.ZIndex = 50003
     IconBoxImg.Parent = IconBox
 
     local TextBox = Instance.new("Frame")
@@ -360,7 +360,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     TextBox.BackgroundTransparency = 1
     TextBox.Size = UDim2.new(1, -32, 0, 56)
     TextBox.LayoutOrder = 2
-    TextBox.ZIndex = 5002
+    TextBox.ZIndex = 50002
     TextBox.Parent = EmptyState
 
     local TextBoxLayout = Instance.new("UIListLayout")
@@ -377,7 +377,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     CaughtUpTitle.Text = "You're all caught up"
     CaughtUpTitle.TextColor3 = Color3.new(0.95, 0.95, 0.95)
     CaughtUpTitle.TextSize = 16
-    CaughtUpTitle.ZIndex = 5003
+    CaughtUpTitle.ZIndex = 50003
     CaughtUpTitle.Parent = TextBox
 
     local CaughtUpDesc = Instance.new("TextLabel")
@@ -389,7 +389,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     CaughtUpDesc.TextColor3 = Color3.fromRGB(120, 120, 120)
     CaughtUpDesc.TextSize = 13
     CaughtUpDesc.TextWrapped = true
-    CaughtUpDesc.ZIndex = 5003
+    CaughtUpDesc.ZIndex = 50003
     CaughtUpDesc.Parent = TextBox
 
     local NotificationsScroll = Instance.new("ScrollingFrame")
@@ -402,7 +402,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     NotificationsScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
     NotificationsScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
     NotificationsScroll.Visible = false
-    NotificationsScroll.ZIndex = 5001
+    NotificationsScroll.ZIndex = 50001
     NotificationsScroll.Parent = PopoverBody
 
     local NotifScrollLayout = Instance.new("UIListLayout")
@@ -442,7 +442,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
             Card.BorderSizePixel = 0
             Card.Size = UDim2.new(1, 0, 0, 0)
             Card.AutomaticSize = Enum.AutomaticSize.Y
-            Card.ZIndex = 5002
+            Card.ZIndex = 50002
             Card.Parent = NotificationsScroll
 
             local CardCorner = Instance.new("UICorner")
@@ -469,7 +469,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
             local HeaderRow = Instance.new("Frame")
             HeaderRow.BackgroundTransparency = 1
             HeaderRow.Size = UDim2.new(1, 0, 0, 18)
-            HeaderRow.ZIndex = 5003
+            HeaderRow.ZIndex = 50003
             HeaderRow.Parent = Card
 
             local HeaderLayout = Instance.new("UIListLayout")
@@ -487,7 +487,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
             TitleLabel.TextSize = 14
             TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
             TitleLabel.TextTruncate = Enum.TextTruncate.AtEnd
-            TitleLabel.ZIndex = 5003
+            TitleLabel.ZIndex = 50003
             TitleLabel.Parent = HeaderRow
 
             local DateLabel = Instance.new("TextLabel")
@@ -498,7 +498,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
             DateLabel.TextColor3 = Color3.fromRGB(110, 110, 110)
             DateLabel.TextSize = 11
             DateLabel.TextXAlignment = Enum.TextXAlignment.Right
-            DateLabel.ZIndex = 5003
+            DateLabel.ZIndex = 50003
             DateLabel.Parent = HeaderRow
 
             local MsgLabel = Instance.new("TextLabel")
@@ -511,7 +511,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
             MsgLabel.TextSize = 12
             MsgLabel.TextWrapped = true
             MsgLabel.TextXAlignment = Enum.TextXAlignment.Left
-            MsgLabel.ZIndex = 5003
+            MsgLabel.ZIndex = 50003
             MsgLabel.Parent = Card
         end
 
