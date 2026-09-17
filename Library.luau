@@ -1,5 +1,5 @@
 local Library = {
-    Version = "1.1.8"
+    Version = "1.1.9"
 }
 local isStudio = false
 pcall(function()

@@ -20,20 +20,20 @@ app.get('/api', (req, res) => {
     res.type('json').send(JSON.stringify({
         status: "online",
         name: "Volt API",
-        version: "1.1.8",
+        version: "1.1.9",
         message: "Volt API is operational"
     }));
 });
 
 app.get('/version', (req, res) => {
     res.type('json').send(JSON.stringify({
-        version: "1.1.8"
+        version: "1.1.9"
     }));
 });
 
 app.get('/api/version', (req, res) => {
     res.type('json').send(JSON.stringify({
-        version: "1.1.8"
+        version: "1.1.9"
     }));
 });
 

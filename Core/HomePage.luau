@@ -2214,7 +2214,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
                 end)
             end
         end)
-    end, UDim2.new(0, 78, 1, 0))
+    end, UDim2.new(0, 85, 1, 0))
 
     CreateActionButton(ActionButtonsRow, "Copy ID", "rbxassetid://98703591334673", 2, function()
         local jobId = tostring(game.JobId)
@@ -2228,14 +2228,14 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
             Duration = 3,
             Type = "success"
         })
-    end, UDim2.new(0, 78, 1, 0))
+    end, UDim2.new(0, 85, 1, 0))
 
     local JoinInputWrapper = Instance.new("Frame")
     JoinInputWrapper.Name = "JoinInputWrapper"
     JoinInputWrapper.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
     JoinInputWrapper.BorderSizePixel = 0
     JoinInputWrapper.LayoutOrder = 3
-    JoinInputWrapper.Size = UDim2.new(1, -232, 1, 0)
+    JoinInputWrapper.Size = UDim2.new(1, -182, 1, 0)
     JoinInputWrapper.Parent = ActionButtonsRow
 
     local JoinCorner = Instance.new("UICorner")
@@ -2365,23 +2365,6 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
             executeJoin()
         end
     end))
-
-    CreateActionButton(ActionButtonsRow, "Reload", "rbxassetid://10734940376", 4, function()
-        SendNotification({
-            Title = "Reload UI",
-            Content = "Reloading Volt UI...",
-            Duration = 2,
-            Type = "info"
-        })
-        task.delay(0.5, function()
-            pcall(function()
-                local screenGui = Page:FindFirstAncestorOfClass("ScreenGui")
-                if screenGui then
-                    screenGui:Destroy()
-                end
-            end)
-        end)
-    end, UDim2.new(0, 52, 1, 0))
 
     local CommunityCard = Instance.new("Frame")
     CommunityCard.Name = "CommunityCard"
