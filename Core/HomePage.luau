@@ -1560,6 +1560,31 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
 
     local isSendingBug = false
 
+    local function GetCooldownRemaining()
+        local elapsed = os.time() - lastBugReportTime
+        local cooldownSeconds = 86400
+        if elapsed < cooldownSeconds then
+            local remaining = cooldownSeconds - elapsed
+            local hoursLeft = math.floor(remaining / 3600)
+            local minsLeft = math.floor((remaining % 3600) / 60)
+            return hoursLeft > 0 and (hoursLeft .. "h left") or (math.max(1, minsLeft) .. "m left")
+        end
+        return nil
+    end
+
+    local function UpdateBugButton()
+        local cd = GetCooldownRemaining()
+        if cd then
+            SendBtn.Text = cd
+            SendBtn.TextColor3 = Color3.new(0.8, 0.8, 0.8)
+        else
+            SendBtn.Text = "Send"
+            SendBtn.TextColor3 = Color3.new(0.8, 0.8, 0.8)
+        end
+    end
+
+    UpdateBugButton()
+
     Maid:GiveTask(SendBtn.MouseEnter:Connect(function()
         Tween(SendBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)})
     end))
@@ -1569,35 +1594,21 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     Maid:GiveTask(SendBtn.MouseButton1Click:Connect(function()
         if isSendingBug then return end
 
-        local reportText = BugTextBox.Text
-        if reportText == "" or string.gsub(reportText, "%s+", "") == "" then
-            return
-        end
-
-        local now = os.time()
-        local cooldownSeconds = 86400
-        local elapsed = now - lastBugReportTime
-        if elapsed < cooldownSeconds then
-            local remaining = cooldownSeconds - elapsed
-            local hoursLeft = math.floor(remaining / 3600)
-            local minsLeft = math.floor((remaining % 3600) / 60)
-            local timeMsg = hoursLeft > 0 and (hoursLeft .. "h left") or (math.max(1, minsLeft) .. "m left")
-
-            SendBtn.Text = timeMsg
-            SendBtn.TextColor3 = Color3.fromRGB(235, 75, 75)
+        local cooldown = GetCooldownRemaining()
+        if cooldown then
+            UpdateBugButton()
             if WindowObject and WindowObject.Notify then
                 WindowObject:Notify({
-                    Title = "Bug Report Cooldown",
-                    Content = "You can only submit 1 bug report every 24 hours. Please wait " .. timeMsg .. ".",
+                    Title = "Bug Report",
+                    Content = "You can only submit 1 bug report every 24 hours. Time left: " .. cooldown,
                     Duration = 4
                 })
             end
-            task.delay(2.5, function()
-                if SendBtn and SendBtn.Parent then
-                    SendBtn.Text = "Send"
-                    SendBtn.TextColor3 = Color3.new(0.8, 0.8, 0.8)
-                end
-            end)
+            return
+        end
+
+        local reportText = BugTextBox.Text
+        if reportText == "" or string.gsub(reportText, "%s+", "") == "" then
             return
         end
 
@@ -1605,7 +1616,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
         SendBtn.Text = "..."
         BugTextBox.Text = ""
 
-        lastBugReportTime = now
+        lastBugReportTime = os.time()
         pcall(function()
             if writefileFunc then
                 if makefolderFunc and isfolderFunc and not isfolderFunc("VoltHub") then
@@ -1724,21 +1735,14 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
                 end
             end)
 
-            SendBtn.Text = "Sent!"
-            SendBtn.TextColor3 = Color3.fromRGB(60, 220, 100)
-            task.delay(3, function()
-                isSendingBug = false
-                if SendBtn and SendBtn.Parent then
-                    SendBtn.Text = "Send"
-                    SendBtn.TextColor3 = Color3.new(0.8, 0.8, 0.8)
-                end
-            end)
+            isSendingBug = false
+            UpdateBugButton()
             
             if WindowObject and WindowObject.Notify then
                 WindowObject:Notify({
                     Title = "Bug Report",
-                    Content = "Thank you! Your bug report has been submitted.",
-                    Duration = 3
+                    Content = "Bug report successfully submitted!",
+                    Duration = 4
                 })
             end
         end))
