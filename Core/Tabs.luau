@@ -126,7 +126,9 @@ function Tabs.CreateTab(WindowObject, Name, IconAsset)
     table.insert(Tabs.Instances, TabObj)
     
     local function ActivateTab()
-        if WindowObject.OpenHome then
+        if WindowObject.OpenContent then
+            WindowObject:OpenContent()
+        elseif WindowObject.OpenHome then
             WindowObject:OpenHome()
         end
 

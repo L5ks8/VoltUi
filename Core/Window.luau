@@ -19,6 +19,7 @@ local LoginPage = require(script.Parent.LoginPage)
 local Notifications = require(script.Parent.Notifications)
 local Tabs = require(script.Parent.Tabs)
 local Loading = require(script.Parent.Loading)
+local HomePage = require(script.Parent.HomePage)
 
 local Window = {}
 
@@ -173,10 +174,17 @@ function Window:CreateWindow(Config)
     
     local OnLoginSuccess
 
+    local HomePageElements
+    pcall(function()
+        HomePageElements = HomePage.Create(PagesContainer, maid, function()
+            WindowObject:OpenContent()
+        end, WindowObject)
+    end)
+
     local AccountPageElements
     pcall(function()
         AccountPageElements = AccountPage.Create(PagesContainer, maid, function()
-            WindowObject:OpenHome()
+            WindowObject:OpenContent()
         end, Api, function()
             LoginPage.Create(VoltUi, function()
                 OnLoginSuccess()
@@ -188,14 +196,13 @@ function Window:CreateWindow(Config)
     local SettingsPageElements
     local success, err = pcall(function()
         SettingsPageElements = SettingsPage.Create(PagesContainer, maid, function()
-            WindowObject:OpenHome()
+            WindowObject:OpenContent()
         end, Config)
     end)
     if not success then
         warn("[VoltUi] Failed to create Settings Page: " .. tostring(err))
     end
     
-    -- Connect Sidebar clicks
     maid:GiveTask(SidebarElements.HomeBtn.MouseButton1Click:Connect(function()
         if WindowObject and WindowObject.OpenHome then
             WindowObject:OpenHome()
@@ -760,6 +767,8 @@ function Window:CreateWindow(Config)
     local PageLayoutMock = {
         JumpTo = function(_, target)
             if target == Content then
+                WindowObject:OpenContent()
+            elseif HomePageElements and target == HomePageElements.Instance then
                 WindowObject:OpenHome()
             elseif SettingsPageElements and target == SettingsPageElements.Instance then
                 WindowObject:OpenSettings()
@@ -781,6 +790,7 @@ function Window:CreateWindow(Config)
         PageLayout = PageLayoutMock,
         PagesContainer = PagesContainer,
         Content = Content,
+        HomePage = HomePageElements,
         AccountPage = AccountPageElements,
         Maid = maid,
         OnClose = OnClose,
@@ -812,12 +822,20 @@ function Window:CreateWindow(Config)
         end
     end
 
-    function WindowObject:OpenHome()
+    function WindowObject:OpenContent()
         SwitchPage(Content, true)
         if Api and Api.UserData and Api.UserData.remaining == "Expired" then
             ExpiredOverlay.Visible = true
         else
             ExpiredOverlay.Visible = false
+        end
+    end
+
+    function WindowObject:OpenHome()
+        if HomePageElements and HomePageElements.Instance then
+            SwitchPage(HomePageElements.Instance, false)
+        else
+            SwitchPage(Content, true)
         end
     end
     
