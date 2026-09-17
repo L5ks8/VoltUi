@@ -8,6 +8,45 @@ pcall(function()
     Notifications = require(script.Parent.Notifications)
 end)
 
+local isfileFunc = isfile or (file and file.Exists) or nil
+local readfileFunc = readfile or (file and file.Read) or nil
+local writefileFunc = writefile or (file and file.Write) or nil
+local makefolderFunc = makefolder or (file and file.CreateDir) or nil
+local isfolderFunc = isfolder or (file and file.IsDir) or nil
+
+local function CreateHeader(parent, iconAsset, titleText)
+    local header = Instance.new("Frame")
+    header.Name = "Header"
+    header.BackgroundTransparency = 1
+    header.Size = UDim2.new(1, 0, 0, 18)
+    header.LayoutOrder = 1
+    header.Parent = parent
+
+    local hLayout = Instance.new("UIListLayout")
+    hLayout.FillDirection = Enum.FillDirection.Horizontal
+    hLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    hLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    hLayout.Padding = UDim.new(0, 6)
+    hLayout.Parent = header
+
+    local icon = Instance.new("ImageLabel")
+    icon.BackgroundTransparency = 1
+    icon.Size = UDim2.new(0, 15, 0, 15)
+    icon.Image = iconAsset
+    icon.ImageColor3 = Color3.fromRGB(180, 180, 180)
+    icon.Parent = header
+
+    local title = Instance.new("TextLabel")
+    title.BackgroundTransparency = 1
+    title.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    title.Size = UDim2.new(1, -22, 1, 0)
+    title.Text = titleText
+    title.TextColor3 = Color3.new(0.85, 0.85, 0.85)
+    title.TextSize = 13
+    title.TextXAlignment = Enum.TextXAlignment.Left
+    title.Parent = header
+end
+
 local HomePage = {}
 
 function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
@@ -17,6 +56,21 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
             Api = require(script.Parent.Parent.Utils.Api)
         end)
     end
+
+
+    local function SendNotification(options)
+        if Notifications and Notifications.Notify then
+            Notifications.Notify(options)
+        elseif WindowObject and WindowObject.Notify then
+            WindowObject:Notify(options)
+        end
+    end
+
+    local NotificationsPopover = nil
+    local PlayersScroll = nil
+    local ClaimedScroll = nil
+    local BugTextBox = nil
+    local SendBtn = nil
     local Page = Instance.new("Frame")
     Page.Name = "HomePage"
     Page.AnchorPoint = Vector2.new(0, 0)
@@ -238,7 +292,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     TooltipText.ZIndex = 60001
     TooltipText.Parent = Tooltip
 
-    local NotificationsPopover = Instance.new("Frame")
+    NotificationsPopover = Instance.new("Frame")
     NotificationsPopover.Name = "NotificationsPopover"
     NotificationsPopover.AnchorPoint = Vector2.new(1, 0)
     NotificationsPopover.Size = UDim2.new(0, 305, 0, 275)
@@ -427,11 +481,6 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     NotifScrollPadding.PaddingRight = UDim.new(0, 12)
     NotifScrollPadding.Parent = NotificationsScroll
 
-    local isfileFunc = isfile or (file and file.Exists) or nil
-    local readfileFunc = readfile or (file and file.Read) or nil
-    local writefileFunc = writefile or (file and file.Write) or nil
-    local makefolderFunc = makefolder or (file and file.CreateDir) or nil
-    local isfolderFunc = isfolder or (file and file.IsDir) or nil
 
     local currentNotifications = {}
     local readNotificationIds = {}
@@ -851,6 +900,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
         end))
     end
 
+    do
     local MainSection = Instance.new("Frame")
     MainSection.Name = "Updats/Players"
     MainSection.BackgroundColor3 = Color3.new(1, 1, 1)
@@ -983,7 +1033,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     PlayersSubtitle.TextYAlignment = Enum.TextYAlignment.Top
     PlayersSubtitle.Parent = PlayersInfoFrame
 
-    local PlayersScroll = Instance.new("ScrollingFrame")
+    PlayersScroll = Instance.new("ScrollingFrame")
     PlayersScroll.Name = "Players"
     PlayersScroll.BackgroundColor3 = Color3.new(1, 1, 1)
     PlayersScroll.BackgroundTransparency = 1
@@ -1205,7 +1255,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     UpdatesFiller.Size = UDim2.new(1, -135, 0, 30)
     UpdatesFiller.Parent = UpdatesHeader
 
-    local ClaimedScroll = Instance.new("ScrollingFrame")
+    ClaimedScroll = Instance.new("ScrollingFrame")
     ClaimedScroll.Name = "Claimed"
     ClaimedScroll.BackgroundColor3 = Color3.new(1, 1, 1)
     ClaimedScroll.BackgroundTransparency = 1
@@ -1350,7 +1400,9 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
 
     RenderUpdates({})
     FetchUpdates()
+    end
 
+    do
     local QuickSectionWrapper = Instance.new("Frame")
     QuickSectionWrapper.Name = "QuickSectionWrapper"
     QuickSectionWrapper.BackgroundTransparency = 1
@@ -1402,38 +1454,6 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
         return card
     end
 
-    local function CreateHeader(parent, iconAsset, titleText)
-        local header = Instance.new("Frame")
-        header.Name = "Header"
-        header.BackgroundTransparency = 1
-        header.Size = UDim2.new(1, 0, 0, 18)
-        header.LayoutOrder = 1
-        header.Parent = parent
-
-        local hLayout = Instance.new("UIListLayout")
-        hLayout.FillDirection = Enum.FillDirection.Horizontal
-        hLayout.SortOrder = Enum.SortOrder.LayoutOrder
-        hLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-        hLayout.Padding = UDim.new(0, 6)
-        hLayout.Parent = header
-
-        local icon = Instance.new("ImageLabel")
-        icon.BackgroundTransparency = 1
-        icon.Size = UDim2.new(0, 15, 0, 15)
-        icon.Image = iconAsset
-        icon.ImageColor3 = Color3.fromRGB(180, 180, 180)
-        icon.Parent = header
-
-        local title = Instance.new("TextLabel")
-        title.BackgroundTransparency = 1
-        title.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-        title.Size = UDim2.new(1, -22, 1, 0)
-        title.Text = titleText
-        title.TextColor3 = Color3.new(0.85, 0.85, 0.85)
-        title.TextSize = 13
-        title.TextXAlignment = Enum.TextXAlignment.Left
-        title.Parent = header
-    end
 
     local function CreateStatRow(parent, labelText, initialValue, order, valueColor)
         local row = Instance.new("Frame")
@@ -1607,7 +1627,9 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
             task.wait(1)
         end
     end)
+    end
 
+    do
     local BugSectionWrapper = Instance.new("Frame")
     BugSectionWrapper.Name = "BugReportsWrapper"
     BugSectionWrapper.BackgroundTransparency = 1
@@ -1763,7 +1785,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     BugInputPadding.PaddingBottom = UDim.new(0, 8)
     BugInputPadding.Parent = BugInputFrame
 
-    local BugTextBox = Instance.new("TextBox")
+    BugTextBox = Instance.new("TextBox")
     BugTextBox.BackgroundColor3 = Color3.new(1, 1, 1)
     BugTextBox.BackgroundTransparency = 1
     BugTextBox.BorderSizePixel = 0
@@ -1789,7 +1811,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     SendBtnContainer.Size = UDim2.new(0, 85, 0, 36)
     SendBtnContainer.Parent = BugSendArea
 
-    local SendBtn = Instance.new("TextButton")
+    SendBtn = Instance.new("TextButton")
     SendBtn.Name = "Button"
     SendBtn.BackgroundColor3 = Color3.new(0.149, 0.149, 0.149)
     SendBtn.BorderSizePixel = 0
@@ -1851,13 +1873,6 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     Maid:GiveTask(SendBtn.MouseLeave:Connect(function()
         Tween(SendBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.new(0.149, 0.149, 0.149)})
     end))
-    local function SendNotification(options)
-        if Notifications and Notifications.Notify then
-            Notifications.Notify(options)
-        elseif WindowObject and WindowObject.Notify then
-            WindowObject:Notify(options)
-        end
-    end
 
     Maid:GiveTask(SendBtn.MouseButton1Click:Connect(function()
         if isSendingBug then return end
@@ -2012,7 +2027,9 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
                 Type = "success"
             })
         end))
+    end
 
+    do
     local BottomSectionWrapper = Instance.new("Frame")
     BottomSectionWrapper.Name = "BottomSectionWrapper"
     BottomSectionWrapper.BackgroundTransparency = 1
@@ -2513,6 +2530,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
             Type = "success"
         })
     end)
+    end
 
     return {
         Instance = Page,
