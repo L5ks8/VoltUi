@@ -1741,8 +1741,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
                     Duration = 3
                 })
             end
-        end
-    end))
+        end))
 
     return {
         Instance = Page,
