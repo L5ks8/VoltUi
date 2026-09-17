@@ -882,8 +882,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     PlayersCard.Parent = MainSection
 
     local PlayersCardInner = Instance.new("Frame")
-    PlayersCardInner.BackgroundColor3 = Color3.new(0.08, 0.08, 0.08)
-    PlayersCardInner.BackgroundTransparency = 0.5
+    PlayersCardInner.BackgroundColor3 = Color3.new(0.09, 0.09, 0.09)
     PlayersCardInner.BorderColor3 = Color3.new(0, 0, 0)
     PlayersCardInner.BorderSizePixel = 0
     PlayersCardInner.Size = UDim2.new(1, 0, 1, 0)
@@ -1013,7 +1012,6 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
         local PlayerItem = Instance.new("Frame")
         PlayerItem.Name = player.Name
         PlayerItem.BackgroundColor3 = Color3.new(0.12, 0.12, 0.12)
-        PlayerItem.BackgroundTransparency = 0.5
         PlayerItem.BorderColor3 = Color3.new(0, 0, 0)
         PlayerItem.BorderSizePixel = 0
         PlayerItem.Size = UDim2.new(1, -10, 0, 40)
@@ -1124,8 +1122,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
 
     local KeysFrame = Instance.new("Frame")
     KeysFrame.Name = "Keys"
-    KeysFrame.BackgroundColor3 = Color3.new(0.08, 0.08, 0.08)
-    KeysFrame.BackgroundTransparency = 0.5
+    KeysFrame.BackgroundColor3 = Color3.new(0.09, 0.09, 0.09)
     KeysFrame.BorderColor3 = Color3.new(0, 0, 0)
     KeysFrame.BorderSizePixel = 0
     KeysFrame.Size = UDim2.new(1, 0, 1, 0)
@@ -1236,8 +1233,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     local function AddUpdateCard(title, date, desc)
         local Card = Instance.new("Frame")
         Card.Name = "UpdateCard"
-        Card.BackgroundColor3 = Color3.new(0.11, 0.11, 0.11)
-        Card.BackgroundTransparency = 0.4
+        Card.BackgroundColor3 = Color3.new(0.12, 0.12, 0.12)
         Card.Size = UDim2.new(1, 0, 0, 0)
         Card.AutomaticSize = Enum.AutomaticSize.Y
         Card.Parent = ClaimedScroll
@@ -1376,8 +1372,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     local function CreateQuickCard(name, order)
         local card = Instance.new("Frame")
         card.Name = name
-        card.BackgroundColor3 = Color3.new(0.08, 0.08, 0.08)
-        card.BackgroundTransparency = 0.5
+        card.BackgroundColor3 = Color3.new(0.09, 0.09, 0.09)
         card.BorderSizePixel = 0
         card.LayoutOrder = order
         card.Size = UDim2.new(0.333, -7, 1, 0)
@@ -1591,8 +1586,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
 
     local BugReportsSection = Instance.new("Frame")
     BugReportsSection.Name = "Bug Reports"
-    BugReportsSection.BackgroundColor3 = Color3.new(0.08, 0.08, 0.08)
-    BugReportsSection.BackgroundTransparency = 0.5
+    BugReportsSection.BackgroundColor3 = Color3.new(0.09, 0.09, 0.09)
     BugReportsSection.BorderColor3 = Color3.new(0, 0, 0)
     BugReportsSection.BorderSizePixel = 0
     BugReportsSection.Size = UDim2.new(1, 0, 0, 0)
