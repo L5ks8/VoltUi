@@ -102,6 +102,25 @@ const getNotificationsHandler = async (req, res) => {
 app.get('/notifications', getNotificationsHandler);
 app.get('/api/notifications', getNotificationsHandler);
 
+const Update = require('./models/Update');
+
+const getUpdatesHandler = async (req, res) => {
+    try {
+        const updates = await Update.find()
+            .sort({ createdAt: -1 })
+            .limit(25)
+            .lean();
+
+        return res.json({ success: true, updates });
+    } catch (err) {
+        console.error('Get updates error:', err);
+        return res.status(500).json({ success: false, error: err.message });
+    }
+};
+
+app.get('/updates', getUpdatesHandler);
+app.get('/api/updates', getUpdatesHandler);
+
 // Developer API (unencrypted, uses Admin API Key)
 app.use('/api/v1', requireApiKey, require('./routes/adminApi'));
 

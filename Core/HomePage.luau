@@ -417,8 +417,60 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     NotifScrollPadding.PaddingRight = UDim.new(0, 12)
     NotifScrollPadding.Parent = NotificationsScroll
 
+    local isfileFunc = isfile or (file and file.Exists) or nil
+    local readfileFunc = readfile or (file and file.Read) or nil
+    local writefileFunc = writefile or (file and file.Write) or nil
+    local makefolderFunc = makefolder or (file and file.CreateDir) or nil
+    local isfolderFunc = isfolder or (file and file.IsDir) or nil
+
     local currentNotifications = {}
     local readNotificationIds = {}
+    local clearedNotificationIds = {}
+
+    local function LoadReadNotifications()
+        pcall(function()
+            if isfileFunc and readfileFunc and isfileFunc("VoltHub/ReadNotifications.json") then
+                local content = readfileFunc("VoltHub/ReadNotifications.json")
+                if content and #content > 0 then
+                    local data = HttpService:JSONDecode(content)
+                    if type(data) == "table" then
+                        if data.read and type(data.read) == "table" then
+                            for k, v in pairs(data.read) do
+                                readNotificationIds[k] = v
+                            end
+                        end
+                        if data.cleared and type(data.cleared) == "table" then
+                            for k, v in pairs(data.cleared) do
+                                clearedNotificationIds[k] = v
+                            end
+                        end
+                        for k, v in pairs(data) do
+                            if k ~= "read" and k ~= "cleared" then
+                                readNotificationIds[k] = v
+                            end
+                        end
+                    end
+                end
+            end
+        end)
+    end
+
+    local function SaveReadNotifications()
+        pcall(function()
+            if writefileFunc then
+                if makefolderFunc and isfolderFunc and not isfolderFunc("VoltHub") then
+                    makefolderFunc("VoltHub")
+                end
+                local data = {
+                    read = readNotificationIds,
+                    cleared = clearedNotificationIds
+                }
+                writefileFunc("VoltHub/ReadNotifications.json", HttpService:JSONEncode(data))
+            end
+        end)
+    end
+
+    LoadReadNotifications()
 
     local function RenderNotifications(notifs)
         currentNotifications = notifs or {}
@@ -430,97 +482,101 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
         end
 
         local unreadCount = 0
+        local visibleCount = 0
         for _, n in ipairs(currentNotifications) do
             local id = tostring(n._id or n.id or (tostring(n.title) .. "_" .. tostring(n.message)))
-            if not readNotificationIds[id] then
-                unreadCount = unreadCount + 1
+            if not clearedNotificationIds[id] then
+                visibleCount = visibleCount + 1
+                if not readNotificationIds[id] then
+                    unreadCount = unreadCount + 1
+                end
+
+                local Card = Instance.new("Frame")
+                Card.Name = "NotifCard"
+                Card.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
+                Card.BorderSizePixel = 0
+                Card.Size = UDim2.new(1, 0, 0, 0)
+                Card.AutomaticSize = Enum.AutomaticSize.Y
+                Card.ZIndex = 50002
+                Card.Parent = NotificationsScroll
+
+                local CardCorner = Instance.new("UICorner")
+                CardCorner.CornerRadius = UDim.new(0, 8)
+                CardCorner.Parent = Card
+
+                local CardStroke = Instance.new("UIStroke")
+                CardStroke.Color = Color3.fromRGB(44, 44, 44)
+                CardStroke.Thickness = 1
+                CardStroke.Parent = Card
+
+                local CardPadding = Instance.new("UIPadding")
+                CardPadding.PaddingTop = UDim.new(0, 10)
+                CardPadding.PaddingBottom = UDim.new(0, 10)
+                CardPadding.PaddingLeft = UDim.new(0, 12)
+                CardPadding.PaddingRight = UDim.new(0, 12)
+                CardPadding.Parent = Card
+
+                local CardLayout = Instance.new("UIListLayout")
+                CardLayout.SortOrder = Enum.SortOrder.LayoutOrder
+                CardLayout.Padding = UDim.new(0, 4)
+                CardLayout.Parent = Card
+
+                local HeaderRow = Instance.new("Frame")
+                HeaderRow.BackgroundTransparency = 1
+                HeaderRow.Size = UDim2.new(1, 0, 0, 18)
+                HeaderRow.ZIndex = 50003
+                HeaderRow.Parent = Card
+
+                local HeaderLayout = Instance.new("UIListLayout")
+                HeaderLayout.FillDirection = Enum.FillDirection.Horizontal
+                HeaderLayout.SortOrder = Enum.SortOrder.LayoutOrder
+                HeaderLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+                HeaderLayout.Parent = HeaderRow
+
+                local TitleLabel = Instance.new("TextLabel")
+                TitleLabel.BackgroundTransparency = 1
+                TitleLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+                TitleLabel.Size = UDim2.new(0.7, 0, 1, 0)
+                TitleLabel.Text = tostring(n.title or "Notification")
+                TitleLabel.TextColor3 = Color3.new(0.95, 0.95, 0.95)
+                TitleLabel.TextSize = 14
+                TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+                TitleLabel.TextTruncate = Enum.TextTruncate.AtEnd
+                TitleLabel.ZIndex = 50003
+                TitleLabel.Parent = HeaderRow
+
+                local DateLabel = Instance.new("TextLabel")
+                DateLabel.BackgroundTransparency = 1
+                DateLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+                DateLabel.Size = UDim2.new(0.3, 0, 1, 0)
+                DateLabel.Text = n.createdAt and string.sub(tostring(n.createdAt), 1, 10) or "Recent"
+                DateLabel.TextColor3 = Color3.fromRGB(110, 110, 110)
+                DateLabel.TextSize = 11
+                DateLabel.TextXAlignment = Enum.TextXAlignment.Right
+                DateLabel.ZIndex = 50003
+                DateLabel.Parent = HeaderRow
+
+                local MsgLabel = Instance.new("TextLabel")
+                MsgLabel.BackgroundTransparency = 1
+                MsgLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+                MsgLabel.Size = UDim2.new(1, 0, 0, 0)
+                MsgLabel.AutomaticSize = Enum.AutomaticSize.Y
+                MsgLabel.Text = tostring(n.message or "")
+                MsgLabel.TextColor3 = Color3.fromRGB(180, 180, 180)
+                MsgLabel.TextSize = 12
+                MsgLabel.TextWrapped = true
+                MsgLabel.TextXAlignment = Enum.TextXAlignment.Left
+                MsgLabel.ZIndex = 50003
+                MsgLabel.Parent = Card
             end
-
-            local Card = Instance.new("Frame")
-            Card.Name = "NotifCard"
-            Card.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
-            Card.BorderSizePixel = 0
-            Card.Size = UDim2.new(1, 0, 0, 0)
-            Card.AutomaticSize = Enum.AutomaticSize.Y
-            Card.ZIndex = 50002
-            Card.Parent = NotificationsScroll
-
-            local CardCorner = Instance.new("UICorner")
-            CardCorner.CornerRadius = UDim.new(0, 8)
-            CardCorner.Parent = Card
-
-            local CardStroke = Instance.new("UIStroke")
-            CardStroke.Color = Color3.fromRGB(44, 44, 44)
-            CardStroke.Thickness = 1
-            CardStroke.Parent = Card
-
-            local CardPadding = Instance.new("UIPadding")
-            CardPadding.PaddingTop = UDim.new(0, 10)
-            CardPadding.PaddingBottom = UDim.new(0, 10)
-            CardPadding.PaddingLeft = UDim.new(0, 12)
-            CardPadding.PaddingRight = UDim.new(0, 12)
-            CardPadding.Parent = Card
-
-            local CardLayout = Instance.new("UIListLayout")
-            CardLayout.SortOrder = Enum.SortOrder.LayoutOrder
-            CardLayout.Padding = UDim.new(0, 4)
-            CardLayout.Parent = Card
-
-            local HeaderRow = Instance.new("Frame")
-            HeaderRow.BackgroundTransparency = 1
-            HeaderRow.Size = UDim2.new(1, 0, 0, 18)
-            HeaderRow.ZIndex = 50003
-            HeaderRow.Parent = Card
-
-            local HeaderLayout = Instance.new("UIListLayout")
-            HeaderLayout.FillDirection = Enum.FillDirection.Horizontal
-            HeaderLayout.SortOrder = Enum.SortOrder.LayoutOrder
-            HeaderLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-            HeaderLayout.Parent = HeaderRow
-
-            local TitleLabel = Instance.new("TextLabel")
-            TitleLabel.BackgroundTransparency = 1
-            TitleLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-            TitleLabel.Size = UDim2.new(0.7, 0, 1, 0)
-            TitleLabel.Text = tostring(n.title or "Notification")
-            TitleLabel.TextColor3 = Color3.new(0.95, 0.95, 0.95)
-            TitleLabel.TextSize = 14
-            TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
-            TitleLabel.TextTruncate = Enum.TextTruncate.AtEnd
-            TitleLabel.ZIndex = 50003
-            TitleLabel.Parent = HeaderRow
-
-            local DateLabel = Instance.new("TextLabel")
-            DateLabel.BackgroundTransparency = 1
-            DateLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-            DateLabel.Size = UDim2.new(0.3, 0, 1, 0)
-            DateLabel.Text = n.createdAt and string.sub(tostring(n.createdAt), 1, 10) or "Recent"
-            DateLabel.TextColor3 = Color3.fromRGB(110, 110, 110)
-            DateLabel.TextSize = 11
-            DateLabel.TextXAlignment = Enum.TextXAlignment.Right
-            DateLabel.ZIndex = 50003
-            DateLabel.Parent = HeaderRow
-
-            local MsgLabel = Instance.new("TextLabel")
-            MsgLabel.BackgroundTransparency = 1
-            MsgLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-            MsgLabel.Size = UDim2.new(1, 0, 0, 0)
-            MsgLabel.AutomaticSize = Enum.AutomaticSize.Y
-            MsgLabel.Text = tostring(n.message or "")
-            MsgLabel.TextColor3 = Color3.fromRGB(180, 180, 180)
-            MsgLabel.TextSize = 12
-            MsgLabel.TextWrapped = true
-            MsgLabel.TextXAlignment = Enum.TextXAlignment.Left
-            MsgLabel.ZIndex = 50003
-            MsgLabel.Parent = Card
         end
 
-        if #currentNotifications > 0 and unreadCount > 0 then
+        if visibleCount > 0 and unreadCount > 0 then
             NotifBadgeText.Text = unreadCount > 99 and "99+" or tostring(unreadCount)
             NotifBadge.Visible = true
             EmptyState.Visible = false
             NotificationsScroll.Visible = true
-        elseif #currentNotifications > 0 then
+        elseif visibleCount > 0 then
             NotifBadge.Visible = false
             EmptyState.Visible = false
             NotificationsScroll.Visible = true
@@ -563,11 +619,15 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
         end)
     end
 
+    local FetchUpdates = nil
+
     task.spawn(function()
         FetchNotifications()
+        if FetchUpdates then FetchUpdates() end
         while Page and Page.Parent do
             task.wait(30)
             FetchNotifications()
+            if FetchUpdates then FetchUpdates() end
         end
     end)
 
@@ -603,6 +663,13 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
             Tween(NotifStroke, TweenInfoFast, {Color = Color3.new(1, 1, 1), Transparency = 0, Thickness = 1.4})
             Tween(NotificationsPopover, TweenInfo.new(0.22, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out), {BackgroundTransparency = 0})
             Tween(PopoverScale, TweenInfo.new(0.22, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out), {Scale = 1})
+
+            for _, n in ipairs(currentNotifications) do
+                local id = tostring(n._id or n.id or (tostring(n.title) .. "_" .. tostring(n.message)))
+                readNotificationIds[id] = true
+            end
+            SaveReadNotifications()
+            NotifBadge.Visible = false
         else
             local targetColor = isHoveringNotif and Color3.fromRGB(70, 70, 70) or Color3.fromRGB(50, 50, 50)
             local targetTrans = isHoveringNotif and 0.5 or 1
@@ -654,8 +721,10 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     Maid:GiveTask(ClearAllBtn.MouseButton1Click:Connect(function()
         for _, n in ipairs(currentNotifications) do
             local id = tostring(n._id or n.id or (tostring(n.title) .. "_" .. tostring(n.message)))
+            clearedNotificationIds[id] = true
             readNotificationIds[id] = true
         end
+        SaveReadNotifications()
         NotifBadge.Visible = false
         EmptyState.Visible = true
         NotificationsScroll.Visible = false
@@ -1156,9 +1225,11 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
 
     local function AddUpdateCard(title, date, desc)
         local Card = Instance.new("Frame")
+        Card.Name = "UpdateCard"
         Card.BackgroundColor3 = Color3.new(0.11, 0.11, 0.11)
         Card.BackgroundTransparency = 0.4
-        Card.Size = UDim2.new(1, 0, 0, 50)
+        Card.Size = UDim2.new(1, 0, 0, 0)
+        Card.AutomaticSize = Enum.AutomaticSize.Y
         Card.Parent = ClaimedScroll
 
         local CardCorner = Instance.new("UICorner")
@@ -1172,15 +1243,18 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
 
         local CardLayout = Instance.new("UIListLayout")
         CardLayout.SortOrder = Enum.SortOrder.LayoutOrder
-        CardLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+        CardLayout.Padding = UDim.new(0, 4)
         CardLayout.Parent = Card
 
         local CardPadding = Instance.new("UIPadding")
+        CardPadding.PaddingTop = UDim.new(0, 8)
+        CardPadding.PaddingBottom = UDim.new(0, 8)
         CardPadding.PaddingLeft = UDim.new(0, 10)
         CardPadding.PaddingRight = UDim.new(0, 10)
         CardPadding.Parent = Card
 
         local TitleRow = Instance.new("Frame")
+        TitleRow.Name = "TitleRow"
         TitleRow.BackgroundTransparency = 1
         TitleRow.Size = UDim2.new(1, 0, 0, 20)
         TitleRow.Parent = Card
@@ -1191,38 +1265,85 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
         TitleRowLayout.Parent = TitleRow
 
         local CardTitle = Instance.new("TextLabel")
+        CardTitle.Name = "Title"
         CardTitle.BackgroundTransparency = 1
         CardTitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
         CardTitle.Size = UDim2.new(0.7, 0, 1, 0)
-        CardTitle.Text = title
+        CardTitle.Text = tostring(title or "Update")
         CardTitle.TextColor3 = Color3.new(0.9, 0.9, 0.9)
         CardTitle.TextSize = 14
+        CardTitle.TextTruncate = Enum.TextTruncate.AtEnd
         CardTitle.TextXAlignment = Enum.TextXAlignment.Left
         CardTitle.Parent = TitleRow
 
         local CardDate = Instance.new("TextLabel")
+        CardDate.Name = "Date"
         CardDate.BackgroundTransparency = 1
         CardDate.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
         CardDate.Size = UDim2.new(0.3, 0, 1, 0)
-        CardDate.Text = date
+        CardDate.Text = tostring(date or "Recent")
         CardDate.TextColor3 = Color3.new(0.5, 0.5, 0.5)
         CardDate.TextSize = 12
         CardDate.TextXAlignment = Enum.TextXAlignment.Right
         CardDate.Parent = TitleRow
 
         local CardDesc = Instance.new("TextLabel")
+        CardDesc.Name = "Description"
         CardDesc.BackgroundTransparency = 1
         CardDesc.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-        CardDesc.Size = UDim2.new(1, 0, 0, 18)
-        CardDesc.Text = desc
+        CardDesc.Size = UDim2.new(1, 0, 0, 0)
+        CardDesc.AutomaticSize = Enum.AutomaticSize.Y
+        CardDesc.Text = tostring(desc or "")
         CardDesc.TextColor3 = Color3.new(0.65, 0.65, 0.65)
         CardDesc.TextSize = 12
+        CardDesc.TextWrapped = true
         CardDesc.TextXAlignment = Enum.TextXAlignment.Left
+        CardDesc.TextYAlignment = Enum.TextYAlignment.Top
         CardDesc.Parent = Card
     end
 
-    AddUpdateCard("Volt UI v1.1.4", "Today", "Added new Home Tab interface, live server player list and updates.")
-    AddUpdateCard("Performance & Animations", "Yesterday", "Optimized tab transitions, instant switches and right-to-left slides.")
+    local function RenderUpdates(updatesList)
+        for _, child in ipairs(ClaimedScroll:GetChildren()) do
+            if child:IsA("Frame") then
+                child:Destroy()
+            end
+        end
+
+        if updatesList and #updatesList > 0 then
+            for _, u in ipairs(updatesList) do
+                local dateStr = "Recent"
+                if u.createdAt then
+                    dateStr = string.sub(tostring(u.createdAt), 1, 10)
+                end
+                AddUpdateCard(u.title or "Update", dateStr, u.description or "")
+            end
+        else
+            AddUpdateCard("Volt UI v1.1.4", "Today", "Added new Home Tab interface, live server player list and updates.")
+            AddUpdateCard("Performance & Animations", "Yesterday", "Optimized tab transitions, instant switches and right-to-left slides.")
+        end
+    end
+
+    FetchUpdates = function()
+        task.spawn(function()
+            local getFunc = (request and function(u) return request({Url = u, Method = "GET"}) end)
+                         or (http_request and function(u) return http_request({Url = u, Method = "GET"}) end)
+                         or (syn and syn.request and function(u) return syn.request({Url = u, Method = "GET"}) end)
+                         or (game and game.HttpGet and function(u) return { Body = game:HttpGet(u) } end)
+            if not getFunc then return end
+
+            local url = "https://getvolt-hub.onrender.com/updates"
+            local ok, res = pcall(getFunc, url)
+            if ok and res and res.Body then
+                local decOk, data = pcall(function() return HttpService:JSONDecode(res.Body) end)
+                if decOk and data and data.updates and #data.updates > 0 then
+                    RenderUpdates(data.updates)
+                end
+            end
+        end)
+    end
+
+    RenderUpdates({})
+    FetchUpdates()
 
     local BugReportsSection = Instance.new("Frame")
     BugReportsSection.Name = "Bug Reports"

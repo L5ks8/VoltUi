@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const License = require('./models/License');
 const User = require('./models/User');
 const Notification = require('./models/Notification');
+const Update = require('./models/Update');
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
@@ -118,6 +119,19 @@ const commands = [
             option.setName('target')
                 .setDescription('Target User ID, Discord ID, username, or "all" (default)')
                 .setRequired(false)
+        ),
+    new SlashCommandBuilder()
+        .setName('update')
+        .setDescription('Post an update to the Volt UI Home tab')
+        .addStringOption(option =>
+            option.setName('title')
+                .setDescription('Update title (e.g. Volt UI v1.2.0)')
+                .setRequired(true)
+        )
+        .addStringOption(option =>
+            option.setName('description')
+                .setDescription('Update description / changelog')
+                .setRequired(true)
         )
 ].map(command => command.toJSON());
 
@@ -224,6 +238,33 @@ client.on('interactionCreate', async interaction => {
             } catch (err) {
                 console.error('Notify command error:', err);
                 return interaction.reply({ embeds: [new EmbedBuilder().setDescription(`Error sending notification: ${err.message}`).setColor('#e74c3c')], ephemeral: true });
+            }
+        }
+
+        if (interaction.commandName === 'update') {
+            const title = interaction.options.getString('title');
+            const description = interaction.options.getString('description');
+
+            try {
+                const updateDoc = new Update({
+                    title,
+                    description
+                });
+                await updateDoc.save();
+
+                const embed = new EmbedBuilder()
+                    .setTitle('🚀 Update Posted')
+                    .setColor('#2ecc71')
+                    .addFields(
+                        { name: 'Title', value: title, inline: true },
+                        { name: 'Description', value: description }
+                    )
+                    .setTimestamp();
+
+                return interaction.reply({ embeds: [embed] });
+            } catch (err) {
+                console.error('Update command error:', err);
+                return interaction.reply({ embeds: [new EmbedBuilder().setDescription(`Error posting update: ${err.message}`).setColor('#e74c3c')], ephemeral: true });
             }
         }
 
