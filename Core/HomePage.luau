@@ -99,7 +99,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     PageTitle.BackgroundTransparency = 1
     PageTitle.Position = UDim2.new(0, 44, 0, 0)
     PageTitle.Size = UDim2.new(0, 150, 1, 0)
-    PageTitle.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    PageTitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     PageTitle.Text = "Home"
     PageTitle.TextColor3 = Color3.new(0.85, 0.85, 0.85)
     PageTitle.TextSize = 18
@@ -266,7 +266,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     PopoverTitle.BackgroundTransparency = 1
     PopoverTitle.Position = UDim2.new(0, 16, 0, 0)
     PopoverTitle.Size = UDim2.new(0.5, 0, 1, 0)
-    PopoverTitle.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    PopoverTitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     PopoverTitle.Text = "Notifications"
     PopoverTitle.TextColor3 = Color3.new(0.95, 0.95, 0.95)
     PopoverTitle.TextSize = 15
@@ -280,7 +280,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     ClearAllBtn.AnchorPoint = Vector2.new(1, 0.5)
     ClearAllBtn.Position = UDim2.new(1, -14, 0.5, 0)
     ClearAllBtn.Size = UDim2.new(0, 80, 0, 26)
-    ClearAllBtn.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+    ClearAllBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
     ClearAllBtn.Text = "✓  Clear all"
     ClearAllBtn.TextColor3 = Color3.fromRGB(130, 130, 130)
     ClearAllBtn.TextSize = 13
@@ -372,7 +372,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     local CaughtUpTitle = Instance.new("TextLabel")
     CaughtUpTitle.Name = "Title"
     CaughtUpTitle.BackgroundTransparency = 1
-    CaughtUpTitle.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    CaughtUpTitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     CaughtUpTitle.Size = UDim2.new(1, 0, 0, 20)
     CaughtUpTitle.Text = "You're all caught up"
     CaughtUpTitle.TextColor3 = Color3.new(0.95, 0.95, 0.95)
@@ -383,7 +383,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     local CaughtUpDesc = Instance.new("TextLabel")
     CaughtUpDesc.Name = "Description"
     CaughtUpDesc.BackgroundTransparency = 1
-    CaughtUpDesc.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+    CaughtUpDesc.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
     CaughtUpDesc.Size = UDim2.new(1, 0, 0, 32)
     CaughtUpDesc.Text = "Milestones, recaps and alerts will show up here."
     CaughtUpDesc.TextColor3 = Color3.fromRGB(120, 120, 120)
@@ -480,7 +480,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
 
             local TitleLabel = Instance.new("TextLabel")
             TitleLabel.BackgroundTransparency = 1
-            TitleLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+            TitleLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
             TitleLabel.Size = UDim2.new(0.7, 0, 1, 0)
             TitleLabel.Text = tostring(n.title or "Notification")
             TitleLabel.TextColor3 = Color3.new(0.95, 0.95, 0.95)
@@ -492,7 +492,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
 
             local DateLabel = Instance.new("TextLabel")
             DateLabel.BackgroundTransparency = 1
-            DateLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+            DateLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
             DateLabel.Size = UDim2.new(0.3, 0, 1, 0)
             DateLabel.Text = n.createdAt and string.sub(tostring(n.createdAt), 1, 10) or "Recent"
             DateLabel.TextColor3 = Color3.fromRGB(110, 110, 110)
@@ -503,7 +503,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
 
             local MsgLabel = Instance.new("TextLabel")
             MsgLabel.BackgroundTransparency = 1
-            MsgLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+            MsgLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
             MsgLabel.Size = UDim2.new(1, 0, 0, 0)
             MsgLabel.AutomaticSize = Enum.AutomaticSize.Y
             MsgLabel.Text = tostring(n.message or "")
@@ -882,7 +882,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     PlayersTitle.BackgroundTransparency = 1
     PlayersTitle.BorderColor3 = Color3.new(0, 0, 0)
     PlayersTitle.BorderSizePixel = 0
-    PlayersTitle.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    PlayersTitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     PlayersTitle.Size = UDim2.new(1, 0, 0, 20)
     PlayersTitle.Text = "Players"
     PlayersTitle.TextColor3 = Color3.new(0.85, 0.85, 0.85)
@@ -896,7 +896,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     PlayersSubtitle.BackgroundTransparency = 1
     PlayersSubtitle.BorderColor3 = Color3.new(0, 0, 0)
     PlayersSubtitle.BorderSizePixel = 0
-    PlayersSubtitle.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+    PlayersSubtitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
     PlayersSubtitle.Size = UDim2.new(1, 0, 0, 18)
     PlayersSubtitle.Text = "Players on the Server"
     PlayersSubtitle.TextColor3 = Color3.new(0.65, 0.65, 0.65)
@@ -1002,7 +1002,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
         UsernameLabel.Name = "Username"
         UsernameLabel.BackgroundColor3 = Color3.new(1, 1, 1)
         UsernameLabel.BackgroundTransparency = 1
-        UsernameLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+        UsernameLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
         UsernameLabel.Size = UDim2.new(1, 0, 0, 18)
         UsernameLabel.Text = player.DisplayName or player.Name
         UsernameLabel.TextColor3 = Color3.new(1, 1, 1)
@@ -1015,7 +1015,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
         IdLabel.Name = "Id"
         IdLabel.BackgroundColor3 = Color3.new(1, 1, 1)
         IdLabel.BackgroundTransparency = 1
-        IdLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+        IdLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
         IdLabel.Size = UDim2.new(1, 0, 0, 16)
         IdLabel.Text = "@" .. player.Name
         IdLabel.TextColor3 = Color3.new(0.6, 0.6, 0.6)
@@ -1114,7 +1114,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     UpdatesHeaderText.Name = "Text"
     UpdatesHeaderText.BackgroundColor3 = Color3.new(1, 1, 1)
     UpdatesHeaderText.BackgroundTransparency = 1
-    UpdatesHeaderText.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    UpdatesHeaderText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     UpdatesHeaderText.Size = UDim2.new(0, 100, 0, 30)
     UpdatesHeaderText.Text = "Updates"
     UpdatesHeaderText.TextColor3 = Color3.new(0.85, 0.85, 0.85)
@@ -1192,7 +1192,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
 
         local CardTitle = Instance.new("TextLabel")
         CardTitle.BackgroundTransparency = 1
-        CardTitle.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+        CardTitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
         CardTitle.Size = UDim2.new(0.7, 0, 1, 0)
         CardTitle.Text = title
         CardTitle.TextColor3 = Color3.new(0.9, 0.9, 0.9)
@@ -1202,7 +1202,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
 
         local CardDate = Instance.new("TextLabel")
         CardDate.BackgroundTransparency = 1
-        CardDate.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+        CardDate.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
         CardDate.Size = UDim2.new(0.3, 0, 1, 0)
         CardDate.Text = date
         CardDate.TextColor3 = Color3.new(0.5, 0.5, 0.5)
@@ -1212,7 +1212,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
 
         local CardDesc = Instance.new("TextLabel")
         CardDesc.BackgroundTransparency = 1
-        CardDesc.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+        CardDesc.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
         CardDesc.Size = UDim2.new(1, 0, 0, 18)
         CardDesc.Text = desc
         CardDesc.TextColor3 = Color3.new(0.65, 0.65, 0.65)
@@ -1298,7 +1298,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     local BugTitle = Instance.new("TextLabel")
     BugTitle.BackgroundColor3 = Color3.new(1, 1, 1)
     BugTitle.BackgroundTransparency = 1
-    BugTitle.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    BugTitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     BugTitle.Size = UDim2.new(1, 0, 0, 20)
     BugTitle.Text = "Bug Report"
     BugTitle.TextColor3 = Color3.new(0.85, 0.85, 0.85)
@@ -1310,7 +1310,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     local BugSubtitle = Instance.new("TextLabel")
     BugSubtitle.BackgroundColor3 = Color3.new(1, 1, 1)
     BugSubtitle.BackgroundTransparency = 1
-    BugSubtitle.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+    BugSubtitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
     BugSubtitle.Size = UDim2.new(1, 0, 0, 18)
     BugSubtitle.Text = "Subscription and Claimed keys"
     BugSubtitle.TextColor3 = Color3.new(0.65, 0.65, 0.65)
@@ -1357,7 +1357,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     BugTextBox.BackgroundColor3 = Color3.new(1, 1, 1)
     BugTextBox.BackgroundTransparency = 1
     BugTextBox.BorderSizePixel = 0
-    BugTextBox.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    BugTextBox.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     BugTextBox.Size = UDim2.new(1, 0, 1, 0)
     BugTextBox.Text = ""
     BugTextBox.PlaceholderText = "Describe the bug..."
@@ -1384,7 +1384,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     SendBtn.Name = "Button"
     SendBtn.BackgroundColor3 = Color3.new(0.149, 0.149, 0.149)
     SendBtn.BorderSizePixel = 0
-    SendBtn.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    SendBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     SendBtn.Size = UDim2.new(1, 0, 1, 0)
     SendBtn.Text = "Sent"
     SendBtn.TextColor3 = Color3.new(0.8, 0.8, 0.8)
