@@ -1347,16 +1347,32 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     RenderUpdates({})
     FetchUpdates()
 
+    local BugSectionWrapper = Instance.new("Frame")
+    BugSectionWrapper.Name = "BugReportsWrapper"
+    BugSectionWrapper.BackgroundTransparency = 1
+    BugSectionWrapper.Size = UDim2.new(1, 0, 0, 0)
+    BugSectionWrapper.AutomaticSize = Enum.AutomaticSize.Y
+    BugSectionWrapper.LayoutOrder = 2
+    BugSectionWrapper.Parent = Page
+
+    local BugSectionPadding = Instance.new("UIPadding")
+    BugSectionPadding.PaddingLeft = UDim.new(0, 8)
+    BugSectionPadding.PaddingRight = UDim.new(0, 8)
+    BugSectionPadding.Parent = BugSectionWrapper
+
     local BugReportsSection = Instance.new("Frame")
     BugReportsSection.Name = "Bug Reports"
     BugReportsSection.BackgroundColor3 = Color3.new(0.08, 0.08, 0.08)
     BugReportsSection.BackgroundTransparency = 0.5
     BugReportsSection.BorderColor3 = Color3.new(0, 0, 0)
     BugReportsSection.BorderSizePixel = 0
-    BugReportsSection.LayoutOrder = 2
-    BugReportsSection.Size = UDim2.new(1, -16, 0, 50)
-    BugReportsSection.Position = UDim2.new(0, 8, 0, 0)
-    BugReportsSection.Parent = Page
+    BugReportsSection.Size = UDim2.new(1, 0, 0, 0)
+    BugReportsSection.AutomaticSize = Enum.AutomaticSize.Y
+    BugReportsSection.Parent = BugSectionWrapper
+
+    local BugReportsConstraint = Instance.new("UISizeConstraint")
+    BugReportsConstraint.MinSize = Vector2.new(0, 52)
+    BugReportsConstraint.Parent = BugReportsSection
 
     local BugReportsCorner = Instance.new("UICorner")
     BugReportsCorner.CornerRadius = UDim.new(0, 8)
@@ -1367,51 +1383,53 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     BugReportsStroke.Color = Color3.new(0.149, 0.149, 0.149)
     BugReportsStroke.Parent = BugReportsSection
 
+    local BugReportsPadding = Instance.new("UIPadding")
+    BugReportsPadding.PaddingLeft = UDim.new(0, 14)
+    BugReportsPadding.PaddingRight = UDim.new(0, 14)
+    BugReportsPadding.PaddingTop = UDim.new(0, 8)
+    BugReportsPadding.PaddingBottom = UDim.new(0, 8)
+    BugReportsPadding.Parent = BugReportsSection
+
     local BugReportsLayout = Instance.new("UIListLayout")
     BugReportsLayout.FillDirection = Enum.FillDirection.Horizontal
     BugReportsLayout.SortOrder = Enum.SortOrder.LayoutOrder
     BugReportsLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    BugReportsLayout.Padding = UDim.new(0, 12)
     BugReportsLayout.Parent = BugReportsSection
 
     local BugInfo = Instance.new("Frame")
     BugInfo.Name = "Info"
     BugInfo.BackgroundColor3 = Color3.new(1, 1, 1)
     BugInfo.BackgroundTransparency = 1
-    BugInfo.BorderColor3 = Color3.new(0, 0, 0)
     BugInfo.BorderSizePixel = 0
-    BugInfo.Size = UDim2.new(0, 240, 0, 50)
+    BugInfo.Size = UDim2.new(0, 230, 0, 0)
+    BugInfo.AutomaticSize = Enum.AutomaticSize.Y
+    BugInfo.LayoutOrder = 1
     BugInfo.Parent = BugReportsSection
 
     local BugInfoLayout = Instance.new("UIListLayout")
     BugInfoLayout.FillDirection = Enum.FillDirection.Horizontal
     BugInfoLayout.SortOrder = Enum.SortOrder.LayoutOrder
     BugInfoLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    BugInfoLayout.Padding = UDim.new(0, 8)
     BugInfoLayout.Parent = BugInfo
-
-    local BugInfoPadding = Instance.new("UIPadding")
-    BugInfoPadding.PaddingLeft = UDim.new(0, 9)
-    BugInfoPadding.Parent = BugInfo
 
     local BugIcon = Instance.new("ImageLabel")
     BugIcon.Name = "Icon"
     BugIcon.BackgroundColor3 = Color3.new(1, 1, 1)
     BugIcon.BackgroundTransparency = 1
-    BugIcon.BorderColor3 = Color3.new(0, 0, 0)
     BugIcon.BorderSizePixel = 0
     BugIcon.Image = "rbxassetid://70862937184937"
-    BugIcon.Size = UDim2.new(0, 31, 0, 31)
+    BugIcon.Size = UDim2.new(0, 30, 0, 30)
     BugIcon.Parent = BugInfo
 
     local BugTextFrame = Instance.new("Frame")
     BugTextFrame.Name = "Text"
     BugTextFrame.BackgroundColor3 = Color3.new(1, 1, 1)
     BugTextFrame.BackgroundTransparency = 1
-    BugTextFrame.Size = UDim2.new(1, -40, 1, 0)
+    BugTextFrame.Size = UDim2.new(1, -38, 0, 0)
+    BugTextFrame.AutomaticSize = Enum.AutomaticSize.Y
     BugTextFrame.Parent = BugInfo
-
-    local BugTextPadding = Instance.new("UIPadding")
-    BugTextPadding.PaddingLeft = UDim.new(0, 6)
-    BugTextPadding.Parent = BugTextFrame
 
     local BugTextLayout = Instance.new("UIListLayout")
     BugTextLayout.SortOrder = Enum.SortOrder.LayoutOrder
@@ -1427,7 +1445,6 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     BugTitle.TextColor3 = Color3.new(0.85, 0.85, 0.85)
     BugTitle.TextSize = 15
     BugTitle.TextXAlignment = Enum.TextXAlignment.Left
-    BugTitle.TextYAlignment = Enum.TextYAlignment.Bottom
     BugTitle.Parent = BugTextFrame
 
     local BugSubtitle = Instance.new("TextLabel")
@@ -1439,14 +1456,15 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     BugSubtitle.TextColor3 = Color3.new(0.65, 0.65, 0.65)
     BugSubtitle.TextSize = 13
     BugSubtitle.TextXAlignment = Enum.TextXAlignment.Left
-    BugSubtitle.TextYAlignment = Enum.TextYAlignment.Top
     BugSubtitle.Parent = BugTextFrame
 
     local BugSendArea = Instance.new("Frame")
     BugSendArea.Name = "Send"
     BugSendArea.BackgroundColor3 = Color3.new(1, 1, 1)
     BugSendArea.BackgroundTransparency = 1
-    BugSendArea.Size = UDim2.new(1, -240, 1, 0)
+    BugSendArea.Size = UDim2.new(1, -242, 0, 0)
+    BugSendArea.AutomaticSize = Enum.AutomaticSize.Y
+    BugSendArea.LayoutOrder = 2
     BugSendArea.Parent = BugReportsSection
 
     local BugSendLayout = Instance.new("UIListLayout")
@@ -1457,16 +1475,18 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     BugSendLayout.Padding = UDim.new(0, 10)
     BugSendLayout.Parent = BugSendArea
 
-    local BugSendPadding = Instance.new("UIPadding")
-    BugSendPadding.PaddingRight = UDim.new(0, 10)
-    BugSendPadding.Parent = BugSendArea
-
     local BugInputFrame = Instance.new("Frame")
     BugInputFrame.Name = "Input"
     BugInputFrame.BackgroundColor3 = Color3.new(0.086, 0.086, 0.086)
     BugInputFrame.BorderSizePixel = 0
-    BugInputFrame.Size = UDim2.new(1, -110, 0, 35)
+    BugInputFrame.Size = UDim2.new(1, -95, 0, 0)
+    BugInputFrame.AutomaticSize = Enum.AutomaticSize.Y
     BugInputFrame.Parent = BugSendArea
+
+    local BugInputConstraint = Instance.new("UISizeConstraint")
+    BugInputConstraint.MinSize = Vector2.new(0, 36)
+    BugInputConstraint.MaxSize = Vector2.new(math.huge, 140)
+    BugInputConstraint.Parent = BugInputFrame
 
     local BugInputCorner = Instance.new("UICorner")
     BugInputCorner.CornerRadius = UDim.new(0, 6)
@@ -1476,31 +1496,37 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     BugInputStroke.Color = Color3.new(0.208, 0.208, 0.208)
     BugInputStroke.Parent = BugInputFrame
 
+    local BugInputPadding = Instance.new("UIPadding")
+    BugInputPadding.PaddingLeft = UDim.new(0, 10)
+    BugInputPadding.PaddingRight = UDim.new(0, 10)
+    BugInputPadding.PaddingTop = UDim.new(0, 8)
+    BugInputPadding.PaddingBottom = UDim.new(0, 8)
+    BugInputPadding.Parent = BugInputFrame
+
     local BugTextBox = Instance.new("TextBox")
     BugTextBox.BackgroundColor3 = Color3.new(1, 1, 1)
     BugTextBox.BackgroundTransparency = 1
     BugTextBox.BorderSizePixel = 0
-    BugTextBox.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    BugTextBox.Size = UDim2.new(1, 0, 1, 0)
+    BugTextBox.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+    BugTextBox.Size = UDim2.new(1, 0, 0, 0)
+    BugTextBox.AutomaticSize = Enum.AutomaticSize.Y
+    BugTextBox.MultiLine = true
+    BugTextBox.TextWrapped = true
+    BugTextBox.ClearTextOnFocus = false
     BugTextBox.Text = ""
     BugTextBox.PlaceholderText = "Describe the bug..."
     BugTextBox.PlaceholderColor3 = Color3.new(0.35, 0.35, 0.35)
     BugTextBox.TextColor3 = Color3.new(0.85, 0.85, 0.85)
-    BugTextBox.TextSize = 14
+    BugTextBox.TextSize = 13
     BugTextBox.TextXAlignment = Enum.TextXAlignment.Left
-    BugTextBox.ClearTextOnFocus = false
+    BugTextBox.TextYAlignment = Enum.TextYAlignment.Top
     BugTextBox.Parent = BugInputFrame
-
-    local BugTextBoxPadding = Instance.new("UIPadding")
-    BugTextBoxPadding.PaddingLeft = UDim.new(0, 8)
-    BugTextBoxPadding.PaddingRight = UDim.new(0, 8)
-    BugTextBoxPadding.Parent = BugTextBox
 
     local SendBtnContainer = Instance.new("Frame")
     SendBtnContainer.Name = "Send"
     SendBtnContainer.BackgroundColor3 = Color3.new(1, 1, 1)
     SendBtnContainer.BackgroundTransparency = 1
-    SendBtnContainer.Size = UDim2.new(0, 80, 0, 35)
+    SendBtnContainer.Size = UDim2.new(0, 85, 0, 36)
     SendBtnContainer.Parent = BugSendArea
 
     local SendBtn = Instance.new("TextButton")
@@ -1509,7 +1535,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     SendBtn.BorderSizePixel = 0
     SendBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     SendBtn.Size = UDim2.new(1, 0, 1, 0)
-    SendBtn.Text = "Sent"
+    SendBtn.Text = "Send"
     SendBtn.TextColor3 = Color3.new(0.8, 0.8, 0.8)
     SendBtn.TextSize = 14
     SendBtn.Parent = SendBtnContainer
@@ -1522,6 +1548,18 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     SendBtnStroke.Color = Color3.new(0.247, 0.247, 0.247)
     SendBtnStroke.Parent = SendBtn
 
+    local lastBugReportTime = 0
+    pcall(function()
+        if isfileFunc and readfileFunc and isfileFunc("VoltHub/LastBugReport.txt") then
+            local t = tonumber(readfileFunc("VoltHub/LastBugReport.txt"))
+            if t then
+                lastBugReportTime = t
+            end
+        end
+    end)
+
+    local isSendingBug = false
+
     Maid:GiveTask(SendBtn.MouseEnter:Connect(function()
         Tween(SendBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)})
     end))
@@ -1529,9 +1567,53 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
         Tween(SendBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.new(0.149, 0.149, 0.149)})
     end))
     Maid:GiveTask(SendBtn.MouseButton1Click:Connect(function()
+        if isSendingBug then return end
+
         local reportText = BugTextBox.Text
-        if reportText ~= "" and string.gsub(reportText, "%s+", "") ~= "" then
-            BugTextBox.Text = ""
+        if reportText == "" or string.gsub(reportText, "%s+", "") == "" then
+            return
+        end
+
+        local now = os.time()
+        local cooldownSeconds = 86400
+        local elapsed = now - lastBugReportTime
+        if elapsed < cooldownSeconds then
+            local remaining = cooldownSeconds - elapsed
+            local hoursLeft = math.floor(remaining / 3600)
+            local minsLeft = math.floor((remaining % 3600) / 60)
+            local timeMsg = hoursLeft > 0 and (hoursLeft .. "h left") or (math.max(1, minsLeft) .. "m left")
+
+            SendBtn.Text = timeMsg
+            SendBtn.TextColor3 = Color3.fromRGB(235, 75, 75)
+            if WindowObject and WindowObject.Notify then
+                WindowObject:Notify({
+                    Title = "Bug Report Cooldown",
+                    Content = "You can only submit 1 bug report every 24 hours. Please wait " .. timeMsg .. ".",
+                    Duration = 4
+                })
+            end
+            task.delay(2.5, function()
+                if SendBtn and SendBtn.Parent then
+                    SendBtn.Text = "Send"
+                    SendBtn.TextColor3 = Color3.new(0.8, 0.8, 0.8)
+                end
+            end)
+            return
+        end
+
+        isSendingBug = true
+        SendBtn.Text = "..."
+        BugTextBox.Text = ""
+
+        lastBugReportTime = now
+        pcall(function()
+            if writefileFunc then
+                if makefolderFunc and isfolderFunc and not isfolderFunc("VoltHub") then
+                    makefolderFunc("VoltHub")
+                end
+                writefileFunc("VoltHub/LastBugReport.txt", tostring(lastBugReportTime))
+            end
+        end)
             
             local lp = Players.LocalPlayer
             local robloxUsername = lp and lp.Name or "Unknown"
@@ -1639,6 +1721,16 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
                         },
                         Body = body
                     })
+                end
+            end)
+
+            SendBtn.Text = "Sent!"
+            SendBtn.TextColor3 = Color3.fromRGB(60, 220, 100)
+            task.delay(3, function()
+                isSendingBug = false
+                if SendBtn and SendBtn.Parent then
+                    SendBtn.Text = "Send"
+                    SendBtn.TextColor3 = Color3.new(0.8, 0.8, 0.8)
                 end
             end)
             
