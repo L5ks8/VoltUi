@@ -2216,7 +2216,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
         end)
     end, UDim2.new(0, 85, 1, 0))
 
-    CreateActionButton(ActionButtonsRow, "Copy ID", "rbxassetid://98703591334673", 2, function()
+    CreateActionButton(ActionButtonsRow, "Copy ID", "rbxassetid://114921354911544", 2, function()
         local jobId = tostring(game.JobId)
         local setclip = setclipboard or toclipboard or (Clipboard and Clipboard.set)
         if setclip then
@@ -2288,7 +2288,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     JoinIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
     JoinIcon.Size = UDim2.new(0, 13, 0, 13)
     JoinIcon.BackgroundTransparency = 1
-    JoinIcon.Image = "rbxassetid://111244733671804"
+    JoinIcon.Image = "rbxassetid://99665318200799"
     JoinIcon.ImageColor3 = Color3.fromRGB(200, 200, 200)
     JoinIcon.Parent = JoinBtn
 
