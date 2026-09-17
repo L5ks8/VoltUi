@@ -181,8 +181,10 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
 
     local NotifBadgeText = Instance.new("TextLabel")
     NotifBadgeText.Name = "Count"
-    NotifBadgeText.BackgroundTransparency = 1
+    NotifBadgeText.AnchorPoint = Vector2.new(0.5, 0.5)
+    NotifBadgeText.Position = UDim2.new(0.5, 0, 0.5, -1)
     NotifBadgeText.Size = UDim2.new(1, 0, 1, 0)
+    NotifBadgeText.BackgroundTransparency = 1
     NotifBadgeText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     NotifBadgeText.Text = "0"
     NotifBadgeText.TextColor3 = Color3.new(1, 1, 1)
