@@ -299,6 +299,11 @@ function LoginPage.Create(ParentGui, OnSuccess)
         
         task.spawn(function()
             if UIState == "Login" then
+                if #passBox.Text < 6 then
+                    Notifications.Notify({ Title = "Password Too Short", Content = "Password must be at least 6 characters long!", Type = "Error" })
+                    ActionBtn.Text = prevText
+                    return
+                end
                 local success, msg = Api.Login(userBox.Text, passBox.Text)
                 if success then
                     Api.FetchMe()
@@ -312,6 +317,11 @@ function LoginPage.Create(ParentGui, OnSuccess)
                 end
                 
             elseif UIState == "Register" then
+                if #passBox.Text < 6 then
+                    Notifications.Notify({ Title = "Password Too Short", Content = "Password must be at least 6 characters long!", Type = "Error" })
+                    ActionBtn.Text = prevText
+                    return
+                end
                 local success, msg = Api.Register(userBox.Text, passBox.Text, keyBox.Text)
                 if success then
                     local succ2, msg2 = Api.Login(userBox.Text, passBox.Text)
@@ -341,6 +351,11 @@ function LoginPage.Create(ParentGui, OnSuccess)
                 end
                 
             elseif UIState == "Reset" then
+                if #newPassBox.Text < 6 then
+                    Notifications.Notify({ Title = "Password Too Short", Content = "Password must be at least 6 characters long!", Type = "Error" })
+                    ActionBtn.Text = prevText
+                    return
+                end
                 local success, msg = Api.ResetPassword(userBox.Text, codeBox.Text, newPassBox.Text)
                 if success then
                     Notifications.Notify({ Title = "Password Reset", Content = msg, Type = "Success" })

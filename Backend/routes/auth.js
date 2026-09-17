@@ -10,6 +10,10 @@ router.post('/register', async (req, res) => {
     try {
         const { username, password, licenseKey, hwid } = req.body;
         
+        if (!password || password.length < 6) {
+            return res.status(400).json({ error: 'Password must be at least 6 characters long.' });
+        }
+        
         const License = require('../models/License');
         const license = await License.findOne({ key: licenseKey });
         
@@ -60,6 +64,10 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
     try {
         const { username, password, hwid } = req.body;
+        
+        if (!password || password.length < 6) {
+            return res.status(400).json({ error: 'Password must be at least 6 characters long.' });
+        }
         
         let user = await User.findOne({ username });
         if (!user) {
@@ -149,6 +157,7 @@ router.post('/reset-password', async (req, res) => {
     try {
         const { username, code, newPassword } = req.body;
         if (!username || !code || !newPassword) return res.status(400).json({ error: 'Missing fields.' });
+        if (newPassword.length < 6) return res.status(400).json({ error: 'Password must be at least 6 characters long.' });
 
         const user = await User.findOne({ username });
         if (!user) return res.status(404).json({ error: 'User not found.' });
