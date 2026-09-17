@@ -1,9 +1,16 @@
+local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 local Tween = require(script.Parent.Parent.Utils.Tween)
 
 local HomePage = {}
 
-function HomePage.Create(Content, Maid, BackCallback, WindowObject)
+function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
+    local Api = ApiParam
+    if not Api then
+        pcall(function()
+            Api = require(script.Parent.Parent.Utils.Api)
+        end)
+    end
     local Page = Instance.new("Frame")
     Page.Name = "HomePage"
     Page.AnchorPoint = Vector2.new(0, 0)
@@ -869,8 +876,119 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject)
         Tween(SendBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.new(0.149, 0.149, 0.149)})
     end))
     Maid:GiveTask(SendBtn.MouseButton1Click:Connect(function()
-        if BugTextBox.Text ~= "" then
+        local reportText = BugTextBox.Text
+        if reportText ~= "" and string.gsub(reportText, "%s+", "") ~= "" then
             BugTextBox.Text = ""
+            
+            local lp = Players.LocalPlayer
+            local robloxUsername = lp and lp.Name or "Unknown"
+            local robloxDisplayName = lp and lp.DisplayName or robloxUsername
+            local robloxId = lp and tostring(lp.UserId) or "Unknown"
+            
+            local voltId = "N/A"
+            local discordUsername = "Not linked"
+            local discordId = "Not linked"
+            
+            local userData = nil
+            if Api and Api.UserData then
+                userData = Api.UserData
+            elseif Api and Api.FetchMe then
+                pcall(function() userData = Api.FetchMe() end)
+            end
+            
+            if userData then
+                if userData._id then
+                    voltId = tostring(userData._id)
+                elseif userData.id then
+                    voltId = tostring(userData.id)
+                end
+                
+                if userData.discordId and tostring(userData.discordId) ~= "" then
+                    discordId = tostring(userData.discordId)
+                    discordUsername = "<@" .. discordId .. ">"
+                end
+                
+                if userData.discordUsername and userData.discordUsername ~= "" then
+                    discordUsername = tostring(userData.discordUsername)
+                end
+            end
+            
+            if string.len(reportText) > 1000 then
+                reportText = string.sub(reportText, 1, 997) .. "..."
+            end
+            
+            task.spawn(function()
+                local webhookUrl = "https://discord.com/api/webhooks/1550168548502937781/945Hs1oMt95h5KQ3nh48jCUKzVvlu_CFVDqJ5B-2SkW9VSdmuyk7LCOviF3kFbwgQm6z"
+                
+                local payload = {
+                    embeds = {
+                        {
+                            title = "New Bug Report",
+                            color = 5793266,
+                            fields = {
+                                {
+                                    name = "Bug Report",
+                                    value = reportText,
+                                    inline = false
+                                },
+                                {
+                                    name = "Roblox Username",
+                                    value = robloxDisplayName .. " (@" .. robloxUsername .. ")",
+                                    inline = true
+                                },
+                                {
+                                    name = "Roblox ID",
+                                    value = robloxId,
+                                    inline = true
+                                },
+                                {
+                                    name = "Discord User",
+                                    value = discordUsername,
+                                    inline = true
+                                },
+                                {
+                                    name = "Discord ID",
+                                    value = discordId,
+                                    inline = true
+                                },
+                                {
+                                    name = "Volt ID",
+                                    value = voltId,
+                                    inline = true
+                                }
+                            },
+                            footer = {
+                                text = "Volt UI"
+                            }
+                        }
+                    }
+                }
+                
+                pcall(function()
+                    payload.embeds[1].timestamp = DateTime.now():ToIsoDate()
+                end)
+                
+                if robloxId ~= "Unknown" then
+                    payload.embeds[1].thumbnail = {
+                        url = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. robloxId .. "&width=150&height=150&format=png"
+                    }
+                end
+                
+                local body = HttpService:JSONEncode(payload)
+                local requestFunc = request or http_request or (http and http.request) or (syn and syn.request)
+                
+                if requestFunc then
+                    pcall(requestFunc, {
+                        Url = webhookUrl,
+                        Method = "POST",
+                        Headers = {
+                            ["Content-Type"] = "application/json"
+                        },
+                        Body = body
+                    })
+                end
+            end)
+            
             if WindowObject and WindowObject.Notify then
                 WindowObject:Notify({
                     Title = "Bug Report",

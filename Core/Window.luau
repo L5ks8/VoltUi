@@ -178,7 +178,7 @@ function Window:CreateWindow(Config)
     pcall(function()
         HomePageElements = HomePage.Create(PagesContainer, maid, function()
             WindowObject:OpenContent()
-        end, WindowObject)
+        end, WindowObject, Api)
     end)
 
     local AccountPageElements
