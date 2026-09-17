@@ -122,12 +122,23 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
 
     local NotificationsBtn = Instance.new("ImageButton")
     NotificationsBtn.Name = "Notifications"
-    NotificationsBtn.BackgroundColor3 = Color3.new(1, 1, 1)
+    NotificationsBtn.AutoButtonColor = false
+    NotificationsBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
     NotificationsBtn.BackgroundTransparency = 1
     NotificationsBtn.BorderColor3 = Color3.new(0, 0, 0)
     NotificationsBtn.BorderSizePixel = 0
-    NotificationsBtn.Size = UDim2.new(0, 40, 0, 40)
+    NotificationsBtn.Size = UDim2.new(0, 34, 0, 34)
     NotificationsBtn.Parent = Icons
+
+    local NotifCorner = Instance.new("UICorner")
+    NotifCorner.CornerRadius = UDim.new(0, 8)
+    NotifCorner.Parent = NotificationsBtn
+
+    local NotifStroke = Instance.new("UIStroke")
+    NotifStroke.Color = Color3.fromRGB(50, 50, 50)
+    NotifStroke.Transparency = 1
+    NotifStroke.Thickness = 1.4
+    NotifStroke.Parent = NotificationsBtn
 
     local NotifLayout = Instance.new("UIListLayout")
     NotifLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
@@ -141,8 +152,270 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     NotifIcon.BorderColor3 = Color3.new(0, 0, 0)
     NotifIcon.BorderSizePixel = 0
     NotifIcon.Image = "rbxassetid://113899772841352"
-    NotifIcon.Size = UDim2.new(0, 25, 0, 25)
+    NotifIcon.ImageColor3 = Color3.fromRGB(220, 220, 220)
+    NotifIcon.Size = UDim2.new(0, 20, 0, 20)
     NotifIcon.Parent = NotificationsBtn
+
+    local Tooltip = Instance.new("Frame")
+    Tooltip.Name = "Tooltip"
+    Tooltip.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
+    Tooltip.BackgroundTransparency = 1
+    Tooltip.AnchorPoint = Vector2.new(0.5, 0)
+    Tooltip.Position = UDim2.new(0.5, 0, 1, 6)
+    Tooltip.Size = UDim2.new(0, 0, 0, 22)
+    Tooltip.AutomaticSize = Enum.AutomaticSize.X
+    Tooltip.BorderSizePixel = 0
+    Tooltip.ZIndex = 250
+    Tooltip.Visible = false
+    Tooltip.Parent = NotificationsBtn
+
+    local TooltipCorner = Instance.new("UICorner")
+    TooltipCorner.CornerRadius = UDim.new(0, 5)
+    TooltipCorner.Parent = Tooltip
+
+    local TooltipPadding = Instance.new("UIPadding")
+    TooltipPadding.PaddingLeft = UDim.new(0, 8)
+    TooltipPadding.PaddingRight = UDim.new(0, 8)
+    TooltipPadding.Parent = Tooltip
+
+    local TooltipStroke = Instance.new("UIStroke")
+    TooltipStroke.Color = Color3.fromRGB(48, 48, 48)
+    TooltipStroke.Transparency = 1
+    TooltipStroke.Parent = Tooltip
+
+    local TooltipText = Instance.new("TextLabel")
+    TooltipText.BackgroundTransparency = 1
+    TooltipText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    TooltipText.Text = "Notifications"
+    TooltipText.TextColor3 = Color3.fromRGB(210, 210, 210)
+    TooltipText.TextSize = 12
+    TooltipText.TextTransparency = 1
+    TooltipText.Size = UDim2.new(1, 0, 1, 0)
+    TooltipText.AutomaticSize = Enum.AutomaticSize.X
+    TooltipText.ZIndex = 251
+    TooltipText.Parent = Tooltip
+
+    local NotificationsPopover = Instance.new("Frame")
+    NotificationsPopover.Name = "NotificationsPopover"
+    NotificationsPopover.AnchorPoint = Vector2.new(1, 0)
+    NotificationsPopover.Position = UDim2.new(1, -10, 0, 46)
+    NotificationsPopover.Size = UDim2.new(0, 305, 0, 275)
+    NotificationsPopover.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    NotificationsPopover.BorderSizePixel = 0
+    NotificationsPopover.ZIndex = 150
+    NotificationsPopover.Visible = false
+    NotificationsPopover.ClipsDescendants = true
+    NotificationsPopover.Parent = Page
+
+    local PopoverCorner = Instance.new("UICorner")
+    PopoverCorner.CornerRadius = UDim.new(0, 10)
+    PopoverCorner.Parent = NotificationsPopover
+
+    local PopoverStroke = Instance.new("UIStroke")
+    PopoverStroke.Color = Color3.fromRGB(45, 45, 45)
+    PopoverStroke.Thickness = 1.2
+    PopoverStroke.Parent = NotificationsPopover
+
+    local PopoverScale = Instance.new("UIScale")
+    PopoverScale.Scale = 0.95
+    PopoverScale.Parent = NotificationsPopover
+
+    local PopoverHeader = Instance.new("Frame")
+    PopoverHeader.Name = "Header"
+    PopoverHeader.BackgroundTransparency = 1
+    PopoverHeader.Size = UDim2.new(1, 0, 0, 44)
+    PopoverHeader.ZIndex = 151
+    PopoverHeader.Parent = NotificationsPopover
+
+    local PopoverTitle = Instance.new("TextLabel")
+    PopoverTitle.Name = "Title"
+    PopoverTitle.BackgroundTransparency = 1
+    PopoverTitle.Position = UDim2.new(0, 16, 0, 0)
+    PopoverTitle.Size = UDim2.new(0.5, 0, 1, 0)
+    PopoverTitle.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    PopoverTitle.Text = "Notifications"
+    PopoverTitle.TextColor3 = Color3.new(0.95, 0.95, 0.95)
+    PopoverTitle.TextSize = 15
+    PopoverTitle.TextXAlignment = Enum.TextXAlignment.Left
+    PopoverTitle.ZIndex = 152
+    PopoverTitle.Parent = PopoverHeader
+
+    local ClearAllBtn = Instance.new("TextButton")
+    ClearAllBtn.Name = "ClearAll"
+    ClearAllBtn.BackgroundTransparency = 1
+    ClearAllBtn.AnchorPoint = Vector2.new(1, 0.5)
+    ClearAllBtn.Position = UDim2.new(1, -14, 0.5, 0)
+    ClearAllBtn.Size = UDim2.new(0, 80, 0, 26)
+    ClearAllBtn.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+    ClearAllBtn.Text = "✓  Clear all"
+    ClearAllBtn.TextColor3 = Color3.fromRGB(130, 130, 130)
+    ClearAllBtn.TextSize = 13
+    ClearAllBtn.TextXAlignment = Enum.TextXAlignment.Right
+    ClearAllBtn.ZIndex = 152
+    ClearAllBtn.Parent = PopoverHeader
+
+    Maid:GiveTask(ClearAllBtn.MouseEnter:Connect(function()
+        Tween(ClearAllBtn, TweenInfo.new(0.2), {TextColor3 = Color3.new(1, 1, 1)})
+    end))
+    Maid:GiveTask(ClearAllBtn.MouseLeave:Connect(function()
+        Tween(ClearAllBtn, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(130, 130, 130)})
+    end))
+
+    local PopoverDivider = Instance.new("Frame")
+    PopoverDivider.Name = "Divider"
+    PopoverDivider.BackgroundColor3 = Color3.fromRGB(36, 36, 36)
+    PopoverDivider.BorderSizePixel = 0
+    PopoverDivider.Position = UDim2.new(0, 0, 1, -1)
+    PopoverDivider.Size = UDim2.new(1, 0, 0, 1)
+    PopoverDivider.ZIndex = 151
+    PopoverDivider.Parent = PopoverHeader
+
+    local PopoverBody = Instance.new("Frame")
+    PopoverBody.Name = "Body"
+    PopoverBody.BackgroundTransparency = 1
+    PopoverBody.Position = UDim2.new(0, 0, 0, 44)
+    PopoverBody.Size = UDim2.new(1, 0, 1, -44)
+    PopoverBody.ZIndex = 151
+    PopoverBody.Parent = NotificationsPopover
+
+    local PopoverBodyLayout = Instance.new("UIListLayout")
+    PopoverBodyLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    PopoverBodyLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    PopoverBodyLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    PopoverBodyLayout.Padding = UDim.new(0, 14)
+    PopoverBodyLayout.Parent = PopoverBody
+
+    local IconBox = Instance.new("Frame")
+    IconBox.Name = "IconBox"
+    IconBox.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
+    IconBox.BorderSizePixel = 0
+    IconBox.Size = UDim2.new(0, 58, 0, 58)
+    IconBox.LayoutOrder = 1
+    IconBox.ZIndex = 152
+    IconBox.Parent = PopoverBody
+
+    local IconBoxCorner = Instance.new("UICorner")
+    IconBoxCorner.CornerRadius = UDim.new(0, 14)
+    IconBoxCorner.Parent = IconBox
+
+    local IconBoxStroke = Instance.new("UIStroke")
+    IconBoxStroke.Color = Color3.fromRGB(42, 42, 42)
+    IconBoxStroke.Thickness = 1
+    IconBoxStroke.Parent = IconBox
+
+    local IconBoxImg = Instance.new("ImageLabel")
+    IconBoxImg.Name = "Icon"
+    IconBoxImg.AnchorPoint = Vector2.new(0.5, 0.5)
+    IconBoxImg.Position = UDim2.new(0.5, 0, 0.5, 0)
+    IconBoxImg.Size = UDim2.new(0, 28, 0, 28)
+    IconBoxImg.BackgroundTransparency = 1
+    IconBoxImg.Image = "rbxassetid://118205848671512"
+    IconBoxImg.ImageColor3 = Color3.fromRGB(180, 180, 180)
+    IconBoxImg.ZIndex = 153
+    IconBoxImg.Parent = IconBox
+
+    local TextBox = Instance.new("Frame")
+    TextBox.Name = "TextBox"
+    TextBox.BackgroundTransparency = 1
+    TextBox.Size = UDim2.new(1, -32, 0, 56)
+    TextBox.LayoutOrder = 2
+    TextBox.ZIndex = 152
+    TextBox.Parent = PopoverBody
+
+    local TextBoxLayout = Instance.new("UIListLayout")
+    TextBoxLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    TextBoxLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    TextBoxLayout.Padding = UDim.new(0, 6)
+    TextBoxLayout.Parent = TextBox
+
+    local CaughtUpTitle = Instance.new("TextLabel")
+    CaughtUpTitle.Name = "Title"
+    CaughtUpTitle.BackgroundTransparency = 1
+    CaughtUpTitle.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    CaughtUpTitle.Size = UDim2.new(1, 0, 0, 20)
+    CaughtUpTitle.Text = "You're all caught up"
+    CaughtUpTitle.TextColor3 = Color3.new(0.95, 0.95, 0.95)
+    CaughtUpTitle.TextSize = 16
+    CaughtUpTitle.ZIndex = 153
+    CaughtUpTitle.Parent = TextBox
+
+    local CaughtUpDesc = Instance.new("TextLabel")
+    CaughtUpDesc.Name = "Description"
+    CaughtUpDesc.BackgroundTransparency = 1
+    CaughtUpDesc.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+    CaughtUpDesc.Size = UDim2.new(1, 0, 0, 32)
+    CaughtUpDesc.Text = "Milestones, recaps and alerts will show up here."
+    CaughtUpDesc.TextColor3 = Color3.fromRGB(120, 120, 120)
+    CaughtUpDesc.TextSize = 13
+    CaughtUpDesc.TextWrapped = true
+    CaughtUpDesc.ZIndex = 153
+    CaughtUpDesc.Parent = TextBox
+
+    local isNotifOpen = false
+    local isHoveringNotif = false
+    local TweenInfoFast = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+
+    local function SetNotifOpen(open)
+        isNotifOpen = open
+        Tooltip.Visible = false
+        if isNotifOpen then
+            NotificationsPopover.Visible = true
+            NotificationsPopover.BackgroundTransparency = 1
+            PopoverScale.Scale = 0.94
+            Tween(NotificationsBtn, TweenInfoFast, {BackgroundTransparency = 0.8, BackgroundColor3 = Color3.fromRGB(40, 40, 40)})
+            Tween(NotifStroke, TweenInfoFast, {Color = Color3.new(1, 1, 1), Transparency = 0, Thickness = 1.4})
+            Tween(NotificationsPopover, TweenInfo.new(0.22, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out), {BackgroundTransparency = 0})
+            Tween(PopoverScale, TweenInfo.new(0.22, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out), {Scale = 1})
+        else
+            local targetColor = isHoveringNotif and Color3.fromRGB(70, 70, 70) or Color3.fromRGB(50, 50, 50)
+            local targetTrans = isHoveringNotif and 0.5 or 1
+            Tween(NotificationsBtn, TweenInfoFast, {BackgroundTransparency = isHoveringNotif and 0.85 or 1})
+            Tween(NotifStroke, TweenInfoFast, {Color = targetColor, Transparency = targetTrans, Thickness = 1.2})
+            Tween(NotificationsPopover, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1})
+            Tween(PopoverScale, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Scale = 0.94})
+            task.delay(0.18, function()
+                if not isNotifOpen then
+                    NotificationsPopover.Visible = false
+                end
+            end)
+        end
+    end
+
+    Maid:GiveTask(NotificationsBtn.MouseEnter:Connect(function()
+        isHoveringNotif = true
+        if not isNotifOpen then
+            Tooltip.Visible = true
+            Tween(NotificationsBtn, TweenInfoFast, {BackgroundTransparency = 0.85})
+            Tween(NotifStroke, TweenInfoFast, {Color = Color3.fromRGB(70, 70, 70), Transparency = 0.5})
+            Tween(Tooltip, TweenInfoFast, {BackgroundTransparency = 0})
+            Tween(TooltipText, TweenInfoFast, {TextTransparency = 0})
+            Tween(TooltipStroke, TweenInfoFast, {Transparency = 0})
+        end
+    end))
+
+    Maid:GiveTask(NotificationsBtn.MouseLeave:Connect(function()
+        isHoveringNotif = false
+        Tween(Tooltip, TweenInfoFast, {BackgroundTransparency = 1})
+        Tween(TooltipText, TweenInfoFast, {TextTransparency = 1})
+        Tween(TooltipStroke, TweenInfoFast, {Transparency = 1})
+        task.delay(0.2, function()
+            if not isHoveringNotif then
+                Tooltip.Visible = false
+            end
+        end)
+        if not isNotifOpen then
+            Tween(NotificationsBtn, TweenInfoFast, {BackgroundTransparency = 1})
+            Tween(NotifStroke, TweenInfoFast, {Color = Color3.fromRGB(50, 50, 50), Transparency = 1})
+        end
+    end))
+
+    Maid:GiveTask(NotificationsBtn.MouseButton1Click:Connect(function()
+        SetNotifOpen(not isNotifOpen)
+    end))
+
+    Maid:GiveTask(ClearAllBtn.MouseButton1Click:Connect(function()
+        SetNotifOpen(false)
+    end))
 
     local AccountBtn = Instance.new("ImageButton")
     AccountBtn.Name = "Account"
@@ -1002,6 +1275,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     return {
         Instance = Page,
         Topbar = Topbar,
+        Notifications = NotificationsPopover,
         PlayersScroll = PlayersScroll,
         ClaimedScroll = ClaimedScroll,
         BugTextBox = BugTextBox,
