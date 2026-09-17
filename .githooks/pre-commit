@@ -1,0 +1,10 @@
+#!/bin/sh
+if [ "$NO_BUMP" = "1" ]; then
+    exit 0
+fi
+
+if command -v python >/dev/null 2>&1; then
+    python bump_version.py
+elif command -v py >/dev/null 2>&1; then
+    py bump_version.py
+fi
