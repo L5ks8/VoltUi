@@ -2036,7 +2036,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     ActionsCard.BackgroundColor3 = Color3.new(0.09, 0.09, 0.09)
     ActionsCard.BorderSizePixel = 0
     ActionsCard.LayoutOrder = 1
-    ActionsCard.Size = UDim2.new(0.62, -5, 1, 0)
+    ActionsCard.Size = UDim2.new(0.67, -5, 1, 0)
     ActionsCard.Parent = BottomSectionWrapper
 
     local ActionsCorner = Instance.new("UICorner")
@@ -2049,8 +2049,8 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     ActionsStroke.Parent = ActionsCard
 
     local ActionsPadding = Instance.new("UIPadding")
-    ActionsPadding.PaddingLeft = UDim.new(0, 12)
-    ActionsPadding.PaddingRight = UDim.new(0, 12)
+    ActionsPadding.PaddingLeft = UDim.new(0, 10)
+    ActionsPadding.PaddingRight = UDim.new(0, 10)
     ActionsPadding.PaddingTop = UDim.new(0, 8)
     ActionsPadding.PaddingBottom = UDim.new(0, 8)
     ActionsPadding.Parent = ActionsCard
@@ -2075,13 +2075,13 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     ActionRowLayout.Padding = UDim.new(0, 6)
     ActionRowLayout.Parent = ActionButtonsRow
 
-    local function CreateActionButton(parent, text, iconId, order, callback)
+    local function CreateActionButton(parent, text, iconId, order, callback, btnWidth)
         local btn = Instance.new("TextButton")
         btn.Name = text .. "Btn"
         btn.BackgroundColor3 = Color3.fromRGB(26, 26, 26)
         btn.BorderSizePixel = 0
         btn.LayoutOrder = order
-        btn.Size = UDim2.new(0.25, -5, 1, 0)
+        btn.Size = btnWidth or UDim2.new(0.25, -5, 1, 0)
         btn.Text = ""
         btn.AutoButtonColor = false
         btn.Parent = parent
@@ -2100,7 +2100,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
         bLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
         bLayout.VerticalAlignment = Enum.VerticalAlignment.Center
         bLayout.SortOrder = Enum.SortOrder.LayoutOrder
-        bLayout.Padding = UDim.new(0, 5)
+        bLayout.Padding = UDim.new(0, 4)
         bLayout.Parent = btn
 
         if iconId and iconId ~= "" then
@@ -2197,9 +2197,9 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
                 end)
             end
         end)
-    end)
+    end, UDim2.new(0, 78, 1, 0))
 
-    CreateActionButton(ActionButtonsRow, "Copy JobId", "rbxassetid://10734886795", 2, function()
+    CreateActionButton(ActionButtonsRow, "Copy ID", "rbxassetid://98703591334673", 2, function()
         local jobId = tostring(game.JobId)
         local setclip = setclipboard or toclipboard or (Clipboard and Clipboard.set)
         if setclip then
@@ -2211,23 +2211,145 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
             Duration = 3,
             Type = "success"
         })
-    end)
+    end, UDim2.new(0, 78, 1, 0))
 
-    CreateActionButton(ActionButtonsRow, "Copy Join", "rbxassetid://10723346959", 3, function()
-        local code = string.format("game:GetService('TeleportService'):TeleportToPlaceInstance(%d, '%s', game.Players.LocalPlayer)", game.PlaceId, tostring(game.JobId))
-        local setclip = setclipboard or toclipboard or (Clipboard and Clipboard.set)
-        if setclip then
-            pcall(setclip, code)
+    local JoinInputWrapper = Instance.new("Frame")
+    JoinInputWrapper.Name = "JoinInputWrapper"
+    JoinInputWrapper.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    JoinInputWrapper.BorderSizePixel = 0
+    JoinInputWrapper.LayoutOrder = 3
+    JoinInputWrapper.Size = UDim2.new(1, -232, 1, 0)
+    JoinInputWrapper.Parent = ActionButtonsRow
+
+    local JoinCorner = Instance.new("UICorner")
+    JoinCorner.CornerRadius = UDim.new(0, 5)
+    JoinCorner.Parent = JoinInputWrapper
+
+    local JoinStroke = Instance.new("UIStroke")
+    JoinStroke.Color = Color3.fromRGB(44, 44, 44)
+    JoinStroke.Thickness = 1
+    JoinStroke.Parent = JoinInputWrapper
+
+    local JoinTextBox = Instance.new("TextBox")
+    JoinTextBox.Name = "JobIdInput"
+    JoinTextBox.BackgroundTransparency = 1
+    JoinTextBox.Position = UDim2.new(0, 8, 0, 0)
+    JoinTextBox.Size = UDim2.new(1, -34, 1, 0)
+    JoinTextBox.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+    JoinTextBox.PlaceholderText = "Paste JobId..."
+    JoinTextBox.PlaceholderColor3 = Color3.fromRGB(110, 110, 110)
+    JoinTextBox.Text = ""
+    JoinTextBox.TextColor3 = Color3.new(0.9, 0.9, 0.9)
+    JoinTextBox.TextSize = 10
+    JoinTextBox.TextXAlignment = Enum.TextXAlignment.Left
+    JoinTextBox.TextTruncate = Enum.TextTruncate.AtEnd
+    JoinTextBox.ClearTextOnFocus = false
+    JoinTextBox.Parent = JoinInputWrapper
+
+    local JoinBtn = Instance.new("TextButton")
+    JoinBtn.Name = "JoinBtn"
+    JoinBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    JoinBtn.BorderSizePixel = 0
+    JoinBtn.Position = UDim2.new(1, -25, 0.5, -11)
+    JoinBtn.Size = UDim2.new(0, 22, 0, 22)
+    JoinBtn.Text = ""
+    JoinBtn.AutoButtonColor = false
+    JoinBtn.Parent = JoinInputWrapper
+
+    local JoinBtnCorner = Instance.new("UICorner")
+    JoinBtnCorner.CornerRadius = UDim.new(0, 4)
+    JoinBtnCorner.Parent = JoinBtn
+
+    local JoinBtnStroke = Instance.new("UIStroke")
+    JoinBtnStroke.Color = Color3.fromRGB(50, 50, 50)
+    JoinBtnStroke.Thickness = 1
+    JoinBtnStroke.Parent = JoinBtn
+
+    local JoinIcon = Instance.new("ImageLabel")
+    JoinIcon.Name = "Icon"
+    JoinIcon.AnchorPoint = Vector2.new(0.5, 0.5)
+    JoinIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
+    JoinIcon.Size = UDim2.new(0, 13, 0, 13)
+    JoinIcon.BackgroundTransparency = 1
+    JoinIcon.Image = "rbxassetid://111244733671804"
+    JoinIcon.ImageColor3 = Color3.fromRGB(200, 200, 200)
+    JoinIcon.Parent = JoinBtn
+
+    Maid:GiveTask(JoinBtn.MouseEnter:Connect(function()
+        Tween(JoinBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(48, 48, 48)})
+        Tween(JoinIcon, TweenInfo.new(0.2), {ImageColor3 = Color3.new(1, 1, 1)})
+    end))
+
+    Maid:GiveTask(JoinBtn.MouseLeave:Connect(function()
+        Tween(JoinBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(30, 30, 30)})
+        Tween(JoinIcon, TweenInfo.new(0.2), {ImageColor3 = Color3.fromRGB(200, 200, 200)})
+    end))
+
+    local function executeJoin()
+        local targetId = string.gsub(JoinTextBox.Text, "%s+", "")
+        if targetId == "" then
+            pcall(function()
+                local getclip = getclipboard or toclipboard or (Clipboard and Clipboard.get)
+                if getclip then
+                    local cb = getclip()
+                    if cb and typeof(cb) == "string" and #cb > 5 then
+                        targetId = string.gsub(cb, "%s+", "")
+                        JoinTextBox.Text = targetId
+                    end
+                end
+            end)
         end
-        SendNotification({
-            Title = "Join Script Copied",
-            Content = "Teleport script copied to clipboard!",
-            Duration = 3,
-            Type = "success"
-        })
-    end)
 
-    CreateActionButton(ActionButtonsRow, "Reload UI", "rbxassetid://10734940376", 4, function()
+        if targetId == "" then
+            SendNotification({
+                Title = "Join Server",
+                Content = "Please enter or paste a valid JobId!",
+                Duration = 3,
+                Type = "error"
+            })
+            return
+        end
+
+        if targetId == tostring(game.JobId) then
+            SendNotification({
+                Title = "Join Server",
+                Content = "You are already in this server!",
+                Duration = 3,
+                Type = "error"
+            })
+            return
+        end
+
+        SendNotification({
+            Title = "Joining Server",
+            Content = "Connecting to server instance...",
+            Duration = 3,
+            Type = "info"
+        })
+
+        task.spawn(function()
+            local success = pcall(function()
+                TeleportService:TeleportToPlaceInstance(game.PlaceId, targetId, Players.LocalPlayer)
+            end)
+            if not success then
+                SendNotification({
+                    Title = "Join Failed",
+                    Content = "Could not connect to that server instance.",
+                    Duration = 4,
+                    Type = "error"
+                })
+            end
+        end)
+    end
+
+    Maid:GiveTask(JoinBtn.MouseButton1Click:Connect(executeJoin))
+    Maid:GiveTask(JoinTextBox.FocusLost:Connect(function(enterPressed)
+        if enterPressed then
+            executeJoin()
+        end
+    end))
+
+    CreateActionButton(ActionButtonsRow, "Reload", "rbxassetid://10734940376", 4, function()
         SendNotification({
             Title = "Reload UI",
             Content = "Reloading Volt UI...",
@@ -2242,14 +2364,14 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
                 end
             end)
         end)
-    end)
+    end, UDim2.new(0, 52, 1, 0))
 
     local CommunityCard = Instance.new("Frame")
     CommunityCard.Name = "CommunityCard"
     CommunityCard.BackgroundColor3 = Color3.new(0.09, 0.09, 0.09)
     CommunityCard.BorderSizePixel = 0
     CommunityCard.LayoutOrder = 2
-    CommunityCard.Size = UDim2.new(0.38, -5, 1, 0)
+    CommunityCard.Size = UDim2.new(0.33, -5, 1, 0)
     CommunityCard.Parent = BottomSectionWrapper
 
     local CommunityCorner = Instance.new("UICorner")
