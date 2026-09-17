@@ -225,7 +225,7 @@ client.on('interactionCreate', async interaction => {
                 await notif.save();
 
                 const embed = new EmbedBuilder()
-                    .setTitle('📢 Notification Sent')
+                    .setTitle('Notification Sent')
                     .setColor('#2ecc71')
                     .addFields(
                         { name: 'Title', value: title, inline: true },
@@ -234,7 +234,7 @@ client.on('interactionCreate', async interaction => {
                     )
                     .setTimestamp();
 
-                return interaction.reply({ embeds: [embed] });
+                return interaction.reply({ embeds: [embed], ephemeral: true });
             } catch (err) {
                 console.error('Notify command error:', err);
                 return interaction.reply({ embeds: [new EmbedBuilder().setDescription(`Error sending notification: ${err.message}`).setColor('#e74c3c')], ephemeral: true });
@@ -253,7 +253,7 @@ client.on('interactionCreate', async interaction => {
                 await updateDoc.save();
 
                 const embed = new EmbedBuilder()
-                    .setTitle('🚀 Update Posted')
+                    .setTitle('Update Posted')
                     .setColor('#2ecc71')
                     .addFields(
                         { name: 'Title', value: title, inline: true },
@@ -261,7 +261,7 @@ client.on('interactionCreate', async interaction => {
                     )
                     .setTimestamp();
 
-                return interaction.reply({ embeds: [embed] });
+                return interaction.reply({ embeds: [embed], ephemeral: true });
             } catch (err) {
                 console.error('Update command error:', err);
                 return interaction.reply({ embeds: [new EmbedBuilder().setDescription(`Error posting update: ${err.message}`).setColor('#e74c3c')], ephemeral: true });
