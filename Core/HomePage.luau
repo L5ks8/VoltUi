@@ -51,6 +51,8 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     TopbarCorner.BottomRightRadius = UDim.new(0, 0)
     TopbarCorner.Parent = Topbar
 
+    local SetNotifOpen = nil
+
     local ReturnButton = Instance.new("ImageButton")
     ReturnButton.Name = "Return"
     ReturnButton.BackgroundColor3 = Color3.new(1, 1, 1)
@@ -78,7 +80,10 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     ReturnIcon.Parent = ReturnButton
 
     if BackCallback then
-        Maid:GiveTask(ReturnButton.MouseButton1Click:Connect(BackCallback))
+        Maid:GiveTask(ReturnButton.MouseButton1Click:Connect(function()
+            if SetNotifOpen then SetNotifOpen(false) end
+            BackCallback()
+        end))
     end
 
     Maid:GiveTask(ReturnButton.MouseEnter:Connect(function()
@@ -120,6 +125,8 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     IconsLayout.Padding = UDim.new(0, 4)
     IconsLayout.Parent = Icons
 
+    local MainFrame = (WindowObject and WindowObject.Main) or Content
+
     local NotificationsBtn = Instance.new("ImageButton")
     NotificationsBtn.Name = "Notifications"
     NotificationsBtn.AutoButtonColor = false
@@ -140,13 +147,9 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     NotifStroke.Thickness = 1.4
     NotifStroke.Parent = NotificationsBtn
 
-    local NotifLayout = Instance.new("UIListLayout")
-    NotifLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    NotifLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    NotifLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    NotifLayout.Parent = NotificationsBtn
-
     local NotifIcon = Instance.new("ImageLabel")
+    NotifIcon.AnchorPoint = Vector2.new(0.5, 0.5)
+    NotifIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
     NotifIcon.BackgroundColor3 = Color3.new(1, 1, 1)
     NotifIcon.BackgroundTransparency = 1
     NotifIcon.BorderColor3 = Color3.new(0, 0, 0)
@@ -157,17 +160,16 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     NotifIcon.Parent = NotificationsBtn
 
     local Tooltip = Instance.new("Frame")
-    Tooltip.Name = "Tooltip"
+    Tooltip.Name = "NotificationsTooltip"
     Tooltip.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
     Tooltip.BackgroundTransparency = 1
     Tooltip.AnchorPoint = Vector2.new(0.5, 0)
-    Tooltip.Position = UDim2.new(0.5, 0, 1, 6)
     Tooltip.Size = UDim2.new(0, 0, 0, 22)
     Tooltip.AutomaticSize = Enum.AutomaticSize.X
     Tooltip.BorderSizePixel = 0
-    Tooltip.ZIndex = 250
+    Tooltip.ZIndex = 6000
     Tooltip.Visible = false
-    Tooltip.Parent = NotificationsBtn
+    Tooltip.Parent = MainFrame
 
     local TooltipCorner = Instance.new("UICorner")
     TooltipCorner.CornerRadius = UDim.new(0, 5)
@@ -192,20 +194,19 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     TooltipText.TextTransparency = 1
     TooltipText.Size = UDim2.new(1, 0, 1, 0)
     TooltipText.AutomaticSize = Enum.AutomaticSize.X
-    TooltipText.ZIndex = 251
+    TooltipText.ZIndex = 6001
     TooltipText.Parent = Tooltip
 
     local NotificationsPopover = Instance.new("Frame")
     NotificationsPopover.Name = "NotificationsPopover"
     NotificationsPopover.AnchorPoint = Vector2.new(1, 0)
-    NotificationsPopover.Position = UDim2.new(1, -10, 0, 46)
     NotificationsPopover.Size = UDim2.new(0, 305, 0, 275)
     NotificationsPopover.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
     NotificationsPopover.BorderSizePixel = 0
-    NotificationsPopover.ZIndex = 150
+    NotificationsPopover.ZIndex = 5000
     NotificationsPopover.Visible = false
     NotificationsPopover.ClipsDescendants = true
-    NotificationsPopover.Parent = Page
+    NotificationsPopover.Parent = MainFrame
 
     local PopoverCorner = Instance.new("UICorner")
     PopoverCorner.CornerRadius = UDim.new(0, 10)
@@ -224,7 +225,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     PopoverHeader.Name = "Header"
     PopoverHeader.BackgroundTransparency = 1
     PopoverHeader.Size = UDim2.new(1, 0, 0, 44)
-    PopoverHeader.ZIndex = 151
+    PopoverHeader.ZIndex = 5001
     PopoverHeader.Parent = NotificationsPopover
 
     local PopoverTitle = Instance.new("TextLabel")
@@ -237,7 +238,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     PopoverTitle.TextColor3 = Color3.new(0.95, 0.95, 0.95)
     PopoverTitle.TextSize = 15
     PopoverTitle.TextXAlignment = Enum.TextXAlignment.Left
-    PopoverTitle.ZIndex = 152
+    PopoverTitle.ZIndex = 5002
     PopoverTitle.Parent = PopoverHeader
 
     local ClearAllBtn = Instance.new("TextButton")
@@ -251,7 +252,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     ClearAllBtn.TextColor3 = Color3.fromRGB(130, 130, 130)
     ClearAllBtn.TextSize = 13
     ClearAllBtn.TextXAlignment = Enum.TextXAlignment.Right
-    ClearAllBtn.ZIndex = 152
+    ClearAllBtn.ZIndex = 5002
     ClearAllBtn.Parent = PopoverHeader
 
     Maid:GiveTask(ClearAllBtn.MouseEnter:Connect(function()
@@ -267,7 +268,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     PopoverDivider.BorderSizePixel = 0
     PopoverDivider.Position = UDim2.new(0, 0, 1, -1)
     PopoverDivider.Size = UDim2.new(1, 0, 0, 1)
-    PopoverDivider.ZIndex = 151
+    PopoverDivider.ZIndex = 5001
     PopoverDivider.Parent = PopoverHeader
 
     local PopoverBody = Instance.new("Frame")
@@ -275,7 +276,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     PopoverBody.BackgroundTransparency = 1
     PopoverBody.Position = UDim2.new(0, 0, 0, 44)
     PopoverBody.Size = UDim2.new(1, 0, 1, -44)
-    PopoverBody.ZIndex = 151
+    PopoverBody.ZIndex = 5001
     PopoverBody.Parent = NotificationsPopover
 
     local PopoverBodyLayout = Instance.new("UIListLayout")
@@ -291,7 +292,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     IconBox.BorderSizePixel = 0
     IconBox.Size = UDim2.new(0, 58, 0, 58)
     IconBox.LayoutOrder = 1
-    IconBox.ZIndex = 152
+    IconBox.ZIndex = 5002
     IconBox.Parent = PopoverBody
 
     local IconBoxCorner = Instance.new("UICorner")
@@ -311,7 +312,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     IconBoxImg.BackgroundTransparency = 1
     IconBoxImg.Image = "rbxassetid://118205848671512"
     IconBoxImg.ImageColor3 = Color3.fromRGB(180, 180, 180)
-    IconBoxImg.ZIndex = 153
+    IconBoxImg.ZIndex = 5003
     IconBoxImg.Parent = IconBox
 
     local TextBox = Instance.new("Frame")
@@ -319,7 +320,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     TextBox.BackgroundTransparency = 1
     TextBox.Size = UDim2.new(1, -32, 0, 56)
     TextBox.LayoutOrder = 2
-    TextBox.ZIndex = 152
+    TextBox.ZIndex = 5002
     TextBox.Parent = PopoverBody
 
     local TextBoxLayout = Instance.new("UIListLayout")
@@ -336,7 +337,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     CaughtUpTitle.Text = "You're all caught up"
     CaughtUpTitle.TextColor3 = Color3.new(0.95, 0.95, 0.95)
     CaughtUpTitle.TextSize = 16
-    CaughtUpTitle.ZIndex = 153
+    CaughtUpTitle.ZIndex = 5003
     CaughtUpTitle.Parent = TextBox
 
     local CaughtUpDesc = Instance.new("TextLabel")
@@ -348,17 +349,34 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     CaughtUpDesc.TextColor3 = Color3.fromRGB(120, 120, 120)
     CaughtUpDesc.TextSize = 13
     CaughtUpDesc.TextWrapped = true
-    CaughtUpDesc.ZIndex = 153
+    CaughtUpDesc.ZIndex = 5003
     CaughtUpDesc.Parent = TextBox
+
+    local function UpdateFloatingPositions()
+        if NotificationsBtn and MainFrame and NotificationsBtn.Parent then
+            local btnPos = NotificationsBtn.AbsolutePosition
+            local mainPos = MainFrame.AbsolutePosition
+            local rightX = (btnPos.X - mainPos.X) + NotificationsBtn.AbsoluteSize.X
+            local bottomY = (btnPos.Y - mainPos.Y) + NotificationsBtn.AbsoluteSize.Y + 6
+            local centerX = (btnPos.X - mainPos.X) + (NotificationsBtn.AbsoluteSize.X / 2)
+            
+            NotificationsPopover.Position = UDim2.new(0, rightX, 0, bottomY)
+            NotificationsPopover.AnchorPoint = Vector2.new(1, 0)
+            
+            Tooltip.Position = UDim2.new(0, centerX, 0, bottomY)
+            Tooltip.AnchorPoint = Vector2.new(0.5, 0)
+        end
+    end
 
     local isNotifOpen = false
     local isHoveringNotif = false
     local TweenInfoFast = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 
-    local function SetNotifOpen(open)
+    SetNotifOpen = function(open)
         isNotifOpen = open
         Tooltip.Visible = false
         if isNotifOpen then
+            UpdateFloatingPositions()
             NotificationsPopover.Visible = true
             NotificationsPopover.BackgroundTransparency = 1
             PopoverScale.Scale = 0.94
@@ -384,6 +402,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     Maid:GiveTask(NotificationsBtn.MouseEnter:Connect(function()
         isHoveringNotif = true
         if not isNotifOpen then
+            UpdateFloatingPositions()
             Tooltip.Visible = true
             Tween(NotificationsBtn, TweenInfoFast, {BackgroundTransparency = 0.85})
             Tween(NotifStroke, TweenInfoFast, {Color = Color3.fromRGB(70, 70, 70), Transparency = 0.5})
@@ -415,6 +434,18 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
 
     Maid:GiveTask(ClearAllBtn.MouseButton1Click:Connect(function()
         SetNotifOpen(false)
+    end))
+
+    Maid:GiveTask(NotificationsBtn:GetPropertyChangedSignal("AbsolutePosition"):Connect(function()
+        if isNotifOpen or isHoveringNotif then
+            UpdateFloatingPositions()
+        end
+    end))
+
+    Maid:GiveTask(Page:GetPropertyChangedSignal("Visible"):Connect(function()
+        if not Page.Visible then
+            SetNotifOpen(false)
+        end
     end))
 
     local AccountBtn = Instance.new("ImageButton")
