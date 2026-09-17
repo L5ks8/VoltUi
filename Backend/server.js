@@ -70,6 +70,38 @@ const verifyKeyHandler = async (req, res) => {
 app.post('/check-key', verifyKeyHandler);
 app.post('/api/check-key', verifyKeyHandler);
 
+const Notification = require('./models/Notification');
+
+const getNotificationsHandler = async (req, res) => {
+    try {
+        const { userId, discordId } = req.query;
+        const filter = {
+            $or: [
+                { target: 'all' }
+            ]
+        };
+        if (userId && mongoose.Types.ObjectId.isValid(userId)) {
+            filter.$or.push({ targetUserId: userId });
+        }
+        if (discordId) {
+            filter.$or.push({ targetDiscordId: discordId });
+        }
+
+        const notifs = await Notification.find(filter)
+            .sort({ createdAt: -1 })
+            .limit(15)
+            .lean();
+
+        return res.json({ success: true, notifications: notifs });
+    } catch (err) {
+        console.error('Get notifications error:', err);
+        return res.status(500).json({ success: false, error: err.message });
+    }
+};
+
+app.get('/notifications', getNotificationsHandler);
+app.get('/api/notifications', getNotificationsHandler);
+
 // Developer API (unencrypted, uses Admin API Key)
 app.use('/api/v1', requireApiKey, require('./routes/adminApi'));
 

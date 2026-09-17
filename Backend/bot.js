@@ -2,6 +2,7 @@ const { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder, EmbedBuild
 const mongoose = require('mongoose');
 const License = require('./models/License');
 const User = require('./models/User');
+const Notification = require('./models/Notification');
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
@@ -99,6 +100,24 @@ const commands = [
                         .setDescription('Bypass the cooldown')
                         .setRequired(false)
                 )
+        ),
+    new SlashCommandBuilder()
+        .setName('notify')
+        .setDescription('Send a notification to Volt UI clients')
+        .addStringOption(option =>
+            option.setName('title')
+                .setDescription('Notification title')
+                .setRequired(true)
+        )
+        .addStringOption(option =>
+            option.setName('message')
+                .setDescription('Notification message')
+                .setRequired(true)
+        )
+        .addStringOption(option =>
+            option.setName('target')
+                .setDescription('Target User ID, Discord ID, username, or "all" (default)')
+                .setRequired(false)
         )
 ].map(command => command.toJSON());
 
@@ -151,6 +170,61 @@ client.on('interactionCreate', async interaction => {
         const allowedCommands = ['panel', 'key', 'reset'];
         if (!isOwner && !allowedCommands.includes(interaction.commandName)) {
             return interaction.reply({ embeds: [new EmbedBuilder().setDescription('You do not have permission to use this command.').setColor('#e74c3c')], ephemeral: true });
+        }
+
+        if (interaction.commandName === 'notify') {
+            const title = interaction.options.getString('title');
+            const message = interaction.options.getString('message');
+            const targetInput = (interaction.options.getString('target') || 'all').trim();
+
+            let targetType = 'all';
+            let targetUserId = null;
+            let targetDiscordId = null;
+
+            if (targetInput !== 'all') {
+                const user = await User.findOne({
+                    $or: [
+                        { discordId: targetInput },
+                        ...(mongoose.Types.ObjectId.isValid(targetInput) ? [{ _id: targetInput }] : []),
+                        { username: targetInput }
+                    ]
+                });
+
+                if (user) {
+                    targetUserId = user._id;
+                    targetDiscordId = user.discordId || null;
+                    targetType = 'user';
+                } else if (/^\d{17,20}$/.test(targetInput)) {
+                    targetDiscordId = targetInput;
+                    targetType = 'user';
+                }
+            }
+
+            try {
+                const notif = new Notification({
+                    title,
+                    message,
+                    target: targetType,
+                    targetUserId,
+                    targetDiscordId
+                });
+                await notif.save();
+
+                const embed = new EmbedBuilder()
+                    .setTitle('📢 Notification Sent')
+                    .setColor('#2ecc71')
+                    .addFields(
+                        { name: 'Title', value: title, inline: true },
+                        { name: 'Target', value: targetType === 'all' ? 'All Users (Broadcast)' : `User (${targetInput})`, inline: true },
+                        { name: 'Message', value: message }
+                    )
+                    .setTimestamp();
+
+                return interaction.reply({ embeds: [embed] });
+            } catch (err) {
+                console.error('Notify command error:', err);
+                return interaction.reply({ embeds: [new EmbedBuilder().setDescription(`Error sending notification: ${err.message}`).setColor('#e74c3c')], ephemeral: true });
+            }
         }
 
         if (interaction.commandName === 'createkey') {

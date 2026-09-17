@@ -159,6 +159,39 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     NotifIcon.Size = UDim2.new(0, 20, 0, 20)
     NotifIcon.Parent = NotificationsBtn
 
+    local NotifBadge = Instance.new("Frame")
+    NotifBadge.Name = "Badge"
+    NotifBadge.AnchorPoint = Vector2.new(0.5, 0.5)
+    NotifBadge.Position = UDim2.new(0, 2, 0, 2)
+    NotifBadge.Size = UDim2.new(0, 16, 0, 16)
+    NotifBadge.BackgroundColor3 = Color3.fromRGB(235, 45, 45)
+    NotifBadge.BorderSizePixel = 0
+    NotifBadge.ZIndex = 50
+    NotifBadge.Visible = false
+    NotifBadge.Parent = NotificationsBtn
+
+    local NotifBadgeCorner = Instance.new("UICorner")
+    NotifBadgeCorner.CornerRadius = UDim.new(1, 0)
+    NotifBadgeCorner.Parent = NotifBadge
+
+    local NotifBadgeStroke = Instance.new("UIStroke")
+    NotifBadgeStroke.Color = Color3.fromRGB(25, 25, 25)
+    NotifBadgeStroke.Thickness = 1.2
+    NotifBadgeStroke.Parent = NotifBadge
+
+    local NotifBadgeText = Instance.new("TextLabel")
+    NotifBadgeText.Name = "Count"
+    NotifBadgeText.BackgroundTransparency = 1
+    NotifBadgeText.Size = UDim2.new(1, 0, 1, 0)
+    NotifBadgeText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    NotifBadgeText.Text = "0"
+    NotifBadgeText.TextColor3 = Color3.new(1, 1, 1)
+    NotifBadgeText.TextSize = 10
+    NotifBadgeText.TextXAlignment = Enum.TextXAlignment.Center
+    NotifBadgeText.TextYAlignment = Enum.TextYAlignment.Center
+    NotifBadgeText.ZIndex = 51
+    NotifBadgeText.Parent = NotifBadge
+
     local Tooltip = Instance.new("Frame")
     Tooltip.Name = "NotificationsTooltip"
     Tooltip.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
@@ -279,12 +312,19 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     PopoverBody.ZIndex = 5001
     PopoverBody.Parent = NotificationsPopover
 
-    local PopoverBodyLayout = Instance.new("UIListLayout")
-    PopoverBodyLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    PopoverBodyLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    PopoverBodyLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    PopoverBodyLayout.Padding = UDim.new(0, 14)
-    PopoverBodyLayout.Parent = PopoverBody
+    local EmptyState = Instance.new("Frame")
+    EmptyState.Name = "EmptyState"
+    EmptyState.BackgroundTransparency = 1
+    EmptyState.Size = UDim2.new(1, 0, 1, 0)
+    EmptyState.ZIndex = 5001
+    EmptyState.Parent = PopoverBody
+
+    local EmptyStateLayout = Instance.new("UIListLayout")
+    EmptyStateLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    EmptyStateLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    EmptyStateLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    EmptyStateLayout.Padding = UDim.new(0, 14)
+    EmptyStateLayout.Parent = EmptyState
 
     local IconBox = Instance.new("Frame")
     IconBox.Name = "IconBox"
@@ -293,7 +333,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     IconBox.Size = UDim2.new(0, 58, 0, 58)
     IconBox.LayoutOrder = 1
     IconBox.ZIndex = 5002
-    IconBox.Parent = PopoverBody
+    IconBox.Parent = EmptyState
 
     local IconBoxCorner = Instance.new("UICorner")
     IconBoxCorner.CornerRadius = UDim.new(0, 14)
@@ -321,7 +361,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     TextBox.Size = UDim2.new(1, -32, 0, 56)
     TextBox.LayoutOrder = 2
     TextBox.ZIndex = 5002
-    TextBox.Parent = PopoverBody
+    TextBox.Parent = EmptyState
 
     local TextBoxLayout = Instance.new("UIListLayout")
     TextBoxLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
@@ -351,6 +391,185 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     CaughtUpDesc.TextWrapped = true
     CaughtUpDesc.ZIndex = 5003
     CaughtUpDesc.Parent = TextBox
+
+    local NotificationsScroll = Instance.new("ScrollingFrame")
+    NotificationsScroll.Name = "NotificationsScroll"
+    NotificationsScroll.BackgroundTransparency = 1
+    NotificationsScroll.BorderSizePixel = 0
+    NotificationsScroll.Size = UDim2.new(1, 0, 1, 0)
+    NotificationsScroll.ScrollBarThickness = 2
+    NotificationsScroll.ScrollBarImageColor3 = Color3.fromRGB(80, 80, 80)
+    NotificationsScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+    NotificationsScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    NotificationsScroll.Visible = false
+    NotificationsScroll.ZIndex = 5001
+    NotificationsScroll.Parent = PopoverBody
+
+    local NotifScrollLayout = Instance.new("UIListLayout")
+    NotifScrollLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    NotifScrollLayout.Padding = UDim.new(0, 8)
+    NotifScrollLayout.Parent = NotificationsScroll
+
+    local NotifScrollPadding = Instance.new("UIPadding")
+    NotifScrollPadding.PaddingTop = UDim.new(0, 10)
+    NotifScrollPadding.PaddingBottom = UDim.new(0, 10)
+    NotifScrollPadding.PaddingLeft = UDim.new(0, 12)
+    NotifScrollPadding.PaddingRight = UDim.new(0, 12)
+    NotifScrollPadding.Parent = NotificationsScroll
+
+    local currentNotifications = {}
+    local readNotificationIds = {}
+
+    local function RenderNotifications(notifs)
+        currentNotifications = notifs or {}
+        
+        for _, child in ipairs(NotificationsScroll:GetChildren()) do
+            if child:IsA("Frame") then
+                child:Destroy()
+            end
+        end
+
+        local unreadCount = 0
+        for _, n in ipairs(currentNotifications) do
+            local id = tostring(n._id or n.id or (tostring(n.title) .. "_" .. tostring(n.message)))
+            if not readNotificationIds[id] then
+                unreadCount = unreadCount + 1
+            end
+
+            local Card = Instance.new("Frame")
+            Card.Name = "NotifCard"
+            Card.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
+            Card.BorderSizePixel = 0
+            Card.Size = UDim2.new(1, 0, 0, 0)
+            Card.AutomaticSize = Enum.AutomaticSize.Y
+            Card.ZIndex = 5002
+            Card.Parent = NotificationsScroll
+
+            local CardCorner = Instance.new("UICorner")
+            CardCorner.CornerRadius = UDim.new(0, 8)
+            CardCorner.Parent = Card
+
+            local CardStroke = Instance.new("UIStroke")
+            CardStroke.Color = Color3.fromRGB(44, 44, 44)
+            CardStroke.Thickness = 1
+            CardStroke.Parent = Card
+
+            local CardPadding = Instance.new("UIPadding")
+            CardPadding.PaddingTop = UDim.new(0, 10)
+            CardPadding.PaddingBottom = UDim.new(0, 10)
+            CardPadding.PaddingLeft = UDim.new(0, 12)
+            CardPadding.PaddingRight = UDim.new(0, 12)
+            CardPadding.Parent = Card
+
+            local CardLayout = Instance.new("UIListLayout")
+            CardLayout.SortOrder = Enum.SortOrder.LayoutOrder
+            CardLayout.Padding = UDim.new(0, 4)
+            CardLayout.Parent = Card
+
+            local HeaderRow = Instance.new("Frame")
+            HeaderRow.BackgroundTransparency = 1
+            HeaderRow.Size = UDim2.new(1, 0, 0, 18)
+            HeaderRow.ZIndex = 5003
+            HeaderRow.Parent = Card
+
+            local HeaderLayout = Instance.new("UIListLayout")
+            HeaderLayout.FillDirection = Enum.FillDirection.Horizontal
+            HeaderLayout.SortOrder = Enum.SortOrder.LayoutOrder
+            HeaderLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+            HeaderLayout.Parent = HeaderRow
+
+            local TitleLabel = Instance.new("TextLabel")
+            TitleLabel.BackgroundTransparency = 1
+            TitleLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+            TitleLabel.Size = UDim2.new(0.7, 0, 1, 0)
+            TitleLabel.Text = tostring(n.title or "Notification")
+            TitleLabel.TextColor3 = Color3.new(0.95, 0.95, 0.95)
+            TitleLabel.TextSize = 14
+            TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+            TitleLabel.TextTruncate = Enum.TextTruncate.AtEnd
+            TitleLabel.ZIndex = 5003
+            TitleLabel.Parent = HeaderRow
+
+            local DateLabel = Instance.new("TextLabel")
+            DateLabel.BackgroundTransparency = 1
+            DateLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+            DateLabel.Size = UDim2.new(0.3, 0, 1, 0)
+            DateLabel.Text = n.createdAt and string.sub(tostring(n.createdAt), 1, 10) or "Recent"
+            DateLabel.TextColor3 = Color3.fromRGB(110, 110, 110)
+            DateLabel.TextSize = 11
+            DateLabel.TextXAlignment = Enum.TextXAlignment.Right
+            DateLabel.ZIndex = 5003
+            DateLabel.Parent = HeaderRow
+
+            local MsgLabel = Instance.new("TextLabel")
+            MsgLabel.BackgroundTransparency = 1
+            MsgLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+            MsgLabel.Size = UDim2.new(1, 0, 0, 0)
+            MsgLabel.AutomaticSize = Enum.AutomaticSize.Y
+            MsgLabel.Text = tostring(n.message or "")
+            MsgLabel.TextColor3 = Color3.fromRGB(180, 180, 180)
+            MsgLabel.TextSize = 12
+            MsgLabel.TextWrapped = true
+            MsgLabel.TextXAlignment = Enum.TextXAlignment.Left
+            MsgLabel.ZIndex = 5003
+            MsgLabel.Parent = Card
+        end
+
+        if #currentNotifications > 0 and unreadCount > 0 then
+            NotifBadgeText.Text = unreadCount > 99 and "99+" or tostring(unreadCount)
+            NotifBadge.Visible = true
+            EmptyState.Visible = false
+            NotificationsScroll.Visible = true
+        elseif #currentNotifications > 0 then
+            NotifBadge.Visible = false
+            EmptyState.Visible = false
+            NotificationsScroll.Visible = true
+        else
+            NotifBadge.Visible = false
+            EmptyState.Visible = true
+            NotificationsScroll.Visible = false
+        end
+    end
+
+    local function FetchNotifications()
+        task.spawn(function()
+            local getFunc = (request and function(u) return request({Url = u, Method = "GET"}) end)
+                         or (http_request and function(u) return http_request({Url = u, Method = "GET"}) end)
+                         or (syn and syn.request and function(u) return syn.request({Url = u, Method = "GET"}) end)
+                         or (game and game.HttpGet and function(u) return { Body = game:HttpGet(u) } end)
+            if not getFunc then return end
+
+            local url = "https://getvolt-hub.onrender.com/notifications"
+            local queryParams = {}
+            if Api and Api.UserData then
+                if Api.UserData._id or Api.UserData.id then
+                    table.insert(queryParams, "userId=" .. tostring(Api.UserData._id or Api.UserData.id))
+                end
+                if Api.UserData.discordId then
+                    table.insert(queryParams, "discordId=" .. tostring(Api.UserData.discordId))
+                end
+            end
+            if #queryParams > 0 then
+                url = url .. "?" .. table.concat(queryParams, "&")
+            end
+
+            local ok, res = pcall(getFunc, url)
+            if ok and res and res.Body then
+                local decOk, data = pcall(function() return HttpService:JSONDecode(res.Body) end)
+                if decOk and data and data.notifications then
+                    RenderNotifications(data.notifications)
+                end
+            end
+        end)
+    end
+
+    task.spawn(function()
+        FetchNotifications()
+        while Page and Page.Parent do
+            task.wait(30)
+            FetchNotifications()
+        end
+    end)
 
     local function UpdateFloatingPositions()
         if NotificationsBtn and MainFrame and NotificationsBtn.Parent then
@@ -433,6 +652,13 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     end))
 
     Maid:GiveTask(ClearAllBtn.MouseButton1Click:Connect(function()
+        for _, n in ipairs(currentNotifications) do
+            local id = tostring(n._id or n.id or (tostring(n.title) .. "_" .. tostring(n.message)))
+            readNotificationIds[id] = true
+        end
+        NotifBadge.Visible = false
+        EmptyState.Visible = true
+        NotificationsScroll.Visible = false
         SetNotifOpen(false)
     end))
 
