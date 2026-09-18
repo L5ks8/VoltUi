@@ -67,6 +67,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     end
 
     local NotificationsPopover = nil
+    local ProfilePopover = nil
     local PlayersScroll = nil
     local ClaimedScroll = nil
     local BugTextBox = nil
@@ -112,6 +113,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     TopbarCorner.Parent = Topbar
 
     local SetNotifOpen = nil
+    local SetProfileOpen = nil
 
     local ReturnButton = Instance.new("ImageButton")
     ReturnButton.Name = "Return"
@@ -142,6 +144,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     if BackCallback then
         Maid:GiveTask(ReturnButton.MouseButton1Click:Connect(function()
             if SetNotifOpen then SetNotifOpen(false) end
+            if SetProfileOpen then SetProfileOpen(false) end
             BackCallback()
         end))
     end
@@ -714,6 +717,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
         isNotifOpen = open
         Tooltip.Visible = false
         if isNotifOpen then
+            if SetProfileOpen then SetProfileOpen(false) end
             UpdateFloatingPositions()
             NotificationsPopover.Visible = true
             NotificationsPopover.BackgroundTransparency = 1
@@ -802,101 +806,353 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
         end
     end))
 
-    local AccountBtn = Instance.new("ImageButton")
-    AccountBtn.Name = "Account"
-    AccountBtn.BackgroundColor3 = Color3.new(1, 1, 1)
-    AccountBtn.BackgroundTransparency = 1
-    AccountBtn.BorderColor3 = Color3.new(0, 0, 0)
-    AccountBtn.BorderSizePixel = 0
-    AccountBtn.LayoutOrder = 1
-    AccountBtn.Size = UDim2.new(0, 60, 0, 40)
-    AccountBtn.Parent = Icons
+    do
+        local isProfileOpen = false
+        local TweenInfoFast = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 
-    local AccountBtnLayout = Instance.new("UIListLayout")
-    AccountBtnLayout.FillDirection = Enum.FillDirection.Horizontal
-    AccountBtnLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    AccountBtnLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    AccountBtnLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    AccountBtnLayout.Parent = AccountBtn
+        local AccountBtn = Instance.new("ImageButton")
+        AccountBtn.Name = "Account"
+        AccountBtn.BackgroundColor3 = Color3.fromRGB(26, 26, 26)
+        AccountBtn.BackgroundTransparency = 0
+        AccountBtn.BorderColor3 = Color3.new(0, 0, 0)
+        AccountBtn.BorderSizePixel = 0
+        AccountBtn.LayoutOrder = 1
+        AccountBtn.Size = UDim2.new(0, 64, 0, 34)
+        AccountBtn.AutoButtonColor = false
+        AccountBtn.Parent = Icons
 
-    local AccountIconFrame = Instance.new("Frame")
-    AccountIconFrame.Name = "Icon"
-    AccountIconFrame.BackgroundColor3 = Color3.new(1, 1, 1)
-    AccountIconFrame.BackgroundTransparency = 1
-    AccountIconFrame.BorderColor3 = Color3.new(0, 0, 0)
-    AccountIconFrame.BorderSizePixel = 0
-    AccountIconFrame.LayoutOrder = 1
-    AccountIconFrame.Position = UDim2.new(0.359, 0, 0, 0)
-    AccountIconFrame.Size = UDim2.new(0, 20, 0, 40)
-    AccountIconFrame.Parent = AccountBtn
+        local AccountBtnCorner = Instance.new("UICorner")
+        AccountBtnCorner.CornerRadius = UDim.new(0, 10)
+        AccountBtnCorner.Parent = AccountBtn
 
-    local AccountIconLayout = Instance.new("UIListLayout")
-    AccountIconLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    AccountIconLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    AccountIconLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    AccountIconLayout.Parent = AccountIconFrame
+        local AccountBtnStroke = Instance.new("UIStroke")
+        AccountBtnStroke.Color = Color3.fromRGB(220, 220, 220)
+        AccountBtnStroke.Thickness = 1.2
+        AccountBtnStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+        AccountBtnStroke.Parent = AccountBtn
 
-    local AccountIconImg = Instance.new("ImageLabel")
-    AccountIconImg.BackgroundColor3 = Color3.new(1, 1, 1)
-    AccountIconImg.BackgroundTransparency = 1
-    AccountIconImg.BorderColor3 = Color3.new(0, 0, 0)
-    AccountIconImg.BorderSizePixel = 0
-    AccountIconImg.Image = "rbxassetid://136385496998416"
-    AccountIconImg.Size = UDim2.new(0, 20, 0, 20)
-    AccountIconImg.Parent = AccountIconFrame
+        local AccountBtnLayout = Instance.new("UIListLayout")
+        AccountBtnLayout.FillDirection = Enum.FillDirection.Horizontal
+        AccountBtnLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+        AccountBtnLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        AccountBtnLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+        AccountBtnLayout.Padding = UDim.new(0, 6)
+        AccountBtnLayout.Parent = AccountBtn
 
-    local AccountIconPadding = Instance.new("UIPadding")
-    AccountIconPadding.PaddingRight = UDim.new(0, 2)
-    AccountIconPadding.Parent = AccountIconFrame
+        local AvatarImg = Instance.new("ImageLabel")
+        AvatarImg.Name = "Avatar"
+        AvatarImg.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+        AvatarImg.BorderSizePixel = 0
+        AvatarImg.Size = UDim2.new(0, 24, 0, 24)
+        AvatarImg.LayoutOrder = 1
+        AvatarImg.Parent = AccountBtn
 
-    local ProfileFrame = Instance.new("Frame")
-    ProfileFrame.Name = "Profile"
-    ProfileFrame.BackgroundColor3 = Color3.new(1, 1, 1)
-    ProfileFrame.BackgroundTransparency = 1
-    ProfileFrame.BorderColor3 = Color3.new(0, 0, 0)
-    ProfileFrame.BorderSizePixel = 0
-    ProfileFrame.Size = UDim2.new(0, 40, 0, 40)
-    ProfileFrame.Parent = AccountBtn
+        local AvatarCorner = Instance.new("UICorner")
+        AvatarCorner.CornerRadius = UDim.new(0, 6)
+        AvatarCorner.Parent = AvatarImg
 
-    local ProfileLayout = Instance.new("UIListLayout")
-    ProfileLayout.FillDirection = Enum.FillDirection.Horizontal
-    ProfileLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    ProfileLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    ProfileLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    ProfileLayout.Parent = ProfileFrame
+        local ChevronIcon = Instance.new("ImageLabel")
+        ChevronIcon.Name = "Chevron"
+        ChevronIcon.BackgroundTransparency = 1
+        ChevronIcon.BorderSizePixel = 0
+        ChevronIcon.Image = "rbxassetid://6031091004"
+        ChevronIcon.ImageColor3 = Color3.fromRGB(200, 200, 200)
+        ChevronIcon.Size = UDim2.new(0, 14, 0, 14)
+        ChevronIcon.LayoutOrder = 2
+        ChevronIcon.Parent = AccountBtn
 
-    local AvatarImg = Instance.new("ImageLabel")
-    AvatarImg.Name = "Frame"
-    AvatarImg.BackgroundColor3 = Color3.new(0.188, 0.188, 0.188)
-    AvatarImg.BorderColor3 = Color3.new(0, 0, 0)
-    AvatarImg.BorderSizePixel = 0
-    AvatarImg.Size = UDim2.new(0, 30, 0, 30)
-    AvatarImg.Parent = ProfileFrame
-
-    local AvatarCorner = Instance.new("UICorner")
-    AvatarCorner.CornerRadius = UDim.new(0, 6)
-    AvatarCorner.Parent = AvatarImg
-
-    local AvatarStroke = Instance.new("UIStroke")
-    AvatarStroke.Color = Color3.new(0.31, 0.31, 0.31)
-    AvatarStroke.Parent = AvatarImg
-
-    local lp = Players.LocalPlayer
-    if lp then
-        task.spawn(function()
-            local thumb = nil
-            pcall(function()
-                thumb = Players:GetUserThumbnailAsync(lp.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size48x48)
+        local lp = Players.LocalPlayer
+        if lp then
+            task.spawn(function()
+                local thumb = nil
+                pcall(function()
+                    thumb = Players:GetUserThumbnailAsync(lp.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size48x48)
+                end)
+                if thumb then
+                    AvatarImg.Image = thumb
+                end
             end)
-            if thumb then
-                AvatarImg.Image = thumb
+        end
+
+        ProfilePopover = Instance.new("Frame")
+        ProfilePopover.Name = "ProfilePopover"
+        ProfilePopover.AnchorPoint = Vector2.new(1, 0)
+        ProfilePopover.Size = UDim2.new(0, 200, 0, 0)
+        ProfilePopover.AutomaticSize = Enum.AutomaticSize.Y
+        ProfilePopover.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+        ProfilePopover.BorderSizePixel = 0
+        ProfilePopover.ZIndex = 50000
+        ProfilePopover.Visible = false
+        ProfilePopover.ClipsDescendants = true
+        ProfilePopover.Parent = MainFrame
+
+        local PopoverCorner = Instance.new("UICorner")
+        PopoverCorner.CornerRadius = UDim.new(0, 12)
+        PopoverCorner.Parent = ProfilePopover
+
+        local PopoverStroke = Instance.new("UIStroke")
+        PopoverStroke.Color = Color3.fromRGB(45, 45, 45)
+        PopoverStroke.Thickness = 1.2
+        PopoverStroke.Parent = ProfilePopover
+
+        local PopoverLayout = Instance.new("UIListLayout")
+        PopoverLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        PopoverLayout.Padding = UDim.new(0, 0)
+        PopoverLayout.Parent = ProfilePopover
+
+        local HeaderFrame = Instance.new("Frame")
+        HeaderFrame.Name = "Header"
+        HeaderFrame.BackgroundTransparency = 1
+        HeaderFrame.Size = UDim2.new(1, 0, 0, 52)
+        HeaderFrame.LayoutOrder = 1
+        HeaderFrame.ZIndex = 50001
+        HeaderFrame.Parent = ProfilePopover
+
+        local HeaderPadding = Instance.new("UIPadding")
+        HeaderPadding.PaddingLeft = UDim.new(0, 14)
+        HeaderPadding.PaddingRight = UDim.new(0, 14)
+        HeaderPadding.PaddingTop = UDim.new(0, 10)
+        HeaderPadding.PaddingBottom = UDim.new(0, 10)
+        HeaderPadding.Parent = HeaderFrame
+
+        local HeaderLayout = Instance.new("UIListLayout")
+        HeaderLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        HeaderLayout.Padding = UDim.new(0, 2)
+        HeaderLayout.Parent = HeaderFrame
+
+        local UsernameLabel = Instance.new("TextLabel")
+        UsernameLabel.Name = "Username"
+        UsernameLabel.BackgroundTransparency = 1
+        UsernameLabel.Size = UDim2.new(1, 0, 0, 18)
+        UsernameLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+        UsernameLabel.Text = (lp and lp.Name) or (Api and Api.UserData and Api.UserData.username) or "User"
+        UsernameLabel.TextColor3 = Color3.new(0.95, 0.95, 0.95)
+        UsernameLabel.TextSize = 15
+        UsernameLabel.TextXAlignment = Enum.TextXAlignment.Left
+        UsernameLabel.TextTruncate = Enum.TextTruncate.AtEnd
+        UsernameLabel.ZIndex = 50002
+        UsernameLabel.LayoutOrder = 1
+        UsernameLabel.Parent = HeaderFrame
+
+        local IdLabel = Instance.new("TextLabel")
+        IdLabel.Name = "Id"
+        IdLabel.BackgroundTransparency = 1
+        IdLabel.Size = UDim2.new(1, 0, 0, 14)
+        IdLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+        IdLabel.Text = "ID: " .. tostring((lp and lp.UserId) or (Api and Api.UserData and (Api.UserData.robloxId or Api.UserData.roblox_id or Api.UserData.userId)) or "0")
+        IdLabel.TextColor3 = Color3.fromRGB(130, 130, 130)
+        IdLabel.TextSize = 12
+        IdLabel.TextXAlignment = Enum.TextXAlignment.Left
+        IdLabel.ZIndex = 50002
+        IdLabel.LayoutOrder = 2
+        IdLabel.Parent = HeaderFrame
+
+        local function CreateDivider(order)
+            local div = Instance.new("Frame")
+            div.Name = "Divider"
+            div.BackgroundColor3 = Color3.fromRGB(36, 36, 36)
+            div.BorderSizePixel = 0
+            div.Size = UDim2.new(1, 0, 0, 1)
+            div.LayoutOrder = order
+            div.ZIndex = 50001
+            div.Parent = ProfilePopover
+            return div
+        end
+
+        CreateDivider(2)
+
+        local MenuContainer = Instance.new("Frame")
+        MenuContainer.Name = "Menu"
+        MenuContainer.BackgroundTransparency = 1
+        MenuContainer.Size = UDim2.new(1, 0, 0, 0)
+        MenuContainer.AutomaticSize = Enum.AutomaticSize.Y
+        MenuContainer.LayoutOrder = 3
+        MenuContainer.ZIndex = 50001
+        MenuContainer.Parent = ProfilePopover
+
+        local MenuPadding = Instance.new("UIPadding")
+        MenuPadding.PaddingLeft = UDim.new(0, 6)
+        MenuPadding.PaddingRight = UDim.new(0, 6)
+        MenuPadding.PaddingTop = UDim.new(0, 4)
+        MenuPadding.PaddingBottom = UDim.new(0, 4)
+        MenuPadding.Parent = MenuContainer
+
+        local MenuLayout = Instance.new("UIListLayout")
+        MenuLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        MenuLayout.Padding = UDim.new(0, 2)
+        MenuLayout.Parent = MenuContainer
+
+        local function CreateMenuItem(parent, order, iconAsset, titleText, textColor, onClick)
+            local btn = Instance.new("TextButton")
+            btn.Name = titleText
+            btn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            btn.BackgroundTransparency = 1
+            btn.BorderSizePixel = 0
+            btn.Size = UDim2.new(1, 0, 0, 34)
+            btn.Text = ""
+            btn.AutoButtonColor = false
+            btn.LayoutOrder = order
+            btn.ZIndex = 50002
+            btn.Parent = parent
+
+            local corner = Instance.new("UICorner")
+            corner.CornerRadius = UDim.new(0, 6)
+            corner.Parent = btn
+
+            local btnLayout = Instance.new("UIListLayout")
+            btnLayout.FillDirection = Enum.FillDirection.Horizontal
+            btnLayout.SortOrder = Enum.SortOrder.LayoutOrder
+            btnLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+            btnLayout.Padding = UDim.new(0, 10)
+            btnLayout.Parent = btn
+
+            local pad = Instance.new("UIPadding")
+            pad.PaddingLeft = UDim.new(0, 10)
+            pad.PaddingRight = UDim.new(0, 10)
+            pad.Parent = btn
+
+            local icon = Instance.new("ImageLabel")
+            icon.BackgroundTransparency = 1
+            icon.BorderSizePixel = 0
+            icon.Size = UDim2.new(0, 18, 0, 18)
+            icon.Image = iconAsset
+            icon.ImageColor3 = textColor or Color3.fromRGB(180, 180, 180)
+            icon.LayoutOrder = 1
+            icon.ZIndex = 50003
+            icon.Parent = btn
+
+            local label = Instance.new("TextLabel")
+            label.BackgroundTransparency = 1
+            label.BorderSizePixel = 0
+            label.Size = UDim2.new(1, -28, 1, 0)
+            label.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+            label.Text = titleText
+            label.TextColor3 = textColor or Color3.fromRGB(200, 200, 200)
+            label.TextSize = 13
+            label.TextXAlignment = Enum.TextXAlignment.Left
+            label.LayoutOrder = 2
+            label.ZIndex = 50003
+            label.Parent = btn
+
+            Maid:GiveTask(btn.MouseEnter:Connect(function()
+                Tween(btn, TweenInfo.new(0.15), {BackgroundTransparency = 0.93})
+            end))
+            Maid:GiveTask(btn.MouseLeave:Connect(function()
+                Tween(btn, TweenInfo.new(0.15), {BackgroundTransparency = 1})
+            end))
+
+            Maid:GiveTask(btn.MouseButton1Click:Connect(function()
+                SetProfileOpen(false)
+                if onClick then
+                    onClick()
+                end
+            end))
+
+            return btn
+        end
+
+        CreateMenuItem(MenuContainer, 1, "rbxassetid://134568818132029", "Account", Color3.fromRGB(200, 200, 200), function()
+            if WindowObject and WindowObject.OpenAccount then
+                WindowObject:OpenAccount()
             end
         end)
-    end
 
-    if WindowObject and WindowObject.OpenAccount then
+        CreateMenuItem(MenuContainer, 2, "rbxassetid://95898765113869", "Settings", Color3.fromRGB(200, 200, 200), function()
+            if WindowObject and WindowObject.OpenSettings then
+                WindowObject:OpenSettings()
+            end
+        end)
+
+        CreateDivider(4)
+
+        local LogoutContainer = Instance.new("Frame")
+        LogoutContainer.Name = "LogoutContainer"
+        LogoutContainer.BackgroundTransparency = 1
+        LogoutContainer.Size = UDim2.new(1, 0, 0, 0)
+        LogoutContainer.AutomaticSize = Enum.AutomaticSize.Y
+        LogoutContainer.LayoutOrder = 5
+        LogoutContainer.ZIndex = 50001
+        LogoutContainer.Parent = ProfilePopover
+
+        local LogoutPadding = Instance.new("UIPadding")
+        LogoutPadding.PaddingLeft = UDim.new(0, 6)
+        LogoutPadding.PaddingRight = UDim.new(0, 6)
+        LogoutPadding.PaddingTop = UDim.new(0, 4)
+        LogoutPadding.PaddingBottom = UDim.new(0, 6)
+        LogoutPadding.Parent = LogoutContainer
+
+        local LogoutLayout = Instance.new("UIListLayout")
+        LogoutLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        LogoutLayout.Parent = LogoutContainer
+
+        CreateMenuItem(LogoutContainer, 1, "rbxassetid://83408923775191", "Logout", Color3.fromRGB(235, 75, 75), function()
+            pcall(function()
+                if Api and Api.ClearToken then
+                    Api.ClearToken()
+                elseif Api and Api.SaveToken then
+                    Api.SaveToken("")
+                end
+                if Api then Api.UserData = nil end
+            end)
+            local pl = Players.LocalPlayer
+            if pl then
+                pl:Kick("You have been signed out. Please rejoin to sign in again.")
+            end
+        end)
+
+        local function UpdateProfilePosition()
+            if AccountBtn and MainFrame and AccountBtn.Parent then
+                local btnPos = AccountBtn.AbsolutePosition
+                local mainPos = MainFrame.AbsolutePosition
+                local rightX = (btnPos.X - mainPos.X) + AccountBtn.AbsoluteSize.X
+                local bottomY = (btnPos.Y - mainPos.Y) + AccountBtn.AbsoluteSize.Y + 6
+                ProfilePopover.Position = UDim2.new(0, rightX, 0, bottomY)
+            end
+        end
+
+        SetProfileOpen = function(open)
+            isProfileOpen = open
+            if isProfileOpen then
+                if SetNotifOpen then
+                    SetNotifOpen(false)
+                end
+                local currentUsername = (lp and lp.Name) or (Api and Api.UserData and Api.UserData.username) or "User"
+                local currentRobloxId = tostring((lp and lp.UserId) or (Api and Api.UserData and (Api.UserData.robloxId or Api.UserData.roblox_id or Api.UserData.userId)) or "0")
+                UsernameLabel.Text = currentUsername
+                IdLabel.Text = "ID: " .. currentRobloxId
+                UpdateProfilePosition()
+                ProfilePopover.Visible = true
+                ProfilePopover.BackgroundTransparency = 1
+                PopoverStroke.Transparency = 1
+                Tween(ProfilePopover, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0})
+                Tween(PopoverStroke, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Transparency = 0})
+                Tween(ChevronIcon, TweenInfo.new(0.2), {Rotation = 180})
+            else
+                Tween(ChevronIcon, TweenInfo.new(0.2), {Rotation = 0})
+                Tween(ProfilePopover, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1})
+                Tween(PopoverStroke, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Transparency = 1})
+                task.delay(0.15, function()
+                    if not isProfileOpen then
+                        ProfilePopover.Visible = false
+                    end
+                end)
+            end
+        end
+
         Maid:GiveTask(AccountBtn.MouseButton1Click:Connect(function()
-            WindowObject:OpenAccount()
+            SetProfileOpen(not isProfileOpen)
+        end))
+
+        Maid:GiveTask(AccountBtn:GetPropertyChangedSignal("AbsolutePosition"):Connect(function()
+            if isProfileOpen then
+                UpdateProfilePosition()
+            end
+        end))
+
+        Maid:GiveTask(Page:GetPropertyChangedSignal("Visible"):Connect(function()
+            if not Page.Visible then
+                SetProfileOpen(false)
+            end
         end))
     end
 
@@ -2519,6 +2775,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
         Instance = Page,
         Topbar = Topbar,
         Notifications = NotificationsPopover,
+        Profile = ProfilePopover,
         PlayersScroll = PlayersScroll,
         ClaimedScroll = ClaimedScroll,
         BugTextBox = BugTextBox,
