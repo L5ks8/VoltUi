@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
     res.type('json').send(JSON.stringify({ message: "Volt API is running" }));
 });
 
-let packageVersion = "1.1.14";
+let packageVersion = "1.1.15";
 try {
     packageVersion = require('./package.json').version || "1.1.10";
 } catch (e) {}

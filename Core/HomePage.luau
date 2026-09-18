@@ -295,7 +295,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     TooltipText.ZIndex = 60001
     TooltipText.Parent = Tooltip
 
-    NotificationsPopover = Instance.new("Frame")
+    NotificationsPopover = Instance.new("CanvasGroup")
     NotificationsPopover.Name = "NotificationsPopover"
     NotificationsPopover.AnchorPoint = Vector2.new(1, 0)
     NotificationsPopover.Size = UDim2.new(0, 305, 0, 275)
@@ -303,6 +303,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
     NotificationsPopover.BorderSizePixel = 0
     NotificationsPopover.ZIndex = 50000
     NotificationsPopover.Visible = false
+    NotificationsPopover.GroupTransparency = 1
     NotificationsPopover.ClipsDescendants = true
     NotificationsPopover.Parent = MainFrame
 
@@ -720,12 +721,10 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
             if SetProfileOpen then SetProfileOpen(false) end
             UpdateFloatingPositions()
             NotificationsPopover.Visible = true
-            NotificationsPopover.BackgroundTransparency = 1
-            PopoverStroke.Transparency = 1
+            NotificationsPopover.GroupTransparency = 1
             Tween(NotificationsBtn, TweenInfoFast, {BackgroundTransparency = 0.8, BackgroundColor3 = Color3.fromRGB(40, 40, 40)})
             Tween(NotifStroke, TweenInfoFast, {Color = Color3.new(1, 1, 1), Transparency = 0, Thickness = 1.4})
-            Tween(NotificationsPopover, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0})
-            Tween(PopoverStroke, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Transparency = 0})
+            Tween(NotificationsPopover, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {GroupTransparency = 0})
 
             for _, n in ipairs(currentNotifications) do
                 local id = tostring(n._id or n.id or (tostring(n.title) .. "_" .. tostring(n.message)))
@@ -738,8 +737,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
             local targetTrans = isHoveringNotif and 0.5 or 1
             Tween(NotificationsBtn, TweenInfoFast, {BackgroundTransparency = isHoveringNotif and 0.85 or 1})
             Tween(NotifStroke, TweenInfoFast, {Color = targetColor, Transparency = targetTrans, Thickness = 1.2})
-            Tween(NotificationsPopover, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1})
-            Tween(PopoverStroke, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Transparency = 1})
+            Tween(NotificationsPopover, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {GroupTransparency = 1})
             task.delay(0.15, function()
                 if not isNotifOpen then
                     NotificationsPopover.Visible = false
@@ -875,7 +873,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
             end)
         end
 
-        ProfilePopover = Instance.new("Frame")
+        ProfilePopover = Instance.new("CanvasGroup")
         ProfilePopover.Name = "ProfilePopover"
         ProfilePopover.AnchorPoint = Vector2.new(1, 0)
         ProfilePopover.Size = UDim2.new(0, 200, 0, 0)
@@ -884,6 +882,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
         ProfilePopover.BorderSizePixel = 0
         ProfilePopover.ZIndex = 50000
         ProfilePopover.Visible = false
+        ProfilePopover.GroupTransparency = 1
         ProfilePopover.ClipsDescendants = true
         ProfilePopover.Parent = MainFrame
 
@@ -1123,17 +1122,14 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
                 IdLabel.Text = "ID: " .. currentRobloxId
                 UpdateProfilePosition()
                 ProfilePopover.Visible = true
-                ProfilePopover.BackgroundTransparency = 1
-                PopoverStroke.Transparency = 1
+                ProfilePopover.GroupTransparency = 1
                 Tween(AccountBtnStroke, TweenInfoFast, {Transparency = 0})
-                Tween(ProfilePopover, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0})
-                Tween(PopoverStroke, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Transparency = 0})
+                Tween(ProfilePopover, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {GroupTransparency = 0})
                 Tween(ChevronIcon, TweenInfo.new(0.2), {Rotation = 180})
             else
                 Tween(ChevronIcon, TweenInfo.new(0.2), {Rotation = 0})
                 Tween(AccountBtnStroke, TweenInfoFast, {Transparency = 1})
-                Tween(ProfilePopover, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1})
-                Tween(PopoverStroke, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Transparency = 1})
+                Tween(ProfilePopover, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {GroupTransparency = 1})
                 task.delay(0.15, function()
                     if not isProfileOpen then
                         ProfilePopover.Visible = false
