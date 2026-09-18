@@ -828,6 +828,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
         local AccountBtnStroke = Instance.new("UIStroke")
         AccountBtnStroke.Color = Color3.fromRGB(220, 220, 220)
         AccountBtnStroke.Thickness = 1.2
+        AccountBtnStroke.Transparency = 1
         AccountBtnStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
         AccountBtnStroke.Parent = AccountBtn
 
@@ -1124,11 +1125,13 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
                 ProfilePopover.Visible = true
                 ProfilePopover.BackgroundTransparency = 1
                 PopoverStroke.Transparency = 1
+                Tween(AccountBtnStroke, TweenInfoFast, {Transparency = 0})
                 Tween(ProfilePopover, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0})
                 Tween(PopoverStroke, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Transparency = 0})
                 Tween(ChevronIcon, TweenInfo.new(0.2), {Rotation = 180})
             else
                 Tween(ChevronIcon, TweenInfo.new(0.2), {Rotation = 0})
+                Tween(AccountBtnStroke, TweenInfoFast, {Transparency = 1})
                 Tween(ProfilePopover, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1})
                 Tween(PopoverStroke, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Transparency = 1})
                 task.delay(0.15, function()
