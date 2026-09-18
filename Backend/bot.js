@@ -1,11 +1,18 @@
-const { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle, AttachmentBuilder, Events } = require('discord.js');
+const { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle, AttachmentBuilder, Events, ChannelType, PermissionFlagsBits } = require('discord.js');
 const mongoose = require('mongoose');
 const License = require('./models/License');
 const User = require('./models/User');
 const Notification = require('./models/Notification');
 const Update = require('./models/Update');
+const Ticket = require('./models/Ticket');
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent
+    ]
+});
 
 const commands = [
     new SlashCommandBuilder()
@@ -936,6 +943,66 @@ client.on('interactionCreate', async interaction => {
                 await interaction.reply({ embeds: [new EmbedBuilder().setDescription('An error occurred.').setColor('#e74c3c')], ephemeral: true });
             }
         }
+    } else if (interaction.isButton()) {
+        if (interaction.customId.startsWith('close_ticket_')) {
+            const ticketId = interaction.customId.replace('close_ticket_', '');
+            try {
+                const ticket = await Ticket.findOne({ ticketId });
+                if (ticket) {
+                    ticket.status = 'closed';
+                    ticket.closedAt = new Date();
+                    ticket.messages.push({
+                        sender: 'system',
+                        authorName: 'System',
+                        text: `Ticket closed by ${interaction.user.username}.`,
+                        createdAt: new Date()
+                    });
+                    await ticket.save();
+                }
+
+                await interaction.reply({
+                    embeds: [
+                        new EmbedBuilder()
+                            .setTitle('Ticket Closed')
+                            .setDescription(`Ticket closed by **${interaction.user.username}**.\nThis channel will be deleted in 5 seconds.`)
+                            .setColor('#e74c3c')
+                    ]
+                });
+
+                setTimeout(async () => {
+                    try {
+                        await interaction.channel.delete('Ticket closed');
+                    } catch (e) {
+                        console.error('Error deleting ticket channel:', e);
+                    }
+                }, 5000);
+            } catch (err) {
+                console.error('Error closing ticket:', err);
+                if (!interaction.replied) {
+                    await interaction.reply({ content: 'Failed to close ticket.', ephemeral: true });
+                }
+            }
+            return;
+        }
+    }
+});
+
+client.on(Events.MessageCreate, async message => {
+    if (message.author.bot || !message.guild) return;
+    try {
+        const ticket = await Ticket.findOne({ channelId: message.channel.id, status: 'open' });
+        if (ticket) {
+            ticket.messages.push({
+                sender: 'support',
+                authorName: message.author.displayName || message.author.username,
+                text: message.content,
+                createdAt: new Date()
+            });
+            await ticket.save();
+            await message.react('✅').catch(() => {});
+        }
+    } catch (err) {
+        console.error('Error recording ticket message:', err);
     }
 });
 
@@ -962,6 +1029,73 @@ module.exports = {
             return false;
         } catch (error) {
             console.error('Error sending DM:', error);
+            return false;
+        }
+    },
+    createTicketChannel: async (ticket) => {
+        try {
+            const guild = await client.guilds.fetch('1542592937307938867');
+            if (!guild) {
+                console.error('Ticket guild 1542592937307938867 not found');
+                return null;
+            }
+            const cleanTitle = (ticket.title || 'ticket')
+                .toLowerCase()
+                .replace(/[^a-z0-9]/g, '-')
+                .slice(0, 15);
+            const channelName = `bug-${cleanTitle}-${ticket.ticketId.slice(-4)}`;
+
+            const channel = await guild.channels.create({
+                name: channelName,
+                type: ChannelType.GuildText,
+                parent: '1550637819318505572',
+                topic: `Bug Report Ticket: ${ticket.title} | ID: ${ticket.ticketId}`
+            });
+
+            const embed = new EmbedBuilder()
+                .setTitle(`🐛 Bug Report: ${ticket.title}`)
+                .setDescription(ticket.description || 'No description provided.')
+                .addFields(
+                    { name: 'Username', value: String(ticket.username || 'User'), inline: true },
+                    { name: 'Roblox Username', value: String(ticket.robloxUsername || 'N/A'), inline: true },
+                    { name: 'Roblox ID', value: String(ticket.robloxId || '0'), inline: true },
+                    { name: 'Account ID', value: String(ticket.userId || 'N/A'), inline: true },
+                    { name: 'HWID', value: `\`${ticket.hwid || 'N/A'}\``, inline: true },
+                    { name: 'Ticket ID', value: String(ticket.ticketId), inline: true }
+                )
+                .setColor('#e74c3c')
+                .setTimestamp();
+
+            const row = new ActionRowBuilder().addComponents(
+                new ButtonBuilder()
+                    .setCustomId(`close_ticket_${ticket.ticketId}`)
+                    .setLabel('Close Ticket')
+                    .setStyle(ButtonStyle.Danger)
+                    .setEmoji('🔒')
+            );
+
+            await channel.send({ embeds: [embed], components: [row] });
+            return channel.id;
+        } catch (err) {
+            console.error('Error creating ticket channel in Discord:', err);
+            return null;
+        }
+    },
+    sendUserMessageToTicket: async (channelId, text, authorName) => {
+        try {
+            const channel = await client.channels.fetch(channelId);
+            if (channel && channel.isTextBased()) {
+                const embed = new EmbedBuilder()
+                    .setAuthor({ name: authorName || 'Player' })
+                    .setDescription(text)
+                    .setColor('#3498db')
+                    .setTimestamp();
+                await channel.send({ embeds: [embed] });
+                return true;
+            }
+            return false;
+        } catch (err) {
+            console.error('Error forwarding message to Discord channel:', err);
             return false;
         }
     }

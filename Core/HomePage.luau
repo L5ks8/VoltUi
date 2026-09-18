@@ -68,10 +68,6 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
 
     local NotificationsPopover = nil
     local ProfilePopover = nil
-    local PlayersScroll = nil
-    local ClaimedScroll = nil
-    local BugTextBox = nil
-    local SendBtn = nil
     local Page = Instance.new("Frame")
     Page.Name = "HomePage"
     Page.AnchorPoint = Vector2.new(0, 0)
@@ -1155,1630 +1151,1375 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
         end))
     end
 
-    do
-    local MainSection = Instance.new("Frame")
-    MainSection.Name = "Updats/Players"
-    MainSection.BackgroundColor3 = Color3.new(1, 1, 1)
-    MainSection.BackgroundTransparency = 1
-    MainSection.BorderColor3 = Color3.new(0, 0, 0)
-    MainSection.BorderSizePixel = 0
-    MainSection.LayoutOrder = 1
-    MainSection.Size = UDim2.new(1, 0, 0, 230)
-    MainSection.Parent = Page
-
-    local MainSectionLayout = Instance.new("UIListLayout")
-    MainSectionLayout.FillDirection = Enum.FillDirection.Horizontal
-    MainSectionLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    MainSectionLayout.Padding = UDim.new(0, 10)
-    MainSectionLayout.Parent = MainSection
-
-    local MainSectionPadding = Instance.new("UIPadding")
-    MainSectionPadding.PaddingLeft = UDim.new(0, 8)
-    MainSectionPadding.PaddingRight = UDim.new(0, 8)
-    MainSectionPadding.Parent = MainSection
-
-    local PlayersCard = Instance.new("Frame")
-    PlayersCard.Name = "Players"
-    PlayersCard.BackgroundColor3 = Color3.new(1, 1, 1)
-    PlayersCard.BackgroundTransparency = 1
-    PlayersCard.BorderColor3 = Color3.new(0, 0, 0)
-    PlayersCard.BorderSizePixel = 0
-    PlayersCard.Size = UDim2.new(0, 200, 1, 0)
-    PlayersCard.Parent = MainSection
-
-    local PlayersCardInner = Instance.new("Frame")
-    PlayersCardInner.BackgroundColor3 = Color3.new(0.09, 0.09, 0.09)
-    PlayersCardInner.BorderColor3 = Color3.new(0, 0, 0)
-    PlayersCardInner.BorderSizePixel = 0
-    PlayersCardInner.Size = UDim2.new(1, 0, 1, 0)
-    PlayersCardInner.Parent = PlayersCard
-
-    local PlayersInnerCorner = Instance.new("UICorner")
-    PlayersInnerCorner.CornerRadius = UDim.new(0, 8)
-    PlayersInnerCorner.Parent = PlayersCardInner
-
-    local PlayersInnerStroke = Instance.new("UIStroke")
-    PlayersInnerStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
-    PlayersInnerStroke.Color = Color3.new(0.149, 0.149, 0.149)
-    PlayersInnerStroke.Parent = PlayersCardInner
-
-    local PlayersInnerLayout = Instance.new("UIListLayout")
-    PlayersInnerLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    PlayersInnerLayout.Parent = PlayersCardInner
-
-    local PlayersHeader = Instance.new("Frame")
-    PlayersHeader.Name = "Text"
-    PlayersHeader.BackgroundColor3 = Color3.new(1, 1, 1)
-    PlayersHeader.BackgroundTransparency = 1
-    PlayersHeader.BorderColor3 = Color3.new(0, 0, 0)
-    PlayersHeader.BorderSizePixel = 0
-    PlayersHeader.Size = UDim2.new(1, 0, 0, 50)
-    PlayersHeader.Parent = PlayersCardInner
-
-    local PlayersHeaderLayout = Instance.new("UIListLayout")
-    PlayersHeaderLayout.FillDirection = Enum.FillDirection.Horizontal
-    PlayersHeaderLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    PlayersHeaderLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    PlayersHeaderLayout.Parent = PlayersHeader
-
-    local PlayersIconFrame = Instance.new("Frame")
-    PlayersIconFrame.Name = "Icon"
-    PlayersIconFrame.BackgroundColor3 = Color3.new(1, 1, 1)
-    PlayersIconFrame.BackgroundTransparency = 1
-    PlayersIconFrame.BorderColor3 = Color3.new(0, 0, 0)
-    PlayersIconFrame.BorderSizePixel = 0
-    PlayersIconFrame.Size = UDim2.new(0, 45, 0, 50)
-    PlayersIconFrame.Parent = PlayersHeader
-
-    local PlayersIconLayout = Instance.new("UIListLayout")
-    PlayersIconLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    PlayersIconLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    PlayersIconLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    PlayersIconLayout.Parent = PlayersIconFrame
-
-    local PlayersIconImg = Instance.new("ImageLabel")
-    PlayersIconImg.BackgroundColor3 = Color3.new(1, 1, 1)
-    PlayersIconImg.BackgroundTransparency = 1
-    PlayersIconImg.BorderColor3 = Color3.new(0, 0, 0)
-    PlayersIconImg.BorderSizePixel = 0
-    PlayersIconImg.Image = "rbxassetid://97001881921521"
-    PlayersIconImg.Size = UDim2.new(0, 26, 0, 26)
-    PlayersIconImg.Parent = PlayersIconFrame
-
-    local PlayersInfoFrame = Instance.new("Frame")
-    PlayersInfoFrame.Name = "Info"
-    PlayersInfoFrame.BackgroundColor3 = Color3.new(1, 1, 1)
-    PlayersInfoFrame.BackgroundTransparency = 1
-    PlayersInfoFrame.BorderColor3 = Color3.new(0, 0, 0)
-    PlayersInfoFrame.BorderSizePixel = 0
-    PlayersInfoFrame.LayoutOrder = 1
-    PlayersInfoFrame.Size = UDim2.new(1, -45, 1, 0)
-    PlayersInfoFrame.Parent = PlayersHeader
-
-    local PlayersInfoLayout = Instance.new("UIListLayout")
-    PlayersInfoLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    PlayersInfoLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    PlayersInfoLayout.Parent = PlayersInfoFrame
-
-    local PlayersTitle = Instance.new("TextLabel")
-    PlayersTitle.BackgroundColor3 = Color3.new(1, 1, 1)
-    PlayersTitle.BackgroundTransparency = 1
-    PlayersTitle.BorderColor3 = Color3.new(0, 0, 0)
-    PlayersTitle.BorderSizePixel = 0
-    PlayersTitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    PlayersTitle.Size = UDim2.new(1, 0, 0, 20)
-    PlayersTitle.Text = "Players"
-    PlayersTitle.TextColor3 = Color3.new(0.85, 0.85, 0.85)
-    PlayersTitle.TextSize = 16
-    PlayersTitle.TextXAlignment = Enum.TextXAlignment.Left
-    PlayersTitle.TextYAlignment = Enum.TextYAlignment.Bottom
-    PlayersTitle.Parent = PlayersInfoFrame
-
-    local PlayersSubtitle = Instance.new("TextLabel")
-    PlayersSubtitle.BackgroundColor3 = Color3.new(1, 1, 1)
-    PlayersSubtitle.BackgroundTransparency = 1
-    PlayersSubtitle.BorderColor3 = Color3.new(0, 0, 0)
-    PlayersSubtitle.BorderSizePixel = 0
-    PlayersSubtitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-    PlayersSubtitle.Size = UDim2.new(1, 0, 0, 18)
-    PlayersSubtitle.Text = "Players on the Server"
-    PlayersSubtitle.TextColor3 = Color3.new(0.65, 0.65, 0.65)
-    PlayersSubtitle.TextSize = 13
-    PlayersSubtitle.TextXAlignment = Enum.TextXAlignment.Left
-    PlayersSubtitle.TextYAlignment = Enum.TextYAlignment.Top
-    PlayersSubtitle.Parent = PlayersInfoFrame
-
-    PlayersScroll = Instance.new("ScrollingFrame")
-    PlayersScroll.Name = "Players"
-    PlayersScroll.BackgroundColor3 = Color3.new(1, 1, 1)
-    PlayersScroll.BackgroundTransparency = 1
-    PlayersScroll.BorderColor3 = Color3.new(0, 0, 0)
-    PlayersScroll.BorderSizePixel = 0
-    PlayersScroll.LayoutOrder = 1
-    PlayersScroll.Size = UDim2.new(1, 0, 1, -50)
-    PlayersScroll.ScrollBarThickness = 2
-    PlayersScroll.ScrollBarImageColor3 = Color3.new(0.3, 0.3, 0.3)
-    PlayersScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
-    PlayersScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
-    PlayersScroll.Parent = PlayersCardInner
-
-    local PlayersScrollLayout = Instance.new("UIListLayout")
-    PlayersScrollLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    PlayersScrollLayout.Padding = UDim.new(0, 5)
-    PlayersScrollLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    PlayersScrollLayout.Parent = PlayersScroll
-
-    local PlayersScrollPadding = Instance.new("UIPadding")
-    PlayersScrollPadding.PaddingTop = UDim.new(0, 4)
-    PlayersScrollPadding.PaddingBottom = UDim.new(0, 4)
-    PlayersScrollPadding.Parent = PlayersScroll
-
-    local function AddPlayerItem(player)
-        local PlayerItem = Instance.new("Frame")
-        PlayerItem.Name = player.Name
-        PlayerItem.BackgroundColor3 = Color3.new(0.12, 0.12, 0.12)
-        PlayerItem.BorderColor3 = Color3.new(0, 0, 0)
-        PlayerItem.BorderSizePixel = 0
-        PlayerItem.Size = UDim2.new(1, -10, 0, 40)
-        PlayerItem.Parent = PlayersScroll
-
-        local ItemCorner = Instance.new("UICorner")
-        ItemCorner.CornerRadius = UDim.new(0, 6)
-        ItemCorner.Parent = PlayerItem
-
-        local ItemStroke = Instance.new("UIStroke")
-        ItemStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
-        ItemStroke.Color = Color3.new(0.149, 0.149, 0.149)
-        ItemStroke.Parent = PlayerItem
-
-        local ItemLayout = Instance.new("UIListLayout")
-        ItemLayout.FillDirection = Enum.FillDirection.Horizontal
-        ItemLayout.SortOrder = Enum.SortOrder.LayoutOrder
-        ItemLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-        ItemLayout.Parent = PlayerItem
-
-        local ItemIconFrame = Instance.new("Frame")
-        ItemIconFrame.Name = "Icon"
-        ItemIconFrame.BackgroundColor3 = Color3.new(1, 1, 1)
-        ItemIconFrame.BackgroundTransparency = 1
-        ItemIconFrame.Size = UDim2.new(0, 36, 1, 0)
-        ItemIconFrame.Parent = PlayerItem
-
-        local ItemIconLayout = Instance.new("UIListLayout")
-        ItemIconLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-        ItemIconLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-        ItemIconLayout.Parent = ItemIconFrame
-
-        local AvatarThumb = Instance.new("ImageLabel")
-        AvatarThumb.BackgroundColor3 = Color3.new(0.18, 0.18, 0.18)
-        AvatarThumb.BorderSizePixel = 0
-        AvatarThumb.Size = UDim2.new(0, 26, 0, 26)
-        AvatarThumb.Parent = ItemIconFrame
-
-        local ThumbCorner = Instance.new("UICorner")
-        ThumbCorner.CornerRadius = UDim.new(0, 13)
-        ThumbCorner.Parent = AvatarThumb
-
-        task.spawn(function()
-            local iconImg = nil
-            pcall(function()
-                iconImg = Players:GetUserThumbnailAsync(player.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size48x48)
-            end)
-            if iconImg then
-                AvatarThumb.Image = iconImg
-            end
-        end)
-
-        local ItemTextFrame = Instance.new("Frame")
-        ItemTextFrame.BackgroundColor3 = Color3.new(1, 1, 1)
-        ItemTextFrame.BackgroundTransparency = 1
-        ItemTextFrame.Size = UDim2.new(1, -40, 1, 0)
-        ItemTextFrame.Parent = PlayerItem
-
-        local ItemTextLayout = Instance.new("UIListLayout")
-        ItemTextLayout.SortOrder = Enum.SortOrder.LayoutOrder
-        ItemTextLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-        ItemTextLayout.Parent = ItemTextFrame
-
-        local UsernameLabel = Instance.new("TextLabel")
-        UsernameLabel.Name = "Username"
-        UsernameLabel.BackgroundColor3 = Color3.new(1, 1, 1)
-        UsernameLabel.BackgroundTransparency = 1
-        UsernameLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-        UsernameLabel.Size = UDim2.new(1, 0, 0, 18)
-        UsernameLabel.Text = player.DisplayName or player.Name
-        UsernameLabel.TextColor3 = Color3.new(1, 1, 1)
-        UsernameLabel.TextSize = 14
-        UsernameLabel.TextTruncate = Enum.TextTruncate.AtEnd
-        UsernameLabel.TextXAlignment = Enum.TextXAlignment.Left
-        UsernameLabel.Parent = ItemTextFrame
-
-        local IdLabel = Instance.new("TextLabel")
-        IdLabel.Name = "Id"
-        IdLabel.BackgroundColor3 = Color3.new(1, 1, 1)
-        IdLabel.BackgroundTransparency = 1
-        IdLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-        IdLabel.Size = UDim2.new(1, 0, 0, 16)
-        IdLabel.Text = "@" .. player.Name
-        IdLabel.TextColor3 = Color3.new(0.6, 0.6, 0.6)
-        IdLabel.TextSize = 12
-        IdLabel.TextTruncate = Enum.TextTruncate.AtEnd
-        IdLabel.TextXAlignment = Enum.TextXAlignment.Left
-        IdLabel.Parent = ItemTextFrame
-    end
-
-    for _, p in ipairs(Players:GetPlayers()) do
-        AddPlayerItem(p)
-    end
-    Maid:GiveTask(Players.PlayerAdded:Connect(AddPlayerItem))
-    Maid:GiveTask(Players.PlayerRemoving:Connect(function(p)
-        local item = PlayersScroll:FindFirstChild(p.Name)
-        if item then item:Destroy() end
-    end))
-
-    local UpdatesCard = Instance.new("Frame")
-    UpdatesCard.Name = "Updates"
-    UpdatesCard.BackgroundColor3 = Color3.new(1, 1, 1)
-    UpdatesCard.BackgroundTransparency = 1
-    UpdatesCard.BorderColor3 = Color3.new(0, 0, 0)
-    UpdatesCard.BorderSizePixel = 0
-    UpdatesCard.Size = UDim2.new(1, -210, 1, 0)
-    UpdatesCard.Parent = MainSection
-
-    local KeysFrame = Instance.new("Frame")
-    KeysFrame.Name = "Keys"
-    KeysFrame.BackgroundColor3 = Color3.new(0.09, 0.09, 0.09)
-    KeysFrame.BorderColor3 = Color3.new(0, 0, 0)
-    KeysFrame.BorderSizePixel = 0
-    KeysFrame.Size = UDim2.new(1, 0, 1, 0)
-    KeysFrame.Parent = UpdatesCard
-
-    local KeysCorner = Instance.new("UICorner")
-    KeysCorner.CornerRadius = UDim.new(0, 8)
-    KeysCorner.Parent = KeysFrame
-
-    local KeysStroke = Instance.new("UIStroke")
-    KeysStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
-    KeysStroke.Color = Color3.new(0.149, 0.149, 0.149)
-    KeysStroke.Parent = KeysFrame
-
-    local KeysLayout = Instance.new("UIListLayout")
-    KeysLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    KeysLayout.Parent = KeysFrame
-
-    local UpdatesHeader = Instance.new("Frame")
-    UpdatesHeader.Name = "Text"
-    UpdatesHeader.BackgroundColor3 = Color3.new(1, 1, 1)
-    UpdatesHeader.BackgroundTransparency = 1
-    UpdatesHeader.BorderColor3 = Color3.new(0, 0, 0)
-    UpdatesHeader.BorderSizePixel = 0
-    UpdatesHeader.Size = UDim2.new(1, 0, 0, 32)
-    UpdatesHeader.Parent = KeysFrame
-
-    local UpdatesHeaderStroke = Instance.new("UIStroke")
-    UpdatesHeaderStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
-    UpdatesHeaderStroke.Color = Color3.new(0.149, 0.149, 0.149)
-    UpdatesHeaderStroke.Parent = UpdatesHeader
-
-    local UpdatesHeaderCorner = Instance.new("UICorner")
-    UpdatesHeaderCorner.CornerRadius = UDim.new(0, 8)
-    UpdatesHeaderCorner.BottomLeftRadius = UDim.new(0, 0)
-    UpdatesHeaderCorner.BottomRightRadius = UDim.new(0, 0)
-    UpdatesHeaderCorner.Parent = UpdatesHeader
-
-    local UpdatesHeaderLayout = Instance.new("UIListLayout")
-    UpdatesHeaderLayout.FillDirection = Enum.FillDirection.Horizontal
-    UpdatesHeaderLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    UpdatesHeaderLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    UpdatesHeaderLayout.Parent = UpdatesHeader
-
-    local UpdatesIconFrame = Instance.new("Frame")
-    UpdatesIconFrame.Name = "Icon"
-    UpdatesIconFrame.BackgroundColor3 = Color3.new(1, 1, 1)
-    UpdatesIconFrame.BackgroundTransparency = 1
-    UpdatesIconFrame.Size = UDim2.new(0, 30, 0, 30)
-    UpdatesIconFrame.Parent = UpdatesHeader
-
-    local UpdatesIconLayout = Instance.new("UIListLayout")
-    UpdatesIconLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    UpdatesIconLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    UpdatesIconLayout.Parent = UpdatesIconFrame
-
-    local UpdatesIconImg = Instance.new("ImageLabel")
-    UpdatesIconImg.BackgroundColor3 = Color3.new(1, 1, 1)
-    UpdatesIconImg.BackgroundTransparency = 1
-    UpdatesIconImg.Image = "rbxassetid://74747504739295"
-    UpdatesIconImg.Size = UDim2.new(0, 18, 0, 18)
-    UpdatesIconImg.Parent = UpdatesIconFrame
-
-    local UpdatesHeaderText = Instance.new("TextLabel")
-    UpdatesHeaderText.Name = "Text"
-    UpdatesHeaderText.BackgroundColor3 = Color3.new(1, 1, 1)
-    UpdatesHeaderText.BackgroundTransparency = 1
-    UpdatesHeaderText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    UpdatesHeaderText.Size = UDim2.new(0, 100, 0, 30)
-    UpdatesHeaderText.Text = "Updates"
-    UpdatesHeaderText.TextColor3 = Color3.new(0.85, 0.85, 0.85)
-    UpdatesHeaderText.TextSize = 15
-    UpdatesHeaderText.TextXAlignment = Enum.TextXAlignment.Left
-    UpdatesHeaderText.Parent = UpdatesHeader
-
-    local UpdatesFiller = Instance.new("Frame")
-    UpdatesFiller.Name = "Filler"
-    UpdatesFiller.BackgroundColor3 = Color3.new(1, 1, 1)
-    UpdatesFiller.BackgroundTransparency = 1
-    UpdatesFiller.Size = UDim2.new(1, -135, 0, 30)
-    UpdatesFiller.Parent = UpdatesHeader
-
-    ClaimedScroll = Instance.new("ScrollingFrame")
-    ClaimedScroll.Name = "Claimed"
-    ClaimedScroll.BackgroundColor3 = Color3.new(1, 1, 1)
-    ClaimedScroll.BackgroundTransparency = 1
-    ClaimedScroll.BorderColor3 = Color3.new(0, 0, 0)
-    ClaimedScroll.BorderSizePixel = 0
-    ClaimedScroll.Size = UDim2.new(1, 0, 1, -32)
-    ClaimedScroll.ScrollBarThickness = 2
-    ClaimedScroll.ScrollBarImageColor3 = Color3.new(0.3, 0.3, 0.3)
-    ClaimedScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
-    ClaimedScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
-    ClaimedScroll.Parent = KeysFrame
-
-    local ClaimedLayout = Instance.new("UIListLayout")
-    ClaimedLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    ClaimedLayout.Padding = UDim.new(0, 6)
-    ClaimedLayout.Parent = ClaimedScroll
-
-    local ClaimedPadding = Instance.new("UIPadding")
-    ClaimedPadding.PaddingTop = UDim.new(0, 8)
-    ClaimedPadding.PaddingBottom = UDim.new(0, 8)
-    ClaimedPadding.PaddingLeft = UDim.new(0, 10)
-    ClaimedPadding.PaddingRight = UDim.new(0, 10)
-    ClaimedPadding.Parent = ClaimedScroll
-
-    local function AddUpdateCard(title, date, desc)
-        local Card = Instance.new("Frame")
-        Card.Name = "UpdateCard"
-        Card.BackgroundColor3 = Color3.new(0.12, 0.12, 0.12)
-        Card.Size = UDim2.new(1, 0, 0, 0)
-        Card.AutomaticSize = Enum.AutomaticSize.Y
-        Card.Parent = ClaimedScroll
-
-        local CardCorner = Instance.new("UICorner")
-        CardCorner.CornerRadius = UDim.new(0, 6)
-        CardCorner.Parent = Card
-
-        local CardStroke = Instance.new("UIStroke")
-        CardStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
-        CardStroke.Color = Color3.new(0.149, 0.149, 0.149)
-        CardStroke.Parent = Card
-
-        local CardLayout = Instance.new("UIListLayout")
-        CardLayout.SortOrder = Enum.SortOrder.LayoutOrder
-        CardLayout.Padding = UDim.new(0, 4)
-        CardLayout.Parent = Card
-
-        local CardPadding = Instance.new("UIPadding")
-        CardPadding.PaddingTop = UDim.new(0, 8)
-        CardPadding.PaddingBottom = UDim.new(0, 8)
-        CardPadding.PaddingLeft = UDim.new(0, 10)
-        CardPadding.PaddingRight = UDim.new(0, 10)
-        CardPadding.Parent = Card
-
-        local TitleRow = Instance.new("Frame")
-        TitleRow.Name = "TitleRow"
-        TitleRow.BackgroundTransparency = 1
-        TitleRow.Size = UDim2.new(1, 0, 0, 20)
-        TitleRow.Parent = Card
-
-        local TitleRowLayout = Instance.new("UIListLayout")
-        TitleRowLayout.FillDirection = Enum.FillDirection.Horizontal
-        TitleRowLayout.SortOrder = Enum.SortOrder.LayoutOrder
-        TitleRowLayout.Parent = TitleRow
-
-        local CardTitle = Instance.new("TextLabel")
-        CardTitle.Name = "Title"
-        CardTitle.BackgroundTransparency = 1
-        CardTitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-        CardTitle.Size = UDim2.new(0.7, 0, 1, 0)
-        CardTitle.Text = tostring(title or "Update")
-        CardTitle.TextColor3 = Color3.new(0.9, 0.9, 0.9)
-        CardTitle.TextSize = 14
-        CardTitle.TextTruncate = Enum.TextTruncate.AtEnd
-        CardTitle.TextXAlignment = Enum.TextXAlignment.Left
-        CardTitle.Parent = TitleRow
-
-        local CardDate = Instance.new("TextLabel")
-        CardDate.Name = "Date"
-        CardDate.BackgroundTransparency = 1
-        CardDate.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-        CardDate.Size = UDim2.new(0.3, 0, 1, 0)
-        CardDate.Text = tostring(date or "Recent")
-        CardDate.TextColor3 = Color3.new(0.5, 0.5, 0.5)
-        CardDate.TextSize = 12
-        CardDate.TextXAlignment = Enum.TextXAlignment.Right
-        CardDate.Parent = TitleRow
-
-        local CardDesc = Instance.new("TextLabel")
-        CardDesc.Name = "Description"
-        CardDesc.BackgroundTransparency = 1
-        CardDesc.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-        CardDesc.Size = UDim2.new(1, 0, 0, 0)
-        CardDesc.AutomaticSize = Enum.AutomaticSize.Y
-        CardDesc.Text = tostring(desc or "")
-        CardDesc.TextColor3 = Color3.new(0.65, 0.65, 0.65)
-        CardDesc.TextSize = 12
-        CardDesc.TextWrapped = true
-        CardDesc.TextXAlignment = Enum.TextXAlignment.Left
-        CardDesc.TextYAlignment = Enum.TextYAlignment.Top
-        CardDesc.Parent = Card
-    end
-
-    local function RenderUpdates(updatesList)
-        for _, child in ipairs(ClaimedScroll:GetChildren()) do
-            if child:IsA("Frame") then
-                child:Destroy()
-            end
-        end
-
-        if updatesList and #updatesList > 0 then
-            for _, u in ipairs(updatesList) do
-                local dateStr = "Recent"
-                if u.createdAt then
-                    dateStr = string.sub(tostring(u.createdAt), 1, 10)
-                end
-                AddUpdateCard(u.title or "Update", dateStr, u.description or "")
-            end
-        else
-            AddUpdateCard("Volt UI v1.1.4", "Today", "Added new Home Tab interface, live server player list and updates.")
-            AddUpdateCard("Performance & Animations", "Yesterday", "Optimized tab transitions, instant switches and right-to-left slides.")
-        end
-    end
-
-    FetchUpdates = function()
-        task.spawn(function()
-            local getFunc = (request and function(u) return request({Url = u, Method = "GET"}) end)
-                         or (http_request and function(u) return http_request({Url = u, Method = "GET"}) end)
-                         or (syn and syn.request and function(u) return syn.request({Url = u, Method = "GET"}) end)
-                         or (game and game.HttpGet and function(u) return { Body = game:HttpGet(u) } end)
-            if not getFunc then return end
-
-            local url = "https://getvolt-hub.onrender.com/updates"
-            local ok, res = pcall(getFunc, url)
-            if ok and res and res.Body then
-                local decOk, data = pcall(function() return HttpService:JSONDecode(res.Body) end)
-                if decOk and data and data.updates and #data.updates > 0 then
-                    RenderUpdates(data.updates)
-                end
-            end
-        end)
-    end
-
-    RenderUpdates({})
-    FetchUpdates()
-    end
+    local HomeBody = Instance.new("Frame")
+    HomeBody.Name = "HomeBody"
+    HomeBody.BackgroundTransparency = 1
+    HomeBody.BorderSizePixel = 0
+    HomeBody.Size = UDim2.new(1, 0, 1, -48)
+    HomeBody.LayoutOrder = 1
+    HomeBody.Parent = Page
+
+    local OpenTicketModal = nil
 
     do
-    local QuickSectionWrapper = Instance.new("Frame")
-    QuickSectionWrapper.Name = "QuickSectionWrapper"
-    QuickSectionWrapper.BackgroundTransparency = 1
-    QuickSectionWrapper.Size = UDim2.new(1, 0, 0, 118)
-    QuickSectionWrapper.LayoutOrder = 2
-    QuickSectionWrapper.Parent = Page
+        local PotassiumContainer = Instance.new("Frame")
+        PotassiumContainer.Name = "PotassiumContainer"
+        PotassiumContainer.BackgroundTransparency = 1
+        PotassiumContainer.Size = UDim2.new(1, 0, 1, 0)
+        PotassiumContainer.Parent = HomeBody
 
-    local QuickSectionPadding = Instance.new("UIPadding")
-    QuickSectionPadding.PaddingLeft = UDim.new(0, 8)
-    QuickSectionPadding.PaddingRight = UDim.new(0, 8)
-    QuickSectionPadding.Parent = QuickSectionWrapper
+        local PotassiumPadding = Instance.new("UIPadding")
+        PotassiumPadding.PaddingLeft = UDim.new(0, 32)
+        PotassiumPadding.PaddingRight = UDim.new(0, 32)
+        PotassiumPadding.PaddingTop = UDim.new(0, 16)
+        PotassiumPadding.PaddingBottom = UDim.new(0, 16)
+        PotassiumPadding.Parent = PotassiumContainer
 
-    local QuickLayout = Instance.new("UIListLayout")
-    QuickLayout.FillDirection = Enum.FillDirection.Horizontal
-    QuickLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    QuickLayout.Padding = UDim.new(0, 10)
-    QuickLayout.Parent = QuickSectionWrapper
+        local HeaderRow = Instance.new("Frame")
+        HeaderRow.Name = "HeaderRow"
+        HeaderRow.BackgroundTransparency = 1
+        HeaderRow.Size = UDim2.new(1, 0, 0, 72)
+        HeaderRow.Parent = PotassiumContainer
 
-    local function CreateQuickCard(name, order)
-        local card = Instance.new("Frame")
-        card.Name = name
-        card.BackgroundColor3 = Color3.new(0.09, 0.09, 0.09)
-        card.BorderSizePixel = 0
-        card.LayoutOrder = order
-        card.Size = UDim2.new(0.333, -7, 1, 0)
-        card.Parent = QuickSectionWrapper
+        local HeaderLeft = Instance.new("Frame")
+        HeaderLeft.Name = "Left"
+        HeaderLeft.BackgroundTransparency = 1
+        HeaderLeft.Size = UDim2.new(0.55, 0, 1, 0)
+        HeaderLeft.Parent = HeaderRow
 
-        local corner = Instance.new("UICorner")
-        corner.CornerRadius = UDim.new(0, 8)
-        corner.Parent = card
+        local HeaderLeftLayout = Instance.new("UIListLayout")
+        HeaderLeftLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        HeaderLeftLayout.Padding = UDim.new(0, 4)
+        HeaderLeftLayout.Parent = HeaderLeft
 
-        local stroke = Instance.new("UIStroke")
-        stroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
-        stroke.Color = Color3.new(0.149, 0.149, 0.149)
-        stroke.Parent = card
+        local AppTitle = Instance.new("TextLabel")
+        AppTitle.Name = "Title"
+        AppTitle.BackgroundTransparency = 1
+        AppTitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+        AppTitle.Size = UDim2.new(1, 0, 0, 34)
+        AppTitle.Text = "Volt"
+        AppTitle.TextColor3 = Color3.fromRGB(245, 245, 245)
+        AppTitle.TextSize = 28
+        AppTitle.TextXAlignment = Enum.TextXAlignment.Left
+        AppTitle.LayoutOrder = 1
+        AppTitle.Parent = HeaderLeft
 
-        local padding = Instance.new("UIPadding")
-        padding.PaddingLeft = UDim.new(0, 12)
-        padding.PaddingRight = UDim.new(0, 12)
-        padding.PaddingTop = UDim.new(0, 10)
-        padding.PaddingBottom = UDim.new(0, 10)
-        padding.Parent = card
+        local SubtitleFrame = Instance.new("Frame")
+        SubtitleFrame.Name = "Subtitle"
+        SubtitleFrame.BackgroundTransparency = 1
+        SubtitleFrame.Size = UDim2.new(1, 0, 0, 20)
+        SubtitleFrame.LayoutOrder = 2
+        SubtitleFrame.Parent = HeaderLeft
 
-        local layout = Instance.new("UIListLayout")
-        layout.SortOrder = Enum.SortOrder.LayoutOrder
-        layout.Padding = UDim.new(0, 5)
-        layout.Parent = card
+        local SubtitleLayout = Instance.new("UIListLayout")
+        SubtitleLayout.FillDirection = Enum.FillDirection.Horizontal
+        SubtitleLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        SubtitleLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+        SubtitleLayout.Padding = UDim.new(0, 4)
+        SubtitleLayout.Parent = SubtitleFrame
 
-        return card
-    end
+        local lp = Players.LocalPlayer
+        local username = (lp and lp.Name) or (Api and Api.UserData and Api.UserData.username) or "User"
 
+        local SignedLabel = Instance.new("TextLabel")
+        SignedLabel.Name = "Signed"
+        SignedLabel.BackgroundTransparency = 1
+        SignedLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+        SignedLabel.Size = UDim2.new(0, 0, 1, 0)
+        SignedLabel.AutomaticSize = Enum.AutomaticSize.X
+        SignedLabel.Text = "Signed in as " .. username .. "."
+        SignedLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
+        SignedLabel.TextSize = 13
+        SignedLabel.LayoutOrder = 1
+        SignedLabel.Parent = SubtitleFrame
 
-    local function CreateStatRow(parent, labelText, initialValue, order, valueColor)
-        local row = Instance.new("Frame")
-        row.Name = "Row"
-        row.BackgroundTransparency = 1
-        row.Size = UDim2.new(1, 0, 0, 17)
-        row.LayoutOrder = order
-        row.Parent = parent
+        local AttachedLabel = Instance.new("TextLabel")
+        AttachedLabel.Name = "Attached"
+        AttachedLabel.BackgroundTransparency = 1
+        AttachedLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+        AttachedLabel.Size = UDim2.new(0, 0, 1, 0)
+        AttachedLabel.AutomaticSize = Enum.AutomaticSize.X
+        AttachedLabel.Text = "1 client attached."
+        AttachedLabel.TextColor3 = Color3.fromRGB(85, 215, 95)
+        AttachedLabel.TextSize = 13
+        AttachedLabel.LayoutOrder = 2
+        AttachedLabel.Parent = SubtitleFrame
 
-        local lbl = Instance.new("TextLabel")
-        lbl.BackgroundTransparency = 1
-        lbl.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-        lbl.Size = UDim2.new(0.5, 0, 1, 0)
-        lbl.Text = labelText
-        lbl.TextColor3 = Color3.fromRGB(130, 130, 130)
-        lbl.TextSize = 12
-        lbl.TextXAlignment = Enum.TextXAlignment.Left
-        lbl.Parent = row
+        local HeaderRight = Instance.new("Frame")
+        HeaderRight.Name = "Right"
+        HeaderRight.BackgroundTransparency = 1
+        HeaderRight.Size = UDim2.new(0.45, 0, 1, 0)
+        HeaderRight.AnchorPoint = Vector2.new(1, 0)
+        HeaderRight.Position = UDim2.new(1, 0, 0, 0)
+        HeaderRight.Parent = HeaderRow
 
-        local val = Instance.new("TextLabel")
-        val.Name = "Value"
-        val.BackgroundTransparency = 1
-        val.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
-        val.Size = UDim2.new(0.5, 0, 1, 0)
-        val.Position = UDim2.new(0.5, 0, 0, 0)
-        val.Text = initialValue
-        val.TextColor3 = valueColor or Color3.new(0.85, 0.85, 0.85)
-        val.TextSize = 12
-        val.TextXAlignment = Enum.TextXAlignment.Right
-        val.TextTruncate = Enum.TextTruncate.AtEnd
-        val.Parent = row
+        local HeaderRightLayout = Instance.new("UIListLayout")
+        HeaderRightLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        HeaderRightLayout.Padding = UDim.new(0, 6)
+        HeaderRightLayout.Parent = HeaderRight
 
-        return val
-    end
+        local UpdatesHeaderLabel = Instance.new("TextLabel")
+        UpdatesHeaderLabel.Name = "UpdatesHeader"
+        UpdatesHeaderLabel.BackgroundTransparency = 1
+        UpdatesHeaderLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+        UpdatesHeaderLabel.Size = UDim2.new(1, 0, 0, 14)
+        UpdatesHeaderLabel.Text = "UPDATES"
+        UpdatesHeaderLabel.TextColor3 = Color3.fromRGB(120, 120, 120)
+        UpdatesHeaderLabel.TextSize = 11
+        UpdatesHeaderLabel.TextXAlignment = Enum.TextXAlignment.Left
+        UpdatesHeaderLabel.LayoutOrder = 1
+        UpdatesHeaderLabel.Parent = HeaderRight
 
-    local PerfCard = CreateQuickCard("PerformanceCard", 1)
-    CreateHeader(PerfCard, "rbxassetid://10709791437", "Performance")
-    local PingValue = CreateStatRow(PerfCard, "Ping", "... ms", 2)
-    local FpsValue = CreateStatRow(PerfCard, "FPS", "60 FPS", 3)
-    local MemValue = CreateStatRow(PerfCard, "Memory", "... MB", 4)
+        local UpdateCard = Instance.new("Frame")
+        UpdateCard.Name = "UpdateCard"
+        UpdateCard.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
+        UpdateCard.BorderSizePixel = 0
+        UpdateCard.Size = UDim2.new(1, 0, 0, 48)
+        UpdateCard.LayoutOrder = 2
+        UpdateCard.Parent = HeaderRight
 
-    local ServerCard = CreateQuickCard("ServerCard", 2)
-    CreateHeader(ServerCard, "rbxassetid://97001881921521", "Server Info")
-    local ServerPlayersVal = CreateStatRow(ServerCard, "Players", tostring(#Players:GetPlayers()) .. " / " .. tostring(Players.MaxPlayers), 2)
-    local PlaceIdVal = CreateStatRow(ServerCard, "Place ID", tostring(game.PlaceId), 3)
+        local UpdateCorner = Instance.new("UICorner")
+        UpdateCorner.CornerRadius = UDim.new(0, 6)
+        UpdateCorner.Parent = UpdateCard
 
-    local RejoinBtn = Instance.new("TextButton")
-    RejoinBtn.Name = "RejoinBtn"
-    RejoinBtn.BackgroundColor3 = Color3.fromRGB(26, 26, 26)
-    RejoinBtn.BorderSizePixel = 0
-    RejoinBtn.LayoutOrder = 4
-    RejoinBtn.Size = UDim2.new(1, 0, 0, 22)
-    RejoinBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    RejoinBtn.Text = "Rejoin Server"
-    RejoinBtn.TextColor3 = Color3.fromRGB(180, 180, 180)
-    RejoinBtn.TextSize = 11
-    RejoinBtn.Parent = ServerCard
+        local UpdateStroke = Instance.new("UIStroke")
+        UpdateStroke.Color = Color3.fromRGB(36, 36, 36)
+        UpdateStroke.Thickness = 1
+        UpdateStroke.Parent = UpdateCard
 
-    local RejoinCorner = Instance.new("UICorner")
-    RejoinCorner.CornerRadius = UDim.new(0, 5)
-    RejoinCorner.Parent = RejoinBtn
+        local UpdatePadding = Instance.new("UIPadding")
+        UpdatePadding.PaddingLeft = UDim.new(0, 10)
+        UpdatePadding.PaddingRight = UDim.new(0, 10)
+        UpdatePadding.PaddingTop = UDim.new(0, 6)
+        UpdatePadding.PaddingBottom = UDim.new(0, 6)
+        UpdatePadding.Parent = UpdateCard
 
-    local RejoinStroke = Instance.new("UIStroke")
-    RejoinStroke.Color = Color3.fromRGB(44, 44, 44)
-    RejoinStroke.Thickness = 1
-    RejoinStroke.Parent = RejoinBtn
+        local UpdateLayout = Instance.new("UIListLayout")
+        UpdateLayout.FillDirection = Enum.FillDirection.Horizontal
+        UpdateLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        UpdateLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+        UpdateLayout.Padding = UDim.new(0, 8)
+        UpdateLayout.Parent = UpdateCard
 
-    Maid:GiveTask(RejoinBtn.MouseEnter:Connect(function()
-        Tween(RejoinBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(36, 36, 36), TextColor3 = Color3.new(1, 1, 1)})
-    end))
-    Maid:GiveTask(RejoinBtn.MouseLeave:Connect(function()
-        Tween(RejoinBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(26, 26, 26), TextColor3 = Color3.fromRGB(180, 180, 180)})
-    end))
-    Maid:GiveTask(RejoinBtn.MouseButton1Click:Connect(function()
-        pcall(function()
-            TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, Players.LocalPlayer)
-        end)
-    end))
+        local Badge = Instance.new("TextLabel")
+        Badge.Name = "Badge"
+        Badge.BackgroundColor3 = Color3.fromRGB(34, 34, 34)
+        Badge.BorderSizePixel = 0
+        Badge.Size = UDim2.new(0, 0, 0, 20)
+        Badge.AutomaticSize = Enum.AutomaticSize.X
+        Badge.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+        Badge.Text = "v1.1.15"
+        Badge.TextColor3 = Color3.fromRGB(180, 180, 180)
+        Badge.TextSize = 11
+        Badge.Parent = UpdateCard
 
-    local function getExecutor()
-        local name = nil
-        pcall(function()
-            if identifyexecutor then
-                name = identifyexecutor()
-            elseif getexecutorname then
-                name = getexecutorname()
+        local BadgeCorner = Instance.new("UICorner")
+        BadgeCorner.CornerRadius = UDim.new(0, 4)
+        BadgeCorner.Parent = Badge
+
+        local BadgePad = Instance.new("UIPadding")
+        BadgePad.PaddingLeft = UDim.new(0, 6)
+        BadgePad.PaddingRight = UDim.new(0, 6)
+        BadgePad.Parent = Badge
+
+        local UpdateText = Instance.new("TextLabel")
+        UpdateText.Name = "Text"
+        UpdateText.BackgroundTransparency = 1
+        UpdateText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+        UpdateText.Size = UDim2.new(1, -75, 1, 0)
+        UpdateText.Text = "Discord bug tickets & live support."
+        UpdateText.TextColor3 = Color3.fromRGB(180, 180, 180)
+        UpdateText.TextSize = 12
+        UpdateText.TextXAlignment = Enum.TextXAlignment.Left
+        UpdateText.TextTruncate = Enum.TextTruncate.AtEnd
+        UpdateText.Parent = UpdateCard
+
+        local ContentArea = Instance.new("Frame")
+        ContentArea.Name = "ContentArea"
+        ContentArea.BackgroundTransparency = 1
+        ContentArea.Position = UDim2.new(0, 0, 0, 86)
+        ContentArea.Size = UDim2.new(1, 0, 1, -86)
+        ContentArea.Parent = PotassiumContainer
+
+        local ActionsList = Instance.new("Frame")
+        ActionsList.Name = "Actions"
+        ActionsList.BackgroundTransparency = 1
+        ActionsList.Size = UDim2.new(0, 240, 1, 0)
+        ActionsList.Parent = ContentArea
+
+        local ActionsLayout = Instance.new("UIListLayout")
+        ActionsLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        ActionsLayout.Padding = UDim.new(0, 14)
+        ActionsLayout.Parent = ActionsList
+
+        local StartHeader = Instance.new("TextLabel")
+        StartHeader.Name = "StartHeader"
+        StartHeader.BackgroundTransparency = 1
+        StartHeader.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+        StartHeader.Size = UDim2.new(1, 0, 0, 14)
+        StartHeader.Text = "START"
+        StartHeader.TextColor3 = Color3.fromRGB(120, 120, 120)
+        StartHeader.TextSize = 11
+        StartHeader.TextXAlignment = Enum.TextXAlignment.Left
+        StartHeader.LayoutOrder = 1
+        StartHeader.Parent = ActionsList
+
+        local StartItems = Instance.new("Frame")
+        StartItems.Name = "StartItems"
+        StartItems.BackgroundTransparency = 1
+        StartItems.Size = UDim2.new(1, 0, 0, 0)
+        StartItems.AutomaticSize = Enum.AutomaticSize.Y
+        StartItems.LayoutOrder = 2
+        StartItems.Parent = ActionsList
+
+        local StartItemsLayout = Instance.new("UIListLayout")
+        StartItemsLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        StartItemsLayout.Padding = UDim.new(0, 4)
+        StartItemsLayout.Parent = StartItems
+
+        local function CreateActionItem(parent, order, iconAsset, titleText, onClick)
+            local btn = Instance.new("TextButton")
+            btn.Name = titleText
+            btn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            btn.BackgroundTransparency = 1
+            btn.BorderSizePixel = 0
+            btn.Size = UDim2.new(1, 0, 0, 30)
+            btn.Text = ""
+            btn.AutoButtonColor = false
+            btn.LayoutOrder = order
+            btn.Parent = parent
+
+            local corner = Instance.new("UICorner")
+            corner.CornerRadius = UDim.new(0, 6)
+            corner.Parent = btn
+
+            local btnLayout = Instance.new("UIListLayout")
+            btnLayout.FillDirection = Enum.FillDirection.Horizontal
+            btnLayout.SortOrder = Enum.SortOrder.LayoutOrder
+            btnLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+            btnLayout.Padding = UDim.new(0, 10)
+            btnLayout.Parent = btn
+
+            local pad = Instance.new("UIPadding")
+            pad.PaddingLeft = UDim.new(0, 6)
+            pad.PaddingRight = UDim.new(0, 6)
+            pad.Parent = btn
+
+            local icon = Instance.new("ImageLabel")
+            icon.BackgroundTransparency = 1
+            icon.BorderSizePixel = 0
+            icon.Size = UDim2.new(0, 16, 0, 16)
+            icon.Image = iconAsset
+            icon.ImageColor3 = Color3.fromRGB(170, 170, 170)
+            icon.LayoutOrder = 1
+            icon.Parent = btn
+
+            local label = Instance.new("TextLabel")
+            label.BackgroundTransparency = 1
+            label.BorderSizePixel = 0
+            label.Size = UDim2.new(1, -26, 1, 0)
+            label.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+            label.Text = titleText
+            label.TextColor3 = Color3.fromRGB(200, 200, 200)
+            label.TextSize = 13
+            label.TextXAlignment = Enum.TextXAlignment.Left
+            label.LayoutOrder = 2
+            label.Parent = btn
+
+            Maid:GiveTask(btn.MouseEnter:Connect(function()
+                Tween(btn, TweenInfo.new(0.15), {BackgroundTransparency = 0.94})
+                Tween(label, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(245, 245, 245)})
+                Tween(icon, TweenInfo.new(0.15), {ImageColor3 = Color3.fromRGB(245, 245, 245)})
+            end))
+            Maid:GiveTask(btn.MouseLeave:Connect(function()
+                Tween(btn, TweenInfo.new(0.15), {BackgroundTransparency = 1})
+                Tween(label, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(200, 200, 200)})
+                Tween(icon, TweenInfo.new(0.15), {ImageColor3 = Color3.fromRGB(170, 170, 170)})
+            end))
+
+            if onClick then
+                Maid:GiveTask(btn.MouseButton1Click:Connect(onClick))
+            end
+
+            return btn
+        end
+
+        CreateActionItem(StartItems, 1, "rbxassetid://70862937184937", "Bug Report", function()
+            if OpenTicketModal then
+                OpenTicketModal()
             end
         end)
-        if not name or name == "" then
-            pcall(function()
-                if KRNL_LOADED then name = "Krnl"
-                elseif syn then name = "Synapse"
-                elseif fluxus then name = "Fluxus"
-                elseif SENTINEL_LOADED then name = "Sentinel"
-                end
-            end)
-        end
-        if not name or name == "" then
-            name = "Volt Client"
-        end
-        return tostring(name)
-    end
 
-    local uiStartTime = os.time()
-    local function formatUptime(seconds)
-        local hrs = math.floor(seconds / 3600)
-        local mins = math.floor((seconds % 3600) / 60)
-        local secs = seconds % 60
-        if hrs > 0 then
-            return string.format("%02d:%02d:%02d", hrs, mins, secs)
-        else
-            return string.format("%02d:%02d", mins, secs)
-        end
-    end
-
-    local ClientCard = CreateQuickCard("ClientCard", 3)
-    CreateHeader(ClientCard, "rbxassetid://136385496998416", "Client")
-    local ExecVal = CreateStatRow(ClientCard, "Executor", getExecutor(), 2)
-    local UptimeVal = CreateStatRow(ClientCard, "Uptime", "00:00", 3)
-    
-    local subText = "Active"
-    if Api and Api.UserData and Api.UserData.remaining then
-        subText = tostring(Api.UserData.remaining)
-    end
-    local SubVal = CreateStatRow(ClientCard, "License", subText, 4, Color3.fromRGB(46, 204, 113))
-
-    task.spawn(function()
-        local lastTime = os.clock()
-        local frameCount = 0
-        local currentFps = 60
-
-        local conn = RunService.RenderStepped:Connect(function()
-            frameCount = frameCount + 1
-            local now = os.clock()
-            if now - lastTime >= 1 then
-                currentFps = math.round(frameCount / (now - lastTime))
-                frameCount = 0
-                lastTime = now
-            end
-        end)
-        Maid:GiveTask(conn)
-
-        while Page and Page.Parent do
-            pcall(function()
-                FpsValue.Text = tostring(currentFps) .. " FPS"
-
-                local ping = 0
-                pcall(function()
-                    local statsService = game:GetService("Stats")
-                    if statsService and statsService.Network and statsService.Network.ServerStatsItem then
-                        local dp = statsService.Network.ServerStatsItem["Data Ping"]
-                        if dp then
-                            ping = math.round(dp:GetValue())
-                        end
-                    end
-                end)
-                PingValue.Text = tostring(ping) .. " ms"
-
-                local mem = 0
-                pcall(function()
-                    local statsService = game:GetService("Stats")
-                    if statsService then
-                        mem = math.round(statsService:GetTotalMemoryUsageMb())
-                    end
-                end)
-                MemValue.Text = tostring(mem) .. " MB"
-
-                ServerPlayersVal.Text = tostring(#Players:GetPlayers()) .. " / " .. tostring(Players.MaxPlayers)
-                UptimeVal.Text = formatUptime(os.time() - uiStartTime)
-            end)
-            task.wait(1)
-        end
-    end)
-    end
-
-    do
-    local BugSectionWrapper = Instance.new("Frame")
-    BugSectionWrapper.Name = "BugReportsWrapper"
-    BugSectionWrapper.BackgroundTransparency = 1
-    BugSectionWrapper.Size = UDim2.new(1, 0, 0, 0)
-    BugSectionWrapper.AutomaticSize = Enum.AutomaticSize.Y
-    BugSectionWrapper.LayoutOrder = 3
-    BugSectionWrapper.Parent = Page
-
-    local BugSectionPadding = Instance.new("UIPadding")
-    BugSectionPadding.PaddingLeft = UDim.new(0, 8)
-    BugSectionPadding.PaddingRight = UDim.new(0, 8)
-    BugSectionPadding.Parent = BugSectionWrapper
-
-    local BugReportsSection = Instance.new("Frame")
-    BugReportsSection.Name = "Bug Reports"
-    BugReportsSection.BackgroundColor3 = Color3.new(0.09, 0.09, 0.09)
-    BugReportsSection.BorderColor3 = Color3.new(0, 0, 0)
-    BugReportsSection.BorderSizePixel = 0
-    BugReportsSection.Size = UDim2.new(1, 0, 0, 0)
-    BugReportsSection.AutomaticSize = Enum.AutomaticSize.Y
-    BugReportsSection.Parent = BugSectionWrapper
-
-    local BugReportsConstraint = Instance.new("UISizeConstraint")
-    BugReportsConstraint.MinSize = Vector2.new(0, 52)
-    BugReportsConstraint.Parent = BugReportsSection
-
-    local BugReportsCorner = Instance.new("UICorner")
-    BugReportsCorner.CornerRadius = UDim.new(0, 8)
-    BugReportsCorner.Parent = BugReportsSection
-
-    local BugReportsStroke = Instance.new("UIStroke")
-    BugReportsStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
-    BugReportsStroke.Color = Color3.new(0.149, 0.149, 0.149)
-    BugReportsStroke.Parent = BugReportsSection
-
-    local BugReportsPadding = Instance.new("UIPadding")
-    BugReportsPadding.PaddingLeft = UDim.new(0, 14)
-    BugReportsPadding.PaddingRight = UDim.new(0, 14)
-    BugReportsPadding.PaddingTop = UDim.new(0, 8)
-    BugReportsPadding.PaddingBottom = UDim.new(0, 8)
-    BugReportsPadding.Parent = BugReportsSection
-
-    local BugReportsLayout = Instance.new("UIListLayout")
-    BugReportsLayout.FillDirection = Enum.FillDirection.Horizontal
-    BugReportsLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    BugReportsLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    BugReportsLayout.Padding = UDim.new(0, 12)
-    BugReportsLayout.Parent = BugReportsSection
-
-    local BugInfo = Instance.new("Frame")
-    BugInfo.Name = "Info"
-    BugInfo.BackgroundColor3 = Color3.new(1, 1, 1)
-    BugInfo.BackgroundTransparency = 1
-    BugInfo.BorderSizePixel = 0
-    BugInfo.Size = UDim2.new(0, 230, 0, 0)
-    BugInfo.AutomaticSize = Enum.AutomaticSize.Y
-    BugInfo.LayoutOrder = 1
-    BugInfo.Parent = BugReportsSection
-
-    local BugInfoLayout = Instance.new("UIListLayout")
-    BugInfoLayout.FillDirection = Enum.FillDirection.Horizontal
-    BugInfoLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    BugInfoLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    BugInfoLayout.Padding = UDim.new(0, 8)
-    BugInfoLayout.Parent = BugInfo
-
-    local BugIcon = Instance.new("ImageLabel")
-    BugIcon.Name = "Icon"
-    BugIcon.BackgroundColor3 = Color3.new(1, 1, 1)
-    BugIcon.BackgroundTransparency = 1
-    BugIcon.BorderSizePixel = 0
-    BugIcon.Image = "rbxassetid://70862937184937"
-    BugIcon.Size = UDim2.new(0, 30, 0, 30)
-    BugIcon.Parent = BugInfo
-
-    local BugTextFrame = Instance.new("Frame")
-    BugTextFrame.Name = "Text"
-    BugTextFrame.BackgroundColor3 = Color3.new(1, 1, 1)
-    BugTextFrame.BackgroundTransparency = 1
-    BugTextFrame.Size = UDim2.new(1, -38, 0, 0)
-    BugTextFrame.AutomaticSize = Enum.AutomaticSize.Y
-    BugTextFrame.Parent = BugInfo
-
-    local BugTextLayout = Instance.new("UIListLayout")
-    BugTextLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    BugTextLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    BugTextLayout.Parent = BugTextFrame
-
-    local BugTitle = Instance.new("TextLabel")
-    BugTitle.BackgroundColor3 = Color3.new(1, 1, 1)
-    BugTitle.BackgroundTransparency = 1
-    BugTitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    BugTitle.Size = UDim2.new(1, 0, 0, 20)
-    BugTitle.Text = "Bug Report"
-    BugTitle.TextColor3 = Color3.new(0.85, 0.85, 0.85)
-    BugTitle.TextSize = 15
-    BugTitle.TextXAlignment = Enum.TextXAlignment.Left
-    BugTitle.Parent = BugTextFrame
-
-    local BugSubtitle = Instance.new("TextLabel")
-    BugSubtitle.BackgroundColor3 = Color3.new(1, 1, 1)
-    BugSubtitle.BackgroundTransparency = 1
-    BugSubtitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-    BugSubtitle.Size = UDim2.new(1, 0, 0, 18)
-    BugSubtitle.Text = "Report bugs or submit feedback"
-    BugSubtitle.TextColor3 = Color3.new(0.65, 0.65, 0.65)
-    BugSubtitle.TextSize = 13
-    BugSubtitle.TextXAlignment = Enum.TextXAlignment.Left
-    BugSubtitle.Parent = BugTextFrame
-
-    local BugSendArea = Instance.new("Frame")
-    BugSendArea.Name = "Send"
-    BugSendArea.BackgroundColor3 = Color3.new(1, 1, 1)
-    BugSendArea.BackgroundTransparency = 1
-    BugSendArea.Size = UDim2.new(1, -242, 0, 0)
-    BugSendArea.AutomaticSize = Enum.AutomaticSize.Y
-    BugSendArea.LayoutOrder = 2
-    BugSendArea.Parent = BugReportsSection
-
-    local BugSendLayout = Instance.new("UIListLayout")
-    BugSendLayout.FillDirection = Enum.FillDirection.Horizontal
-    BugSendLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
-    BugSendLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    BugSendLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    BugSendLayout.Padding = UDim.new(0, 10)
-    BugSendLayout.Parent = BugSendArea
-
-    local BugInputFrame = Instance.new("Frame")
-    BugInputFrame.Name = "Input"
-    BugInputFrame.BackgroundColor3 = Color3.new(0.086, 0.086, 0.086)
-    BugInputFrame.BorderSizePixel = 0
-    BugInputFrame.Size = UDim2.new(1, -95, 0, 0)
-    BugInputFrame.AutomaticSize = Enum.AutomaticSize.Y
-    BugInputFrame.Parent = BugSendArea
-
-    local BugInputConstraint = Instance.new("UISizeConstraint")
-    BugInputConstraint.MinSize = Vector2.new(0, 36)
-    BugInputConstraint.MaxSize = Vector2.new(math.huge, 140)
-    BugInputConstraint.Parent = BugInputFrame
-
-    local BugInputCorner = Instance.new("UICorner")
-    BugInputCorner.CornerRadius = UDim.new(0, 6)
-    BugInputCorner.Parent = BugInputFrame
-
-    local BugInputStroke = Instance.new("UIStroke")
-    BugInputStroke.Color = Color3.new(0.208, 0.208, 0.208)
-    BugInputStroke.Parent = BugInputFrame
-
-    local BugInputPadding = Instance.new("UIPadding")
-    BugInputPadding.PaddingLeft = UDim.new(0, 10)
-    BugInputPadding.PaddingRight = UDim.new(0, 10)
-    BugInputPadding.PaddingTop = UDim.new(0, 8)
-    BugInputPadding.PaddingBottom = UDim.new(0, 8)
-    BugInputPadding.Parent = BugInputFrame
-
-    BugTextBox = Instance.new("TextBox")
-    BugTextBox.BackgroundColor3 = Color3.new(1, 1, 1)
-    BugTextBox.BackgroundTransparency = 1
-    BugTextBox.BorderSizePixel = 0
-    BugTextBox.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
-    BugTextBox.Size = UDim2.new(1, 0, 0, 0)
-    BugTextBox.AutomaticSize = Enum.AutomaticSize.Y
-    BugTextBox.MultiLine = true
-    BugTextBox.TextWrapped = true
-    BugTextBox.ClearTextOnFocus = false
-    BugTextBox.Text = ""
-    BugTextBox.PlaceholderText = "Describe the bug..."
-    BugTextBox.PlaceholderColor3 = Color3.new(0.35, 0.35, 0.35)
-    BugTextBox.TextColor3 = Color3.new(0.85, 0.85, 0.85)
-    BugTextBox.TextSize = 13
-    BugTextBox.TextXAlignment = Enum.TextXAlignment.Left
-    BugTextBox.TextYAlignment = Enum.TextYAlignment.Top
-    BugTextBox.Parent = BugInputFrame
-
-    local SendBtnContainer = Instance.new("Frame")
-    SendBtnContainer.Name = "Send"
-    SendBtnContainer.BackgroundColor3 = Color3.new(1, 1, 1)
-    SendBtnContainer.BackgroundTransparency = 1
-    SendBtnContainer.Size = UDim2.new(0, 85, 0, 36)
-    SendBtnContainer.Parent = BugSendArea
-
-    SendBtn = Instance.new("TextButton")
-    SendBtn.Name = "Button"
-    SendBtn.BackgroundColor3 = Color3.new(0.149, 0.149, 0.149)
-    SendBtn.BorderSizePixel = 0
-    SendBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    SendBtn.Size = UDim2.new(1, 0, 1, 0)
-    SendBtn.Text = "Send"
-    SendBtn.TextColor3 = Color3.new(0.8, 0.8, 0.8)
-    SendBtn.TextSize = 14
-    SendBtn.Parent = SendBtnContainer
-
-    local SendBtnCorner = Instance.new("UICorner")
-    SendBtnCorner.CornerRadius = UDim.new(0, 6)
-    SendBtnCorner.Parent = SendBtn
-
-    local SendBtnStroke = Instance.new("UIStroke")
-    SendBtnStroke.Color = Color3.new(0.247, 0.247, 0.247)
-    SendBtnStroke.Parent = SendBtn
-
-    local lastBugReportTime = 0
-    pcall(function()
-        if isfileFunc and readfileFunc and isfileFunc("VoltHub/LastBugReport.txt") then
-            local t = tonumber(readfileFunc("VoltHub/LastBugReport.txt"))
-            if t then
-                lastBugReportTime = t
-            end
-        end
-    end)
-
-    local isSendingBug = false
-
-    local function GetCooldownRemaining()
-        local elapsed = os.time() - lastBugReportTime
-        local cooldownSeconds = 86400
-        if elapsed < cooldownSeconds then
-            local remaining = cooldownSeconds - elapsed
-            local hoursLeft = math.floor(remaining / 3600)
-            local minsLeft = math.floor((remaining % 3600) / 60)
-            return hoursLeft > 0 and (hoursLeft .. "h left") or (math.max(1, minsLeft) .. "m left")
-        end
-        return nil
-    end
-
-    local function UpdateBugButton()
-        local cd = GetCooldownRemaining()
-        if cd then
-            SendBtn.Text = cd
-            SendBtn.TextColor3 = Color3.new(0.8, 0.8, 0.8)
-        else
-            SendBtn.Text = "Send"
-            SendBtn.TextColor3 = Color3.new(0.8, 0.8, 0.8)
-        end
-    end
-
-    UpdateBugButton()
-
-    Maid:GiveTask(SendBtn.MouseEnter:Connect(function()
-        Tween(SendBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)})
-    end))
-    Maid:GiveTask(SendBtn.MouseLeave:Connect(function()
-        Tween(SendBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.new(0.149, 0.149, 0.149)})
-    end))
-
-    Maid:GiveTask(SendBtn.MouseButton1Click:Connect(function()
-        if isSendingBug then return end
-
-        local cooldown = GetCooldownRemaining()
-        if cooldown then
-            UpdateBugButton()
+        CreateActionItem(StartItems, 2, "rbxassetid://10747373176", "Explore scripts", function()
             SendNotification({
-                Title = "Bug Report",
-                Content = "You can only submit 1 bug report every 24 hours. Time left: " .. cooldown,
-                Duration = 4,
-                Type = "error"
+                Title = "Scripts",
+                Content = "Explore community scripts and documentation.",
+                Duration = 2
             })
-            return
-        end
+        end)
 
-        local reportText = BugTextBox.Text
-        if reportText == "" or string.gsub(reportText, "%s+", "") == "" then
-            return
-        end
-
-        isSendingBug = true
-        SendBtn.Text = "..."
-        BugTextBox.Text = ""
-
-        lastBugReportTime = os.time()
-        pcall(function()
-            if writefileFunc then
-                if makefolderFunc and isfolderFunc and not isfolderFunc("VoltHub") then
-                    makefolderFunc("VoltHub")
-                end
-                writefileFunc("VoltHub/LastBugReport.txt", tostring(lastBugReportTime))
+        CreateActionItem(StartItems, 3, "rbxassetid://95898765113869", "Settings", function()
+            if WindowObject and WindowObject.OpenSettings then
+                WindowObject:OpenSettings()
             end
         end)
-            
-            local lp = Players.LocalPlayer
-            local robloxUsername = lp and lp.Name or "Unknown"
-            local robloxDisplayName = lp and lp.DisplayName or robloxUsername
-            local robloxId = lp and tostring(lp.UserId) or "Unknown"
-            
-            local voltId = "N/A"
-            local discordUsername = "Not linked"
-            local discordId = "Not linked"
-            
-            local userData = nil
-            if Api and Api.UserData then
-                userData = Api.UserData
-            elseif Api and Api.FetchMe then
-                pcall(function() userData = Api.FetchMe() end)
+
+        CreateActionItem(StartItems, 4, "rbxassetid://134568818132029", "Account", function()
+            if WindowObject and WindowObject.OpenAccount then
+                WindowObject:OpenAccount()
             end
-            
-            if userData then
-                if userData._id then
-                    voltId = tostring(userData._id)
-                elseif userData.id then
-                    voltId = tostring(userData.id)
-                end
-                
-                if userData.discordId and tostring(userData.discordId) ~= "" then
-                    discordId = tostring(userData.discordId)
-                    discordUsername = "<@" .. discordId .. ">"
-                end
-                
-                if userData.discordUsername and userData.discordUsername ~= "" then
-                    discordUsername = tostring(userData.discordUsername)
-                end
+        end)
+
+        local RecentHeader = Instance.new("TextLabel")
+        RecentHeader.Name = "RecentHeader"
+        RecentHeader.BackgroundTransparency = 1
+        RecentHeader.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+        RecentHeader.Size = UDim2.new(1, 0, 0, 14)
+        RecentHeader.Text = "RECENT SCRIPTS"
+        RecentHeader.TextColor3 = Color3.fromRGB(120, 120, 120)
+        RecentHeader.TextSize = 11
+        RecentHeader.TextXAlignment = Enum.TextXAlignment.Left
+        RecentHeader.LayoutOrder = 3
+        RecentHeader.Parent = ActionsList
+
+        local RecentItems = Instance.new("Frame")
+        RecentItems.Name = "RecentItems"
+        RecentItems.BackgroundTransparency = 1
+        RecentItems.Size = UDim2.new(1, 0, 0, 0)
+        RecentItems.AutomaticSize = Enum.AutomaticSize.Y
+        RecentItems.LayoutOrder = 4
+        RecentItems.Parent = ActionsList
+
+        local RecentItemsLayout = Instance.new("UIListLayout")
+        RecentItemsLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        RecentItemsLayout.Padding = UDim.new(0, 4)
+        RecentItemsLayout.Parent = RecentItems
+
+        CreateActionItem(RecentItems, 1, "rbxassetid://10709789910", "Snowy_Hub.luau", function()
+            SendNotification({ Title = "Script Selected", Content = "Snowy_Hub.luau ready to execute.", Duration = 2 })
+        end)
+
+        CreateActionItem(RecentItems, 2, "rbxassetid://10709789910", "Volt Test.luau", function()
+            SendNotification({ Title = "Script Selected", Content = "Volt Test.luau ready to execute.", Duration = 2 })
+        end)
+
+        CreateActionItem(RecentItems, 3, "rbxassetid://10709789910", "BountyHunt.luau", function()
+            SendNotification({ Title = "Script Selected", Content = "BountyHunt.luau ready to execute.", Duration = 2 })
+        end)
+
+        local AttachedStatus = Instance.new("Frame")
+        AttachedStatus.Name = "Status"
+        AttachedStatus.BackgroundTransparency = 1
+        AttachedStatus.AnchorPoint = Vector2.new(1, 1)
+        AttachedStatus.Position = UDim2.new(1, 0, 1, 0)
+        AttachedStatus.Size = UDim2.new(0, 0, 0, 20)
+        AttachedStatus.AutomaticSize = Enum.AutomaticSize.X
+        AttachedStatus.Parent = ContentArea
+
+        local AttachedStatusLayout = Instance.new("UIListLayout")
+        AttachedStatusLayout.FillDirection = Enum.FillDirection.Horizontal
+        AttachedStatusLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        AttachedStatusLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+        AttachedStatusLayout.Padding = UDim.new(0, 6)
+        AttachedStatusLayout.Parent = AttachedStatus
+
+        local StatusDot = Instance.new("Frame")
+        StatusDot.Name = "Dot"
+        StatusDot.BackgroundColor3 = Color3.fromRGB(85, 215, 95)
+        StatusDot.BorderSizePixel = 0
+        StatusDot.Size = UDim2.new(0, 7, 0, 7)
+        StatusDot.LayoutOrder = 1
+        StatusDot.Parent = AttachedStatus
+
+        local StatusDotCorner = Instance.new("UICorner")
+        StatusDotCorner.CornerRadius = UDim.new(1, 0)
+        StatusDotCorner.Parent = StatusDot
+
+        local StatusText = Instance.new("TextLabel")
+        StatusText.Name = "Text"
+        StatusText.BackgroundTransparency = 1
+        StatusText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+        StatusText.Size = UDim2.new(0, 0, 1, 0)
+        StatusText.AutomaticSize = Enum.AutomaticSize.X
+        StatusText.Text = "Attached"
+        StatusText.TextColor3 = Color3.fromRGB(150, 150, 150)
+        StatusText.TextSize = 12
+        StatusText.LayoutOrder = 2
+        StatusText.Parent = AttachedStatus
+    end
+
+    do
+        local isModalOpen = false
+        local activeTicketId = nil
+        local ticketsList = {}
+        local cooldownSeconds = 0
+
+        local lp = Players.LocalPlayer
+        local robloxId = tostring((lp and lp.UserId) or "0")
+        local robloxUsername = (lp and lp.Name) or "Player"
+        local hwid = (Api and Api.GetHWID and Api.GetHWID()) or "DUMMY_HWID"
+
+        local TicketModal = Instance.new("CanvasGroup")
+        TicketModal.Name = "TicketModal"
+        TicketModal.Size = UDim2.new(1, 0, 1, 0)
+        TicketModal.Position = UDim2.new(0, 0, 0, 0)
+        TicketModal.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
+        TicketModal.BorderSizePixel = 0
+        TicketModal.ZIndex = 10000
+        TicketModal.Visible = false
+        TicketModal.GroupTransparency = 1
+        TicketModal.Parent = HomeBody
+
+        local ModalHeader = Instance.new("Frame")
+        ModalHeader.Name = "Header"
+        ModalHeader.BackgroundTransparency = 1
+        ModalHeader.Size = UDim2.new(1, 0, 0, 42)
+        ModalHeader.Parent = TicketModal
+
+        local ModalHeaderLayout = Instance.new("UIListLayout")
+        ModalHeaderLayout.FillDirection = Enum.FillDirection.Horizontal
+        ModalHeaderLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+        ModalHeaderLayout.Padding = UDim.new(0, 10)
+        ModalHeaderLayout.Parent = ModalHeader
+
+        local ModalHeaderPad = Instance.new("UIPadding")
+        ModalHeaderPad.PaddingLeft = UDim.new(0, 16)
+        ModalHeaderPad.PaddingRight = UDim.new(0, 16)
+        ModalHeaderPad.Parent = ModalHeader
+
+        local BackBtn = Instance.new("TextButton")
+        BackBtn.Name = "Back"
+        BackBtn.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
+        BackBtn.Size = UDim2.new(0, 80, 0, 26)
+        BackBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+        BackBtn.Text = "← Back"
+        BackBtn.TextColor3 = Color3.fromRGB(200, 200, 200)
+        BackBtn.TextSize = 12
+        BackBtn.AutoButtonColor = false
+        BackBtn.LayoutOrder = 1
+        BackBtn.Parent = ModalHeader
+
+        local BackCorner = Instance.new("UICorner")
+        BackCorner.CornerRadius = UDim.new(0, 5)
+        BackCorner.Parent = BackBtn
+
+        local BackStroke = Instance.new("UIStroke")
+        BackStroke.Color = Color3.fromRGB(45, 45, 45)
+        BackStroke.Thickness = 1
+        BackStroke.Parent = BackBtn
+
+        local ModalTitle = Instance.new("TextLabel")
+        ModalTitle.Name = "Title"
+        ModalTitle.BackgroundTransparency = 1
+        ModalTitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+        ModalTitle.Size = UDim2.new(1, -100, 1, 0)
+        ModalTitle.Text = "Bug Reports & Discord Support"
+        ModalTitle.TextColor3 = Color3.fromRGB(240, 240, 240)
+        ModalTitle.TextSize = 14
+        ModalTitle.TextXAlignment = Enum.TextXAlignment.Left
+        ModalTitle.LayoutOrder = 2
+        ModalTitle.Parent = ModalHeader
+
+        local HeaderDivider = Instance.new("Frame")
+        HeaderDivider.Name = "Divider"
+        HeaderDivider.BackgroundColor3 = Color3.fromRGB(34, 34, 34)
+        HeaderDivider.BorderSizePixel = 0
+        HeaderDivider.Position = UDim2.new(0, 0, 0, 42)
+        HeaderDivider.Size = UDim2.new(1, 0, 0, 1)
+        HeaderDivider.Parent = TicketModal
+
+        local TwoColumn = Instance.new("Frame")
+        TwoColumn.Name = "TwoColumn"
+        TwoColumn.BackgroundTransparency = 1
+        TwoColumn.Position = UDim2.new(0, 0, 0, 43)
+        TwoColumn.Size = UDim2.new(1, 0, 1, -43)
+        TwoColumn.Parent = TicketModal
+
+        local LeftPane = Instance.new("Frame")
+        LeftPane.Name = "LeftPane"
+        LeftPane.BackgroundColor3 = Color3.fromRGB(16, 16, 16)
+        LeftPane.BorderSizePixel = 0
+        LeftPane.Size = UDim2.new(0, 220, 1, 0)
+        LeftPane.Parent = TwoColumn
+
+        local LeftPanePad = Instance.new("UIPadding")
+        LeftPanePad.PaddingLeft = UDim.new(0, 10)
+        LeftPanePad.PaddingRight = UDim.new(0, 10)
+        LeftPanePad.PaddingTop = UDim.new(0, 10)
+        LeftPanePad.PaddingBottom = UDim.new(0, 10)
+        LeftPanePad.Parent = LeftPane
+
+        local LeftLayout = Instance.new("UIListLayout")
+        LeftLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        LeftLayout.Padding = UDim.new(0, 8)
+        LeftLayout.Parent = LeftPane
+
+        local CooldownBox = Instance.new("Frame")
+        CooldownBox.Name = "CooldownBox"
+        CooldownBox.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
+        CooldownBox.BorderSizePixel = 0
+        CooldownBox.Size = UDim2.new(1, 0, 0, 32)
+        CooldownBox.LayoutOrder = 1
+        CooldownBox.Parent = LeftPane
+
+        local CooldownCorner = Instance.new("UICorner")
+        CooldownCorner.CornerRadius = UDim.new(0, 6)
+        CooldownCorner.Parent = CooldownBox
+
+        local CooldownStroke = Instance.new("UIStroke")
+        CooldownStroke.Color = Color3.fromRGB(36, 36, 36)
+        CooldownStroke.Thickness = 1
+        CooldownStroke.Parent = CooldownBox
+
+        local CooldownLayout = Instance.new("UIListLayout")
+        CooldownLayout.FillDirection = Enum.FillDirection.Horizontal
+        CooldownLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        CooldownLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+        CooldownLayout.Padding = UDim.new(0, 8)
+        CooldownLayout.Parent = CooldownBox
+
+        local CooldownPad = Instance.new("UIPadding")
+        CooldownPad.PaddingLeft = UDim.new(0, 10)
+        CooldownPad.PaddingRight = UDim.new(0, 10)
+        CooldownPad.Parent = CooldownBox
+
+        local CooldownDot = Instance.new("Frame")
+        CooldownDot.Name = "Dot"
+        CooldownDot.BackgroundColor3 = Color3.fromRGB(85, 215, 95)
+        CooldownDot.BorderSizePixel = 0
+        CooldownDot.Size = UDim2.new(0, 8, 0, 8)
+        CooldownDot.LayoutOrder = 1
+        CooldownDot.Parent = CooldownBox
+
+        local CooldownDotCorner = Instance.new("UICorner")
+        CooldownDotCorner.CornerRadius = UDim.new(1, 0)
+        CooldownDotCorner.Parent = CooldownDot
+
+        local CooldownText = Instance.new("TextLabel")
+        CooldownText.Name = "Text"
+        CooldownText.BackgroundTransparency = 1
+        CooldownText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+        CooldownText.Size = UDim2.new(1, -20, 1, 0)
+        CooldownText.Text = "Ready to submit"
+        CooldownText.TextColor3 = Color3.fromRGB(200, 200, 200)
+        CooldownText.TextSize = 12
+        CooldownText.TextXAlignment = Enum.TextXAlignment.Left
+        CooldownText.LayoutOrder = 2
+        CooldownText.Parent = CooldownBox
+
+        local NewReportBtn = Instance.new("TextButton")
+        NewReportBtn.Name = "NewReportBtn"
+        NewReportBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        NewReportBtn.BorderSizePixel = 0
+        NewReportBtn.Size = UDim2.new(1, 0, 0, 32)
+        NewReportBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+        NewReportBtn.Text = "+ New Bug Report"
+        NewReportBtn.TextColor3 = Color3.fromRGB(240, 240, 240)
+        NewReportBtn.TextSize = 12
+        NewReportBtn.AutoButtonColor = false
+        NewReportBtn.LayoutOrder = 2
+        NewReportBtn.Parent = LeftPane
+
+        local NewReportCorner = Instance.new("UICorner")
+        NewReportCorner.CornerRadius = UDim.new(0, 6)
+        NewReportCorner.Parent = NewReportBtn
+
+        local NewReportStroke = Instance.new("UIStroke")
+        NewReportStroke.Color = Color3.fromRGB(48, 48, 48)
+        NewReportStroke.Thickness = 1
+        NewReportStroke.Parent = NewReportBtn
+
+        local LeftDivider = Instance.new("Frame")
+        LeftDivider.Name = "Divider"
+        LeftDivider.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
+        LeftDivider.BorderSizePixel = 0
+        LeftDivider.Size = UDim2.new(1, 0, 0, 1)
+        LeftDivider.LayoutOrder = 3
+        LeftDivider.Parent = LeftPane
+
+        local ReportsHeader = Instance.new("TextLabel")
+        ReportsHeader.Name = "ReportsHeader"
+        ReportsHeader.BackgroundTransparency = 1
+        ReportsHeader.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+        ReportsHeader.Size = UDim2.new(1, 0, 0, 14)
+        ReportsHeader.Text = "MY BUG REPORTS"
+        ReportsHeader.TextColor3 = Color3.fromRGB(110, 110, 110)
+        ReportsHeader.TextSize = 11
+        ReportsHeader.TextXAlignment = Enum.TextXAlignment.Left
+        ReportsHeader.LayoutOrder = 4
+        ReportsHeader.Parent = LeftPane
+
+        local ReportsScroll = Instance.new("ScrollingFrame")
+        ReportsScroll.Name = "ReportsScroll"
+        ReportsScroll.BackgroundTransparency = 1
+        ReportsScroll.BorderSizePixel = 0
+        ReportsScroll.Size = UDim2.new(1, 0, 1, -112)
+        ReportsScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+        ReportsScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
+        ReportsScroll.ScrollBarThickness = 3
+        ReportsScroll.ScrollBarImageColor3 = Color3.fromRGB(60, 60, 60)
+        ReportsScroll.LayoutOrder = 5
+        ReportsScroll.Parent = LeftPane
+
+        local ReportsScrollLayout = Instance.new("UIListLayout")
+        ReportsScrollLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        ReportsScrollLayout.Padding = UDim.new(0, 4)
+        ReportsScrollLayout.Parent = ReportsScroll
+
+        local ColumnDivider = Instance.new("Frame")
+        ColumnDivider.Name = "ColumnDivider"
+        ColumnDivider.BackgroundColor3 = Color3.fromRGB(34, 34, 34)
+        ColumnDivider.BorderSizePixel = 0
+        ColumnDivider.Position = UDim2.new(0, 220, 0, 0)
+        ColumnDivider.Size = UDim2.new(0, 1, 1, 0)
+        ColumnDivider.Parent = TwoColumn
+
+        local RightPane = Instance.new("Frame")
+        RightPane.Name = "RightPane"
+        RightPane.BackgroundTransparency = 1
+        RightPane.Position = UDim2.new(0, 221, 0, 0)
+        RightPane.Size = UDim2.new(1, -221, 1, 0)
+        RightPane.Parent = TwoColumn
+
+        local CreateView = Instance.new("Frame")
+        CreateView.Name = "CreateView"
+        CreateView.BackgroundTransparency = 1
+        CreateView.Size = UDim2.new(1, 0, 1, 0)
+        CreateView.Visible = true
+        CreateView.Parent = RightPane
+
+        local CreateViewPad = Instance.new("UIPadding")
+        CreateViewPad.PaddingLeft = UDim.new(0, 20)
+        CreateViewPad.PaddingRight = UDim.new(0, 20)
+        CreateViewPad.PaddingTop = UDim.new(0, 16)
+        CreateViewPad.PaddingBottom = UDim.new(0, 16)
+        CreateViewPad.Parent = CreateView
+
+        local CreateViewLayout = Instance.new("UIListLayout")
+        CreateViewLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        CreateViewLayout.Padding = UDim.new(0, 12)
+        CreateViewLayout.Parent = CreateView
+
+        local CreateTitle = Instance.new("TextLabel")
+        CreateTitle.Name = "Title"
+        CreateTitle.BackgroundTransparency = 1
+        CreateTitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+        CreateTitle.Size = UDim2.new(1, 0, 0, 22)
+        CreateTitle.Text = "Submit a Bug Report"
+        CreateTitle.TextColor3 = Color3.fromRGB(240, 240, 240)
+        CreateTitle.TextSize = 16
+        CreateTitle.TextXAlignment = Enum.TextXAlignment.Left
+        CreateTitle.LayoutOrder = 1
+        CreateTitle.Parent = CreateView
+
+        local CreateSubtitle = Instance.new("TextLabel")
+        CreateSubtitle.Name = "Subtitle"
+        CreateSubtitle.BackgroundTransparency = 1
+        CreateSubtitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+        CreateSubtitle.Size = UDim2.new(1, 0, 0, 16)
+        CreateSubtitle.Text = "Creates a private channel in our Discord server where you can speak with staff."
+        CreateSubtitle.TextColor3 = Color3.fromRGB(140, 140, 140)
+        CreateSubtitle.TextSize = 12
+        CreateSubtitle.TextXAlignment = Enum.TextXAlignment.Left
+        CreateSubtitle.LayoutOrder = 2
+        CreateSubtitle.Parent = CreateView
+
+        local TitleInputFrame = Instance.new("Frame")
+        TitleInputFrame.Name = "TitleInput"
+        TitleInputFrame.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
+        TitleInputFrame.BorderSizePixel = 0
+        TitleInputFrame.Size = UDim2.new(1, 0, 0, 36)
+        TitleInputFrame.LayoutOrder = 3
+        TitleInputFrame.Parent = CreateView
+
+        local TitleCorner = Instance.new("UICorner")
+        TitleCorner.CornerRadius = UDim.new(0, 6)
+        TitleCorner.Parent = TitleInputFrame
+
+        local TitleStroke = Instance.new("UIStroke")
+        TitleStroke.Color = Color3.fromRGB(42, 42, 42)
+        TitleStroke.Thickness = 1
+        TitleStroke.Parent = TitleInputFrame
+
+        local TitleInputPad = Instance.new("UIPadding")
+        TitleInputPad.PaddingLeft = UDim.new(0, 10)
+        TitleInputPad.PaddingRight = UDim.new(0, 10)
+        TitleInputPad.Parent = TitleInputFrame
+
+        local TitleTextBox = Instance.new("TextBox")
+        TitleTextBox.Name = "Input"
+        TitleTextBox.BackgroundTransparency = 1
+        TitleTextBox.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+        TitleTextBox.Size = UDim2.new(1, 0, 1, 0)
+        TitleTextBox.PlaceholderText = "Report title (e.g. Teleport bug)..."
+        TitleTextBox.PlaceholderColor3 = Color3.fromRGB(100, 100, 100)
+        TitleTextBox.Text = ""
+        TitleTextBox.TextColor3 = Color3.fromRGB(230, 230, 230)
+        TitleTextBox.TextSize = 13
+        TitleTextBox.TextXAlignment = Enum.TextXAlignment.Left
+        TitleTextBox.ClearTextOnFocus = false
+        TitleTextBox.Parent = TitleInputFrame
+
+        local DescInputFrame = Instance.new("Frame")
+        DescInputFrame.Name = "DescInput"
+        DescInputFrame.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
+        DescInputFrame.BorderSizePixel = 0
+        DescInputFrame.Size = UDim2.new(1, 0, 0, 100)
+        DescInputFrame.LayoutOrder = 4
+        DescInputFrame.Parent = CreateView
+
+        local DescCorner = Instance.new("UICorner")
+        DescCorner.CornerRadius = UDim.new(0, 6)
+        DescCorner.Parent = DescInputFrame
+
+        local DescStroke = Instance.new("UIStroke")
+        DescStroke.Color = Color3.fromRGB(42, 42, 42)
+        DescStroke.Thickness = 1
+        DescStroke.Parent = DescInputFrame
+
+        local DescInputPad = Instance.new("UIPadding")
+        DescInputPad.PaddingLeft = UDim.new(0, 10)
+        DescInputPad.PaddingRight = UDim.new(0, 10)
+        DescInputPad.PaddingTop = UDim.new(0, 8)
+        DescInputPad.PaddingBottom = UDim.new(0, 8)
+        DescInputPad.Parent = DescInputFrame
+
+        local DescTextBox = Instance.new("TextBox")
+        DescTextBox.Name = "Input"
+        DescTextBox.BackgroundTransparency = 1
+        DescTextBox.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+        DescTextBox.Size = UDim2.new(1, 0, 1, 0)
+        DescTextBox.MultiLine = true
+        DescTextBox.TextWrapped = true
+        DescTextBox.PlaceholderText = "Describe the bug in detail, what happened, and steps to reproduce..."
+        DescTextBox.PlaceholderColor3 = Color3.fromRGB(100, 100, 100)
+        DescTextBox.Text = ""
+        DescTextBox.TextColor3 = Color3.fromRGB(230, 230, 230)
+        DescTextBox.TextSize = 13
+        DescTextBox.TextXAlignment = Enum.TextXAlignment.Left
+        DescTextBox.TextYAlignment = Enum.TextYAlignment.Top
+        DescTextBox.ClearTextOnFocus = false
+        DescTextBox.Parent = DescInputFrame
+
+        local SubmitBtn = Instance.new("TextButton")
+        SubmitBtn.Name = "SubmitBtn"
+        SubmitBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+        SubmitBtn.BorderSizePixel = 0
+        SubmitBtn.Size = UDim2.new(0, 160, 0, 36)
+        SubmitBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+        SubmitBtn.Text = "Submit Bug Report"
+        SubmitBtn.TextColor3 = Color3.fromRGB(240, 240, 240)
+        SubmitBtn.TextSize = 13
+        SubmitBtn.AutoButtonColor = false
+        SubmitBtn.LayoutOrder = 5
+        SubmitBtn.Parent = CreateView
+
+        local SubmitCorner = Instance.new("UICorner")
+        SubmitCorner.CornerRadius = UDim.new(0, 6)
+        SubmitCorner.Parent = SubmitBtn
+
+        local SubmitStroke = Instance.new("UIStroke")
+        SubmitStroke.Color = Color3.fromRGB(55, 55, 55)
+        SubmitStroke.Thickness = 1
+        SubmitStroke.Parent = SubmitBtn
+
+        local StatusMsg = Instance.new("TextLabel")
+        StatusMsg.Name = "StatusMsg"
+        StatusMsg.BackgroundTransparency = 1
+        StatusMsg.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+        StatusMsg.Size = UDim2.new(1, 0, 0, 20)
+        StatusMsg.Text = ""
+        StatusMsg.TextColor3 = Color3.fromRGB(230, 80, 80)
+        StatusMsg.TextSize = 12
+        StatusMsg.TextXAlignment = Enum.TextXAlignment.Left
+        StatusMsg.LayoutOrder = 6
+        StatusMsg.Parent = CreateView
+
+        local ChatView = Instance.new("Frame")
+        ChatView.Name = "ChatView"
+        ChatView.BackgroundTransparency = 1
+        ChatView.Size = UDim2.new(1, 0, 1, 0)
+        ChatView.Visible = false
+        ChatView.Parent = RightPane
+
+        local ChatHeader = Instance.new("Frame")
+        ChatHeader.Name = "ChatHeader"
+        ChatHeader.BackgroundTransparency = 1
+        ChatHeader.Size = UDim2.new(1, 0, 0, 42)
+        ChatHeader.Parent = ChatView
+
+        local ChatHeaderPad = Instance.new("UIPadding")
+        ChatHeaderPad.PaddingLeft = UDim.new(0, 16)
+        ChatHeaderPad.PaddingRight = UDim.new(0, 16)
+        ChatHeaderPad.Parent = ChatHeader
+
+        local ChatHeaderLayout = Instance.new("UIListLayout")
+        ChatHeaderLayout.FillDirection = Enum.FillDirection.Horizontal
+        ChatHeaderLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+        ChatHeaderLayout.Padding = UDim.new(0, 8)
+        ChatHeaderLayout.Parent = ChatHeader
+
+        local ChatTitle = Instance.new("TextLabel")
+        ChatTitle.Name = "Title"
+        ChatTitle.BackgroundTransparency = 1
+        ChatTitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+        ChatTitle.Size = UDim2.new(1, -90, 1, 0)
+        ChatTitle.Text = "Bug Report"
+        ChatTitle.TextColor3 = Color3.fromRGB(240, 240, 240)
+        ChatTitle.TextSize = 14
+        ChatTitle.TextXAlignment = Enum.TextXAlignment.Left
+        ChatTitle.TextTruncate = Enum.TextTruncate.AtEnd
+        ChatTitle.LayoutOrder = 1
+        ChatTitle.Parent = ChatHeader
+
+        local ChatStatusBadge = Instance.new("TextLabel")
+        ChatStatusBadge.Name = "Status"
+        ChatStatusBadge.BackgroundColor3 = Color3.fromRGB(30, 75, 40)
+        ChatStatusBadge.BorderSizePixel = 0
+        ChatStatusBadge.Size = UDim2.new(0, 0, 0, 20)
+        ChatStatusBadge.AutomaticSize = Enum.AutomaticSize.X
+        ChatStatusBadge.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+        ChatStatusBadge.Text = "OPEN"
+        ChatStatusBadge.TextColor3 = Color3.fromRGB(90, 220, 120)
+        ChatStatusBadge.TextSize = 10
+        ChatStatusBadge.LayoutOrder = 2
+        ChatStatusBadge.Parent = ChatHeader
+
+        local StatusCorner = Instance.new("UICorner")
+        StatusCorner.CornerRadius = UDim.new(0, 4)
+        StatusCorner.Parent = ChatStatusBadge
+
+        local StatusPad = Instance.new("UIPadding")
+        StatusPad.PaddingLeft = UDim.new(0, 6)
+        StatusPad.PaddingRight = UDim.new(0, 6)
+        StatusPad.Parent = ChatStatusBadge
+
+        local ChatDivider = Instance.new("Frame")
+        ChatDivider.Name = "Divider"
+        ChatDivider.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
+        ChatDivider.BorderSizePixel = 0
+        ChatDivider.Position = UDim2.new(0, 0, 0, 42)
+        ChatDivider.Size = UDim2.new(1, 0, 0, 1)
+        ChatDivider.Parent = ChatView
+
+        local MessagesScroll = Instance.new("ScrollingFrame")
+        MessagesScroll.Name = "MessagesScroll"
+        MessagesScroll.BackgroundTransparency = 1
+        MessagesScroll.BorderSizePixel = 0
+        MessagesScroll.Position = UDim2.new(0, 0, 0, 43)
+        MessagesScroll.Size = UDim2.new(1, 0, 1, -95)
+        MessagesScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+        MessagesScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
+        MessagesScroll.ScrollBarThickness = 3
+        MessagesScroll.ScrollBarImageColor3 = Color3.fromRGB(60, 60, 60)
+        MessagesScroll.Parent = ChatView
+
+        local MessagesLayout = Instance.new("UIListLayout")
+        MessagesLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        MessagesLayout.Padding = UDim.new(0, 8)
+        MessagesLayout.Parent = MessagesScroll
+
+        local MessagesPad = Instance.new("UIPadding")
+        MessagesPad.PaddingLeft = UDim.new(0, 14)
+        MessagesPad.PaddingRight = UDim.new(0, 14)
+        MessagesPad.PaddingTop = UDim.new(0, 10)
+        MessagesPad.PaddingBottom = UDim.new(0, 10)
+        MessagesPad.Parent = MessagesScroll
+
+        local ReplyBar = Instance.new("Frame")
+        ReplyBar.Name = "ReplyBar"
+        ReplyBar.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+        ReplyBar.BorderSizePixel = 0
+        ReplyBar.Position = UDim2.new(0, 0, 1, -50)
+        ReplyBar.Size = UDim2.new(1, 0, 0, 50)
+        ReplyBar.Parent = ChatView
+
+        local ReplyDivider = Instance.new("Frame")
+        ReplyDivider.Name = "Divider"
+        ReplyDivider.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
+        ReplyDivider.BorderSizePixel = 0
+        ReplyDivider.Size = UDim2.new(1, 0, 0, 1)
+        ReplyDivider.Parent = ReplyBar
+
+        local ReplyPad = Instance.new("UIPadding")
+        ReplyPad.PaddingLeft = UDim.new(0, 12)
+        ReplyPad.PaddingRight = UDim.new(0, 12)
+        ReplyPad.PaddingTop = UDim.new(0, 8)
+        ReplyPad.PaddingBottom = UDim.new(0, 8)
+        ReplyPad.Parent = ReplyBar
+
+        local ReplyLayout = Instance.new("UIListLayout")
+        ReplyLayout.FillDirection = Enum.FillDirection.Horizontal
+        ReplyLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        ReplyLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+        ReplyLayout.Padding = UDim.new(0, 8)
+        ReplyLayout.Parent = ReplyBar
+
+        local ReplyInputBox = Instance.new("TextBox")
+        ReplyInputBox.Name = "ReplyInput"
+        ReplyInputBox.BackgroundColor3 = Color3.fromRGB(26, 26, 26)
+        ReplyInputBox.BorderSizePixel = 0
+        ReplyInputBox.Size = UDim2.new(1, -70, 0, 34)
+        ReplyInputBox.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+        ReplyInputBox.PlaceholderText = "Reply to Discord staff..."
+        ReplyInputBox.PlaceholderColor3 = Color3.fromRGB(100, 100, 100)
+        ReplyInputBox.Text = ""
+        ReplyInputBox.TextColor3 = Color3.fromRGB(235, 235, 235)
+        ReplyInputBox.TextSize = 13
+        ReplyInputBox.TextXAlignment = Enum.TextXAlignment.Left
+        ReplyInputBox.ClearTextOnFocus = false
+        ReplyInputBox.LayoutOrder = 1
+        ReplyInputBox.Parent = ReplyBar
+
+        local ReplyInputCorner = Instance.new("UICorner")
+        ReplyInputCorner.CornerRadius = UDim.new(0, 6)
+        ReplyInputCorner.Parent = ReplyInputBox
+
+        local ReplyInputStroke = Instance.new("UIStroke")
+        ReplyInputStroke.Color = Color3.fromRGB(42, 42, 42)
+        ReplyInputStroke.Thickness = 1
+        ReplyInputStroke.Parent = ReplyInputBox
+
+        local ReplyInputPad = Instance.new("UIPadding")
+        ReplyInputPad.PaddingLeft = UDim.new(0, 10)
+        ReplyInputPad.PaddingRight = UDim.new(0, 10)
+        ReplyInputPad.Parent = ReplyInputBox
+
+        local SendReplyBtn = Instance.new("TextButton")
+        SendReplyBtn.Name = "SendReplyBtn"
+        SendReplyBtn.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
+        SendReplyBtn.BorderSizePixel = 0
+        SendReplyBtn.Size = UDim2.new(0, 62, 0, 34)
+        SendReplyBtn.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+        SendReplyBtn.Text = "Send"
+        SendReplyBtn.TextColor3 = Color3.fromRGB(240, 240, 240)
+        SendReplyBtn.TextSize = 12
+        SendReplyBtn.AutoButtonColor = false
+        SendReplyBtn.LayoutOrder = 2
+        SendReplyBtn.Parent = ReplyBar
+
+        local SendReplyCorner = Instance.new("UICorner")
+        SendReplyCorner.CornerRadius = UDim.new(0, 6)
+        SendReplyCorner.Parent = SendReplyBtn
+
+        local SendReplyStroke = Instance.new("UIStroke")
+        SendReplyStroke.Color = Color3.fromRGB(52, 52, 52)
+        SendReplyStroke.Thickness = 1
+        SendReplyStroke.Parent = SendReplyBtn
+
+        local ClosedNotice = Instance.new("TextLabel")
+        ClosedNotice.Name = "ClosedNotice"
+        ClosedNotice.BackgroundTransparency = 1
+        ClosedNotice.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+        ClosedNotice.Size = UDim2.new(1, 0, 1, 0)
+        ClosedNotice.Text = "🔒 Ticket closed - replies disabled."
+        ClosedNotice.TextColor3 = Color3.fromRGB(140, 140, 140)
+        ClosedNotice.TextSize = 13
+        ClosedNotice.Visible = false
+        ClosedNotice.Parent = ReplyBar
+
+        local function FormatDate(dt)
+            if not dt then return "" end
+            local s = tostring(dt)
+            if #s >= 10 then
+                return string.sub(s, 1, 10)
             end
-            
-            if string.len(reportText) > 1000 then
-                reportText = string.sub(reportText, 1, 997) .. "..."
-            end
-            
+            return s
+        end
+
+        local function CheckCooldown()
             task.spawn(function()
-                local webhookUrl = "https://discord.com/api/webhooks/1550168548502937781/945Hs1oMt95h5KQ3nh48jCUKzVvlu_CFVDqJ5B-2SkW9VSdmuyk7LCOviF3kFbwgQm6z"
-                
-                local payload = {
-                    embeds = {
-                        {
-                            title = "New Bug Report",
-                            color = 5793266,
-                            fields = {
-                                {
-                                    name = "Bug Report",
-                                    value = reportText,
-                                    inline = false
-                                },
-                                {
-                                    name = "Roblox Username",
-                                    value = robloxDisplayName .. " (@" .. robloxUsername .. ")",
-                                    inline = true
-                                },
-                                {
-                                    name = "Roblox ID",
-                                    value = robloxId,
-                                    inline = true
-                                },
-                                {
-                                    name = "Discord User",
-                                    value = discordUsername,
-                                    inline = true
-                                },
-                                {
-                                    name = "Discord ID",
-                                    value = discordId,
-                                    inline = true
-                                },
-                                {
-                                    name = "Volt ID",
-                                    value = voltId,
-                                    inline = true
-                                }
-                            },
-                            footer = {
-                                text = "Volt UI"
-                            }
-                        }
-                    }
-                }
-                
-                pcall(function()
-                    payload.embeds[1].timestamp = DateTime.now():ToIsoDate()
-                end)
-                
-                if robloxId ~= "Unknown" then
-                    payload.embeds[1].thumbnail = {
-                        url = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. robloxId .. "&width=150&height=150&format=png"
-                    }
-                end
-                
-                local body = HttpService:JSONEncode(payload)
-                local requestFunc = request or http_request or (http and http.request) or (syn and syn.request)
-                
-                if requestFunc then
-                    pcall(requestFunc, {
-                        Url = webhookUrl,
-                        Method = "POST",
-                        Headers = {
-                            ["Content-Type"] = "application/json"
-                        },
-                        Body = body
-                    })
-                end
-            end)
-
-            isSendingBug = false
-            UpdateBugButton()
-            
-            SendNotification({
-                Title = "Bug Report",
-                Content = "Bug report successfully submitted!",
-                Duration = 4,
-                Type = "success"
-            })
-        end))
-    end
-
-    do
-    local BottomSectionWrapper = Instance.new("Frame")
-    BottomSectionWrapper.Name = "BottomSectionWrapper"
-    BottomSectionWrapper.BackgroundTransparency = 1
-    BottomSectionWrapper.Size = UDim2.new(1, 0, 0, 72)
-    BottomSectionWrapper.LayoutOrder = 4
-    BottomSectionWrapper.Parent = Page
-
-    local BottomSectionPadding = Instance.new("UIPadding")
-    BottomSectionPadding.PaddingLeft = UDim.new(0, 8)
-    BottomSectionPadding.PaddingRight = UDim.new(0, 8)
-    BottomSectionPadding.Parent = BottomSectionWrapper
-
-    local BottomLayout = Instance.new("UIListLayout")
-    BottomLayout.FillDirection = Enum.FillDirection.Horizontal
-    BottomLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    BottomLayout.Padding = UDim.new(0, 10)
-    BottomLayout.Parent = BottomSectionWrapper
-
-    local ActionsCard = Instance.new("Frame")
-    ActionsCard.Name = "ActionsCard"
-    ActionsCard.BackgroundColor3 = Color3.new(0.09, 0.09, 0.09)
-    ActionsCard.BorderSizePixel = 0
-    ActionsCard.LayoutOrder = 1
-    ActionsCard.Size = UDim2.new(0.67, -5, 1, 0)
-    ActionsCard.Parent = BottomSectionWrapper
-
-    local ActionsCorner = Instance.new("UICorner")
-    ActionsCorner.CornerRadius = UDim.new(0, 8)
-    ActionsCorner.Parent = ActionsCard
-
-    local ActionsStroke = Instance.new("UIStroke")
-    ActionsStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
-    ActionsStroke.Color = Color3.new(0.149, 0.149, 0.149)
-    ActionsStroke.Parent = ActionsCard
-
-    local ActionsPadding = Instance.new("UIPadding")
-    ActionsPadding.PaddingLeft = UDim.new(0, 10)
-    ActionsPadding.PaddingRight = UDim.new(0, 10)
-    ActionsPadding.PaddingTop = UDim.new(0, 8)
-    ActionsPadding.PaddingBottom = UDim.new(0, 8)
-    ActionsPadding.Parent = ActionsCard
-
-    local ActionsCardLayout = Instance.new("UIListLayout")
-    ActionsCardLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    ActionsCardLayout.Padding = UDim.new(0, 6)
-    ActionsCardLayout.Parent = ActionsCard
-
-    CreateHeader(ActionsCard, "rbxassetid://10734898355", "Quick Actions")
-
-    local ActionButtonsRow = Instance.new("Frame")
-    ActionButtonsRow.Name = "ButtonsRow"
-    ActionButtonsRow.BackgroundTransparency = 1
-    ActionButtonsRow.LayoutOrder = 2
-    ActionButtonsRow.Size = UDim2.new(1, 0, 1, -24)
-    ActionButtonsRow.Parent = ActionsCard
-
-    local ActionRowLayout = Instance.new("UIListLayout")
-    ActionRowLayout.FillDirection = Enum.FillDirection.Horizontal
-    ActionRowLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    ActionRowLayout.Padding = UDim.new(0, 6)
-    ActionRowLayout.Parent = ActionButtonsRow
-
-    local function CreateActionButton(parent, text, iconId, order, callback, btnWidth)
-        local btn = Instance.new("TextButton")
-        btn.Name = text .. "Btn"
-        btn.BackgroundColor3 = Color3.fromRGB(26, 26, 26)
-        btn.BorderSizePixel = 0
-        btn.LayoutOrder = order
-        btn.Size = btnWidth or UDim2.new(0.25, -5, 1, 0)
-        btn.Text = ""
-        btn.AutoButtonColor = false
-        btn.Parent = parent
-
-        local btnCorner = Instance.new("UICorner")
-        btnCorner.CornerRadius = UDim.new(0, 5)
-        btnCorner.Parent = btn
-
-        local btnStroke = Instance.new("UIStroke")
-        btnStroke.Color = Color3.fromRGB(44, 44, 44)
-        btnStroke.Thickness = 1
-        btnStroke.Parent = btn
-
-        local bLayout = Instance.new("UIListLayout")
-        bLayout.FillDirection = Enum.FillDirection.Horizontal
-        bLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-        bLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-        bLayout.SortOrder = Enum.SortOrder.LayoutOrder
-        bLayout.Padding = UDim.new(0, 4)
-        bLayout.Parent = btn
-
-        if iconId and iconId ~= "" then
-            local icon = Instance.new("ImageLabel")
-            icon.Name = "Icon"
-            icon.BackgroundTransparency = 1
-            icon.Size = UDim2.new(0, 12, 0, 12)
-            icon.Image = iconId
-            icon.ImageColor3 = Color3.fromRGB(180, 180, 180)
-            icon.LayoutOrder = 1
-            icon.Parent = btn
-        end
-
-        local lbl = Instance.new("TextLabel")
-        lbl.Name = "Label"
-        lbl.BackgroundTransparency = 1
-        lbl.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
-        lbl.Size = UDim2.new(0, 0, 1, 0)
-        lbl.AutomaticSize = Enum.AutomaticSize.X
-        lbl.Text = text
-        lbl.TextColor3 = Color3.fromRGB(180, 180, 180)
-        lbl.TextSize = 10
-        lbl.LayoutOrder = 2
-        lbl.Parent = btn
-
-        Maid:GiveTask(btn.MouseEnter:Connect(function()
-            Tween(btn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(36, 36, 36)})
-            Tween(lbl, TweenInfo.new(0.2), {TextColor3 = Color3.new(1, 1, 1)})
-            local icon = btn:FindFirstChild("Icon")
-            if icon then
-                Tween(icon, TweenInfo.new(0.2), {ImageColor3 = Color3.new(1, 1, 1)})
-            end
-        end))
-
-        Maid:GiveTask(btn.MouseLeave:Connect(function()
-            Tween(btn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(26, 26, 26)})
-            Tween(lbl, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(180, 180, 180)})
-            local icon = btn:FindFirstChild("Icon")
-            if icon then
-                Tween(icon, TweenInfo.new(0.2), {ImageColor3 = Color3.fromRGB(180, 180, 180)})
-            end
-        end))
-
-        Maid:GiveTask(btn.MouseButton1Click:Connect(function()
-            callback()
-        end))
-
-        return btn
-    end
-
-    CreateActionButton(ActionButtonsRow, "Server Hop", "rbxassetid://10734940376", 1, function()
-        SendNotification({
-            Title = "Server Hop",
-            Content = "Searching for a new server...",
-            Duration = 3,
-            Type = "info"
-        })
-        task.spawn(function()
-            local success = pcall(function()
-                local placeId = game.PlaceId
-                local currentJobId = game.JobId
-                local req = request or http_request or (http and http.request) or (syn and syn.request)
-                local url = "https://games.roblox.com/v1/games/" .. tostring(placeId) .. "/servers/Public?sortOrder=Asc&limit=100"
-                local body = nil
-                if req then
-                    local res = req({Url = url, Method = "GET"})
-                    if res and res.Body then body = res.Body end
-                elseif game and game.HttpGet then
-                    body = game:HttpGet(url)
-                end
-
-                local foundServer = nil
-                if body then
-                    local data = HttpService:JSONDecode(body)
-                    if data and data.data then
-                        for _, s in ipairs(data.data) do
-                            if s.id ~= currentJobId and type(s.playing) == "number" and s.playing < (s.maxPlayers or 100) and s.playing > 0 then
-                                foundServer = s.id
-                                break
-                            end
+                if Api and Api.Request then
+                    local res = Api.Request("/tickets/cooldown?robloxId=" .. robloxId, "GET")
+                    if res and res.canSubmit ~= nil then
+                        if res.canSubmit then
+                            cooldownSeconds = 0
+                            CooldownDot.BackgroundColor3 = Color3.fromRGB(85, 215, 95)
+                            CooldownText.Text = "Ready to submit"
+                            CooldownText.TextColor3 = Color3.fromRGB(200, 200, 200)
+                        else
+                            cooldownSeconds = tonumber(res.cooldownSeconds) or 0
+                            CooldownDot.BackgroundColor3 = Color3.fromRGB(230, 150, 40)
+                            local mins = math.floor(cooldownSeconds / 60)
+                            local secs = cooldownSeconds % 60
+                            CooldownText.Text = string.format("Cooldown: %02d:%02d", mins, secs)
+                            CooldownText.TextColor3 = Color3.fromRGB(230, 150, 40)
                         end
                     end
                 end
-
-                if foundServer then
-                    TeleportService:TeleportToPlaceInstance(placeId, foundServer, Players.LocalPlayer)
-                else
-                    TeleportService:Teleport(placeId, Players.LocalPlayer)
-                end
             end)
-            if not success then
-                pcall(function()
-                    TeleportService:Teleport(game.PlaceId, Players.LocalPlayer)
-                end)
-            end
-        end)
-    end, UDim2.new(0, 85, 1, 0))
-
-    CreateActionButton(ActionButtonsRow, "Copy ID", "rbxassetid://114921354911544", 2, function()
-        local jobId = tostring(game.JobId)
-        local setclip = setclipboard or toclipboard or (Clipboard and Clipboard.set)
-        if setclip then
-            pcall(setclip, jobId)
         end
-        SendNotification({
-            Title = "JobId Copied",
-            Content = "Server JobId copied to clipboard!",
-            Duration = 3,
-            Type = "success"
-        })
-    end, UDim2.new(0, 85, 1, 0))
 
-    local JoinInputWrapper = Instance.new("Frame")
-    JoinInputWrapper.Name = "JoinInputWrapper"
-    JoinInputWrapper.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-    JoinInputWrapper.BorderSizePixel = 0
-    JoinInputWrapper.LayoutOrder = 3
-    JoinInputWrapper.Size = UDim2.new(1, -182, 1, 0)
-    JoinInputWrapper.Parent = ActionButtonsRow
+        local RenderChatMessages = nil
+        local LoadTicket = nil
 
-    local JoinCorner = Instance.new("UICorner")
-    JoinCorner.CornerRadius = UDim.new(0, 5)
-    JoinCorner.Parent = JoinInputWrapper
+        local function RenderTicketsList()
+            for _, c in ipairs(ReportsScroll:GetChildren()) do
+                if c:IsA("GuiObject") and c.Name ~= "UIListLayout" then
+                    c:Destroy()
+                end
+            end
 
-    local JoinStroke = Instance.new("UIStroke")
-    JoinStroke.Color = Color3.fromRGB(44, 44, 44)
-    JoinStroke.Thickness = 1
-    JoinStroke.Parent = JoinInputWrapper
+            for i, t in ipairs(ticketsList) do
+                local item = Instance.new("TextButton")
+                item.Name = "Ticket_" .. tostring(t.ticketId)
+                item.BackgroundColor3 = (t.ticketId == activeTicketId) and Color3.fromRGB(30, 30, 30) or Color3.fromRGB(22, 22, 22)
+                item.BorderSizePixel = 0
+                item.Size = UDim2.new(1, 0, 0, 48)
+                item.Text = ""
+                item.AutoButtonColor = false
+                item.LayoutOrder = i
+                item.Parent = ReportsScroll
 
-    local JoinTextBox = Instance.new("TextBox")
-    JoinTextBox.Name = "JobIdInput"
-    JoinTextBox.BackgroundTransparency = 1
-    JoinTextBox.Position = UDim2.new(0, 8, 0, 0)
-    JoinTextBox.Size = UDim2.new(1, -34, 1, 0)
-    JoinTextBox.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
-    JoinTextBox.PlaceholderText = "Paste JobId..."
-    JoinTextBox.PlaceholderColor3 = Color3.fromRGB(110, 110, 110)
-    JoinTextBox.Text = ""
-    JoinTextBox.TextColor3 = Color3.new(0.9, 0.9, 0.9)
-    JoinTextBox.TextSize = 10
-    JoinTextBox.TextXAlignment = Enum.TextXAlignment.Left
-    JoinTextBox.TextTruncate = Enum.TextTruncate.AtEnd
-    JoinTextBox.ClearTextOnFocus = false
-    JoinTextBox.Parent = JoinInputWrapper
+                local itemCorner = Instance.new("UICorner")
+                itemCorner.CornerRadius = UDim.new(0, 6)
+                itemCorner.Parent = item
 
-    local JoinBtn = Instance.new("TextButton")
-    JoinBtn.Name = "JoinBtn"
-    JoinBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-    JoinBtn.BorderSizePixel = 0
-    JoinBtn.Position = UDim2.new(1, -25, 0.5, -11)
-    JoinBtn.Size = UDim2.new(0, 22, 0, 22)
-    JoinBtn.Text = ""
-    JoinBtn.AutoButtonColor = false
-    JoinBtn.Parent = JoinInputWrapper
+                local itemStroke = Instance.new("UIStroke")
+                itemStroke.Color = (t.ticketId == activeTicketId) and Color3.fromRGB(60, 60, 60) or Color3.fromRGB(34, 34, 34)
+                itemStroke.Thickness = 1
+                itemStroke.Parent = item
 
-    local JoinBtnCorner = Instance.new("UICorner")
-    JoinBtnCorner.CornerRadius = UDim.new(0, 4)
-    JoinBtnCorner.Parent = JoinBtn
+                local itemPad = Instance.new("UIPadding")
+                itemPad.PaddingLeft = UDim.new(0, 8)
+                itemPad.PaddingRight = UDim.new(0, 8)
+                itemPad.PaddingTop = UDim.new(0, 6)
+                itemPad.PaddingBottom = UDim.new(0, 6)
+                itemPad.Parent = item
 
-    local JoinBtnStroke = Instance.new("UIStroke")
-    JoinBtnStroke.Color = Color3.fromRGB(50, 50, 50)
-    JoinBtnStroke.Thickness = 1
-    JoinBtnStroke.Parent = JoinBtn
+                local itemLayout = Instance.new("UIListLayout")
+                itemLayout.SortOrder = Enum.SortOrder.LayoutOrder
+                itemLayout.Padding = UDim.new(0, 2)
+                itemLayout.Parent = item
 
-    local JoinIcon = Instance.new("ImageLabel")
-    JoinIcon.Name = "Icon"
-    JoinIcon.AnchorPoint = Vector2.new(0.5, 0.5)
-    JoinIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
-    JoinIcon.Size = UDim2.new(0, 13, 0, 13)
-    JoinIcon.BackgroundTransparency = 1
-    JoinIcon.Image = "rbxassetid://99665318200799"
-    JoinIcon.ImageColor3 = Color3.fromRGB(200, 200, 200)
-    JoinIcon.Parent = JoinBtn
+                local rowTop = Instance.new("Frame")
+                rowTop.Name = "RowTop"
+                rowTop.BackgroundTransparency = 1
+                rowTop.Size = UDim2.new(1, 0, 0, 18)
+                rowTop.LayoutOrder = 1
+                rowTop.Parent = item
 
-    Maid:GiveTask(JoinBtn.MouseEnter:Connect(function()
-        Tween(JoinBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(48, 48, 48)})
-        Tween(JoinIcon, TweenInfo.new(0.2), {ImageColor3 = Color3.new(1, 1, 1)})
-    end))
+                local rowTopLayout = Instance.new("UIListLayout")
+                rowTopLayout.FillDirection = Enum.FillDirection.Horizontal
+                rowTopLayout.SortOrder = Enum.SortOrder.LayoutOrder
+                rowTopLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+                rowTopLayout.Parent = rowTop
 
-    Maid:GiveTask(JoinBtn.MouseLeave:Connect(function()
-        Tween(JoinBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(30, 30, 30)})
-        Tween(JoinIcon, TweenInfo.new(0.2), {ImageColor3 = Color3.fromRGB(200, 200, 200)})
-    end))
+                local tTitle = Instance.new("TextLabel")
+                tTitle.Name = "Title"
+                tTitle.BackgroundTransparency = 1
+                tTitle.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+                tTitle.Size = UDim2.new(1, -48, 1, 0)
+                tTitle.Text = t.title or "Ticket"
+                tTitle.TextColor3 = Color3.fromRGB(235, 235, 235)
+                tTitle.TextSize = 12
+                tTitle.TextXAlignment = Enum.TextXAlignment.Left
+                tTitle.TextTruncate = Enum.TextTruncate.AtEnd
+                tTitle.LayoutOrder = 1
+                tTitle.Parent = rowTop
 
-    local function executeJoin()
-        local targetId = string.gsub(JoinTextBox.Text, "%s+", "")
-        if targetId == "" then
-            pcall(function()
-                local getclip = getclipboard or toclipboard or (Clipboard and Clipboard.get)
-                if getclip then
-                    local cb = getclip()
-                    if cb and typeof(cb) == "string" and #cb > 5 then
-                        targetId = string.gsub(cb, "%s+", "")
-                        JoinTextBox.Text = targetId
+                local badge = Instance.new("TextLabel")
+                badge.Name = "Badge"
+                badge.BackgroundColor3 = (t.status == "open") and Color3.fromRGB(25, 70, 35) or Color3.fromRGB(40, 40, 40)
+                badge.BorderSizePixel = 0
+                badge.Size = UDim2.new(0, 44, 0, 16)
+                badge.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+                badge.Text = (t.status == "open") and "OPEN" or "CLOSED"
+                badge.TextColor3 = (t.status == "open") and Color3.fromRGB(85, 220, 110) or Color3.fromRGB(150, 150, 150)
+                badge.TextSize = 9
+                badge.LayoutOrder = 2
+                badge.Parent = rowTop
+
+                local badgeCorn = Instance.new("UICorner")
+                badgeCorn.CornerRadius = UDim.new(0, 3)
+                badgeCorn.Parent = badge
+
+                local dateLabel = Instance.new("TextLabel")
+                dateLabel.Name = "Date"
+                dateLabel.BackgroundTransparency = 1
+                dateLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+                dateLabel.Size = UDim2.new(1, 0, 0, 14)
+                dateLabel.Text = FormatDate(t.createdAt)
+                dateLabel.TextColor3 = Color3.fromRGB(120, 120, 120)
+                dateLabel.TextSize = 10
+                dateLabel.TextXAlignment = Enum.TextXAlignment.Left
+                dateLabel.LayoutOrder = 2
+                dateLabel.Parent = item
+
+                Maid:GiveTask(item.MouseButton1Click:Connect(function()
+                    LoadTicket(t.ticketId)
+                end))
+            end
+        end
+
+        local function FetchTickets()
+            task.spawn(function()
+                if Api and Api.Request then
+                    local res = Api.Request("/tickets?robloxId=" .. robloxId, "GET")
+                    if res and res.success and res.tickets then
+                        ticketsList = res.tickets
+                        RenderTicketsList()
                     end
                 end
             end)
         end
 
-        if targetId == "" then
-            SendNotification({
-                Title = "Join Server",
-                Content = "Please enter or paste a valid JobId!",
-                Duration = 3,
-                Type = "error"
-            })
-            return
-        end
+        RenderChatMessages = function(messages, status)
+            for _, c in ipairs(MessagesScroll:GetChildren()) do
+                if c:IsA("GuiObject") and c.Name ~= "UIListLayout" and c.Name ~= "UIPadding" then
+                    c:Destroy()
+                end
+            end
 
-        if targetId == tostring(game.JobId) then
-            SendNotification({
-                Title = "Join Server",
-                Content = "You are already in this server!",
-                Duration = 3,
-                Type = "error"
-            })
-            return
-        end
+            for i, m in ipairs(messages or {}) do
+                local isUser = (m.sender == "user")
+                local isSystem = (m.sender == "system")
 
-        SendNotification({
-            Title = "Joining Server",
-            Content = "Connecting to server instance...",
-            Duration = 3,
-            Type = "info"
-        })
+                local msgFrame = Instance.new("Frame")
+                msgFrame.Name = "Msg_" .. tostring(i)
+                msgFrame.BackgroundTransparency = 1
+                msgFrame.Size = UDim2.new(1, 0, 0, 0)
+                msgFrame.AutomaticSize = Enum.AutomaticSize.Y
+                msgFrame.LayoutOrder = i
+                msgFrame.Parent = MessagesScroll
 
-        task.spawn(function()
-            local success = pcall(function()
-                TeleportService:TeleportToPlaceInstance(game.PlaceId, targetId, Players.LocalPlayer)
+                local msgLayout = Instance.new("UIListLayout")
+                msgLayout.SortOrder = Enum.SortOrder.LayoutOrder
+                msgLayout.HorizontalAlignment = isSystem and Enum.HorizontalAlignment.Center or (isUser and Enum.HorizontalAlignment.Right or Enum.HorizontalAlignment.Left)
+                msgLayout.Padding = UDim.new(0, 2)
+                msgLayout.Parent = msgFrame
+
+                if not isSystem then
+                    local authorLabel = Instance.new("TextLabel")
+                    authorLabel.Name = "Author"
+                    authorLabel.BackgroundTransparency = 1
+                    authorLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+                    authorLabel.Size = UDim2.new(0, 0, 0, 14)
+                    authorLabel.AutomaticSize = Enum.AutomaticSize.X
+                    authorLabel.Text = isUser and "You" or (tostring(m.authorName or "Support") .. " [Staff]")
+                    authorLabel.TextColor3 = isUser and Color3.fromRGB(150, 150, 150) or Color3.fromRGB(100, 160, 240)
+                    authorLabel.TextSize = 11
+                    authorLabel.Parent = msgFrame
+                end
+
+                local bubble = Instance.new("Frame")
+                bubble.Name = "Bubble"
+                bubble.BackgroundColor3 = isSystem and Color3.fromRGB(24, 24, 24) or (isUser and Color3.fromRGB(36, 48, 72) or Color3.fromRGB(28, 28, 30))
+                bubble.BorderSizePixel = 0
+                bubble.Size = UDim2.new(0, 0, 0, 0)
+                bubble.AutomaticSize = Enum.AutomaticSize.XY
+                bubble.Parent = msgFrame
+
+                local bubbleCorner = Instance.new("UICorner")
+                bubbleCorner.CornerRadius = UDim.new(0, 8)
+                bubbleCorner.Parent = bubble
+
+                local bubbleStroke = Instance.new("UIStroke")
+                bubbleStroke.Color = isSystem and Color3.fromRGB(34, 34, 34) or (isUser and Color3.fromRGB(50, 68, 100) or Color3.fromRGB(44, 44, 48))
+                bubbleStroke.Thickness = 1
+                bubbleStroke.Parent = bubble
+
+                local bubblePad = Instance.new("UIPadding")
+                bubblePad.PaddingLeft = UDim.new(0, 10)
+                bubblePad.PaddingRight = UDim.new(0, 10)
+                bubblePad.PaddingTop = UDim.new(0, 7)
+                bubblePad.PaddingBottom = UDim.new(0, 7)
+                bubblePad.Parent = bubble
+
+                local msgText = Instance.new("TextLabel")
+                msgText.Name = "Text"
+                msgText.BackgroundTransparency = 1
+                msgText.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+                msgText.Size = UDim2.new(0, 0, 0, 0)
+                msgText.AutomaticSize = Enum.AutomaticSize.XY
+                msgText.Text = tostring(m.text or "")
+                msgText.TextColor3 = isSystem and Color3.fromRGB(140, 140, 140) or Color3.fromRGB(240, 240, 240)
+                msgText.TextSize = 13
+                msgText.TextWrapped = true
+                msgText.Parent = bubble
+
+                local sizeConstraint = Instance.new("UISizeConstraint")
+                sizeConstraint.MaxSize = Vector2.new(340, math.huge)
+                sizeConstraint.Parent = msgText
+            end
+
+            task.delay(0.05, function()
+                if MessagesScroll and MessagesScroll.Parent then
+                    MessagesScroll.CanvasPosition = Vector2.new(0, 999999)
+                end
             end)
-            if not success then
-                SendNotification({
-                    Title = "Join Failed",
-                    Content = "Could not connect to that server instance.",
-                    Duration = 4,
-                    Type = "error"
-                })
-            end
-        end)
-    end
-
-    Maid:GiveTask(JoinBtn.MouseButton1Click:Connect(executeJoin))
-    Maid:GiveTask(JoinTextBox.FocusLost:Connect(function(enterPressed)
-        if enterPressed then
-            executeJoin()
-        end
-    end))
-
-    local CommunityCard = Instance.new("Frame")
-    CommunityCard.Name = "CommunityCard"
-    CommunityCard.BackgroundColor3 = Color3.new(0.09, 0.09, 0.09)
-    CommunityCard.BorderSizePixel = 0
-    CommunityCard.LayoutOrder = 2
-    CommunityCard.Size = UDim2.new(0.33, -5, 1, 0)
-    CommunityCard.Parent = BottomSectionWrapper
-
-    local CommunityCorner = Instance.new("UICorner")
-    CommunityCorner.CornerRadius = UDim.new(0, 8)
-    CommunityCorner.Parent = CommunityCard
-
-    local CommunityStroke = Instance.new("UIStroke")
-    CommunityStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
-    CommunityStroke.Color = Color3.new(0.149, 0.149, 0.149)
-    CommunityStroke.Parent = CommunityCard
-
-    local CommunityPadding = Instance.new("UIPadding")
-    CommunityPadding.PaddingLeft = UDim.new(0, 12)
-    CommunityPadding.PaddingRight = UDim.new(0, 12)
-    CommunityPadding.PaddingTop = UDim.new(0, 8)
-    CommunityPadding.PaddingBottom = UDim.new(0, 8)
-    CommunityPadding.Parent = CommunityCard
-
-    local CommunityCardLayout = Instance.new("UIListLayout")
-    CommunityCardLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    CommunityCardLayout.Padding = UDim.new(0, 6)
-    CommunityCardLayout.Parent = CommunityCard
-
-    CreateHeader(CommunityCard, "rbxassetid://10747373176", "Community")
-
-    local CommunityButtonsRow = Instance.new("Frame")
-    CommunityButtonsRow.Name = "ButtonsRow"
-    CommunityButtonsRow.BackgroundTransparency = 1
-    CommunityButtonsRow.LayoutOrder = 2
-    CommunityButtonsRow.Size = UDim2.new(1, 0, 1, -24)
-    CommunityButtonsRow.Parent = CommunityCard
-
-    local CommRowLayout = Instance.new("UIListLayout")
-    CommRowLayout.FillDirection = Enum.FillDirection.Horizontal
-    CommRowLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    CommRowLayout.Padding = UDim.new(0, 6)
-    CommRowLayout.Parent = CommunityButtonsRow
-
-    local function CreateCommunityButton(parent, text, iconId, order, callback)
-        local btn = Instance.new("TextButton")
-        btn.Name = text .. "Btn"
-        btn.BackgroundColor3 = Color3.fromRGB(26, 26, 26)
-        btn.BorderSizePixel = 0
-        btn.LayoutOrder = order
-        btn.Size = UDim2.new(0.5, -3, 1, 0)
-        btn.Text = ""
-        btn.AutoButtonColor = false
-        btn.Parent = parent
-
-        local btnCorner = Instance.new("UICorner")
-        btnCorner.CornerRadius = UDim.new(0, 5)
-        btnCorner.Parent = btn
-
-        local btnStroke = Instance.new("UIStroke")
-        btnStroke.Color = Color3.fromRGB(44, 44, 44)
-        btnStroke.Thickness = 1
-        btnStroke.Parent = btn
-
-        local bLayout = Instance.new("UIListLayout")
-        bLayout.FillDirection = Enum.FillDirection.Horizontal
-        bLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-        bLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-        bLayout.SortOrder = Enum.SortOrder.LayoutOrder
-        bLayout.Padding = UDim.new(0, 5)
-        bLayout.Parent = btn
-
-        if iconId and iconId ~= "" then
-            local icon = Instance.new("ImageLabel")
-            icon.Name = "Icon"
-            icon.BackgroundTransparency = 1
-            icon.Size = UDim2.new(0, 13, 0, 13)
-            icon.Image = iconId
-            icon.ImageColor3 = Color3.fromRGB(180, 180, 180)
-            icon.LayoutOrder = 1
-            icon.Parent = btn
         end
 
-        local lbl = Instance.new("TextLabel")
-        lbl.Name = "Label"
-        lbl.BackgroundTransparency = 1
-        lbl.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal)
-        lbl.Size = UDim2.new(0, 0, 1, 0)
-        lbl.AutomaticSize = Enum.AutomaticSize.X
-        lbl.Text = text
-        lbl.TextColor3 = Color3.fromRGB(180, 180, 180)
-        lbl.TextSize = 11
-        lbl.LayoutOrder = 2
-        lbl.Parent = btn
+        LoadTicket = function(ticketId)
+            activeTicketId = ticketId
+            RenderTicketsList()
+            CreateView.Visible = false
+            ChatView.Visible = true
 
-        Maid:GiveTask(btn.MouseEnter:Connect(function()
-            Tween(btn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(36, 36, 36)})
-            Tween(lbl, TweenInfo.new(0.2), {TextColor3 = Color3.new(1, 1, 1)})
-            local icon = btn:FindFirstChild("Icon")
-            if icon then
-                Tween(icon, TweenInfo.new(0.2), {ImageColor3 = Color3.new(1, 1, 1)})
+            task.spawn(function()
+                if Api and Api.Request then
+                    local res = Api.Request("/tickets/" .. tostring(ticketId) .. "/messages", "GET")
+                    if res and res.success then
+                        ChatTitle.Text = res.title or "Ticket"
+                        local isClosed = (res.status == "closed")
+                        ChatStatusBadge.Text = isClosed and "CLOSED" or "OPEN"
+                        ChatStatusBadge.BackgroundColor3 = isClosed and Color3.fromRGB(40, 40, 40) or Color3.fromRGB(25, 70, 35)
+                        ChatStatusBadge.TextColor3 = isClosed and Color3.fromRGB(150, 150, 150) or Color3.fromRGB(85, 220, 110)
+
+                        ReplyInputBox.Visible = not isClosed
+                        SendReplyBtn.Visible = not isClosed
+                        ClosedNotice.Visible = isClosed
+
+                        RenderChatMessages(res.messages, res.status)
+                    end
+                end
+            end)
+        end
+
+        local function RefreshTicketMessages()
+            if not activeTicketId or not isModalOpen then return end
+            task.spawn(function()
+                if Api and Api.Request then
+                    local res = Api.Request("/tickets/" .. tostring(activeTicketId) .. "/messages", "GET")
+                    if res and res.success then
+                        local isClosed = (res.status == "closed")
+                        ChatStatusBadge.Text = isClosed and "CLOSED" or "OPEN"
+                        ChatStatusBadge.BackgroundColor3 = isClosed and Color3.fromRGB(40, 40, 40) or Color3.fromRGB(25, 70, 35)
+                        ChatStatusBadge.TextColor3 = isClosed and Color3.fromRGB(150, 150, 150) or Color3.fromRGB(85, 220, 110)
+
+                        ReplyInputBox.Visible = not isClosed
+                        SendReplyBtn.Visible = not isClosed
+                        ClosedNotice.Visible = isClosed
+
+                        RenderChatMessages(res.messages, res.status)
+                    end
+                end
+            end)
+        end
+
+        local function SendReply()
+            local text = ReplyInputBox.Text
+            if not text or string.gsub(text, "%s+", "") == "" then return end
+            if not activeTicketId then return end
+
+            ReplyInputBox.Text = ""
+            task.spawn(function()
+                if Api and Api.Request then
+                    local res = Api.Request("/tickets/" .. tostring(activeTicketId) .. "/messages", "POST", {
+                        text = text,
+                        authorName = robloxUsername
+                    })
+                    if res and res.success then
+                        RefreshTicketMessages()
+                    else
+                        SendNotification({ Title = "Error", Content = (res and res.error) or "Failed to send reply.", Type = "Error", Duration = 3 })
+                    end
+                end
+            end)
+        end
+
+        Maid:GiveTask(SendReplyBtn.MouseButton1Click:Connect(SendReply))
+        Maid:GiveTask(ReplyInputBox.FocusLost:Connect(function(enterPressed)
+            if enterPressed then
+                SendReply()
             end
         end))
 
-        Maid:GiveTask(btn.MouseLeave:Connect(function()
-            Tween(btn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(26, 26, 26)})
-            Tween(lbl, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(180, 180, 180)})
-            local icon = btn:FindFirstChild("Icon")
-            if icon then
-                Tween(icon, TweenInfo.new(0.2), {ImageColor3 = Color3.fromRGB(180, 180, 180)})
+        Maid:GiveTask(NewReportBtn.MouseButton1Click:Connect(function()
+            activeTicketId = nil
+            RenderTicketsList()
+            ChatView.Visible = false
+            CreateView.Visible = true
+            TitleTextBox.Text = ""
+            DescTextBox.Text = ""
+            StatusMsg.Text = ""
+            CheckCooldown()
+        end))
+
+        local function SubmitTicket()
+            local title = TitleTextBox.Text
+            local desc = DescTextBox.Text
+            if not title or string.gsub(title, "%s+", "") == "" then
+                StatusMsg.Text = "Please enter a report title."
+                StatusMsg.TextColor3 = Color3.fromRGB(230, 80, 80)
+                return
+            end
+
+            SubmitBtn.Text = "Submitting..."
+            task.spawn(function()
+                if Api and Api.Request then
+                    local res = Api.Request("/tickets", "POST", {
+                        title = title,
+                        description = desc,
+                        robloxId = robloxId,
+                        robloxUsername = robloxUsername,
+                        hwid = hwid,
+                        username = (Api and Api.UserData and Api.UserData.username) or robloxUsername
+                    })
+
+                    SubmitBtn.Text = "Submit Bug Report"
+                    if res and res.success and res.ticket then
+                        TitleTextBox.Text = ""
+                        DescTextBox.Text = ""
+                        StatusMsg.Text = ""
+                        SendNotification({ Title = "Report Created", Content = "Discord ticket channel opened! Staff notified.", Duration = 4 })
+                        CheckCooldown()
+                        FetchTickets()
+                        LoadTicket(res.ticket.ticketId)
+                    else
+                        local err = (res and (res.message or res.error)) or "Failed to submit report."
+                        StatusMsg.Text = err
+                        StatusMsg.TextColor3 = Color3.fromRGB(230, 80, 80)
+                    end
+                end
+            end)
+        end
+
+        Maid:GiveTask(SubmitBtn.MouseButton1Click:Connect(SubmitTicket))
+
+        OpenTicketModal = function()
+            isModalOpen = true
+            TicketModal.Visible = true
+            TicketModal.GroupTransparency = 1
+            Tween(TicketModal, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {GroupTransparency = 0})
+            CheckCooldown()
+            FetchTickets()
+
+            task.spawn(function()
+                while isModalOpen and Page and Page.Parent do
+                    task.wait(3)
+                    if isModalOpen and activeTicketId then
+                        RefreshTicketMessages()
+                    end
+                end
+            end)
+        end
+
+        local function CloseTicketModal()
+            isModalOpen = false
+            activeTicketId = nil
+            Tween(TicketModal, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {GroupTransparency = 1})
+            task.delay(0.18, function()
+                if not isModalOpen then
+                    TicketModal.Visible = false
+                end
+            end)
+        end
+
+        Maid:GiveTask(BackBtn.MouseButton1Click:Connect(CloseTicketModal))
+
+        Maid:GiveTask(Page:GetPropertyChangedSignal("Visible"):Connect(function()
+            if not Page.Visible and isModalOpen then
+                CloseTicketModal()
             end
         end))
-
-        Maid:GiveTask(btn.MouseButton1Click:Connect(function()
-            callback()
-        end))
-
-        return btn
-    end
-
-    CreateCommunityButton(CommunityButtonsRow, "Discord", "rbxassetid://10747373176", 1, function()
-        local link = "https://discord.gg/xRkepZnK2c"
-        local setclip = setclipboard or toclipboard or (Clipboard and Clipboard.set)
-        if setclip then
-            pcall(setclip, link)
-        end
-        SendNotification({
-            Title = "Discord",
-            Content = "Discord invite copied to clipboard!",
-            Duration = 3,
-            Type = "success"
-        })
-    end)
-
-    CreateCommunityButton(CommunityButtonsRow, "Support", "rbxassetid://10723415766", 2, function()
-        local link = "https://discord.gg/xRkepZnK2c"
-        local setclip = setclipboard or toclipboard or (Clipboard and Clipboard.set)
-        if setclip then
-            pcall(setclip, link)
-        end
-        SendNotification({
-            Title = "Support",
-            Content = "Support link copied to clipboard!",
-            Duration = 3,
-            Type = "success"
-        })
-    end)
     end
 
     return {
         Instance = Page,
         Topbar = Topbar,
         Notifications = NotificationsPopover,
-        Profile = ProfilePopover,
-        PlayersScroll = PlayersScroll,
-        ClaimedScroll = ClaimedScroll,
-        BugTextBox = BugTextBox,
-        SendBtn = SendBtn
+        Profile = ProfilePopover
     }
 end
 

@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
     res.type('json').send(JSON.stringify({ message: "Volt API is running" }));
 });
 
-let packageVersion = "1.1.15";
+let packageVersion = "1.1.16";
 try {
     packageVersion = require('./package.json').version || "1.1.10";
 } catch (e) {}
@@ -146,6 +146,7 @@ app.use('/api/auth/reset-password', authLimiter);
 
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/user', require('./routes/user'));
+app.use('/api/tickets', require('./routes/tickets'));
 
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/voltui')
     .then(() => console.log('Connected to MongoDB'))
