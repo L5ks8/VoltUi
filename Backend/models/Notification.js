@@ -24,6 +24,14 @@ const notificationSchema = new mongoose.Schema({
     targetDiscordId: {
         type: String,
         default: null
+    },
+    targetRobloxId: {
+        type: String,
+        default: null
+    },
+    targetUsername: {
+        type: String,
+        default: null
     }
 }, { timestamps: true });
 

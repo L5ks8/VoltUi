@@ -40,7 +40,7 @@ router.get('/cooldown', async (req, res) => {
 
 router.post('/', async (req, res) => {
     try {
-        const { title, description, robloxId, robloxUsername, hwid, userId, username } = req.body;
+        const { title, description, robloxId, robloxUsername, hwid, userId, username, discordId } = req.body;
 
         if (!title || typeof title !== 'string' || title.trim() === '') {
             return res.status(400).json({ success: false, error: 'Title is required.' });
@@ -49,6 +49,7 @@ router.post('/', async (req, res) => {
         const filter = [];
         if (robloxId && String(robloxId) !== '0') filter.push({ robloxId: String(robloxId) });
         if (userId) filter.push({ userId: String(userId) });
+        if (discordId) filter.push({ discordId: String(discordId) });
 
         if (filter.length > 0) {
             const lastTicket = await Ticket.findOne({ $or: filter }).sort({ createdAt: -1 });
@@ -84,6 +85,7 @@ router.post('/', async (req, res) => {
             ticketId,
             ticketNumber,
             userId: userId || null,
+            discordId: discordId || null,
             username: username || 'User',
             robloxId: String(robloxId || '0'),
             robloxUsername: robloxUsername || 'RobloxUser',

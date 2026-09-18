@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
     res.type('json').send(JSON.stringify({ message: "Volt API is running" }));
 });
 
-let packageVersion = "1.1.16";
+let packageVersion = "1.1.17";
 try {
     packageVersion = require('./package.json').version || "1.1.10";
 } catch (e) {}
@@ -79,7 +79,7 @@ const Notification = require('./models/Notification');
 
 const getNotificationsHandler = async (req, res) => {
     try {
-        const { userId, discordId } = req.query;
+        const { userId, discordId, robloxId, username } = req.query;
         const filter = {
             $or: [
                 { target: 'all' }
@@ -89,7 +89,13 @@ const getNotificationsHandler = async (req, res) => {
             filter.$or.push({ targetUserId: userId });
         }
         if (discordId) {
-            filter.$or.push({ targetDiscordId: discordId });
+            filter.$or.push({ targetDiscordId: String(discordId) });
+        }
+        if (robloxId && String(robloxId) !== '0') {
+            filter.$or.push({ targetRobloxId: String(robloxId) });
+        }
+        if (username) {
+            filter.$or.push({ targetUsername: new RegExp('^' + username + '$', 'i') });
         }
 
         const notifs = await Notification.find(filter)

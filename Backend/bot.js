@@ -958,6 +958,42 @@ client.on('interactionCreate', async interaction => {
                         createdAt: new Date()
                     });
                     await ticket.save();
+
+                    // Send notification to the user in-game (like /notify)
+                    try {
+                        let targetUserId = null;
+                        let targetDiscordId = ticket.discordId || null;
+                        let targetType = 'user';
+
+                        if (ticket.userId && mongoose.Types.ObjectId.isValid(ticket.userId)) {
+                            targetUserId = ticket.userId;
+                        } else if (ticket.username) {
+                            const u = await User.findOne({
+                                $or: [
+                                    { username: ticket.username },
+                                    ...(ticket.robloxId && ticket.robloxId !== '0' ? [{ robloxId: ticket.robloxId }] : [])
+                                ]
+                            });
+                            if (u) {
+                                targetUserId = u._id;
+                                if (u.discordId && !targetDiscordId) targetDiscordId = u.discordId;
+                            }
+                        }
+
+                        const notif = new Notification({
+                            title: 'Bug Report Closed',
+                            message: `Your bug report "${ticket.title}" has been reviewed and closed by ${interaction.user.username}.`,
+                            target: targetType,
+                            targetUserId: targetUserId,
+                            targetDiscordId: targetDiscordId,
+                            targetRobloxId: (ticket.robloxId && ticket.robloxId !== '0') ? String(ticket.robloxId) : null,
+                            targetUsername: ticket.robloxUsername || ticket.username || null
+                        });
+                        await notif.save();
+                        console.log(`Created in-game notification for closed ticket ${ticket.ticketId}`);
+                    } catch (notifErr) {
+                        console.error('Failed to create ticket close notification:', notifErr);
+                    }
                 }
 
                 await interaction.reply({

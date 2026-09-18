@@ -34,6 +34,10 @@ const ticketSchema = new mongoose.Schema({
         type: String,
         default: null
     },
+    discordId: {
+        type: String,
+        default: null
+    },
     username: {
         type: String,
         default: 'User'

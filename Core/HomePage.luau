@@ -646,6 +646,9 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
         end
     end
 
+    local shownNotificationIds = {}
+    local isFirstNotifFetch = true
+
     local function FetchNotifications()
         task.spawn(function()
             local getFunc = (request and function(u) return request({Url = u, Method = "GET"}) end)
@@ -664,6 +667,14 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
                     table.insert(queryParams, "discordId=" .. tostring(Api.UserData.discordId))
                 end
             end
+            local currentRobloxId = tostring((lp and lp.UserId) or 0)
+            if currentRobloxId ~= "0" then
+                table.insert(queryParams, "robloxId=" .. currentRobloxId)
+            end
+            local currentRobloxUser = (lp and lp.Name) or (Api and Api.UserData and Api.UserData.username)
+            if currentRobloxUser then
+                table.insert(queryParams, "username=" .. tostring(currentRobloxUser))
+            end
             if #queryParams > 0 then
                 url = url .. "?" .. table.concat(queryParams, "&")
             end
@@ -673,6 +684,28 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
                 local decOk, data = pcall(function() return HttpService:JSONDecode(res.Body) end)
                 if decOk and data and data.notifications then
                     RenderNotifications(data.notifications)
+
+                    if isFirstNotifFetch then
+                        for _, n in ipairs(data.notifications) do
+                            local id = tostring(n._id or n.id or (tostring(n.title) .. "_" .. tostring(n.message)))
+                            shownNotificationIds[id] = true
+                        end
+                        isFirstNotifFetch = false
+                    else
+                        for _, n in ipairs(data.notifications) do
+                            local id = tostring(n._id or n.id or (tostring(n.title) .. "_" .. tostring(n.message)))
+                            if not shownNotificationIds[id] and not readNotificationIds[id] and not clearedNotificationIds[id] then
+                                shownNotificationIds[id] = true
+                                local isBugClose = string.find(string.lower(tostring(n.title or "")), "close") or string.find(string.lower(tostring(n.title or "")), "bug")
+                                SendNotification({
+                                    Title = tostring(n.title or "Notification"),
+                                    Content = tostring(n.message or ""),
+                                    Duration = 6,
+                                    Type = isBugClose and "warning" or "info"
+                                })
+                            end
+                        end
+                    end
                 end
             end
         end)
@@ -684,7 +717,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
         FetchNotifications()
         if FetchUpdates then FetchUpdates() end
         while Page and Page.Parent do
-            task.wait(30)
+            task.wait(10)
             FetchNotifications()
             if FetchUpdates then FetchUpdates() end
         end
@@ -2350,6 +2383,8 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
             end)
         end
 
+        local knownTicketStatuses = {}
+
         LoadTicket = function(ticketId)
             activeTicketId = ticketId
             RenderTicketsList()
@@ -2362,6 +2397,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
                     if res and res.success then
                         ChatTitle.Text = res.title or "Ticket"
                         local isClosed = (res.status == "closed")
+                        knownTicketStatuses[ticketId] = res.status
                         ChatStatusBadge.Text = isClosed and "CLOSED" or "OPEN"
                         ChatStatusBadge.BackgroundColor3 = isClosed and Color3.fromRGB(40, 40, 40) or Color3.fromRGB(25, 70, 35)
                         ChatStatusBadge.TextColor3 = isClosed and Color3.fromRGB(150, 150, 150) or Color3.fromRGB(85, 220, 110)
@@ -2383,6 +2419,20 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
                     local res = Api.Request("/tickets/" .. tostring(activeTicketId) .. "/messages", "GET")
                     if res and res.success then
                         local isClosed = (res.status == "closed")
+                        local prevStatus = knownTicketStatuses[activeTicketId]
+                        knownTicketStatuses[activeTicketId] = res.status
+
+                        if prevStatus == "open" and isClosed then
+                            SendNotification({
+                                Title = "Bug Report Closed",
+                                Content = "Your bug report '" .. tostring(res.title or "Ticket") .. "' has been closed by staff.",
+                                Duration = 6,
+                                Type = "warning"
+                            })
+                            FetchTickets()
+                            FetchNotifications()
+                        end
+
                         ChatStatusBadge.Text = isClosed and "CLOSED" or "OPEN"
                         ChatStatusBadge.BackgroundColor3 = isClosed and Color3.fromRGB(40, 40, 40) or Color3.fromRGB(25, 70, 35)
                         ChatStatusBadge.TextColor3 = isClosed and Color3.fromRGB(150, 150, 150) or Color3.fromRGB(85, 220, 110)
@@ -2448,13 +2498,20 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
             SubmitBtn.Text = "Submitting..."
             task.spawn(function()
                 if Api and Api.Request then
+                    local currentRobloxId = tostring((lp and lp.UserId) or robloxId or "0")
+                    local currentRobloxUser = (lp and lp.Name) or robloxUsername or "Player"
+                    local currentUserId = Api and Api.UserData and (Api.UserData._id or Api.UserData.id)
+                    local currentDiscordId = Api and Api.UserData and Api.UserData.discordId
+
                     local res = Api.Request("/tickets", "POST", {
                         title = title,
                         description = desc,
-                        robloxId = robloxId,
-                        robloxUsername = robloxUsername,
+                        robloxId = currentRobloxId,
+                        robloxUsername = currentRobloxUser,
                         hwid = hwid,
-                        username = (Api and Api.UserData and Api.UserData.username) or robloxUsername
+                        userId = currentUserId,
+                        discordId = currentDiscordId,
+                        username = (Api and Api.UserData and Api.UserData.username) or currentRobloxUser
                     })
 
                     SubmitBtn.Text = "Submit Bug Report"
@@ -2462,6 +2519,7 @@ function HomePage.Create(Content, Maid, BackCallback, WindowObject, ApiParam)
                         TitleTextBox.Text = ""
                         DescTextBox.Text = ""
                         StatusMsg.Text = ""
+                        knownTicketStatuses[res.ticket.ticketId] = "open"
                         SendNotification({ Title = "Report Created", Content = "Discord ticket channel opened! Staff notified.", Duration = 4 })
                         CheckCooldown()
                         FetchTickets()
